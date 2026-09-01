@@ -1,0 +1,382 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - Plataforma de Estudos</title>
+    <style>
+        :root {
+            --bg-principal: #121212;
+            --bg-card: #1e1e1e;
+            --cor-texto: #e0d0c0;
+            --cor-destaque: #d4b28c;
+            --cor-borda: #333333;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-principal); 
+            margin: 0; 
+            padding: 0; 
+            color: var(--cor-texto); 
+            padding-bottom: 70px;
+        }
+
+        .container { 
+            max-width: 600px; 
+            margin: 30px auto; 
+            background: var(--bg-card); 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
+            border: 1px solid var(--cor-borda);
+        }
+        
+        .perfil-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 25px; 
+            border-bottom: 1px solid var(--cor-borda); 
+            padding-bottom: 25px; 
+        }
+
+        /* Avatar com suporte a imagem ou letra inicial */
+        .avatar-container {
+            position: relative;
+            cursor: pointer;
+        }
+        .avatar { 
+            width: 90px; 
+            height: 90px; 
+            background: var(--cor-destaque); 
+            color: #121212;
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 38px; 
+            font-weight: bold; 
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: var(--cor-destaque);
+            color: #121212;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid var(--bg-card);
+        }
+
+        .info-usuario h2 { 
+            margin: 0 0 8px 0; 
+            font-size: 22px; 
+            color: var(--cor-destaque);
+        }
+
+        .stats { 
+            display: flex; 
+            gap: 20px; 
+            font-size: 14px; 
+            opacity: 0.85;
+        }
+
+        .stats span { 
+            font-weight: bold; 
+            color: var(--cor-destaque); 
+        }
+
+        .bio { 
+            margin-top: 20px; 
+            font-size: 14px; 
+            line-height: 1.6; 
+        }
+        .bio p { margin: 5px 0; }
+        .bio strong { color: var(--cor-destaque); }
+
+        /* Estilo do Modo Edição */
+        .edit-input, .edit-textarea {
+            width: 100%;
+            background: #121212;
+            border: 1px solid var(--cor-destaque);
+            border-radius: 6px;
+            color: var(--cor-texto);
+            padding: 8px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .escondido { display: none !important; }
+
+        .btn-editar { 
+            width: 100%; 
+            background-color: transparent; 
+            border: 1px solid var(--cor-destaque); 
+            color: var(--cor-destaque);
+            padding: 10px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            font-size: 14px; 
+            transition: all 0.3s ease; 
+        }
+        .btn-editar:hover { 
+            background-color: var(--cor-destaque); 
+            color: #121212; 
+        }
+
+        .destaques { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 25px; 
+            overflow-x: auto; 
+            padding-bottom: 10px; 
+        }
+        .destaque-item { text-align: center; font-size: 12px; }
+        .bolinha { 
+            width: 65px; 
+            height: 65px; 
+            background: #2a2a2a; 
+            border: 2px solid var(--cor-destaque);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px;
+            margin-bottom: 6px; 
+        }
+
+        .grid-posts { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-top: 25px; 
+        }
+        .post-card { 
+            background: #242424; 
+            aspect-ratio: 1/1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 12px; 
+            padding: 12px; 
+            text-align: center; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            border: 1px solid var(--cor-borda);
+        }
+        .post-card strong { 
+            font-size: 13px; 
+            color: var(--cor-destaque); 
+            margin-bottom: 6px; 
+        }
+
+        .barra-inferior {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-card);
+            border-top: 1px solid var(--cor-borda);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            z-index: 1000;
+        }
+        .nav-item {
+            color: var(--cor-texto);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .nav-item:hover, .nav-item.ativo {
+            opacity: 1;
+            color: var(--cor-destaque);
+        }
+        .nav-item span.icone { font-size: 18px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="perfil-header">
+            <!-- Avatar clicável para alterar foto -->
+            <div class="avatar-container" onclick="document.getElementById('inputFoto').click();" title="Clique para alterar a foto">
+                <div class="avatar" id="avatarDiv">M</div>
+                <div class="avatar-overlay">📷</div>
+            </div>
+            <!-- Input oculto para selecionar arquivo de foto -->
+            <input type="file" id="inputFoto" accept="image/*" style="display: none;" onchange="carregarFoto(event)">
+
+            <div class="info-usuario">
+                <h2 id="viewNome">miguel_lopes</h2>
+                <input type="text" id="editNome" class="edit-input escondido" value="miguel_lopes">
+
+                <div class="stats">
+                    <div><span>15</span> posts</div>
+                    <div><span>420</span> seguidores</div>
+                    <div><span>210</span> seguindo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bio">
+            <div id="viewBio">
+                <p><strong>Engenharia Mecânica - UFF ⚙️</strong></p>
+                <p>Constância nos estudos, simulados e alta performance diária.</p>
+                <p>🎯 Rumo aos objetivos e à evolução contínua.</p>
+            </div>
+            <div id="editBioContainer" class="escondido">
+                <textarea id="editBioText" class="edit-textarea" rows="4">Engenharia Mecânica - UFF ⚙️
+Constância nos estudos, simulados e alta performance diária.
+🎯 Rumo aos objetivos e à evolução contínua.</textarea>
+            </div>
+        </div>
+
+        <button class="btn-editar" id="btnEditar" onclick="alternarEdicao()">Editar Perfil</button>
+
+        <div class="destaques">
+            <div class="destaque-item">
+                <div class="bolinha">🔥</div>
+                <span>Ofensiva</span>
+            </div>
+            <div class="destaque-item">
+                <div class="bolinha">📈</div>
+                <span>Simulados</span>
+            </div>
+            <div class="destaque-item">
+                <div class="bolinha">💡</div>
+                <span>Rotina</span>
+            </div>
+        </div>
+
+        <div class="grid-posts">
+            <div class="post-card">
+                <strong>Cálculo 2</strong>
+                <span>Lista Concluída</span>
+            </div>
+            <div class="post-card">
+                <strong>Simulado Geral</strong>
+                <span>Foco & Metas</span>
+            </div>
+            <div class="post-card">
+                <strong>Física 1</strong>
+                <span>Revisão OK</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="barra-inferior">
+        <a href="feed.html" class="nav-item">
+            <span class="icone">🏠</span>
+            <span>Feed</span>
+        </a>
+        <a href="#" class="nav-item">
+            <span class="icone">⚡</span>
+            <span>Questões</span>
+        </a>
+        <a href="perfil.html" class="nav-item ativo">
+            <span class="icone">👤</span>
+            <span>Perfil</span>
+        </a>
+    </div>
+
+    <script>
+        let editando = false;
+
+        // Carrega dados salvos no navegador ao abrir a página
+        window.onload = function() {
+            if (localStorage.getItem('perfil_nome')) {
+                document.getElementById('viewNome').innerText = localStorage.getItem('perfil_nome');
+                document.getElementById('editNome').value = localStorage.getItem('perfil_nome');
+            }
+            if (localStorage.getItem('perfil_bio')) {
+                const bioSalva = localStorage.getItem('perfil_bio');
+                document.getElementById('viewBio').innerHTML = `<p>${bioSalva.replace(/\n/g, '<br>')}</p>`;
+                document.getElementById('editBioText').value = bioSalva;
+            }
+            if (localStorage.getItem('perfil_foto')) {
+                const avatarDiv = document.getElementById('avatarDiv');
+                avatarDiv.style.backgroundImage = `url(${localStorage.getItem('perfil_foto')})`;
+                avatarDiv.innerText = ''; // Remove a letra 'M' se houver foto
+            }
+        };
+
+        function alternarEdicao() {
+            const viewNome = document.getElementById('viewNome');
+            const editNome = document.getElementById('editNome');
+            const viewBio = document.getElementById('viewBio');
+            const editBioContainer = document.getElementById('editBioContainer');
+            const btnEditar = document.getElementById('btnEditar');
+
+            if (!editando) {
+                // Entra no modo de edição
+                editNome.value = viewNome.innerText;
+                viewNome.classList.add('escondido');
+                editNome.classList.remove('escondido');
+
+                viewBio.classList.add('escondido');
+                editBioContainer.classList.remove('escondido');
+
+                btnEditar.innerText = "Salvar Alterações";
+                editando = true;
+            } else {
+                // Salva as alterações
+                const novoNome = editNome.value;
+                const novaBio = document.getElementById('editBioText').value;
+
+                viewNome.innerText = novoNome;
+                viewBio.innerHTML = `<p>${novaBio.replace(/\n/g, '<br>')}</p>`;
+
+                // Salva no navegador
+                localStorage.setItem('perfil_nome', novoNome);
+                localStorage.setItem('perfil_bio', novaBio);
+
+                editNome.classList.add('escondido');
+                viewNome.classList.remove('escondido');
+
+                editBioContainer.classList.add('escondido');
+                viewBio.classList.remove('escondido');
+
+                btnEditar.innerText = "Editar Perfil";
+                editando = false;
+            }
+        }
+
+        // Função para carregar a foto do perfil
+        function carregarFoto(event) {
+            const arquivo = event.target.files[0];
+            if (arquivo) {
+                const leitor = new FileReader();
+                leitor.onload = function(e) {
+                    const base64Image = e.target.result;
+                    const avatarDiv = document.getElementById('avatarDiv');
+                    avatarDiv.style.backgroundImage = `url(${base64Image})`;
+                    avatarDiv.innerText = ''; // Remove a letra
+                    
+                    // Salva a foto permanentemente no navegador
+                    localStorage.setItem('perfil_foto', base64Image);
+                }
+                leitor.readAsDataURL(arquivo);
+            }
+        }
+    </script>
+
+</body>
+</html>

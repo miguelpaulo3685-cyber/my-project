@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil - Plataforma de Estudos</title>
+    <style>
+        /* Paleta de Cores: Preto e Bege */
+        :root {
+            --bg-principal: #121212;
+            --bg-card: #1e1e1e;
+            --cor-texto: #e0d0c0;
+            --cor-destaque: #d4b28c;
+            --cor-borda: #333333;
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-principal); 
+            margin: 0; 
+            padding: 0; 
+            color: var(--cor-texto); 
+        }
+
+        .container { 
+            max-width: 600px; 
+            margin: 40px auto; 
+            background: var(--bg-card); 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4); 
+            border: 1px solid var(--cor-borda);
+        }
+        
+        /* Cabeçalho do Perfil */
+        .perfil-header { 
+            display: flex; 
+            align-items: center; 
+            gap: 25px; 
+            border-bottom: 1px solid var(--cor-borda); 
+            padding-bottom: 25px; 
+        }
+
+        .avatar { 
+            width: 90px; 
+            height: 90px; 
+            background: var(--cor-destaque); 
+            color: #121212;
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 38px; 
+            font-weight: bold; 
+        }
+
+        .info-usuario h2 { 
+            margin: 0 0 8px 0; 
+            font-size: 22px; 
+            color: var(--cor-destaque);
+            letter-spacing: 0.5px;
+        }
+
+        .stats { 
+            display: flex; 
+            gap: 20px; 
+            font-size: 14px; 
+            opacity: 0.85;
+        }
+
+        .stats span { 
+            font-weight: bold; 
+            color: var(--cor-destaque); 
+        }
+
+        /* Bio */
+        .bio { 
+            margin-top: 20px; 
+            font-size: 14px; 
+            line-height: 1.6; 
+        }
+        .bio p { margin: 5px 0; }
+        .bio strong { color: var(--cor-destaque); }
+
+        /* Botão de Ação */
+        .btn-editar { 
+            width: 100%; 
+            background-color: transparent; 
+            border: 1px solid var(--cor-destaque); 
+            color: var(--cor-destaque);
+            padding: 10px; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            font-size: 14px; 
+            transition: all 0.3s ease; 
+        }
+        .btn-editar:hover { 
+            background-color: var(--cor-destaque); 
+            color: #121212; 
+        }
+
+        /* Seção de Conquistas / Destaques */
+        .destaques { 
+            display: flex; 
+            gap: 15px; 
+            margin-top: 25px; 
+            overflow-x: auto; 
+            padding-bottom: 10px; 
+        }
+        .destaque-item { text-align: center; font-size: 12px; }
+        .bolinha { 
+            width: 65px; 
+            height: 65px; 
+            background: #2a2a2a; 
+            border: 2px solid var(--cor-destaque);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 20px;
+            margin-bottom: 6px; 
+        }
+
+        /* Grid de Evolução (Substituindo o feed quadrado comum) */
+        .grid-posts { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-top: 25px; 
+        }
+        .post-card { 
+            background: #242424; 
+            aspect-ratio: 1/1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 12px; 
+            padding: 12px; 
+            text-align: center; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            border: 1px solid var(--cor-borda);
+            transition: border-color 0.2s;
+        }
+        .post-card:hover { 
+            border-color: var(--cor-destaque); 
+        }
+        .post-card strong { 
+            font-size: 13px; 
+            color: var(--cor-destaque); 
+            margin-bottom: 6px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Cabeçalho -->
+        <div class="perfil-header">
+            <div class="avatar">M</div>
+            <div class="info-usuario">
+                <h2>miguel_lopes</h2>
+                <div class="stats">
+                    <div><span>15</span> posts</div>
+                    <div><span>420</span> seguidores</div>
+                    <div><span>210</span> seguindo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bio -->
+        <div class="bio">
+            <p><strong>Engenharia Mecânica - UFF ⚙️</strong></p>
+            <p>Constância nos estudos, simulados e alta performance diária.</p>
+            <p>🎯 Rumo aos objetivos e à evolução contínua.</p>
+        </div>
+
+        <!-- Botão Editar Perfil -->
+        <button class="btn-editar" onclick="alert('Funcionalidade de edição em breve!')">Editar Perfil</button>
+
+        <!-- Destaques -->
+        <div class="destaques">
+            <div class="destaque-item">
+                <div class="bolinha">🔥</div>
+                <span>Ofensiva</span>
+            </div>
+            <div class="destaque-item">
+                <div class="bolinha">📈</div>
+                <span>Simulados</span>
+            </div>
+            <div class="destaque-item">
+                <div class="bolinha">💡</div>
+                <span>Rotina</span>
+            </div>
+        </div>
+
+        <!-- Grid de Posts de Evolução -->
+        <div class="grid-posts">
+            <div class="post-card">
+                <strong>Cálculo 2</strong>
+                <span>Lista Concluída</span>
+            </div>
+            <div class="post-card">
+                <strong>Simulado Geral</strong>
+                <span>Foco & Metas</span>
+            </div>
+            <div class="post-card">
+                <strong>Física 1</strong>
+                <span>Revisão OK</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
