@@ -1,0 +1,34 @@
+name: 💓 Keep-Alive API
+
+on:
+  schedule:
+    # Ping a cada 5 minutos
+    - cron: '*/5 * * * *'
+  # Permitir rodar manualmente
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏥 Health Check
+        run: |
+          echo "🔔 Iniciando ping..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://enem-api.onrender.com/api/health || echo "000")
+
+          if [ "$RESPONSE" = "200" ]; then
+            echo "✅ API está saudável! (HTTP $RESPONSE)"
+          else
+            echo "⚠️ API respondeu com HTTP $RESPONSE"
+          fi
+
+      - name: 🔄 Warm Cache
+        run: |
+          echo "♻️ Aquecendo cache..."
+          curl -X POST https://enem-api.onrender.com/api/atualizar-cache || echo "Cache warming failed (pode estar em sleep)"
+        continue-on-error: true
+
+      - name: 📊 Log Status
+        run: |
+          echo "✅ Keep-alive check completo"
+          echo "Próxima verificação: em 5 minutos"
