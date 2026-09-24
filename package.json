@@ -4,7 +4,7 @@
   "description": "Plataforma de estudos ENEM com cache via Neon PostgreSQL",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node simple-server.js",
     "dev": "nodemon server.js",
     "migrate": "node migrations/init.js",
     "keep-alive": "node services/keep-alive.js",
