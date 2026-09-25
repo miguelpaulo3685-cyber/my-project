@@ -1,185 +1,181 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Plataforma de Estudos</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Estudos ENEM</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 1200px;
+      width: 100%;
+      padding: 40px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .status {
+      text-align: center;
+      padding: 20px;
+      background: #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+    
+    .status.ok {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    
+    .card {
+      background: #f9f9f9;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .card:hover {
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .card h3 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+    
+    .card p {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    
+    button:hover {
+      background: #764ba2;
+    }
+  </style>
 </head>
 <body>
-
-    <div class="container">
-
-        <!-- AB 1: FEED -->
-        <div id="aba-feed" class="aba-conteudo ativa">
-            <div class="card-base criar-post">
-                <textarea id="textoPost" rows="3" placeholder="Compartilhe sua evolução de hoje (ex: 42/45 em simulado, foco em Cálculo 2)..."></textarea>
-                <button class="btn-postar" onclick="criarPost()">Publicar</button>
-                <div class="limpar"></div>
-            </div>
-            <div id="feedContainer"></div>
-        </div>
-
-        <!-- ABA 2: QUESTÕES DIÁRIAS -->
-        <div id="aba-questoes" class="aba-conteudo">
-
-            <!-- Tela 1: seleção de área -->
-            <div id="telaAreas">
-                <div class="card-base" style="text-align:center; padding:20px;">
-                    <h2 style="margin:0; color: var(--cor-destaque);">Questões Diárias</h2>
-                    <p style="margin:8px 0 0; font-size:13px; opacity:0.8;">5 questões por área, todo dia. Escolha uma área pra começar.</p>
-                    <p id="statusApi" style="margin:8px 0 0; font-size:11px; opacity:0.6;"></p>
-                    <button class="btn-atualizar" onclick="verificarEAtualizarCache(true)">🔄 Atualizar questões da API do ENEM</button>
-                </div>
-                <div class="areas-grid" id="areasGrid"></div>
-            </div>
-
-            <!-- Tela 2: quiz em andamento -->
-            <div id="telaQuiz" class="escondido">
-                <div class="card-base">
-                    <div class="quiz-topo">
-                        <span id="quizAreaLabel"></span>
-                        <span id="quizAno" class="quiz-ano"></span>
-                        <span id="quizProgresso"></span>
-                        <span id="quizTimer">0s</span>
-                    </div>
-                    <p id="quizEnunciado" class="quiz-enunciado"></p>
-                    <div id="quizAlternativas" class="quiz-alternativas"></div>
-                    <div id="quizExplicacao" class="quiz-explicacao escondido">
-                        <p id="quizResultadoTexto" class="quiz-resultado-texto"></p>
-                        <p id="quizTextoExplicacao"></p>
-                        <button class="btn-acao" onclick="avancarQuestao()" id="btnProxima">Próxima questão</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tela 3: resultado -->
-            <div id="telaResultado" class="escondido">
-                <div class="card-base" style="text-align:center;">
-                    <h2 style="margin:0 0 15px; color: var(--cor-destaque);">Resultado</h2>
-                    <div class="resultado-grid">
-                        <div class="resultado-item"><span id="resAcertos">-</span><small>Acertos</small></div>
-                        <div class="resultado-item"><span id="resTempoTotal">-</span><small>Tempo total</small></div>
-                        <div class="resultado-item"><span id="resTempoMedio">-</span><small>Tempo médio/questão</small></div>
-                        <div class="resultado-item"><span id="resTRI">-</span><small>TRI estimado</small></div>
-                    </div>
-                    <p style="font-size:11px; opacity:0.6; margin-top:15px;">*TRI calculada com uma fórmula simplificada baseada na dificuldade das questões, só de referência.</p>
-                    <button class="btn-acao" onclick="continuarRespondendo()">Responder mais 5</button>
-                    <button class="btn-acao" style="margin-top:10px;" onclick="voltarParaAreas()">Voltar para as áreas</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ABA 3: PERFIL -->
-        <div id="aba-perfil" class="aba-conteudo">
-            <div class="card-base">
-                <div class="perfil-header">
-                    <div class="avatar-container" onclick="document.getElementById('inputFoto').click();" title="Clique para alterar a foto">
-                        <div class="avatar" id="avatarDiv">M</div>
-                        <div class="avatar-overlay">📷</div>
-                    </div>
-                    <input type="file" id="inputFoto" accept="image/*" style="display: none;" onchange="carregarFoto(event)">
-
-                    <div class="info-usuario">
-                        <h2 id="viewNome">miguel_lopes</h2>
-                        <input type="text" id="editNome" class="edit-input escondido" value="miguel_lopes">
-
-                        <div class="stats">
-                            <div><span>15</span> posts</div>
-                            <div><span>420</span> seguidores</div>
-                            <div><span>210</span> seguindo</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bio">
-                    <div id="viewBio">
-                        <p><strong>Engenharia Mecânica - UFF ⚙️</strong></p>
-                        <p>Constância nos estudos, simulados e alta performance diária.</p>
-                        <p>🎯 Rumo aos objetivos e à evolução contínua.</p>
-                    </div>
-                    <div id="editBioContainer" class="escondido">
-                        <textarea id="editBioText" class="edit-textarea" rows="4">Engenharia Mecânica - UFF ⚙️
-Constância nos estudos, simulados e alta performance diária.
-🎯 Rumo aos objetivos e à evolução contínua.</textarea>
-                    </div>
-                </div>
-
-                <button class="btn-acao" id="btnEditar" onclick="alternarEdicao()">Editar Perfil</button>
-
-                <div class="destaques">
-                    <div class="destaque-item">
-                        <div class="bolinha">🔥</div>
-                        <span>Ofensiva</span>
-                    </div>
-                    <div class="destaque-item">
-                        <div class="bolinha">📈</div>
-                        <span>Simulados</span>
-                    </div>
-                    <div class="destaque-item">
-                        <div class="bolinha">💡</div>
-                        <span>Rotina</span>
-                    </div>
-                </div>
-
-                <div class="grid-posts">
-                    <div class="post-grid-item" id="capaItem0">
-                        <span class="capa-btn-editar" onclick="abrirEditorCapa(0)" title="Editar capa">📷</span>
-                        <strong>Cálculo 2</strong>
-                        <span>Lista Concluída</span>
-                    </div>
-                    <div class="post-grid-item" id="capaItem1">
-                        <span class="capa-btn-editar" onclick="abrirEditorCapa(1)" title="Editar capa">📷</span>
-                        <strong>Simulado Geral</strong>
-                        <span>Foco & Metas</span>
-                    </div>
-                    <div class="post-grid-item" id="capaItem2">
-                        <span class="capa-btn-editar" onclick="abrirEditorCapa(2)" title="Editar capa">📷</span>
-                        <strong>Física 1</strong>
-                        <span>Revisão OK</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+  <div class="container">
+    <h1>📚 Plataforma de Estudos ENEM</h1>
+    
+    <div class="status" id="status">
+      <p>Verificando conexão com a API...</p>
     </div>
-
-    <!-- Modal de edição de capa estilo Notion (adicionado) -->
-    <div class="modal-overlay-capa escondido" id="modalCapa" onclick="fecharEditorCapaSeClicarFora(event)">
-        <div class="modal-capa" onclick="event.stopPropagation()">
-            <h3>Editar capa</h3>
-
-            <input type="file" id="capaInputArquivo" accept="image/*" style="display:none;" onchange="carregarImagemCapa(event)">
-            <button type="button" class="capa-btn-upload" id="btnEscolherImagemCapa" onclick="document.getElementById('capaInputArquivo').click();">📷 Escolher imagem</button>
-
-            <div class="capa-preview-arraste escondido" id="capaPreviewArraste">
-                <span class="capa-preview-dica">Arraste para posicionar</span>
-            </div>
-
-            <div class="modal-capa-botoes">
-                <button class="btn-acao btn-secundario" onclick="removerCapa()" style="flex:1;">Remover capa</button>
-                <button class="btn-acao" onclick="salvarCapa()" style="flex:1;">Salvar</button>
-            </div>
-            <button class="btn-acao btn-secundario" style="margin-top:10px;" onclick="fecharEditorCapa()">Cancelar</button>
-        </div>
+    
+    <div class="content">
+      <div class="card">
+        <h3>🎯 Linguagens e Códigos</h3>
+        <p>Pratique questões de linguagens, redação e interpretação de textos.</p>
+        <button onclick="carregarQuestoes('linguagens')">Acessar →</button>
+      </div>
+      
+      <div class="card">
+        <h3>🌍 Ciências Humanas</h3>
+        <p>Estude história, geografia, sociologia e filosofia.</p>
+        <button onclick="carregarQuestoes('humanas')">Acessar →</button>
+      </div>
+      
+      <div class="card">
+        <h3>🔬 Ciências da Natureza</h3>
+        <p>Explore biologia, química e física.</p>
+        <button onclick="carregarQuestoes('natureza')">Acessar →</button>
+      </div>
+      
+      <div class="card">
+        <h3>🔢 Matemática</h3>
+        <p>Resolva problemas de matemática e suas aplicações.</p>
+        <button onclick="carregarQuestoes('matematica')">Acessar →</button>
+      </div>
+      
+      <div class="card">
+        <h3>💬 Feed de Estudos</h3>
+        <p>Veja dicas e comentários de outros estudantes.</p>
+        <button onclick="carregarPosts()">Ver Posts →</button>
+      </div>
+      
+      <div class="card">
+        <h3>⚙️ Sobre a API</h3>
+        <p>Integrada com Render + Neon PostgreSQL. Hospedada 24h/dia.</p>
+        <button onclick="verificarAPI()">Verificar Status →</button>
+      </div>
     </div>
-
-    <!-- Barra de Navegação Inferior Estilo App -->
-    <div class="barra-inferior">
-        <div class="nav-item ativo" onclick="trocarAba('feed', this)">
-            <span class="icone">🏠</span>
-            <span>Feed</span>
-        </div>
-        <div class="nav-item" onclick="trocarAba('questoes', this)">
-            <span class="icone">⚡</span>
-            <span>Questões</span>
-        </div>
-        <div class="nav-item" onclick="trocarAba('perfil', this)">
-            <span class="icone">👤</span>
-            <span>Perfil</span>
-        </div>
-    </div>
-
-    <script src="scripts.js"></script>
-
+  </div>
+  
+  <script>
+    const API_URL = 'https://enem-api-cbo6.onrender.com';
+    
+    function verificarAPI() {
+      fetch(`${API_URL}/api/health`)
+        .then(r => r.json())
+        .then(d => {
+          const status = document.getElementById('status');
+          status.innerHTML = `✅ API está UP! Status: ${d.status}`;
+          status.classList.add('ok');
+        })
+        .catch(e => {
+          const status = document.getElementById('status');
+          status.innerHTML = `❌ Erro ao conectar: ${e.message}`;
+          status.classList.add('error');
+        });
+    }
+    
+    function carregarQuestoes(area) {
+      alert(`Carregando questões de ${area}...\n\nFunção completa em breve! 📖`);
+    }
+    
+    function carregarPosts() {
+      alert(`Carregando posts...\n\nFunção completa em breve! 💬`);
+    }
+    
+    // Verificar API ao carregar
+    window.addEventListener('load', verificarAPI);
+  </script>
 </body>
 </html>
