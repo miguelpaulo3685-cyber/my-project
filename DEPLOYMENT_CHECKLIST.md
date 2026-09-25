@@ -113,8 +113,8 @@
   - Aguardar build (2-3 min)
 
 - [ ] **Verificar URL**
-  - Deve aparecer: `https://enem-api.onrender.com`
-  - Acessar: `https://enem-api.onrender.com/api/health`
+  - Deve aparecer: `https://enem-api-cbo6.onrender.com`
+  - Acessar: `https://enem-api-cbo6.onrender.com/api/health`
   - Deve retornar: `{"status":"ok","timestamp":"..."}`
 
 ## Fase 4: Keep-Alive Setup (15 min) 💓
@@ -127,7 +127,7 @@
 
 - [ ] **Criar novo monitor**
   - Monitor Type: `HTTP(s)`
-  - URL: `https://enem-api.onrender.com/api/health`
+  - URL: `https://enem-api-cbo6.onrender.com/api/health`
   - Monitoring Interval: `5 minutes`
   - Alert Contacts: seu email (opcional)
 
@@ -182,7 +182,7 @@
   - Aguardar build completo
 
 - [ ] **Testar em produção**
-  - Abrir: `https://enem-api.onrender.com`
+  - Abrir: `https://enem-api-cbo6.onrender.com`
   - Testar: Feed, Questões, Cache
 
 ## Fase 6: Monitoring (5 min) 📊
@@ -208,7 +208,7 @@
 
 - [ ] **API Online**
   ```bash
-  curl https://enem-api.onrender.com/api/health
+  curl https://enem-api-cbo6.onrender.com/api/health
   # {"status":"ok",...}
   ```
 
@@ -217,21 +217,21 @@
   - SELECT COUNT(*) FROM questoes;
 
 - [ ] **Cache warming**
-  - POST `https://enem-api.onrender.com/api/atualizar-cache`
+  - POST `https://enem-api-cbo6.onrender.com/api/atualizar-cache`
   - Deve retornar: `"message":"Cache atualizado com X questões"`
 
 - [ ] **Feed funcionando**
-  - GET `https://enem-api.onrender.com/api/posts`
+  - GET `https://enem-api-cbo6.onrender.com/api/posts`
   - Deve retornar array de posts
 
 - [ ] **Questões disponíveis**
-  - GET `https://enem-api.onrender.com/api/questoes/linguagens`
+  - GET `https://enem-api-cbo6.onrender.com/api/questoes/linguagens`
   - Deve retornar questões em cache
 
 ### Browser Tests
 
 - [ ] **Abrir app no browser**
-  - URL: `https://enem-api.onrender.com`
+  - URL: `https://enem-api-cbo6.onrender.com`
 
 - [ ] **Aba Feed**
   - [ ] Posts carregam do banco

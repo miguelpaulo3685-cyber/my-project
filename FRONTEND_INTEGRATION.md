@@ -13,7 +13,7 @@ const API_CONFIG = {
   // BASE_URL: 'http://localhost:3000',
   
   // Produção (Render)
-  BASE_URL: 'https://enem-api.onrender.com',
+  BASE_URL: 'https://enem-api-cbo6.onrender.com',
   
   // Timeout para requisições
   TIMEOUT: 10000

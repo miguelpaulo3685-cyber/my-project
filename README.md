@@ -89,7 +89,7 @@ GET /api/posts
 
 ### Acesso
 ```
-https://enem-api.onrender.com/api/health
+https://enem-api-cbo6.onrender.com/api/health
 ```
 
 ## 💓 Keep-Alive Automático
@@ -99,7 +99,7 @@ Sem isso, Render coloca a app em sleep após 15 min de inatividade.
 ### Opção 1: UptimeRobot (Recomendado)
 1. Ir para https://uptimerobot.com
 2. New Monitor
-3. URL: `https://enem-api.onrender.com/api/health`
+3. URL: `https://enem-api-cbo6.onrender.com/api/health`
 4. Intervalo: 5 minutos
 5. Ativo! ✅
 
@@ -159,7 +159,7 @@ https://github.com/user/repo/actions
 
 ### Health Check
 ```bash
-curl https://enem-api.onrender.com/api/health
+curl https://enem-api-cbo6.onrender.com/api/health
 # {"status": "ok", "timestamp": "2024-09-16T..."}
 ```
 
