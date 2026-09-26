@@ -25,12 +25,14 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
 // ================== HEALTH CHECK ==================
+// Responde 200 mesmo sem banco: o Render usa esta rota para saber se o
+// servico esta de pe, e derrubar o site inteiro por causa do banco e pior.
 app.get('/api/health', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
-    res.json({ status: 'ok', timestamp: result.rows[0].now });
+    res.json({ status: 'ok', banco: 'conectado', timestamp: result.rows[0].now });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    res.json({ status: 'ok', banco: 'sem conexao', detalhe: error.message });
   }
 });
 

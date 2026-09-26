@@ -14,7 +14,7 @@ jobs:
       - name: 🏥 Health Check
         run: |
           echo "🔔 Iniciando ping..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://enem-api.onrender.com/api/health || echo "000")
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://enem-api-cbo6.onrender.com/api/health || echo "000")
 
           if [ "$RESPONSE" = "200" ]; then
             echo "✅ API está saudável! (HTTP $RESPONSE)"
@@ -25,7 +25,7 @@ jobs:
       - name: 🔄 Warm Cache
         run: |
           echo "♻️ Aquecendo cache..."
-          curl -X POST https://enem-api.onrender.com/api/atualizar-cache || echo "Cache warming failed (pode estar em sleep)"
+          curl -X POST https://enem-api-cbo6.onrender.com/api/atualizar-cache || echo "Cache warming failed (pode estar em sleep)"
         continue-on-error: true
 
       - name: 📊 Log Status

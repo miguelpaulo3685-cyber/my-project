@@ -34,7 +34,7 @@ https://claude.ai/customize/connectors?auth_start=github&auth_start_force=1
    ```
 8. Clique: **Create Web Service**
 
-Render vai fazer auto-deploy. Aguarde 3-5 min até aparecer: `https://enem-api.onrender.com`
+Render vai fazer auto-deploy. Aguarde 3-5 min até aparecer: `https://enem-api-cbo6.onrender.com`
 
 ## Passo 3️⃣ : Ativar Keep-Alive (3 min)
 
@@ -42,7 +42,7 @@ Render vai fazer auto-deploy. Aguarde 3-5 min até aparecer: `https://enem-api.o
 1. Acesse: https://uptimerobot.com
 2. Sign up
 3. New Monitor:
-   - URL: `https://enem-api.onrender.com/api/health`
+   - URL: `https://enem-api-cbo6.onrender.com/api/health`
    - Interval: 5 minutes
 4. Save
 
@@ -56,14 +56,14 @@ Já está no seu repo em `.github/workflows/keep-alive.yml`. Só precisa:
 ## ✅ Pronto!
 
 Quando completar os 3 passos:
-- ✅ API rodando em https://enem-api.onrender.com
+- ✅ API rodando em https://enem-api-cbo6.onrender.com
 - ✅ Database Neon conectado
 - ✅ Keep-alive ativo
 - ✅ Cache automático
 
 Teste:
 ```bash
-curl https://enem-api.onrender.com/api/health
+curl https://enem-api-cbo6.onrender.com/api/health
 # {"status":"ok","timestamp":"..."}
 ```
 

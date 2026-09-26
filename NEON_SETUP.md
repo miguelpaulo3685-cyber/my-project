@@ -100,7 +100,7 @@ CACHE_WARMING_INTERVAL = 60
 
 ### 4.4 Deploy automático
 - Render deploy automático quando você faz push
-- Acesse em: `https://enem-api.onrender.com`
+- Acesse em: `https://enem-api-cbo6.onrender.com`
 
 ## Passo 5: Configurar keep-alive no Render
 
@@ -108,7 +108,7 @@ CACHE_WARMING_INTERVAL = 60
 1. Ir para https://uptimerobot.com
 2. Fazer signup
 3. Criar novo monitor:
-   - URL: `https://enem-api.onrender.com/api/health`
+   - URL: `https://enem-api-cbo6.onrender.com/api/health`
    - Intervalo: `5 minutos`
    - Tipo: HTTP(s) GET
 
@@ -129,7 +129,7 @@ jobs:
     steps:
       - name: Ping API
         run: |
-          curl -f https://enem-api.onrender.com/api/health || exit 1
+          curl -f https://enem-api-cbo6.onrender.com/api/health || exit 1
 ```
 
 ## Passo 6: Integrar no frontend (scripts.js)
@@ -139,7 +139,7 @@ No seu `scripts.js`, adicione:
 
 ```javascript
 // No início do arquivo, após as imports
-const API_BASE = 'https://enem-api.onrender.com';  // Mudar para sua URL
+const API_BASE = 'https://enem-api-cbo6.onrender.com';  // Mudar para sua URL
 
 // Modificar função de atualizar cache
 async function verificarEAtualizarCache(forcaAtualizacao = false) {
