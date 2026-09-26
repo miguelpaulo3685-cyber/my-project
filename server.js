@@ -91,7 +91,10 @@ function prepararQuestao(q) {
 }
 
 app.post('/api/atualizar-cache', async (req, res) => {
-  const anosDisponiveis = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+  const anosDisponiveis = [
+    2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+    2017, 2018, 2019, 2020, 2021, 2022, 2023
+  ];
   const ano = anosDisponiveis[Math.floor(Math.random() * anosDisponiveis.length)];
 
   try {
