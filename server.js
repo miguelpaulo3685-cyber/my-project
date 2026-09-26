@@ -54,7 +54,6 @@ app.get('/api/questoes/:area', async (req, res) => {
     const result = await pool.query(
       `SELECT * FROM questoes
        WHERE disciplina = $1
-       AND created_at > NOW() - INTERVAL '7 days'
        ORDER BY RANDOM()
        LIMIT 5`,
       [disciplina]
@@ -72,53 +71,59 @@ app.get('/api/questoes/:area', async (req, res) => {
 });
 
 // ================== ATUALIZAR CACHE DA API ==================
+// Converte uma questão da api.enem.dev para as colunas da tabela questoes.
+// O enunciado vem em alternativesIntroduction e o texto de apoio em context,
+// que pode ser null — juntar os dois evita gravar questão sem enunciado.
+function prepararQuestao(q) {
+  const alternativas = q.alternatives || [];
+  const correta = alternativas.findIndex(a => a.isCorrect);
+  if (correta === -1 || !q.title) return null;
+
+  return [
+    q.discipline,
+    q.title,
+    [q.context, q.alternativesIntroduction].filter(Boolean).join('\n\n'),
+    JSON.stringify(alternativas.map(a => a.text)),
+    correta,
+    q.year,
+    q.files?.[0] || null
+  ];
+}
+
 app.post('/api/atualizar-cache', async (req, res) => {
-  const areas = ['linguagens', 'ciencias-humanas', 'ciencias-natureza', 'matematica'];
-  const anosDisponiveis = [2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2022, 2023];
+  const anosDisponiveis = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+  const ano = anosDisponiveis[Math.floor(Math.random() * anosDisponiveis.length)];
 
   try {
-    console.log('🔄 Iniciando atualização de cache...');
-    let totalInserts = 0;
+    console.log(`🔄 Buscando questões do ENEM ${ano}...`);
 
-    for (const area of areas) {
-      const ano = anosDisponiveis[Math.floor(Math.random() * anosDisponiveis.length)];
-      try {
-        const response = await axios.get(
-          `${process.env.ENEM_API_BASE}/questoes`,
-          { params: { disciplina: area, ano, limit: 20 } }
-        );
+    const response = await axios.get(
+      `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+      { params: { limit: 50, offset: Math.floor(Math.random() * 120) }, timeout: 30000 }
+    );
 
-        if (response.data && response.data.results) {
-          for (const q of response.data.results.slice(0, 5)) {
-            const indiceCorreta = q.alternatives.findIndex(a => a.isCorrect);
-            if (indiceCorreta === -1) continue;
+    const questoes = response.data?.questions || [];
+    let inseridas = 0;
 
-            await pool.query(
-              `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url)
-               VALUES ($1, $2, $3, $4, $5, $6, $7)
-               ON CONFLICT (titulo) DO NOTHING`,
-              [
-                area,
-                q.title || 'Sem título',
-                q.context || '',
-                JSON.stringify(q.alternatives.map(a => a.text)),
-                indiceCorreta,
-                ano,
-                q.files?.[0] || null
-              ]
-            );
-            totalInserts++;
-          }
-        }
-      } catch (err) {
-        console.error(`Erro ao buscar ${area}:`, err.message);
-      }
+    for (const q of questoes) {
+      const valores = prepararQuestao(q);
+      if (!valores) continue;
+
+      const result = await pool.query(
+        `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         ON CONFLICT (titulo) DO NOTHING`,
+        valores
+      );
+      inseridas += result.rowCount;
     }
 
-    res.json({ message: `Cache atualizado com ${totalInserts} questões` });
+    const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
+    console.log(`✅ ${msg}`);
+    res.json({ message: msg, ano, recebidas: questoes.length, inseridas });
   } catch (error) {
-    console.error('Erro na atualização:', error);
-    res.status(500).json({ error: 'Erro ao atualizar cache' });
+    console.error('❌ Erro na atualização:', error.message);
+    res.status(500).json({ error: 'Erro ao atualizar cache', detalhe: error.message });
   }
 });
 
