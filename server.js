@@ -90,12 +90,89 @@ function prepararQuestao(q) {
   ];
 }
 
+const ANOS_DISPONIVEIS = [
+  2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
+  2017, 2018, 2019, 2020, 2021, 2022, 2023
+];
+
+async function gravarQuestoes(questoes) {
+  let inseridas = 0;
+  for (const q of questoes) {
+    const valores = prepararQuestao(q);
+    if (!valores) continue;
+
+    const result = await pool.query(
+      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       ON CONFLICT (titulo) DO NOTHING`,
+      valores
+    );
+    inseridas += result.rowCount;
+  }
+  return inseridas;
+}
+
+// Baixa a prova inteira de um ano, pagina por pagina, ate a API dizer que
+// acabou (hasMore). Diferente do sorteio, aqui da para saber que terminou.
+app.post('/api/carregar-ano/:ano', async (req, res) => {
+  const ano = Number(req.params.ano);
+  if (!ANOS_DISPONIVEIS.includes(ano)) {
+    return res.status(400).json({ error: `Ano invalido. Disponiveis: ${ANOS_DISPONIVEIS.join(', ')}` });
+  }
+
+  try {
+    console.log(`🔄 Carregando ENEM ${ano} por completo...`);
+    let offset = 0;
+    let recebidas = 0;
+    let inseridas = 0;
+
+    while (true) {
+      const { data } = await axios.get(
+        `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+        { params: { limit: 50, offset }, timeout: 30000 }
+      );
+
+      const questoes = data?.questions || [];
+      if (questoes.length === 0) break;
+
+      recebidas += questoes.length;
+      inseridas += await gravarQuestoes(questoes);
+
+      if (!data?.metadata?.hasMore) break;
+      offset += questoes.length;
+    }
+
+    const msg = `ENEM ${ano} completo: ${recebidas} questoes lidas, ${inseridas} novas gravadas`;
+    console.log(`✅ ${msg}`);
+    res.json({ message: msg, ano, recebidas, inseridas });
+  } catch (error) {
+    console.error(`❌ Erro ao carregar ${ano}:`, error.message);
+    res.status(500).json({ error: `Erro ao carregar ENEM ${ano}`, detalhe: error.message });
+  }
+});
+
+// Quanto ja existe no banco, por materia e por ano.
+app.get('/api/estatisticas', async (req, res) => {
+  try {
+    const [total, porArea, porAno] = await Promise.all([
+      pool.query('SELECT COUNT(*)::int AS total FROM questoes'),
+      pool.query('SELECT disciplina, COUNT(*)::int AS total FROM questoes GROUP BY disciplina ORDER BY total DESC'),
+      pool.query('SELECT ano, COUNT(*)::int AS total FROM questoes GROUP BY ano ORDER BY ano')
+    ]);
+
+    res.json({
+      total: total.rows[0].total,
+      por_materia: porArea.rows,
+      por_ano: porAno.rows,
+      anos_faltando: ANOS_DISPONIVEIS.filter(a => !porAno.rows.some(r => r.ano === a))
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao ler estatisticas', detalhe: error.message });
+  }
+});
+
 app.post('/api/atualizar-cache', async (req, res) => {
-  const anosDisponiveis = [
-    2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
-    2017, 2018, 2019, 2020, 2021, 2022, 2023
-  ];
-  const ano = anosDisponiveis[Math.floor(Math.random() * anosDisponiveis.length)];
+  const ano = ANOS_DISPONIVEIS[Math.floor(Math.random() * ANOS_DISPONIVEIS.length)];
 
   try {
     console.log(`🔄 Buscando questões do ENEM ${ano}...`);
@@ -106,20 +183,7 @@ app.post('/api/atualizar-cache', async (req, res) => {
     );
 
     const questoes = response.data?.questions || [];
-    let inseridas = 0;
-
-    for (const q of questoes) {
-      const valores = prepararQuestao(q);
-      if (!valores) continue;
-
-      const result = await pool.query(
-        `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)
-         ON CONFLICT (titulo) DO NOTHING`,
-        valores
-      );
-      inseridas += result.rowCount;
-    }
+    const inseridas = await gravarQuestoes(questoes);
 
     const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
     console.log(`✅ ${msg}`);
