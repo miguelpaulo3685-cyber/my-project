@@ -4,11 +4,11 @@
   "description": "Plataforma de estudos ENEM com cache via Neon PostgreSQL",
   "main": "server.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node server.js",
+    "start:simples": "node app.js",
     "dev": "nodemon server.js",
     "migrate": "node migrations/init.js",
-    "keep-alive": "node services/keep-alive.js",
-    "prestart": "npm run migrate || true"
+    "keep-alive": "node services/keep-alive.js"
   },
   "keywords": ["enem", "estudos", "neon", "postgresql"],
   "author": "Miguel Paulo",
