@@ -201,6 +201,46 @@
 
     .carregando { text-align: center; padding: 40px 20px; color: #667eea; font-size: 1rem; }
 
+    /* ---------- Conta ---------- */
+    .barra-conta {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 10px; flex-wrap: wrap;
+      background: #f4f4fb; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 18px;
+      font-size: 0.9rem;
+    }
+    .barra-conta .quem { display: flex; align-items: center; gap: 10px; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.95rem; flex-shrink: 0;
+    }
+    .btn-pequeno { padding: 7px 14px; font-size: 0.82rem; }
+    .btn-fantasma { background: transparent; color: #667eea; border: 1px solid #667eea; }
+    .btn-fantasma:hover { background: #667eea; color: #fff; }
+
+    .form-conta { max-width: 380px; margin: 0 auto; }
+    .form-conta label { display: block; font-size: 0.85rem; font-weight: 600; margin: 14px 0 5px; }
+    .form-conta input {
+      width: 100%; padding: 11px 13px;
+      border: 2px solid #e2e2ec; border-radius: 7px;
+      font-size: 0.95rem; font-family: inherit;
+    }
+    .form-conta input:focus { outline: none; border-color: #667eea; }
+    .form-conta button[type=submit] { width: 100%; margin-top: 20px; padding: 12px; font-size: 1rem; }
+    .dica { font-size: 0.78rem; color: #888; margin-top: 4px; }
+    .troca-form { text-align: center; margin-top: 16px; font-size: 0.88rem; color: #666; }
+    .troca-form a { color: #667eea; cursor: pointer; font-weight: 600; text-decoration: underline; }
+
+    .recado { padding: 11px 14px; border-radius: 7px; font-size: 0.88rem; margin-top: 16px; line-height: 1.45; }
+    .recado.ruim { background: #f8d7da; color: #721c24; }
+    .recado.bom { background: #d4edda; color: #155724; }
+
+    .caixa-post { width: 100%; padding: 12px; border: 2px solid #e2e2ec; border-radius: 8px;
+      font-family: inherit; font-size: 0.95rem; resize: vertical; min-height: 80px; }
+    .caixa-post:focus { outline: none; border-color: #667eea; }
+
     @media (max-width: 520px) {
       .container { padding: 22px 16px; }
       h1 { font-size: 1.35rem; }
@@ -216,6 +256,17 @@
     <!-- ================= MENU ================= -->
     <div id="tela-menu">
       <h1>📚 Plataforma de Estudos ENEM</h1>
+
+      <div class="barra-conta">
+        <div class="quem" id="quem-sou">
+          <span>Você não está conectado</span>
+        </div>
+        <div id="botoes-conta">
+          <button class="btn-pequeno" onclick="abrirConta('entrar')">Entrar</button>
+          <button class="btn-pequeno btn-fantasma" onclick="abrirConta('criar')">Criar conta</button>
+        </div>
+      </div>
+
       <div class="status" id="status">Verificando conexão com a API...</div>
 
       <div class="grade">
@@ -267,7 +318,36 @@
         <button class="btn-voltar" onclick="voltarAoMenu()">← Voltar</button>
         <span class="placar">💬 Feed de Estudos</span>
       </div>
+      <div id="area-publicar"></div>
       <div id="conteudo-feed"></div>
+    </div>
+
+    <!-- ================= CONTA ================= -->
+    <div id="tela-conta" class="escondido">
+      <div class="barra-topo">
+        <button class="btn-voltar" onclick="voltarAoMenu()">← Voltar</button>
+        <span class="placar" id="titulo-conta">Entrar</span>
+      </div>
+
+      <form class="form-conta" id="form-conta" onsubmit="enviarConta(event)">
+        <div id="campo-nome" class="escondido">
+          <label for="conta-nome">Como quer ser chamado</label>
+          <input type="text" id="conta-nome" autocomplete="name" maxlength="60">
+        </div>
+
+        <label for="conta-email">E-mail</label>
+        <input type="email" id="conta-email" autocomplete="email" required>
+        <div class="dica" id="dica-email"></div>
+
+        <label for="conta-senha">Senha</label>
+        <input type="password" id="conta-senha" autocomplete="current-password" required>
+        <div class="dica" id="dica-senha"></div>
+
+        <button type="submit" id="botao-enviar-conta">Entrar</button>
+        <div id="recado-conta"></div>
+
+        <div class="troca-form" id="troca-form"></div>
+      </form>
     </div>
   </div>
 
@@ -306,10 +386,138 @@ function formatarEnunciado(texto) {
 }
 
 function mostrarTela(id) {
-  ['tela-menu', 'tela-questao', 'tela-feed'].forEach(t => {
+  ['tela-menu', 'tela-questao', 'tela-feed', 'tela-conta'].forEach(t => {
     document.getElementById(t).classList.toggle('escondido', t !== id);
   });
   window.scrollTo(0, 0);
+}
+
+// ================= CONTA =================
+// O token fica no navegador; a senha nunca é guardada aqui nem no servidor.
+const CHAVE_TOKEN = 'enem_token';
+let usuarioLogado = null;
+let modoConta = 'entrar';
+
+function pegarToken() {
+  try { return localStorage.getItem(CHAVE_TOKEN); } catch (e) { return null; }
+}
+function guardarToken(t) {
+  try { t ? localStorage.setItem(CHAVE_TOKEN, t) : localStorage.removeItem(CHAVE_TOKEN); } catch (e) {}
+}
+
+function cabecalhoAuth() {
+  const t = pegarToken();
+  return t ? { 'Authorization': 'Bearer ' + t } : {};
+}
+
+function desenharBarraConta() {
+  const quem = document.getElementById('quem-sou');
+  const botoes = document.getElementById('botoes-conta');
+
+  if (usuarioLogado) {
+    const inicial = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
+    quem.innerHTML = `<span class="avatar">${escapar(inicial)}</span>
+      <span>Olá, <strong>${escapar(usuarioLogado.username)}</strong></span>`;
+    botoes.innerHTML = `<button class="btn-pequeno btn-fantasma" onclick="sair()">Sair</button>`;
+  } else {
+    quem.innerHTML = '<span>Você não está conectado</span>';
+    botoes.innerHTML = `
+      <button class="btn-pequeno" onclick="abrirConta('entrar')">Entrar</button>
+      <button class="btn-pequeno btn-fantasma" onclick="abrirConta('criar')">Criar conta</button>`;
+  }
+}
+
+function abrirConta(modo) {
+  modoConta = modo;
+  const criando = modo === 'criar';
+
+  document.getElementById('titulo-conta').textContent = criando ? 'Criar conta' : 'Entrar';
+  document.getElementById('campo-nome').classList.toggle('escondido', !criando);
+  document.getElementById('conta-nome').required = criando;
+  document.getElementById('botao-enviar-conta').textContent = criando ? 'Criar minha conta' : 'Entrar';
+  document.getElementById('conta-senha').autocomplete = criando ? 'new-password' : 'current-password';
+  document.getElementById('dica-senha').textContent = criando
+    ? 'Ao menos 8 caracteres, misturando letras e números.' : '';
+  document.getElementById('dica-email').textContent = criando
+    ? 'Conferimos se o domínio do e-mail existe de verdade.' : '';
+  document.getElementById('recado-conta').innerHTML = '';
+  document.getElementById('form-conta').reset();
+
+  document.getElementById('troca-form').innerHTML = criando
+    ? `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
+    : `Ainda não tem conta? <a onclick="abrirConta('criar')">Criar agora</a>`;
+
+  mostrarTela('tela-conta');
+}
+
+function recadoConta(texto, tipo) {
+  document.getElementById('recado-conta').innerHTML =
+    `<div class="recado ${tipo}">${escapar(texto)}</div>`;
+}
+
+async function enviarConta(evento) {
+  evento.preventDefault();
+  const botao = document.getElementById('botao-enviar-conta');
+  const criando = modoConta === 'criar';
+
+  const corpo = {
+    email: document.getElementById('conta-email').value.trim(),
+    senha: document.getElementById('conta-senha').value
+  };
+  if (criando) corpo.nome = document.getElementById('conta-nome').value.trim();
+
+  botao.disabled = true;
+  botao.textContent = criando ? 'Criando...' : 'Entrando...';
+  recadoConta('Falando com o servidor...', 'bom');
+
+  try {
+    const r = await fetch(`${API_URL}/api/auth/${criando ? 'registrar' : 'login'}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(corpo)
+    });
+    const dados = await r.json();
+
+    if (!r.ok) {
+      recadoConta(dados.error || 'Não deu certo. Tente de novo.', 'ruim');
+      return;
+    }
+
+    guardarToken(dados.token);
+    usuarioLogado = dados.usuario;
+    desenharBarraConta();
+    recadoConta(criando ? 'Conta criada! Bem-vindo.' : 'Bem-vindo de volta!', 'bom');
+    setTimeout(voltarAoMenu, 700);
+  } catch (e) {
+    recadoConta('Não consegui falar com o servidor: ' + e.message, 'ruim');
+  } finally {
+    botao.disabled = false;
+    botao.textContent = criando ? 'Criar minha conta' : 'Entrar';
+  }
+}
+
+async function sair() {
+  try {
+    await fetch(`${API_URL}/api/auth/sair`, { method: 'POST', headers: cabecalhoAuth() });
+  } catch (e) { /* mesmo sem resposta, saímos aqui */ }
+  guardarToken(null);
+  usuarioLogado = null;
+  desenharBarraConta();
+  voltarAoMenu();
+}
+
+// Ao abrir o site: se o token guardado ainda vale, a pessoa volta já logada.
+async function restaurarSessao() {
+  if (!pegarToken()) { desenharBarraConta(); return; }
+  try {
+    const r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() });
+    if (r.ok) {
+      usuarioLogado = (await r.json()).usuario;
+    } else {
+      guardarToken(null); // token vencido ou revogado
+    }
+  } catch (e) { /* servidor fora do ar: tentamos de novo na próxima visita */ }
+  desenharBarraConta();
 }
 
 function voltarAoMenu() { mostrarTela('tela-menu'); }
@@ -429,8 +637,46 @@ function soltarConfete() {
   }
 }
 
+async function publicar() {
+  const caixa = document.getElementById('texto-post');
+  const conteudo = caixa.value.trim();
+  if (!conteudo) return;
+
+  const botao = document.getElementById('botao-publicar');
+  botao.disabled = true;
+  botao.textContent = 'Publicando...';
+
+  try {
+    const r = await fetch(`${API_URL}/api/posts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify({ conteudo })
+    });
+    if (r.ok) { caixa.value = ''; await abrirFeed(); return; }
+    const d = await r.json();
+    alert(d.error || 'Não consegui publicar.');
+  } catch (e) {
+    alert('Não consegui publicar: ' + e.message);
+  } finally {
+    botao.disabled = false;
+    botao.textContent = 'Publicar';
+  }
+}
+
 async function abrirFeed() {
   mostrarTela('tela-feed');
+
+  document.getElementById('area-publicar').innerHTML = usuarioLogado
+    ? `<div class="card" style="margin-bottom:18px">
+         <h3>Escrever no feed</h3>
+         <textarea class="caixa-post" id="texto-post" maxlength="2000"
+           placeholder="Compartilhe uma dica, tire uma dúvida..."></textarea>
+         <button id="botao-publicar" onclick="publicar()" style="margin-top:10px">Publicar</button>
+       </div>`
+    : `<div class="recado ruim" style="margin-bottom:18px">
+         Entre na sua conta para escrever no feed.
+       </div>`;
+
   const alvo = document.getElementById('conteudo-feed');
   alvo.innerHTML = '<div class="carregando">Carregando posts...</div>';
   try {
@@ -468,7 +714,10 @@ function verificarAPI() {
     });
 }
 
-window.addEventListener('load', verificarAPI);
+window.addEventListener('load', () => {
+  verificarAPI();
+  restaurarSessao();
+});
 </script>
 </body>
 </html>

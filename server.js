@@ -6,6 +6,7 @@ const { Pool } = require('pg');
 const cron = require('node-cron');
 const axios = require('axios');
 const path = require('path');
+const auth = require('./auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,139 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
+
+// ================== CONTAS E LOGIN ==================
+
+// Le o token do cabecalho e descobre quem esta falando. Nao bloqueia:
+// as rotas que exigem login usam exigirLogin.
+async function identificar(req, res, next) {
+  req.usuario = null;
+  const cabecalho = req.headers.authorization || '';
+  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
+
+  if (token) {
+    try {
+      const { rows } = await pool.query(
+        `SELECT u.id, u.username, u.email, u.bio, u.avatar_url
+           FROM sessoes s
+           JOIN usuarios u ON u.id = s.usuario_id
+          WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
+        [auth.hashDeToken(token)]
+      );
+      if (rows[0]) req.usuario = rows[0];
+    } catch (erro) {
+      console.error('Erro ao identificar sessao:', erro.message);
+    }
+  }
+  next();
+}
+
+function exigirLogin(req, res, next) {
+  if (!req.usuario) return res.status(401).json({ error: 'Faça login para continuar.' });
+  next();
+}
+
+app.use(identificar);
+
+async function abrirSessao(usuarioId) {
+  const { token, hash } = auth.criarToken();
+  await pool.query(
+    'INSERT INTO sessoes (token_hash, usuario_id, expira_em) VALUES ($1, $2, $3)',
+    [hash, usuarioId, auth.validadeDaSessao()]
+  );
+  await pool.query('UPDATE usuarios SET ultimo_acesso = NOW() WHERE id = $1', [usuarioId]);
+  return token;
+}
+
+app.post('/api/auth/registrar', async (req, res) => {
+  const { nome, email, senha } = req.body || {};
+
+  if (!nome || String(nome).trim().length < 2) {
+    return res.status(400).json({ error: 'Diga seu nome (ao menos 2 letras).' });
+  }
+  const problemaEmail = await auth.problemaNoEmail(email);
+  if (problemaEmail) return res.status(400).json({ error: problemaEmail });
+
+  const problemaSenha = auth.problemaNaSenha(senha);
+  if (problemaSenha) return res.status(400).json({ error: problemaSenha });
+
+  try {
+    const emailLimpo = String(email).trim().toLowerCase();
+    const jaExiste = await pool.query('SELECT 1 FROM usuarios WHERE email = $1', [emailLimpo]);
+    if (jaExiste.rowCount > 0) {
+      return res.status(409).json({ error: 'Já existe uma conta com esse e-mail. Tente entrar.' });
+    }
+
+    const { rows } = await pool.query(
+      `INSERT INTO usuarios (username, email, senha_hash)
+       VALUES ($1, $2, $3)
+       RETURNING id, username, email`,
+      [String(nome).trim(), emailLimpo, await auth.criarHashDeSenha(senha)]
+    );
+
+    const token = await abrirSessao(rows[0].id);
+    res.status(201).json({ token, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO });
+  } catch (erro) {
+    if (erro.code === '23505') {
+      return res.status(409).json({ error: 'Já existe uma conta com esse e-mail.' });
+    }
+    console.error('Erro ao registrar:', erro.message);
+    res.status(500).json({ error: 'Não consegui criar a conta agora.' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  const { email, senha } = req.body || {};
+  const emailLimpo = String(email || '').trim().toLowerCase();
+  const chaveDoFreio = `${req.ip}:${emailLimpo}`;
+
+  if (auth.bloqueado(chaveDoFreio)) {
+    return res.status(429).json({ error: 'Muitas tentativas. Espere 15 minutos e tente de novo.' });
+  }
+
+  try {
+    const { rows } = await pool.query(
+      'SELECT id, username, email, senha_hash FROM usuarios WHERE email = $1',
+      [emailLimpo]
+    );
+    const usuario = rows[0];
+
+    // Mesma resposta para e-mail inexistente e senha errada: dizer qual dos
+    // dois falhou entregaria para um estranho quais e-mails tem conta aqui.
+    const ok = usuario && await auth.senhaConfere(String(senha || ''), usuario.senha_hash);
+    if (!ok) {
+      auth.registrarFalha(chaveDoFreio);
+      return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
+    }
+
+    auth.limparFalhas(chaveDoFreio);
+    const token = await abrirSessao(usuario.id);
+    res.json({
+      token,
+      usuario: { id: usuario.id, username: usuario.username, email: usuario.email },
+      dias_de_sessao: auth.DIAS_DE_SESSAO
+    });
+  } catch (erro) {
+    console.error('Erro no login:', erro.message);
+    res.status(500).json({ error: 'Não consegui entrar agora.' });
+  }
+});
+
+// O site chama esta rota ao abrir: se o token guardado ainda vale, a pessoa
+// volta já logada.
+app.get('/api/auth/eu', (req, res) => {
+  if (!req.usuario) return res.status(401).json({ error: 'Sessão expirada ou inexistente.' });
+  res.json({ usuario: req.usuario });
+});
+
+app.post('/api/auth/sair', async (req, res) => {
+  const cabecalho = req.headers.authorization || '';
+  const token = cabecalho.startsWith('Bearer ') ? cabecalho.slice(7) : null;
+  if (token) {
+    await pool.query('DELETE FROM sessoes WHERE token_hash = $1', [auth.hashDeToken(token)]);
+  }
+  res.json({ message: 'Você saiu da conta.' });
+});
 
 // ================== HEALTH CHECK ==================
 // Responde 200 mesmo sem banco: o Render usa esta rota para saber se o
@@ -195,16 +329,20 @@ app.post('/api/atualizar-cache', async (req, res) => {
 });
 
 // ================== SALVAR POST DO FEED ==================
-app.post('/api/posts', async (req, res) => {
-  const { usuario_id, conteudo } = req.body;
-  if (!conteudo) return res.status(400).json({ error: 'Conteúdo vazio' });
+app.post('/api/posts', exigirLogin, async (req, res) => {
+  const { conteudo } = req.body;
+  if (!conteudo || !String(conteudo).trim()) {
+    return res.status(400).json({ error: 'Escreva alguma coisa antes de publicar.' });
+  }
 
   try {
+    // O autor vem da sessão, nunca do que o navegador mandou: senão qualquer
+    // um poderia publicar no nome de outra pessoa.
     const result = await pool.query(
       `INSERT INTO posts (usuario_id, conteudo, created_at)
        VALUES ($1, $2, NOW())
        RETURNING *`,
-      [usuario_id || 'anonimo', conteudo]
+      [req.usuario.username, String(conteudo).trim().slice(0, 2000)]
     );
     res.json({ post: result.rows[0] });
   } catch (error) {
@@ -237,6 +375,16 @@ cron.schedule('0 * * * *', async () => {
     console.log('✅ Cache atualizado:', response.data.message);
   } catch (error) {
     console.error('❌ Erro no cron:', error.message);
+  }
+});
+
+// Sessoes vencidas nao servem para nada e so ocupam espaco.
+cron.schedule('0 4 * * *', async () => {
+  try {
+    const r = await pool.query('DELETE FROM sessoes WHERE expira_em < NOW()');
+    if (r.rowCount > 0) console.log(`🧹 ${r.rowCount} sessões expiradas removidas`);
+  } catch (erro) {
+    console.error('❌ Erro ao limpar sessões:', erro.message);
   }
 });
 

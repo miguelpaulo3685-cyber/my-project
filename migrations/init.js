@@ -58,8 +58,32 @@ async function runMigrations() {
       );
 
       CREATE INDEX IF NOT EXISTS idx_usuarios_username ON usuarios(username);
+
+      -- Nunca guardamos a senha: apenas o hash scrypt, que nao pode ser revertido.
+      -- O nome e apenas exibicao e pode repetir: duas pessoas podem se chamar
+      -- Matheus. Quem identifica a conta e o e-mail, esse sim unico.
+      ALTER TABLE usuarios DROP CONSTRAINT IF EXISTS usuarios_username_key;
+
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS senha_hash TEXT;
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS email_verificado BOOLEAN DEFAULT FALSE;
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ultimo_acesso TIMESTAMP;
     `);
     console.log('✅ Tabela usuarios criada');
+
+    // Sessões: guardamos o hash do token, não o token. Assim, quem ler o banco
+    // não consegue se passar por ninguém.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS sessoes (
+        token_hash TEXT PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        criada_em TIMESTAMP DEFAULT NOW(),
+        expira_em TIMESTAMP NOT NULL
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_sessoes_usuario ON sessoes(usuario_id);
+      CREATE INDEX IF NOT EXISTS idx_sessoes_expira ON sessoes(expira_em);
+    `);
+    console.log('✅ Tabela sessoes criada');
 
     // Tabela de histórico de cache
     await pool.query(`
