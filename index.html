@@ -185,17 +185,10 @@
     button.acao.pequena { padding: 8px 16px; font-size: .85rem; }
 
     /* ===================== QUESTÃO ===================== */
-    .barra-questao {
-      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-      margin-bottom: 22px;
-    }
-    .tag {
       background: var(--marca-suave); color: var(--marca-forte);
       padding: 6px 14px; border-radius: 20px;
       font-size: .8rem; font-weight: 700;
     }
-    .contador { margin-left: auto; font-weight: 700; font-size: .95rem; }
-    .contador span { color: var(--texto-fraco); font-weight: 600; }
 
     .painel {
       background: var(--superficie); border: 1px solid var(--borda);
@@ -257,6 +250,95 @@
       background: rgba(245,158,11,.11); border-left: 3px solid var(--aviso);
       padding: 16px 18px; border-radius: 10px; margin-bottom: 20px;
       font-size: .92rem; line-height: 1.65;
+    }
+
+    /* ===================== BARRA DO BLOCO ===================== */
+    .barra-bloco {
+      position: sticky; top: 62px; z-index: 40;
+      background: var(--superficie); border-bottom: 1px solid var(--borda);
+      margin: -32px -20px 24px; padding: 12px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .btn-sair {
+      background: var(--superficie-2); border: 1px solid var(--borda);
+      color: var(--texto); cursor: pointer; font-family: inherit;
+      width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .btn-sair:hover { border-color: var(--errado); color: var(--errado); }
+
+    .cronometro {
+      font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.05rem;
+      min-width: 58px;
+    }
+
+    .trilho {
+      flex: 1; height: 9px; border-radius: 99px;
+      background: var(--superficie-2); overflow: hidden;
+      border: 1px solid var(--borda);
+    }
+    .trilho i { display: block; height: 100%; background: var(--marca); transition: width .35s; }
+    .passo { font-weight: 800; font-size: .95rem; white-space: nowrap; }
+    .passo span { color: var(--texto-fraco); font-weight: 600; }
+
+    .cabeca-questao { margin-bottom: 18px; }
+    .cabeca-questao .ano { font-size: 1.32rem; font-weight: 800; letter-spacing: -.4px; }
+    .cabeca-questao .materia { color: var(--marca-forte); font-weight: 700; font-size: .96rem; }
+
+    .dica-uso {
+      display: flex; align-items: flex-start; gap: 11px;
+      background: var(--marca-suave); border: 1px solid var(--borda);
+      border-radius: 11px; padding: 13px 15px; margin-bottom: 20px;
+      font-size: .86rem; line-height: 1.55; color: var(--texto-fraco);
+    }
+    .dica-uso b { color: var(--texto); }
+    .dica-uso button {
+      margin-left: auto; background: none; border: none; cursor: pointer;
+      color: var(--texto-fraco); font-size: 1.1rem; font-family: inherit; line-height: 1;
+    }
+
+    /* alternativa eliminada pela pessoa */
+    .alt.riscada { opacity: .42; }
+    .alt.riscada > span:last-child { text-decoration: line-through; }
+    .alt.riscada .letra { background: var(--texto-fraco); }
+    .alt.segurando { transform: scale(.985); border-color: var(--aviso); }
+
+    /* ===================== RESULTADO DO BLOCO ===================== */
+    .placar-final { text-align: center; padding: 20px 0 10px; }
+    .placar-final .simbolo { font-size: 3rem; display: block; margin-bottom: 12px; }
+    .placar-final h2 { font-size: 1.85rem; font-weight: 800; letter-spacing: -.5px; margin-bottom: 7px; }
+    .placar-final .frase { color: var(--texto-fraco); font-size: 1rem; margin-bottom: 4px; }
+    .placar-final .risco { width: 96px; height: 4px; border-radius: 4px; background: var(--marca); margin: 16px auto 30px; }
+
+    .rotulo-acertos {
+      text-transform: uppercase; letter-spacing: 3px;
+      font-size: .76rem; color: var(--texto-fraco); font-weight: 700; margin-bottom: 14px;
+    }
+    .estrelas { display: flex; justify-content: center; gap: 12px; margin-bottom: 34px; }
+    .estrelas i { font-size: 1.9rem; font-style: normal; opacity: .28; transition: opacity .3s, transform .3s; }
+    .estrelas i.acesa { opacity: 1; transform: scale(1.12); }
+
+    .cartoes-final {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 16px; max-width: 520px; margin: 0 auto 30px;
+    }
+    .cartao-final {
+      background: var(--superficie); border: 1px solid var(--borda);
+      border-radius: var(--raio); padding: 22px 18px; text-align: center;
+    }
+    .cartao-final .icone { font-size: 1.7rem; display: block; margin-bottom: 9px; }
+    .cartao-final .valor { font-size: 1.75rem; font-weight: 800; letter-spacing: -1px; }
+    .cartao-final .valor small { font-size: .82rem; font-weight: 700; margin-left: 4px; }
+    .cartao-final .subiu { color: var(--certo); }
+    .cartao-final .desceu { color: var(--errado); }
+    .cartao-final .legenda { font-size: .82rem; color: var(--texto-fraco); margin-top: 5px; }
+
+    .botoes-final { max-width: 420px; margin: 0 auto; display: grid; gap: 11px; }
+    .botoes-final button { width: 100%; padding: 14px; font-size: 1rem; }
+
+    .rodape-aviso {
+      max-width: 560px; margin: 28px auto 0; text-align: center;
+      font-size: .8rem; color: var(--texto-fraco); line-height: 1.6;
     }
 
     /* ===================== CONTA ===================== */
@@ -361,12 +443,46 @@
 
   <!-- ===================== QUESTÃO ===================== -->
   <main class="pagina escondido" id="tela-questao">
-    <div class="barra-questao">
-      <button class="acao discreta pequena" onclick="irPara('treinar')">← Voltar</button>
-      <span class="tag" id="tag-questao"></span>
-      <span class="contador" id="contador"></span>
+    <div class="barra-bloco">
+      <button class="btn-sair" onclick="encerrarBloco()" title="Sair do bloco">✕</button>
+      <span class="cronometro" id="cronometro">0:00</span>
+      <div class="trilho"><i id="trilho-barra" style="width:0%"></i></div>
+      <span class="passo" id="passo">0<span>/5</span></span>
     </div>
     <div class="painel" id="painel-questao"></div>
+  </main>
+
+  <!-- ===================== RESULTADO DO BLOCO ===================== -->
+  <main class="pagina escondido" id="tela-resultado">
+    <div class="placar-final">
+      <span class="simbolo" id="res-simbolo">📊</span>
+      <h2 id="res-titulo"></h2>
+      <p class="frase" id="res-frase"></p>
+      <div class="risco"></div>
+
+      <div class="rotulo-acertos">Acertos</div>
+      <div class="estrelas" id="res-estrelas"></div>
+
+      <div class="cartoes-final">
+        <div class="cartao-final">
+          <span class="icone">📚</span>
+          <div class="valor" id="res-nota"></div>
+          <div class="legenda">Aproveitamento</div>
+        </div>
+        <div class="cartao-final">
+          <span class="icone">⏱️</span>
+          <div class="valor" id="res-tempo"></div>
+          <div class="legenda">Tempo por questão</div>
+        </div>
+      </div>
+
+      <div class="botoes-final">
+        <button class="acao" onclick="abrirMateria(materiaAtual)">Novo bloco</button>
+        <button class="acao discreta" onclick="irPara('treinar')">Voltar para o início</button>
+      </div>
+
+      <p class="rodape-aviso" id="res-aviso"></p>
+    </div>
   </main>
 
   <!-- ===================== FEED ===================== -->
@@ -431,7 +547,6 @@ const CHAVE_PROGRESSO = 'mm_progresso';
 let usuarioLogado = null;
 let modoConta = 'entrar';
 let materiaAtual = null;
-let fila = [];
 let questaoAtual = null;
 let respondida = false;
 let progresso = {};
@@ -477,11 +592,13 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'feed', 'conta'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'feed', 'conta'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
-  document.getElementById('aba-treinar').classList.toggle('ativa', tela === 'treinar' || tela === 'questao');
+  const treinando = ['treinar', 'questao', 'resultado'].includes(tela);
+  document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed');
+  if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
   if (tela === 'treinar') desenharAreas();
   if (tela === 'feed') abrirFeed();
@@ -546,90 +663,208 @@ function nomeDaArea(id) {
   return (AREAS.find(a => a.id === id) || {}).nome || id;
 }
 
-function atualizarContador() {
-  const p = progresso[materiaAtual] || { feitas: 0, acertos: 0 };
-  document.getElementById('contador').innerHTML =
-    `${p.acertos} <span>de ${p.feitas}</span>`;
+const LETRAS = ['A', 'B', 'C', 'D', 'E'];
+const POR_BLOCO = 5;
+
+let bloco = null;
+let eliminadas = new Set();
+let timerCronometro = null;
+let mostrouDica = false;
+
+// ---------- cronômetro ----------
+function formatarTempo(segundos) {
+  const m = Math.floor(segundos / 60);
+  const s = segundos % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+function iniciarCronometro() {
+  pararCronometro();
+  timerCronometro = setInterval(() => {
+    if (!bloco) return;
+    const seg = Math.floor((Date.now() - bloco.inicio) / 1000);
+    document.getElementById('cronometro').textContent = formatarTempo(seg);
+  }, 1000);
+}
+
+function pararCronometro() {
+  if (timerCronometro) { clearInterval(timerCronometro); timerCronometro = null; }
+}
+
+function atualizarTrilho() {
+  const feitas = bloco.respostas.length;
+  document.getElementById('trilho-barra').style.width = (feitas / bloco.questoes.length * 100) + '%';
+  document.getElementById('passo').innerHTML = `${feitas}<span>/${bloco.questoes.length}</span>`;
+}
+
+// ---------- bloco ----------
 async function abrirMateria(area) {
   materiaAtual = area;
-  fila = [];
-  document.getElementById('tag-questao').textContent = nomeDaArea(area);
-  atualizarContador();
   irPara('questao');
-  document.getElementById('painel-questao').innerHTML =
-    `<div class="vazio"><span class="cara">⏳</span>Carregando questões…<br>
-     <small>Se o servidor estiver dormindo, pode levar até 1 minuto.</small></div>`;
-  await proximaQuestao();
-}
 
-async function proximaQuestao() {
   const painel = document.getElementById('painel-questao');
+  painel.innerHTML = `<div class="vazio"><span class="cara">⏳</span>Montando seu bloco…<br>
+    <small>Se o servidor estiver dormindo, pode levar até 1 minuto.</small></div>`;
+  document.getElementById('cronometro').textContent = '0:00';
+  document.getElementById('trilho-barra').style.width = '0%';
+  document.getElementById('passo').innerHTML = `0<span>/${POR_BLOCO}</span>`;
 
-  if (fila.length === 0) {
-    try {
-      const r = await fetch(`${API_URL}/api/questoes/${materiaAtual}`);
-      if (r.status === 404) {
-        painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>
-          Ainda não há questões de ${escapar(nomeDaArea(materiaAtual))} no banco.</div>`;
-        return;
-      }
-      if (!r.ok) throw new Error('A API respondeu ' + r.status);
-      fila = (await r.json()).questoes || [];
-    } catch (e) {
-      painel.innerHTML = `<div class="vazio"><span class="cara">🔌</span>
-        Não consegui falar com a API.<br><small>${escapar(e.message)}</small></div>`;
+  let questoes = [];
+  try {
+    const r = await fetch(`${API_URL}/api/questoes/${area}`);
+    if (r.status === 404) {
+      painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>
+        Ainda não há questões de ${escapar(nomeDaArea(area))} no banco.</div>`;
       return;
     }
-  }
-
-  questaoAtual = fila.shift();
-  if (!questaoAtual) {
-    painel.innerHTML = `<div class="vazio"><span class="cara">✅</span>Acabaram as questões desta rodada.<br>
-      <button class="acao" style="margin-top:16px" onclick="abrirMateria('${materiaAtual}')">Buscar mais</button></div>`;
+    if (!r.ok) throw new Error('A API respondeu ' + r.status);
+    questoes = (await r.json()).questoes || [];
+  } catch (e) {
+    painel.innerHTML = `<div class="vazio"><span class="cara">🔌</span>
+      Não consegui falar com a API.<br><small>${escapar(e.message)}</small></div>`;
     return;
   }
 
-  respondida = false;
+  if (questoes.length === 0) {
+    painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>Nenhuma questão veio da API.</div>`;
+    return;
+  }
+
+  bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now() };
+  atualizarTrilho();
+  iniciarCronometro();
+  desenharQuestao();
+}
+
+function encerrarBloco() {
+  if (bloco && bloco.respostas.length > 0 && bloco.respostas.length < bloco.questoes.length) {
+    if (!confirm('Sair agora encerra o bloco. Tem certeza?')) return;
+  }
+  pararCronometro();
+  bloco = null;
+  irPara('treinar');
+}
+
+function proximaQuestao() {
+  bloco.indice++;
+  if (bloco.indice >= bloco.questoes.length) return mostrarResultado();
+  bloco.inicioQuestao = Date.now();
   desenharQuestao();
 }
 
 function desenharQuestao() {
-  const q = questaoAtual;
-  const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
-  const letras = ['A', 'B', 'C', 'D', 'E'];
+  const q = bloco.questoes[bloco.indice];
+  questaoAtual = q;
+  respondida = false;
+  eliminadas = new Set();
 
-  document.getElementById('tag-questao').textContent = `${nomeDaArea(materiaAtual)} · ENEM ${q.ano}`;
+  const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
+
+  const dica = mostrouDica ? '' : `
+    <div class="dica-uso" id="dica-uso">
+      <span>💡</span>
+      <span><b>Dica:</b> segure o clique numa alternativa (ou clique com o botão direito)
+      para riscá-la e ir eliminando as que você descartou.</span>
+      <button onclick="fecharDica()" title="Fechar">✕</button>
+    </div>`;
+
   document.getElementById('painel-questao').innerHTML = `
+    <div class="cabeca-questao">
+      <div class="ano">ENEM ${escapar(q.ano)}</div>
+      <div class="materia">${escapar(nomeDaArea(materiaAtual))}</div>
+    </div>
+    ${dica}
     <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
-    <div>${alternativas.map((t, i) => `
-      <button class="alt" id="alt-${i}" onclick="responder(${i})">
-        <span class="letra">${letras[i] || i + 1}</span>
+    <div id="lista-alts">${alternativas.map((t, i) => `
+      <button class="alt" id="alt-${i}"
+        onmousedown="pressionar(event, ${i})" onmouseup="soltar(event, ${i})"
+        onmouseleave="cancelarPressao()" oncontextmenu="return riscarPeloMenu(event, ${i})"
+        ontouchstart="pressionar(event, ${i})" ontouchend="soltar(event, ${i})"
+        ontouchcancel="cancelarPressao()">
+        <span class="letra">${LETRAS[i] || i + 1}</span>
         <span>${escapar(t)}</span>
       </button>`).join('')}</div>
     <div id="area-resultado"></div>`;
+
+  bloco.inicioQuestao = Date.now();
 }
 
+function fecharDica() {
+  mostrouDica = true;
+  document.getElementById('dica-uso')?.remove();
+}
+
+// ---------- eliminar alternativas ----------
+let timerPressao = null;
+let riscouAgora = false;
+
+function pressionar(evento, i) {
+  if (respondida) return;
+  if (evento.button === 2) return; // botão direito tem tratamento próprio
+  riscouAgora = false;
+  document.getElementById('alt-' + i)?.classList.add('segurando');
+  timerPressao = setTimeout(() => {
+    riscouAgora = true;
+    alternarRiscada(i);
+    if (navigator.vibrate) navigator.vibrate(35);
+  }, 450);
+}
+
+function soltar(evento, i) {
+  cancelarPressao();
+  if (respondida) return;
+  // o botao direito so risca, pelo oncontextmenu; sem isso o mouseup dele
+  // cairia aqui e responderia a questao sem querer
+  if (evento.button === 2) return;
+  // um toque curto responde; se já virou risco, não conta como resposta
+  if (riscouAgora) { riscouAgora = false; return; }
+  if (eliminadas.has(i)) { alternarRiscada(i); return; } // clique em riscada desfaz
+  responder(i);
+}
+
+function cancelarPressao() {
+  if (timerPressao) { clearTimeout(timerPressao); timerPressao = null; }
+  document.querySelectorAll('.alt.segurando').forEach(e => e.classList.remove('segurando'));
+}
+
+function riscarPeloMenu(evento, i) {
+  evento.preventDefault();
+  if (!respondida) alternarRiscada(i);
+  return false;
+}
+
+function alternarRiscada(i) {
+  const alvo = document.getElementById('alt-' + i);
+  if (!alvo) return;
+  if (eliminadas.has(i)) { eliminadas.delete(i); alvo.classList.remove('riscada'); }
+  else { eliminadas.add(i); alvo.classList.add('riscada'); }
+}
+
+// ---------- responder ----------
 function responder(escolhida) {
   if (respondida) return;
   respondida = true;
+  cancelarPressao();
 
-  const correta = questaoAtual.correta;
-  const acertou = escolhida === correta;
+  const q = bloco.questoes[bloco.indice];
+  const acertou = escolhida === q.correta;
+  const segundos = Math.max(1, Math.round((Date.now() - bloco.inicioQuestao) / 1000));
 
+  bloco.respostas.push({ acertou, segundos });
   anotarResposta(materiaAtual, acertou);
-  atualizarContador();
+  atualizarTrilho();
   if (acertou) soltarConfete();
 
   document.querySelectorAll('.alt').forEach(b => b.disabled = true);
-  document.getElementById('alt-' + correta)?.classList.add('certa');
+  document.getElementById('alt-' + q.correta)?.classList.add('certa');
   if (!acertou) document.getElementById('alt-' + escolhida)?.classList.add('errada');
 
-  const letra = ['A', 'B', 'C', 'D', 'E'][correta] || (correta + 1);
+  const letra = LETRAS[q.correta] || (q.correta + 1);
   const r = acertou
     ? { classe: 'bom', cara: '🎉', manchete: 'Acertou!', linha: 'Parabéns, mandou muito bem!' }
     : { classe: 'mau', cara: '💪', manchete: 'Errou, que pena!', linha: 'Continue tentando, você chega lá!' };
+
+  const ultima = bloco.indice === bloco.questoes.length - 1;
 
   document.getElementById('area-resultado').innerHTML = `
     <div class="resultado ${r.classe}">
@@ -642,9 +877,56 @@ function responder(escolhida) {
       A explicação de cada alternativa ainda não está disponível: a fonte das questões
       fornece o gabarito, mas não a justificativa.
     </div>
-    <button class="acao" onclick="proximaQuestao()">Próxima questão →</button>`;
+    <button class="acao" onclick="proximaQuestao()">
+      ${ultima ? 'Ver resultado →' : 'Próxima questão →'}
+    </button>`;
 
   document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ---------- resultado do bloco ----------
+function mostrarResultado() {
+  pararCronometro();
+
+  const total = bloco.respostas.length;
+  const acertos = bloco.respostas.filter(r => r.acertou).length;
+  const segundos = bloco.respostas.reduce((s, r) => s + r.segundos, 0);
+  const media = total ? Math.round(segundos / total) : 0;
+  const percentual = total ? Math.round(acertos / total * 100) : 0;
+  const nome = usuarioLogado ? usuarioLogado.username : null;
+
+  let simbolo, titulo, frase;
+  if (percentual >= 80) {
+    simbolo = '🏆';
+    titulo = nome ? `Mandou bem, ${nome}!` : 'Mandou bem!';
+    frase = 'Esse é o caminho — continue assim!';
+  } else if (percentual >= 40) {
+    simbolo = '📈';
+    titulo = nome ? `Bom trabalho, ${nome}!` : 'Bom trabalho!';
+    frase = 'Você está evoluindo. Mais um bloco?';
+  } else {
+    simbolo = '📊';
+    titulo = nome ? `Não desanime, ${nome}!` : 'Não desanime!';
+    frase = 'A prática leva à perfeição!';
+  }
+
+  document.getElementById('res-simbolo').textContent = simbolo;
+  document.getElementById('res-titulo').textContent = titulo;
+  document.getElementById('res-frase').textContent = frase;
+
+  document.getElementById('res-estrelas').innerHTML =
+    Array.from({ length: bloco.questoes.length }, (_, i) =>
+      `<i class="${i < acertos ? 'acesa' : ''}">${i < acertos ? '⭐' : '☆'}</i>`).join('');
+
+  document.getElementById('res-nota').innerHTML =
+    `${percentual}%<small class="${percentual >= 50 ? 'subiu' : 'desceu'}">${acertos}/${total}</small>`;
+  document.getElementById('res-tempo').textContent = formatarTempo(media);
+
+  document.getElementById('res-aviso').textContent =
+    'O aproveitamento é a conta simples de acertos sobre questões. Não é a nota do TRI, ' +
+    'que depende de parâmetros estatísticos de cada questão que a fonte não fornece.';
+
+  irPara('resultado');
 }
 
 function soltarConfete() {
