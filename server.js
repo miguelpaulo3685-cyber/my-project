@@ -16,7 +16,9 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  // No plano gratuito o Neon hiberna e leva alguns segundos para acordar.
+  // Com 2s a primeira consulta depois de um tempo parado sempre falhava.
+  connectionTimeoutMillis: 20000,
 });
 
 // Middleware
