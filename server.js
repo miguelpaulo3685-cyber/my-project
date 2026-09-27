@@ -172,6 +172,52 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
+// ================== NÍVEL DE DIFICULDADE ==================
+// A fonte das questões não informa dificuldade, então ela é medida aqui:
+// quanto menor a proporção de acertos, mais difícil. Abaixo de RESPOSTAS_MINIMAS
+// a amostra é pequena demais para afirmar qualquer coisa, e o nível fica nulo.
+const RESPOSTAS_MINIMAS = 5;
+
+function calcularNivel(totalRespostas, taxaAcerto) {
+  if (totalRespostas < RESPOSTAS_MINIMAS) return null;
+  if (taxaAcerto >= 0.75) return 1; // Fácil
+  if (taxaAcerto >= 0.50) return 2; // Médio
+  if (taxaAcerto >= 0.25) return 3; // Difícil
+  return 4;                         // Desafio
+}
+
+app.post('/api/responder', async (req, res) => {
+  const { questao_id, acertou, segundos } = req.body || {};
+  if (!Number.isInteger(questao_id) || typeof acertou !== 'boolean') {
+    return res.status(400).json({ error: 'Informe questao_id e acertou.' });
+  }
+
+  try {
+    await pool.query(
+      'INSERT INTO respostas (questao_id, usuario_id, acertou, segundos) VALUES ($1, $2, $3, $4)',
+      [questao_id, req.usuario ? req.usuario.id : null, acertou,
+       Number.isInteger(segundos) ? Math.min(segundos, 3600) : null]
+    );
+
+    const { rows } = await pool.query(
+      `SELECT COUNT(*)::int AS total,
+              AVG(CASE WHEN acertou THEN 1.0 ELSE 0 END)::float AS taxa
+         FROM respostas WHERE questao_id = $1`,
+      [questao_id]
+    );
+
+    res.json({
+      registrado: true,
+      total_respostas: rows[0].total,
+      nivel: calcularNivel(rows[0].total, rows[0].taxa)
+    });
+  } catch (erro) {
+    if (erro.code === '23503') return res.status(404).json({ error: 'Questão não encontrada.' });
+    console.error('Erro ao registrar resposta:', erro.message);
+    res.status(500).json({ error: 'Não consegui registrar a resposta.' });
+  }
+});
+
 // ================== QUESTÕES - GET CACHE ==================
 app.get('/api/questoes/:area', async (req, res) => {
   const { area } = req.params;
@@ -186,14 +232,24 @@ app.get('/api/questoes/:area', async (req, res) => {
   if (!disciplina) return res.status(400).json({ error: 'Área inválida' });
 
   try {
-    // Busca 5 questões do cache do Neon
+    // Junta as respostas já dadas para calcular o nível de cada questão.
     const result = await pool.query(
-      `SELECT * FROM questoes
-       WHERE disciplina = $1
-       ORDER BY RANDOM()
-       LIMIT 5`,
+      `SELECT q.*,
+              COUNT(r.id)::int AS total_respostas,
+              COALESCE(AVG(CASE WHEN r.acertou THEN 1.0 ELSE 0 END), 0)::float AS taxa_acerto
+         FROM questoes q
+         LEFT JOIN respostas r ON r.questao_id = q.id
+        WHERE q.disciplina = $1
+        GROUP BY q.id
+        ORDER BY RANDOM()
+        LIMIT 5`,
       [disciplina]
     );
+
+    result.rows.forEach(q => {
+      q.nivel = calcularNivel(q.total_respostas, q.taxa_acerto);
+      delete q.taxa_acerto; // não expõe o gabarito indireto de quem acerta
+    });
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Nenhuma questão em cache. Atualizando...' });

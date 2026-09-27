@@ -281,9 +281,34 @@
     .passo { font-weight: 800; font-size: .95rem; white-space: nowrap; }
     .passo span { color: var(--texto-fraco); font-weight: 600; }
 
-    .cabeca-questao { margin-bottom: 18px; }
+    .cabeca-questao {
+      margin-bottom: 18px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
+    }
     .cabeca-questao .ano { font-size: 1.32rem; font-weight: 800; letter-spacing: -.4px; }
     .cabeca-questao .materia { color: var(--marca-forte); font-weight: 700; font-size: .96rem; }
+
+    .nivel {
+      flex-shrink: 0; border-radius: 10px; padding: 7px 13px;
+      font-size: .8rem; font-weight: 800; line-height: 1.3; text-align: center;
+      border: 1px solid transparent; white-space: nowrap;
+    }
+    .nivel small { display: block; font-size: .68rem; font-weight: 700; opacity: .85; }
+    .nivel.n1 { background: rgba(34,197,94,.15);  color: var(--certo);  border-color: rgba(34,197,94,.4); }
+    .nivel.n2 { background: rgba(59,130,246,.15); color: #3b82f6;       border-color: rgba(59,130,246,.4); }
+    .nivel.n3 { background: rgba(245,158,11,.15); color: var(--aviso);  border-color: rgba(245,158,11,.4); }
+    .nivel.n4 { background: rgba(239,68,68,.15);  color: var(--errado); border-color: rgba(239,68,68,.45); }
+    .nivel.novo { background: var(--superficie-2); color: var(--texto-fraco); border-color: var(--borda); }
+
+    /* o desafio merece destaque na tela */
+    .faixa-desafio {
+      display: flex; align-items: center; gap: 11px;
+      background: rgba(239,68,68,.11); border: 1px solid rgba(239,68,68,.32);
+      border-radius: 12px; padding: 13px 16px; margin-bottom: 18px;
+      font-size: .92rem; font-weight: 700; color: var(--errado);
+      animation: surgir .4s ease;
+    }
+    .faixa-desafio span:last-child { font-weight: 600; opacity: .9; }
 
     .dica-uso {
       display: flex; align-items: flex-start; gap: 11px;
@@ -666,6 +691,17 @@ function nomeDaArea(id) {
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 const POR_BLOCO = 5;
 
+// O nível vem do servidor, calculado pela proporção de acertos de quem já
+// respondeu. Questão nova ainda não tem gente suficiente para classificar.
+const NIVEIS = {
+  1: { classe: 'n1', selo: 'Nv 1', nome: 'Fácil',   ajuda: 'A maioria acerta esta questão.' },
+  2: { classe: 'n2', selo: 'Nv 2', nome: 'Médio',   ajuda: 'Cerca de metade acerta.' },
+  3: { classe: 'n3', selo: 'Nv 3', nome: 'Difícil', ajuda: 'Poucos acertam esta.' },
+  4: { classe: 'n4', selo: 'Nv 4', nome: 'Desafio', ajuda: 'Menos de um quarto acerta.' },
+  novo: { classe: 'novo', selo: 'Nova', nome: 'sem nível',
+          ajuda: 'Ainda não há respostas suficientes para medir a dificuldade.' }
+};
+
 let bloco = null;
 let eliminadas = new Set();
 let timerCronometro = null;
@@ -760,7 +796,8 @@ function desenharQuestao() {
 
   const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
 
-  const dica = mostrouDica ? '' : `
+  // só na primeira questão do bloco, e nunca mais depois de fechada
+  const dica = (mostrouDica || bloco.indice > 0) ? '' : `
     <div class="dica-uso" id="dica-uso">
       <span>💡</span>
       <span><b>Dica:</b> segure o clique numa alternativa (ou clique com o botão direito)
@@ -768,11 +805,24 @@ function desenharQuestao() {
       <button onclick="fecharDica()" title="Fechar">✕</button>
     </div>`;
 
+  const n = NIVEIS[q.nivel] || NIVEIS.novo;
+  const desafio = q.nivel === 4 ? `
+    <div class="faixa-desafio">
+      <span>🔥</span>
+      <span>Questão desafio — pouca gente acerta esta. Capricha!</span>
+    </div>` : '';
+
   document.getElementById('painel-questao').innerHTML = `
     <div class="cabeca-questao">
-      <div class="ano">ENEM ${escapar(q.ano)}</div>
-      <div class="materia">${escapar(nomeDaArea(materiaAtual))}</div>
+      <div>
+        <div class="ano">ENEM ${escapar(q.ano)}</div>
+        <div class="materia">${escapar(nomeDaArea(materiaAtual))}</div>
+      </div>
+      <span class="nivel ${n.classe}" title="${escapar(n.ajuda)}">
+        ${n.selo}<small>${n.nome}</small>
+      </span>
     </div>
+    ${desafio}
     ${dica}
     <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
     <div id="lista-alts">${alternativas.map((t, i) => `
@@ -854,6 +904,7 @@ function responder(escolhida) {
   anotarResposta(materiaAtual, acertou);
   atualizarTrilho();
   if (acertou) soltarConfete();
+  registrarResposta(q.id, acertou, segundos);
 
   document.querySelectorAll('.alt').forEach(b => b.disabled = true);
   document.getElementById('alt-' + q.correta)?.classList.add('certa');
@@ -882,6 +933,18 @@ function responder(escolhida) {
     </button>`;
 
   document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Manda a resposta para o servidor, que usa o conjunto de todas para medir a
+// dificuldade. Falhar aqui não pode atrapalhar quem está estudando, então o
+// erro só vai para o console.
+function registrarResposta(questaoId, acertou, segundos) {
+  if (!Number.isInteger(questaoId)) return;
+  fetch(`${API_URL}/api/responder`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+    body: JSON.stringify({ questao_id: questaoId, acertou, segundos })
+  }).catch(e => console.warn('Não registrei a resposta:', e.message));
 }
 
 // ---------- resultado do bloco ----------

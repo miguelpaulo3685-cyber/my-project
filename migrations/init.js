@@ -85,6 +85,24 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela sessoes criada');
 
+    // Cada resposta dada no site. É daqui que sai o nível de dificuldade:
+    // a fonte das questões não informa se são fáceis ou difíceis, então
+    // medimos pela proporção de quem acerta.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS respostas (
+        id SERIAL PRIMARY KEY,
+        questao_id INT NOT NULL REFERENCES questoes(id) ON DELETE CASCADE,
+        usuario_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        acertou BOOLEAN NOT NULL,
+        segundos INT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_respostas_questao ON respostas(questao_id);
+      CREATE INDEX IF NOT EXISTS idx_respostas_usuario ON respostas(usuario_id);
+    `);
+    console.log('✅ Tabela respostas criada');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
