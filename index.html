@@ -1,334 +1,392 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-tema="escuro">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Estudos ENEM</title>
+  <meta name="color-scheme" content="dark light">
+  <title>M&M Estudos — ENEM</title>
   <style>
+    /* ===================== TEMAS ===================== */
+    :root {
+      --marca: #6d5efc;
+      --marca-forte: #8b7cff;
+      --marca-suave: rgba(109, 94, 252, 0.13);
+      --certo: #22c55e;
+      --errado: #ef4444;
+      --aviso: #f59e0b;
+      --raio: 16px;
+      --sombra: 0 4px 24px rgba(0,0,0,.10);
+      --fonte: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+    }
+
+    html[data-tema="escuro"] {
+      --fundo: #0d1017;
+      --superficie: #161b26;
+      --superficie-2: #1d2331;
+      --borda: #262d3d;
+      --texto: #e9ecf4;
+      --texto-fraco: #9aa3b8;
+      --sombra: 0 4px 24px rgba(0,0,0,.45);
+    }
+
+    html[data-tema="claro"] {
+      --fundo: #f4f6fb;
+      --superficie: #ffffff;
+      --superficie-2: #f8f9fd;
+      --borda: #e2e6f0;
+      --texto: #151925;
+      --texto-fraco: #6b7488;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: var(--fonte);
+      background: var(--fundo);
+      color: var(--texto);
       min-height: 100vh;
-      padding: 20px 16px;
-      color: #333;
+      transition: background .25s, color .25s;
     }
 
-    .container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 32px 24px;
+    /* ===================== TOPO ===================== */
+    .topo {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--superficie);
+      border-bottom: 1px solid var(--borda);
+      padding: 0 20px;
+    }
+    .topo-interno {
+      max-width: 1120px; margin: 0 auto;
+      display: flex; align-items: center; gap: 18px;
+      min-height: 62px; flex-wrap: wrap;
     }
 
-    h1 { margin-bottom: 16px; text-align: center; font-size: 1.6rem; }
-
-    .status {
-      text-align: center;
-      padding: 12px;
-      background: #f0f0f0;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      font-size: 0.9rem;
+    .marca {
+      font-size: 1.12rem; font-weight: 800; letter-spacing: -.3px;
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
     }
-    .status.ok { background: #d4edda; color: #155724; }
-    .status.error { background: #f8d7da; color: #721c24; }
-
-    .grade {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
+    .marca .selo {
+      width: 30px; height: 30px; border-radius: 9px;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: .95rem;
     }
+    .marca em { color: var(--marca-forte); font-style: normal; }
 
-    .card {
-      background: #f9f9f9;
-      border-left: 4px solid #667eea;
-      padding: 20px;
-      border-radius: 8px;
+    .abas { display: flex; gap: 4px; margin-right: auto; }
+    .aba {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--texto-fraco); font-family: inherit;
+      font-size: .93rem; font-weight: 600;
+      padding: 9px 15px; border-radius: 10px;
+      display: flex; align-items: center; gap: 7px;
+      transition: background .18s, color .18s;
     }
-    .card h3 { color: #667eea; margin-bottom: 8px; font-size: 1.1rem; }
-    .card p { color: #666; font-size: 0.88rem; margin-bottom: 12px; }
+    .aba:hover { background: var(--superficie-2); color: var(--texto); }
+    .aba.ativa { background: var(--marca-suave); color: var(--marca-forte); }
 
-    button {
-      background: #667eea;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
+    .indicadores { display: flex; align-items: center; gap: 14px; }
+    .indicador {
+      display: flex; align-items: center; gap: 6px;
+      font-weight: 700; font-size: .92rem;
+    }
+    .indicador span { color: var(--texto-fraco); font-weight: 600; font-size: .82rem; }
+
+    .btn-icone {
+      background: var(--superficie-2); border: 1px solid var(--borda);
+      color: var(--texto); cursor: pointer;
+      width: 38px; height: 38px; border-radius: 11px;
+      font-size: 1.05rem; display: flex; align-items: center; justify-content: center;
+      transition: border-color .18s, transform .18s;
+    }
+    .btn-icone:hover { border-color: var(--marca); transform: translateY(-1px); }
+
+    .avatar {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte));
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .95rem; cursor: pointer; border: none;
       font-family: inherit;
     }
-    button:hover { background: #764ba2; }
-    button:disabled { opacity: 0.5; cursor: default; }
 
-    .escondido { display: none; }
+    /* ===================== LAYOUT ===================== */
+    .pagina { max-width: 1120px; margin: 0 auto; padding: 32px 20px 60px; }
+    .escondido { display: none !important; }
 
-    /* ---------- Tela da questão ---------- */
-    .barra-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid #eee;
+    .cabecalho-secao { margin-bottom: 26px; }
+    .cabecalho-secao h1 {
+      font-size: 1.75rem; font-weight: 800; letter-spacing: -.5px;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
     }
-    .btn-voltar { background: #888; }
-    .placar { font-weight: 600; color: #667eea; font-size: 0.95rem; }
+    .cabecalho-secao p { color: var(--texto-fraco); font-size: .95rem; }
 
-    .etiqueta {
-      display: inline-block;
-      background: #667eea;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      margin-bottom: 14px;
+    .faixa-status {
+      display: flex; align-items: center; gap: 9px;
+      background: var(--superficie); border: 1px solid var(--borda);
+      border-radius: 12px; padding: 11px 15px; margin-bottom: 24px;
+      font-size: .88rem; color: var(--texto-fraco);
+    }
+    .bolinha { width: 9px; height: 9px; border-radius: 50%; background: var(--texto-fraco); flex-shrink: 0; }
+    .bolinha.ok { background: var(--certo); box-shadow: 0 0 0 4px rgba(34,197,94,.16); }
+    .bolinha.ruim { background: var(--errado); box-shadow: 0 0 0 4px rgba(239,68,68,.16); }
+
+    /* ===================== CARDS DAS ÁREAS ===================== */
+    /* 430px garante no maximo 2 colunas na largura da pagina (1120px),
+       deixando os cards largos em vez de espremer tres numa linha */
+    .grade-areas {
+      display: grid; gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(430px, 1fr));
+    }
+
+    .area {
+      background: var(--superficie);
+      border: 1px solid var(--borda);
+      border-radius: var(--raio);
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .area:hover { transform: translateY(-3px); border-color: var(--marca); box-shadow: var(--sombra); }
+
+    .area-topo {
+      padding: 24px 24px 20px;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+      flex: 1;
+    }
+    .area h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -.4px; margin-bottom: 7px; }
+    .area .sobre { color: var(--texto-fraco); font-size: .89rem; line-height: 1.5; }
+    .area .emblema {
+      width: 54px; height: 54px; border-radius: 14px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.65rem;
+    }
+
+    .area-rodape {
+      border-top: 1px solid var(--borda);
+      background: var(--superficie-2);
+      padding: 15px 24px;
+      display: flex; align-items: center; gap: 22px;
+    }
+    .metrica { line-height: 1.2; }
+    .metrica b { font-size: 1.22rem; font-weight: 800; display: block; }
+    .metrica span { font-size: .74rem; color: var(--texto-fraco); text-transform: uppercase; letter-spacing: .5px; }
+
+    button.acao {
+      margin-left: auto;
+      background: var(--marca); color: #fff;
+      border: none; border-radius: 10px; cursor: pointer;
+      padding: 11px 24px; font-size: .92rem; font-weight: 700;
+      font-family: inherit; transition: background .18s, transform .12s;
+    }
+    button.acao:hover { background: var(--marca-forte); transform: translateY(-1px); }
+    button.acao:disabled { opacity: .55; cursor: default; transform: none; }
+    button.acao.secundaria { background: transparent; color: var(--marca-forte); border: 1px solid var(--marca); }
+    button.acao.secundaria:hover { background: var(--marca-suave); }
+    button.acao.discreta { background: var(--superficie-2); color: var(--texto); border: 1px solid var(--borda); }
+    button.acao.pequena { padding: 8px 16px; font-size: .85rem; }
+
+    /* ===================== QUESTÃO ===================== */
+    .barra-questao {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .tag {
+      background: var(--marca-suave); color: var(--marca-forte);
+      padding: 6px 14px; border-radius: 20px;
+      font-size: .8rem; font-weight: 700;
+    }
+    .contador { margin-left: auto; font-weight: 700; font-size: .95rem; }
+    .contador span { color: var(--texto-fraco); font-weight: 600; }
+
+    .painel {
+      background: var(--superficie); border: 1px solid var(--borda);
+      border-radius: var(--raio); padding: 28px;
     }
 
     .enunciado {
-      line-height: 1.65;
-      margin-bottom: 22px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      font-size: 0.97rem;
+      line-height: 1.75; font-size: 1.02rem;
+      white-space: pre-wrap; word-wrap: break-word;
+      margin-bottom: 26px;
     }
-    .enunciado img { max-width: 100%; height: auto; border-radius: 6px; margin: 10px 0; }
+    .enunciado img { max-width: 100%; height: auto; border-radius: 10px; margin: 14px 0; }
 
-    .alternativa {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      width: 100%;
-      text-align: left;
-      background: #f7f7f9;
-      color: #333;
-      border: 2px solid transparent;
-      padding: 14px 16px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      transition: transform 0.12s, background 0.2s;
-      user-select: none; /* cliques rapidos nao selecionam o texto sem querer */
+    /* alternativas grandes, faceis de acertar no toque */
+    .alt {
+      display: flex; align-items: flex-start; gap: 16px; width: 100%;
+      background: var(--superficie-2); color: var(--texto);
+      border: 2px solid var(--borda); border-radius: 13px;
+      padding: 19px 22px; margin-bottom: 13px;
+      font-size: 1rem; line-height: 1.6; text-align: left;
+      font-family: inherit; cursor: pointer;
+      user-select: none;
+      transition: border-color .18s, background .18s, transform .12s;
     }
-    .alternativa:hover:not(:disabled) { background: #ececf5; transform: translateX(4px); }
-    .alternativa .letra {
-      flex-shrink: 0;
-      width: 28px; height: 28px;
-      background: #667eea;
-      color: white;
-      border-radius: 50%;
+    .alt:hover:not(:disabled) { border-color: var(--marca); transform: translateX(5px); }
+    .alt .letra {
+      flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+      background: var(--marca); color: #fff;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.85rem;
+      font-weight: 800; font-size: .95rem;
     }
-    .alternativa.certa {
-      background: #d4edda;
-      border-color: #28a745;
-      opacity: 1;
-    }
-    .alternativa.certa .letra { background: #28a745; }
-    .alternativa.errada {
-      background: #f8d7da;
-      border-color: #dc3545;
-      opacity: 1;
-    }
-    .alternativa.errada .letra { background: #dc3545; }
+    .alt.certa { border-color: var(--certo); background: rgba(34,197,94,.13); }
+    .alt.certa .letra { background: var(--certo); }
+    .alt.errada { border-color: var(--errado); background: rgba(239,68,68,.13); }
+    .alt.errada .letra { background: var(--errado); }
 
-    /* ---------- Feedback ---------- */
-    .feedback {
-      text-align: center;
-      padding: 24px 16px;
-      border-radius: 12px;
-      margin: 22px 0;
-      animation: surgir 0.45s cubic-bezier(.2,.9,.3,1.4);
+    .resultado {
+      text-align: center; padding: 28px 20px;
+      border-radius: var(--raio); margin: 24px 0;
+      animation: surgir .45s cubic-bezier(.2,.9,.3,1.4);
     }
     @keyframes surgir {
-      from { opacity: 0; transform: scale(0.8) translateY(14px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
+      from { opacity: 0; transform: scale(.85) translateY(16px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
-    .feedback .emoji { font-size: 3.2rem; display: block; margin-bottom: 8px; }
-    .feedback .titulo { font-size: 1.45rem; font-weight: 800; margin-bottom: 4px; }
-    .feedback .frase { font-size: 1rem; opacity: 0.9; }
+    .resultado .cara { font-size: 3.4rem; display: block; margin-bottom: 10px; }
+    .resultado .manchete { font-size: 1.5rem; font-weight: 800; margin-bottom: 5px; }
+    .resultado .linha { font-size: 1rem; opacity: .92; }
 
-    .feedback.acerto { background: linear-gradient(135deg, #d4f5dd, #a8e6b8); color: #14632a; }
-    .feedback.acerto .emoji { animation: pular 0.75s ease infinite alternate; }
-    @keyframes pular {
-      from { transform: translateY(0) rotate(-6deg); }
-      to   { transform: translateY(-12px) rotate(6deg); }
-    }
+    .resultado.bom { background: rgba(34,197,94,.14); border: 1px solid rgba(34,197,94,.35); color: var(--certo); }
+    .resultado.bom .cara { animation: pular .75s ease infinite alternate; }
+    @keyframes pular { from { transform: translateY(0) rotate(-7deg); } to { transform: translateY(-14px) rotate(7deg); } }
 
-    .feedback.erro { background: linear-gradient(135deg, #ffe1e3, #ffc2c7); color: #8a1f28; }
-    .feedback.erro .emoji { animation: balancar 0.5s ease 2; }
-    @keyframes balancar {
-      0%,100% { transform: rotate(0); }
-      25%     { transform: rotate(-12deg); }
-      75%     { transform: rotate(12deg); }
-    }
+    .resultado.mau { background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.32); color: var(--errado); }
+    .resultado.mau .cara { animation: tremer .5s ease 2; }
+    @keyframes tremer { 0%,100%{transform:rotate(0)} 25%{transform:rotate(-13deg)} 75%{transform:rotate(13deg)} }
 
-    .aviso-gabarito {
-      background: #fff8e1;
-      border-left: 4px solid #ffc107;
-      padding: 14px 16px;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      line-height: 1.55;
-      margin-bottom: 18px;
-      color: #6b5200;
+    .nota-gabarito {
+      background: rgba(245,158,11,.11); border-left: 3px solid var(--aviso);
+      padding: 16px 18px; border-radius: 10px; margin-bottom: 20px;
+      font-size: .92rem; line-height: 1.65;
     }
 
-    /* ---------- Confete ---------- */
-    #confete {
-      position: fixed; inset: 0;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 9999;
-    }
-    .papel {
-      position: absolute;
-      width: 10px; height: 16px;
-      opacity: 0.9;
-      animation: cair linear forwards;
-    }
-    @keyframes cair {
-      to { transform: translateY(105vh) rotate(680deg); opacity: 0; }
-    }
-
-    .carregando { text-align: center; padding: 40px 20px; color: #667eea; font-size: 1rem; }
-
-    /* ---------- Conta ---------- */
-    .barra-conta {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 10px; flex-wrap: wrap;
-      background: #f4f4fb; border-radius: 8px;
-      padding: 10px 14px; margin-bottom: 18px;
-      font-size: 0.9rem;
-    }
-    .barra-conta .quem { display: flex; align-items: center; gap: 10px; }
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: #fff; display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.95rem; flex-shrink: 0;
-    }
-    .btn-pequeno { padding: 7px 14px; font-size: 0.82rem; }
-    .btn-fantasma { background: transparent; color: #667eea; border: 1px solid #667eea; }
-    .btn-fantasma:hover { background: #667eea; color: #fff; }
-
-    .form-conta { max-width: 380px; margin: 0 auto; }
-    .form-conta label { display: block; font-size: 0.85rem; font-weight: 600; margin: 14px 0 5px; }
+    /* ===================== CONTA ===================== */
+    .form-conta { max-width: 420px; margin: 0 auto; }
+    .form-conta label { display: block; font-size: .86rem; font-weight: 700; margin: 18px 0 7px; }
     .form-conta input {
-      width: 100%; padding: 11px 13px;
-      border: 2px solid #e2e2ec; border-radius: 7px;
-      font-size: 0.95rem; font-family: inherit;
+      width: 100%; padding: 13px 15px;
+      background: var(--superficie-2); color: var(--texto);
+      border: 2px solid var(--borda); border-radius: 11px;
+      font-size: .98rem; font-family: inherit;
     }
-    .form-conta input:focus { outline: none; border-color: #667eea; }
-    .form-conta button[type=submit] { width: 100%; margin-top: 20px; padding: 12px; font-size: 1rem; }
-    .dica { font-size: 0.78rem; color: #888; margin-top: 4px; }
-    .troca-form { text-align: center; margin-top: 16px; font-size: 0.88rem; color: #666; }
-    .troca-form a { color: #667eea; cursor: pointer; font-weight: 600; text-decoration: underline; }
+    .form-conta input:focus { outline: none; border-color: var(--marca); }
+    .form-conta button[type=submit] { width: 100%; margin-top: 24px; padding: 14px; font-size: 1rem; }
+    .pista { font-size: .79rem; color: var(--texto-fraco); margin-top: 6px; }
+    .alternar { text-align: center; margin-top: 20px; font-size: .9rem; color: var(--texto-fraco); }
+    .alternar a { color: var(--marca-forte); cursor: pointer; font-weight: 700; }
 
-    .recado { padding: 11px 14px; border-radius: 7px; font-size: 0.88rem; margin-top: 16px; line-height: 1.45; }
-    .recado.ruim { background: #f8d7da; color: #721c24; }
-    .recado.bom { background: #d4edda; color: #155724; }
+    .recado { padding: 13px 16px; border-radius: 10px; font-size: .9rem; margin-top: 18px; line-height: 1.5; }
+    .recado.ruim { background: rgba(239,68,68,.13); color: var(--errado); }
+    .recado.bom { background: rgba(34,197,94,.13); color: var(--certo); }
 
-    .caixa-post { width: 100%; padding: 12px; border: 2px solid #e2e2ec; border-radius: 8px;
-      font-family: inherit; font-size: 0.95rem; resize: vertical; min-height: 80px; }
-    .caixa-post:focus { outline: none; border-color: #667eea; }
+    /* ===================== FEED ===================== */
+    .caixa-texto {
+      width: 100%; padding: 15px; min-height: 96px; resize: vertical;
+      background: var(--superficie-2); color: var(--texto);
+      border: 2px solid var(--borda); border-radius: 12px;
+      font-family: inherit; font-size: .97rem; line-height: 1.55;
+    }
+    .caixa-texto:focus { outline: none; border-color: var(--marca); }
 
-    @media (max-width: 520px) {
-      .container { padding: 22px 16px; }
-      h1 { font-size: 1.35rem; }
-      .feedback .emoji { font-size: 2.6rem; }
-      .feedback .titulo { font-size: 1.2rem; }
+    .post {
+      background: var(--superficie); border: 1px solid var(--borda);
+      border-radius: 13px; padding: 19px 22px; margin-bottom: 13px;
+    }
+    .post-autor { display: flex; align-items: center; gap: 11px; margin-bottom: 11px; }
+    .post-autor .bolha {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte));
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .85rem; flex-shrink: 0;
+    }
+    .post-autor b { font-size: .94rem; }
+    .post p { line-height: 1.65; font-size: .96rem; white-space: pre-wrap; word-wrap: break-word; }
+
+    .vazio { text-align: center; padding: 56px 24px; color: var(--texto-fraco); }
+    .vazio .cara { font-size: 2.8rem; display: block; margin-bottom: 14px; }
+
+    /* ===================== CONFETE ===================== */
+    #confete { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
+    .papel { position: absolute; width: 11px; height: 17px; opacity: .92; animation: cair linear forwards; }
+    @keyframes cair { to { transform: translateY(105vh) rotate(700deg); opacity: 0; } }
+
+    @media (max-width: 700px) {
+      .topo-interno { min-height: 56px; gap: 10px; }
+      .abas { order: 3; width: 100%; padding-bottom: 8px; overflow-x: auto; }
+      .marca { font-size: 1rem; margin-right: auto; }
+      .pagina { padding: 22px 16px 50px; }
+      .cabecalho-secao h1 { font-size: 1.4rem; }
+      .grade-areas { grid-template-columns: 1fr; }
+      .painel { padding: 20px 17px; }
+      .alt { padding: 16px 17px; font-size: .96rem; gap: 13px; }
+      .indicador span { display: none; }
     }
   </style>
 </head>
 <body>
   <div id="confete"></div>
 
-  <div class="container">
-    <!-- ================= MENU ================= -->
-    <div id="tela-menu">
-      <h1>📚 Plataforma de Estudos ENEM</h1>
+  <!-- ===================== TOPO ===================== -->
+  <header class="topo">
+    <div class="topo-interno">
+      <div class="marca"><span class="selo">M</span>M&amp;M <em>Estudos</em></div>
 
-      <div class="barra-conta">
-        <div class="quem" id="quem-sou">
-          <span>Você não está conectado</span>
-        </div>
-        <div id="botoes-conta">
-          <button class="btn-pequeno" onclick="abrirConta('entrar')">Entrar</button>
-          <button class="btn-pequeno btn-fantasma" onclick="abrirConta('criar')">Criar conta</button>
-        </div>
-      </div>
+      <nav class="abas">
+        <button class="aba ativa" id="aba-treinar" onclick="irPara('treinar')">🎯 Treinar</button>
+        <button class="aba" id="aba-feed" onclick="irPara('feed')">💬 Feed</button>
+      </nav>
 
-      <div class="status" id="status">Verificando conexão com a API...</div>
-
-      <div class="grade">
-        <div class="card">
-          <h3>🎯 Linguagens e Códigos</h3>
-          <p>Pratique questões de linguagens, redação e interpretação de textos.</p>
-          <button onclick="abrirMateria('linguagens')">Começar →</button>
-        </div>
-        <div class="card">
-          <h3>🌍 Ciências Humanas</h3>
-          <p>Estude história, geografia, sociologia e filosofia.</p>
-          <button onclick="abrirMateria('humanas')">Começar →</button>
-        </div>
-        <div class="card">
-          <h3>🔬 Ciências da Natureza</h3>
-          <p>Explore biologia, química e física.</p>
-          <button onclick="abrirMateria('natureza')">Começar →</button>
-        </div>
-        <div class="card">
-          <h3>🔢 Matemática</h3>
-          <p>Resolva problemas de matemática e suas aplicações.</p>
-          <button onclick="abrirMateria('matematica')">Começar →</button>
-        </div>
-        <div class="card">
-          <h3>💬 Feed de Estudos</h3>
-          <p>Veja dicas e comentários de outros estudantes.</p>
-          <button onclick="abrirFeed()">Ver Posts →</button>
-        </div>
-        <div class="card">
-          <h3>⚙️ Sobre a API</h3>
-          <p>2684 questões reais do ENEM, de 2009 a 2023, no banco Neon.</p>
-          <button onclick="verificarAPI()">Verificar Status →</button>
-        </div>
+      <div class="indicadores">
+        <div class="indicador" title="Questões respondidas">🎯 <b id="ind-feitas">0</b></div>
+        <div class="indicador" title="Acertos">⭐ <b id="ind-acertos">0</b></div>
+        <button class="btn-icone" id="btn-tema" onclick="trocarTema()" title="Alternar tema">🌙</button>
+        <button class="avatar" id="btn-perfil" onclick="cliqueNoPerfil()" title="Conta">?</button>
       </div>
     </div>
+  </header>
 
-    <!-- ================= QUESTÕES ================= -->
-    <div id="tela-questao" class="escondido">
-      <div class="barra-topo">
-        <button class="btn-voltar" onclick="voltarAoMenu()">← Voltar</button>
-        <span class="placar" id="placar">Acertos: 0 de 0</span>
-      </div>
-      <div id="conteudo-questao"></div>
+  <!-- ===================== TREINAR ===================== -->
+  <main class="pagina" id="tela-treinar">
+    <div class="cabecalho-secao">
+      <h1>🎯 Treinar</h1>
+      <p>Questões reais do ENEM, de 2009 a 2023, sorteadas do nosso banco.</p>
     </div>
 
-    <!-- ================= FEED ================= -->
-    <div id="tela-feed" class="escondido">
-      <div class="barra-topo">
-        <button class="btn-voltar" onclick="voltarAoMenu()">← Voltar</button>
-        <span class="placar">💬 Feed de Estudos</span>
-      </div>
-      <div id="area-publicar"></div>
-      <div id="conteudo-feed"></div>
+    <div class="faixa-status">
+      <span class="bolinha" id="bolinha"></span>
+      <span id="texto-status">Verificando conexão…</span>
     </div>
 
-    <!-- ================= CONTA ================= -->
-    <div id="tela-conta" class="escondido">
-      <div class="barra-topo">
-        <button class="btn-voltar" onclick="voltarAoMenu()">← Voltar</button>
-        <span class="placar" id="titulo-conta">Entrar</span>
-      </div>
+    <div class="grade-areas" id="grade-areas"></div>
+  </main>
 
+  <!-- ===================== QUESTÃO ===================== -->
+  <main class="pagina escondido" id="tela-questao">
+    <div class="barra-questao">
+      <button class="acao discreta pequena" onclick="irPara('treinar')">← Voltar</button>
+      <span class="tag" id="tag-questao"></span>
+      <span class="contador" id="contador"></span>
+    </div>
+    <div class="painel" id="painel-questao"></div>
+  </main>
+
+  <!-- ===================== FEED ===================== -->
+  <main class="pagina escondido" id="tela-feed">
+    <div class="cabecalho-secao">
+      <h1>💬 Feed de Estudos</h1>
+      <p>Dicas, dúvidas e explicações entre vocês.</p>
+    </div>
+    <div id="area-publicar"></div>
+    <div id="lista-posts"></div>
+  </main>
+
+  <!-- ===================== CONTA ===================== -->
+  <main class="pagina escondido" id="tela-conta">
+    <div class="cabecalho-secao">
+      <h1 id="titulo-conta">Entrar</h1>
+      <p id="sub-conta">Sua conta guarda seu progresso e seus posts.</p>
+    </div>
+
+    <div class="painel">
       <form class="form-conta" id="form-conta" onsubmit="enviarConta(event)">
         <div id="campo-nome" class="escondido">
           <label for="conta-nome">Como quer ser chamado</label>
@@ -337,93 +395,296 @@
 
         <label for="conta-email">E-mail</label>
         <input type="email" id="conta-email" autocomplete="email" required>
-        <div class="dica" id="dica-email"></div>
+        <div class="pista" id="pista-email"></div>
 
         <label for="conta-senha">Senha</label>
         <input type="password" id="conta-senha" autocomplete="current-password" required>
-        <div class="dica" id="dica-senha"></div>
+        <div class="pista" id="pista-senha"></div>
 
-        <button type="submit" id="botao-enviar-conta">Entrar</button>
+        <button type="submit" class="acao" id="botao-conta">Entrar</button>
         <div id="recado-conta"></div>
-
-        <div class="troca-form" id="troca-form"></div>
+        <div class="alternar" id="alternar-conta"></div>
       </form>
     </div>
-  </div>
+  </main>
 
 <script>
-// Em localhost usa o servidor da maquina; publicado, usa o Render.
 const API_URL = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? 'http://localhost:3000'
   : 'https://enem-api-cbo6.onrender.com';
 
-const NOMES = {
-  linguagens: 'Linguagens e Códigos',
-  humanas: 'Ciências Humanas',
-  natureza: 'Ciências da Natureza',
-  matematica: 'Matemática'
-};
+const AREAS = [
+  { id: 'linguagens', nome: 'Linguagens', icone: '📖', cor: '#f59e0b',
+    sobre: 'Língua Portuguesa, Literatura, Estrangeira e Artes.' },
+  { id: 'humanas', nome: 'Ciências Humanas', icone: '🏛️', cor: '#ec4899',
+    sobre: 'História, Geografia, Filosofia e Sociologia.' },
+  { id: 'natureza', nome: 'Ciências da Natureza', icone: '🔬', cor: '#10b981',
+    sobre: 'Biologia, Física e Química.' },
+  { id: 'matematica', nome: 'Matemática', icone: '📐', cor: '#3b82f6',
+    sobre: 'Matemática e suas tecnologias.' }
+];
 
+const CHAVE_TOKEN = 'mm_token';
+const CHAVE_TEMA = 'mm_tema';
+const CHAVE_PROGRESSO = 'mm_progresso';
+
+let usuarioLogado = null;
+let modoConta = 'entrar';
 let materiaAtual = null;
 let fila = [];
 let questaoAtual = null;
 let respondida = false;
-let acertos = 0;
-let respondidas = 0;
+let progresso = {};
 
-// Conteudo vem de API externa: escapar antes de montar HTML.
+// ===================== BASE =====================
 function escapar(texto) {
   const d = document.createElement('div');
   d.textContent = texto == null ? '' : String(texto);
   return d.innerHTML;
 }
 
-// Markdown minimo que a api.enem.dev usa: **negrito** e ![](imagem)
 function formatarEnunciado(texto) {
   return escapar(texto)
     .replace(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g, '<img src="$1" alt="Imagem da questão" loading="lazy">')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
 }
 
-function mostrarTela(id) {
-  ['tela-menu', 'tela-questao', 'tela-feed', 'tela-conta'].forEach(t => {
-    document.getElementById(t).classList.toggle('escondido', t !== id);
+function guardar(chave, valor) {
+  try { valor === null ? localStorage.removeItem(chave) : localStorage.setItem(chave, valor); } catch (e) {}
+}
+function ler(chave) {
+  try { return localStorage.getItem(chave); } catch (e) { return null; }
+}
+
+// ===================== TEMA =====================
+function aplicarTema(tema) {
+  document.documentElement.dataset.tema = tema;
+  document.getElementById('btn-tema').textContent = tema === 'escuro' ? '🌙' : '☀️';
+  guardar(CHAVE_TEMA, tema);
+}
+
+function trocarTema() {
+  aplicarTema(document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro');
+}
+
+function iniciarTema() {
+  const salvo = ler(CHAVE_TEMA);
+  if (salvo) return aplicarTema(salvo);
+  // sem escolha salva, segue a preferência do sistema
+  const prefereClaro = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+  aplicarTema(prefereClaro ? 'claro' : 'escuro');
+}
+
+// ===================== NAVEGAÇÃO =====================
+function irPara(tela) {
+  ['treinar', 'questao', 'feed', 'conta'].forEach(t => {
+    document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
+  document.getElementById('aba-treinar').classList.toggle('ativa', tela === 'treinar' || tela === 'questao');
+  document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed');
   window.scrollTo(0, 0);
+  if (tela === 'treinar') desenharAreas();
+  if (tela === 'feed') abrirFeed();
 }
 
-// ================= CONTA =================
-// O token fica no navegador; a senha nunca é guardada aqui nem no servidor.
-const CHAVE_TOKEN = 'enem_token';
-let usuarioLogado = null;
-let modoConta = 'entrar';
-
-function pegarToken() {
-  try { return localStorage.getItem(CHAVE_TOKEN); } catch (e) { return null; }
-}
-function guardarToken(t) {
-  try { t ? localStorage.setItem(CHAVE_TOKEN, t) : localStorage.removeItem(CHAVE_TOKEN); } catch (e) {}
+// ===================== PROGRESSO =====================
+function carregarProgresso() {
+  try { progresso = JSON.parse(ler(CHAVE_PROGRESSO)) || {}; } catch (e) { progresso = {}; }
 }
 
+function salvarProgresso() {
+  guardar(CHAVE_PROGRESSO, JSON.stringify(progresso));
+}
+
+function anotarResposta(area, acertou) {
+  const p = progresso[area] || { feitas: 0, acertos: 0 };
+  p.feitas++;
+  if (acertou) p.acertos++;
+  progresso[area] = p;
+  salvarProgresso();
+  desenharIndicadores();
+}
+
+function totais() {
+  return Object.values(progresso).reduce(
+    (t, p) => ({ feitas: t.feitas + p.feitas, acertos: t.acertos + p.acertos }),
+    { feitas: 0, acertos: 0 }
+  );
+}
+
+function desenharIndicadores() {
+  const t = totais();
+  document.getElementById('ind-feitas').textContent = t.feitas;
+  document.getElementById('ind-acertos').textContent = t.acertos;
+}
+
+// ===================== ÁREAS =====================
+function desenharAreas() {
+  document.getElementById('grade-areas').innerHTML = AREAS.map(a => {
+    const p = progresso[a.id] || { feitas: 0, acertos: 0 };
+    const aproveitamento = p.feitas ? Math.round((p.acertos / p.feitas) * 100) + '%' : '—';
+    return `
+      <article class="area">
+        <div class="area-topo">
+          <div>
+            <h2>${a.nome}</h2>
+            <p class="sobre">${a.sobre}</p>
+          </div>
+          <div class="emblema" style="background:${a.cor}22">${a.icone}</div>
+        </div>
+        <div class="area-rodape">
+          <div class="metrica"><b>${p.feitas}</b><span>Feitas</span></div>
+          <div class="metrica"><b>${aproveitamento}</b><span>Acerto</span></div>
+          <button class="acao" onclick="abrirMateria('${a.id}')">Treinar</button>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+// ===================== QUESTÕES =====================
+function nomeDaArea(id) {
+  return (AREAS.find(a => a.id === id) || {}).nome || id;
+}
+
+function atualizarContador() {
+  const p = progresso[materiaAtual] || { feitas: 0, acertos: 0 };
+  document.getElementById('contador').innerHTML =
+    `${p.acertos} <span>de ${p.feitas}</span>`;
+}
+
+async function abrirMateria(area) {
+  materiaAtual = area;
+  fila = [];
+  document.getElementById('tag-questao').textContent = nomeDaArea(area);
+  atualizarContador();
+  irPara('questao');
+  document.getElementById('painel-questao').innerHTML =
+    `<div class="vazio"><span class="cara">⏳</span>Carregando questões…<br>
+     <small>Se o servidor estiver dormindo, pode levar até 1 minuto.</small></div>`;
+  await proximaQuestao();
+}
+
+async function proximaQuestao() {
+  const painel = document.getElementById('painel-questao');
+
+  if (fila.length === 0) {
+    try {
+      const r = await fetch(`${API_URL}/api/questoes/${materiaAtual}`);
+      if (r.status === 404) {
+        painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>
+          Ainda não há questões de ${escapar(nomeDaArea(materiaAtual))} no banco.</div>`;
+        return;
+      }
+      if (!r.ok) throw new Error('A API respondeu ' + r.status);
+      fila = (await r.json()).questoes || [];
+    } catch (e) {
+      painel.innerHTML = `<div class="vazio"><span class="cara">🔌</span>
+        Não consegui falar com a API.<br><small>${escapar(e.message)}</small></div>`;
+      return;
+    }
+  }
+
+  questaoAtual = fila.shift();
+  if (!questaoAtual) {
+    painel.innerHTML = `<div class="vazio"><span class="cara">✅</span>Acabaram as questões desta rodada.<br>
+      <button class="acao" style="margin-top:16px" onclick="abrirMateria('${materiaAtual}')">Buscar mais</button></div>`;
+    return;
+  }
+
+  respondida = false;
+  desenharQuestao();
+}
+
+function desenharQuestao() {
+  const q = questaoAtual;
+  const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
+  const letras = ['A', 'B', 'C', 'D', 'E'];
+
+  document.getElementById('tag-questao').textContent = `${nomeDaArea(materiaAtual)} · ENEM ${q.ano}`;
+  document.getElementById('painel-questao').innerHTML = `
+    <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
+    <div>${alternativas.map((t, i) => `
+      <button class="alt" id="alt-${i}" onclick="responder(${i})">
+        <span class="letra">${letras[i] || i + 1}</span>
+        <span>${escapar(t)}</span>
+      </button>`).join('')}</div>
+    <div id="area-resultado"></div>`;
+}
+
+function responder(escolhida) {
+  if (respondida) return;
+  respondida = true;
+
+  const correta = questaoAtual.correta;
+  const acertou = escolhida === correta;
+
+  anotarResposta(materiaAtual, acertou);
+  atualizarContador();
+  if (acertou) soltarConfete();
+
+  document.querySelectorAll('.alt').forEach(b => b.disabled = true);
+  document.getElementById('alt-' + correta)?.classList.add('certa');
+  if (!acertou) document.getElementById('alt-' + escolhida)?.classList.add('errada');
+
+  const letra = ['A', 'B', 'C', 'D', 'E'][correta] || (correta + 1);
+  const r = acertou
+    ? { classe: 'bom', cara: '🎉', manchete: 'Acertou!', linha: 'Parabéns, mandou muito bem!' }
+    : { classe: 'mau', cara: '💪', manchete: 'Errou, que pena!', linha: 'Continue tentando, você chega lá!' };
+
+  document.getElementById('area-resultado').innerHTML = `
+    <div class="resultado ${r.classe}">
+      <span class="cara">${r.cara}</span>
+      <div class="manchete">${r.manchete}</div>
+      <div class="linha">${r.linha}</div>
+    </div>
+    <div class="nota-gabarito">
+      <strong>Resposta correta: alternativa ${letra}</strong> — destacada em verde.<br>
+      A explicação de cada alternativa ainda não está disponível: a fonte das questões
+      fornece o gabarito, mas não a justificativa.
+    </div>
+    <button class="acao" onclick="proximaQuestao()">Próxima questão →</button>`;
+
+  document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function soltarConfete() {
+  const cores = ['#6d5efc', '#8b7cff', '#22c55e', '#f59e0b', '#ec4899', '#3b82f6'];
+  const palco = document.getElementById('confete');
+  for (let i = 0; i < 60; i++) {
+    const p = document.createElement('div');
+    p.className = 'papel';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.top = '-20px';
+    p.style.background = cores[Math.floor(Math.random() * cores.length)];
+    p.style.animationDuration = (2 + Math.random() * 1.6) + 's';
+    p.style.animationDelay = (Math.random() * .4) + 's';
+    palco.appendChild(p);
+    setTimeout(() => p.remove(), 4200);
+  }
+}
+
+// ===================== CONTA =====================
 function cabecalhoAuth() {
-  const t = pegarToken();
+  const t = ler(CHAVE_TOKEN);
   return t ? { 'Authorization': 'Bearer ' + t } : {};
 }
 
-function desenharBarraConta() {
-  const quem = document.getElementById('quem-sou');
-  const botoes = document.getElementById('botoes-conta');
-
+function desenharPerfil() {
+  const botao = document.getElementById('btn-perfil');
   if (usuarioLogado) {
-    const inicial = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
-    quem.innerHTML = `<span class="avatar">${escapar(inicial)}</span>
-      <span>Olá, <strong>${escapar(usuarioLogado.username)}</strong></span>`;
-    botoes.innerHTML = `<button class="btn-pequeno btn-fantasma" onclick="sair()">Sair</button>`;
+    botao.textContent = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
+    botao.title = usuarioLogado.username + ' — clique para sair';
   } else {
-    quem.innerHTML = '<span>Você não está conectado</span>';
-    botoes.innerHTML = `
-      <button class="btn-pequeno" onclick="abrirConta('entrar')">Entrar</button>
-      <button class="btn-pequeno btn-fantasma" onclick="abrirConta('criar')">Criar conta</button>`;
+    botao.textContent = '?';
+    botao.title = 'Entrar ou criar conta';
+  }
+}
+
+function cliqueNoPerfil() {
+  if (usuarioLogado) {
+    if (confirm(`Sair da conta de ${usuarioLogado.username}?`)) sair();
+  } else {
+    abrirConta('entrar');
   }
 }
 
@@ -432,32 +693,30 @@ function abrirConta(modo) {
   const criando = modo === 'criar';
 
   document.getElementById('titulo-conta').textContent = criando ? 'Criar conta' : 'Entrar';
+  document.getElementById('sub-conta').textContent = criando
+    ? 'Leva menos de um minuto.' : 'Bom te ver de novo.';
   document.getElementById('campo-nome').classList.toggle('escondido', !criando);
   document.getElementById('conta-nome').required = criando;
-  document.getElementById('botao-enviar-conta').textContent = criando ? 'Criar minha conta' : 'Entrar';
+  document.getElementById('botao-conta').textContent = criando ? 'Criar minha conta' : 'Entrar';
   document.getElementById('conta-senha').autocomplete = criando ? 'new-password' : 'current-password';
-  document.getElementById('dica-senha').textContent = criando
-    ? 'Ao menos 8 caracteres, misturando letras e números.' : '';
-  document.getElementById('dica-email').textContent = criando
-    ? 'Conferimos se o domínio do e-mail existe de verdade.' : '';
+  document.getElementById('pista-senha').textContent = criando ? 'Ao menos 8 caracteres, com letras e números.' : '';
+  document.getElementById('pista-email').textContent = criando ? 'Conferimos se o domínio existe de verdade.' : '';
   document.getElementById('recado-conta').innerHTML = '';
   document.getElementById('form-conta').reset();
-
-  document.getElementById('troca-form').innerHTML = criando
+  document.getElementById('alternar-conta').innerHTML = criando
     ? `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
     : `Ainda não tem conta? <a onclick="abrirConta('criar')">Criar agora</a>`;
 
-  mostrarTela('tela-conta');
+  irPara('conta');
 }
 
 function recadoConta(texto, tipo) {
-  document.getElementById('recado-conta').innerHTML =
-    `<div class="recado ${tipo}">${escapar(texto)}</div>`;
+  document.getElementById('recado-conta').innerHTML = `<div class="recado ${tipo}">${escapar(texto)}</div>`;
 }
 
 async function enviarConta(evento) {
   evento.preventDefault();
-  const botao = document.getElementById('botao-enviar-conta');
+  const botao = document.getElementById('botao-conta');
   const criando = modoConta === 'criar';
 
   const corpo = {
@@ -467,8 +726,7 @@ async function enviarConta(evento) {
   if (criando) corpo.nome = document.getElementById('conta-nome').value.trim();
 
   botao.disabled = true;
-  botao.textContent = criando ? 'Criando...' : 'Entrando...';
-  recadoConta('Falando com o servidor...', 'bom');
+  botao.textContent = criando ? 'Criando…' : 'Entrando…';
 
   try {
     const r = await fetch(`${API_URL}/api/auth/${criando ? 'registrar' : 'login'}`, {
@@ -478,16 +736,13 @@ async function enviarConta(evento) {
     });
     const dados = await r.json();
 
-    if (!r.ok) {
-      recadoConta(dados.error || 'Não deu certo. Tente de novo.', 'ruim');
-      return;
-    }
+    if (!r.ok) { recadoConta(dados.error || 'Não deu certo.', 'ruim'); return; }
 
-    guardarToken(dados.token);
+    guardar(CHAVE_TOKEN, dados.token);
     usuarioLogado = dados.usuario;
-    desenharBarraConta();
+    desenharPerfil();
     recadoConta(criando ? 'Conta criada! Bem-vindo.' : 'Bem-vindo de volta!', 'bom');
-    setTimeout(voltarAoMenu, 700);
+    setTimeout(() => irPara('treinar'), 700);
   } catch (e) {
     recadoConta('Não consegui falar com o servidor: ' + e.message, 'ruim');
   } finally {
@@ -497,146 +752,24 @@ async function enviarConta(evento) {
 }
 
 async function sair() {
-  try {
-    await fetch(`${API_URL}/api/auth/sair`, { method: 'POST', headers: cabecalhoAuth() });
-  } catch (e) { /* mesmo sem resposta, saímos aqui */ }
-  guardarToken(null);
+  try { await fetch(`${API_URL}/api/auth/sair`, { method: 'POST', headers: cabecalhoAuth() }); } catch (e) {}
+  guardar(CHAVE_TOKEN, null);
   usuarioLogado = null;
-  desenharBarraConta();
-  voltarAoMenu();
+  desenharPerfil();
+  irPara('treinar');
 }
 
-// Ao abrir o site: se o token guardado ainda vale, a pessoa volta já logada.
 async function restaurarSessao() {
-  if (!pegarToken()) { desenharBarraConta(); return; }
+  if (!ler(CHAVE_TOKEN)) { desenharPerfil(); return; }
   try {
     const r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() });
-    if (r.ok) {
-      usuarioLogado = (await r.json()).usuario;
-    } else {
-      guardarToken(null); // token vencido ou revogado
-    }
-  } catch (e) { /* servidor fora do ar: tentamos de novo na próxima visita */ }
-  desenharBarraConta();
+    if (r.ok) usuarioLogado = (await r.json()).usuario;
+    else guardar(CHAVE_TOKEN, null);
+  } catch (e) {}
+  desenharPerfil();
 }
 
-function voltarAoMenu() { mostrarTela('tela-menu'); }
-
-function atualizarPlacar() {
-  document.getElementById('placar').textContent = `Acertos: ${acertos} de ${respondidas}`;
-}
-
-async function abrirMateria(area) {
-  materiaAtual = area;
-  acertos = 0;
-  respondidas = 0;
-  fila = [];
-  atualizarPlacar();
-  mostrarTela('tela-questao');
-  document.getElementById('conteudo-questao').innerHTML =
-    '<div class="carregando">Carregando questões...<br><small>Se a API estiver dormindo, pode levar até 1 minuto.</small></div>';
-  await proximaQuestao();
-}
-
-async function proximaQuestao() {
-  if (fila.length === 0) {
-    try {
-      const r = await fetch(`${API_URL}/api/questoes/${materiaAtual}`);
-      if (r.status === 404) {
-        document.getElementById('conteudo-questao').innerHTML =
-          '<div class="carregando">Nenhuma questão de ' + escapar(NOMES[materiaAtual]) +
-          ' no banco ainda.<br><small>Carregue o cache pela API e tente de novo.</small></div>';
-        return;
-      }
-      if (!r.ok) throw new Error('A API respondeu ' + r.status);
-      const dados = await r.json();
-      fila = dados.questoes || [];
-    } catch (e) {
-      document.getElementById('conteudo-questao').innerHTML =
-        '<div class="carregando">Não consegui falar com a API.<br><small>' + escapar(e.message) + '</small></div>';
-      return;
-    }
-  }
-
-  questaoAtual = fila.shift();
-  if (!questaoAtual) { document.getElementById('conteudo-questao').innerHTML =
-    '<div class="carregando">Acabaram as questões desta rodada.</div>'; return; }
-
-  respondida = false;
-  desenharQuestao();
-}
-
-function desenharQuestao() {
-  const q = questaoAtual;
-  const alternativas = typeof q.alternativas === 'string'
-    ? JSON.parse(q.alternativas)
-    : (q.alternativas || []);
-
-  const letras = ['A', 'B', 'C', 'D', 'E'];
-  const botoes = alternativas.map((texto, i) => `
-    <button class="alternativa" id="alt-${i}" onclick="responder(${i})">
-      <span class="letra">${letras[i] || i + 1}</span>
-      <span>${escapar(texto)}</span>
-    </button>`).join('');
-
-  document.getElementById('conteudo-questao').innerHTML = `
-    <span class="etiqueta">${escapar(NOMES[materiaAtual])} &middot; ENEM ${escapar(q.ano)}</span>
-    <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
-    <div id="lista-alternativas">${botoes}</div>
-    <div id="area-feedback"></div>`;
-}
-
-function responder(escolhida) {
-  if (respondida) return;
-  respondida = true;
-  respondidas++;
-
-  const correta = questaoAtual.correta;
-  const acertou = escolhida === correta;
-  if (acertou) { acertos++; soltarConfete(); }
-  atualizarPlacar();
-
-  document.querySelectorAll('.alternativa').forEach(b => b.disabled = true);
-  document.getElementById('alt-' + correta)?.classList.add('certa');
-  if (!acertou) document.getElementById('alt-' + escolhida)?.classList.add('errada');
-
-  const letra = ['A', 'B', 'C', 'D', 'E'][correta] || (correta + 1);
-  const fb = acertou
-    ? { classe: 'acerto', emoji: '🎉', titulo: 'Acertou!', frase: 'Parabéns, mandou muito bem!' }
-    : { classe: 'erro', emoji: '💪', titulo: 'Errou, que pena!', frase: 'Continue tentando, você chega lá!' };
-
-  document.getElementById('area-feedback').innerHTML = `
-    <div class="feedback ${fb.classe}">
-      <span class="emoji">${fb.emoji}</span>
-      <div class="titulo">${fb.titulo}</div>
-      <div class="frase">${fb.frase}</div>
-    </div>
-    <div class="aviso-gabarito">
-      <strong>Resposta correta: alternativa ${letra}</strong> — destacada em verde acima.<br>
-      A explicação de cada alternativa ainda não está disponível: a fonte das questões
-      fornece o gabarito, mas não a justificativa.
-    </div>
-    <button onclick="proximaQuestao()">Próxima questão →</button>`;
-
-  document.getElementById('area-feedback').scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
-
-function soltarConfete() {
-  const cores = ['#667eea', '#764ba2', '#28a745', '#ffc107', '#ff6b9d', '#4dd0e1'];
-  const palco = document.getElementById('confete');
-  for (let i = 0; i < 60; i++) {
-    const p = document.createElement('div');
-    p.className = 'papel';
-    p.style.left = Math.random() * 100 + 'vw';
-    p.style.top = '-20px';
-    p.style.background = cores[Math.floor(Math.random() * cores.length)];
-    p.style.animationDuration = (2 + Math.random() * 1.6) + 's';
-    p.style.animationDelay = (Math.random() * 0.4) + 's';
-    palco.appendChild(p);
-    setTimeout(() => p.remove(), 4200);
-  }
-}
-
+// ===================== FEED =====================
 async function publicar() {
   const caixa = document.getElementById('texto-post');
   const conteudo = caixa.value.trim();
@@ -644,7 +777,7 @@ async function publicar() {
 
   const botao = document.getElementById('botao-publicar');
   botao.disabled = true;
-  botao.textContent = 'Publicando...';
+  botao.textContent = 'Publicando…';
 
   try {
     const r = await fetch(`${API_URL}/api/posts`, {
@@ -653,8 +786,7 @@ async function publicar() {
       body: JSON.stringify({ conteudo })
     });
     if (r.ok) { caixa.value = ''; await abrirFeed(); return; }
-    const d = await r.json();
-    alert(d.error || 'Não consegui publicar.');
+    alert((await r.json()).error || 'Não consegui publicar.');
   } catch (e) {
     alert('Não consegui publicar: ' + e.message);
   } finally {
@@ -664,60 +796,63 @@ async function publicar() {
 }
 
 async function abrirFeed() {
-  mostrarTela('tela-feed');
-
   document.getElementById('area-publicar').innerHTML = usuarioLogado
-    ? `<div class="card" style="margin-bottom:18px">
-         <h3>Escrever no feed</h3>
-         <textarea class="caixa-post" id="texto-post" maxlength="2000"
-           placeholder="Compartilhe uma dica, tire uma dúvida..."></textarea>
-         <button id="botao-publicar" onclick="publicar()" style="margin-top:10px">Publicar</button>
+    ? `<div class="painel" style="margin-bottom:22px">
+         <textarea class="caixa-texto" id="texto-post" maxlength="2000"
+           placeholder="Compartilhe uma dica, tire uma dúvida, explique uma questão…"></textarea>
+         <button class="acao" id="botao-publicar" onclick="publicar()" style="margin-top:14px">Publicar</button>
        </div>`
-    : `<div class="recado ruim" style="margin-bottom:18px">
-         Entre na sua conta para escrever no feed.
+    : `<div class="painel" style="margin-bottom:22px;text-align:center">
+         <p style="color:var(--texto-fraco);margin-bottom:14px">Entre na sua conta para escrever no feed.</p>
+         <button class="acao" onclick="abrirConta('entrar')">Entrar</button>
        </div>`;
 
-  const alvo = document.getElementById('conteudo-feed');
-  alvo.innerHTML = '<div class="carregando">Carregando posts...</div>';
+  const alvo = document.getElementById('lista-posts');
+  alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
+
   try {
-    const r = await fetch(`${API_URL}/api/posts`);
-    const dados = await r.json();
-    const posts = dados.posts || [];
+    const posts = (await (await fetch(`${API_URL}/api/posts`)).json()).posts || [];
     alvo.innerHTML = posts.length === 0
-      ? '<div class="carregando">Nenhum post ainda. Seja o primeiro!</div>'
+      ? '<div class="vazio"><span class="cara">💬</span>Nenhum post ainda. Seja o primeiro!</div>'
       : posts.map(p => `
-          <div class="card" style="margin-bottom:12px">
-            <h3>${escapar(p.usuario_id)}</h3>
+          <article class="post">
+            <div class="post-autor">
+              <span class="bolha">${escapar((p.usuario_id || '?').charAt(0).toUpperCase())}</span>
+              <b>${escapar(p.usuario_id)}</b>
+            </div>
             <p>${escapar(p.conteudo)}</p>
-          </div>`).join('');
+          </article>`).join('');
   } catch (e) {
-    alvo.innerHTML = '<div class="carregando">Não consegui carregar os posts.<br><small>'
-      + escapar(e.message) + '</small></div>';
+    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>Não consegui carregar os posts.<br>
+      <small>${escapar(e.message)}</small></div>`;
   }
 }
 
+// ===================== STATUS =====================
 function verificarAPI() {
-  const status = document.getElementById('status');
-  status.className = 'status';
-  status.textContent = 'Verificando...';
+  const bolinha = document.getElementById('bolinha');
+  const texto = document.getElementById('texto-status');
   fetch(`${API_URL}/api/health`)
     .then(r => r.json())
     .then(d => {
-      status.textContent = d.banco === 'conectado'
-        ? '✅ API no ar e banco conectado'
-        : '⚠️ API no ar, mas sem conexão com o banco';
-      status.classList.add(d.banco === 'conectado' ? 'ok' : 'error');
+      const ok = d.banco === 'conectado';
+      bolinha.className = 'bolinha ' + (ok ? 'ok' : 'ruim');
+      texto.textContent = ok
+        ? 'Tudo funcionando — 2684 questões disponíveis'
+        : 'Servidor no ar, mas sem conexão com o banco';
     })
     .catch(e => {
-      status.textContent = '❌ Erro ao conectar: ' + e.message;
-      status.classList.add('error');
+      bolinha.className = 'bolinha ruim';
+      texto.textContent = 'Sem conexão com a API: ' + e.message;
     });
 }
 
-window.addEventListener('load', () => {
-  verificarAPI();
-  restaurarSessao();
-});
+// ===================== INÍCIO =====================
+iniciarTema();
+carregarProgresso();
+desenharIndicadores();
+desenharAreas();
+window.addEventListener('load', () => { verificarAPI(); restaurarSessao(); });
 </script>
 </body>
 </html>
