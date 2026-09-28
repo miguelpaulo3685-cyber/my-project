@@ -1,0 +1,820 @@
+<title>Doces da Luh</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Karla:wght@400;500;600;700&display=swap">
+
+<style>
+/* Layout: vitrine de confeitaria — hero em duas colunas, grade de doces filtravel
+   e um painel de pedido que acompanha a rolagem e vira barra no celular. */
+:root{
+  --sugar:#FDF3F5;        /* fundo: acucar de confeiteiro com vies rosa */
+  --surface:#FFFFFF;
+  --surface-2:#F8E9EC;
+  --cocoa:#2B1418;        /* texto principal */
+  --cocoa-soft:#704B52;   /* texto secundario */
+  --raspberry:#B32858;    /* acento: framboesa */
+  --caramel:#C9762C;      /* acento secundario: caramelo */
+  --line:#EBD3D8;
+  --shadow:18px 18px 44px rgba(97,36,52,.10);
+  --ring:rgba(179,40,88,.38);
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Karla",-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --sugar:#170F11; --surface:#211518; --surface-2:#2D1C21;
+    --cocoa:#F8EAEC; --cocoa-soft:#C7A3AA; --raspberry:#FF83AB; --caramel:#F0A85C;
+    --line:#3B262B; --shadow:18px 18px 44px rgba(0,0,0,.45); --ring:rgba(255,131,171,.45);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --sugar:#170F11; --surface:#211518; --surface-2:#2D1C21;
+  --cocoa:#F8EAEC; --cocoa-soft:#C7A3AA; --raspberry:#FF83AB; --caramel:#F0A85C;
+  --line:#3B262B; --shadow:18px 18px 44px rgba(0,0,0,.45); --ring:rgba(255,131,171,.45);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--sugar); color:var(--cocoa);
+  font-family:var(--body); font-size:16px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.08;font-variation-settings:"SOFT" 40,"WONK" 1}
+.wrap{max-width:1140px;margin:0 auto;padding-inline:20px}
+.eyebrow{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:var(--raspberry);margin:0 0 .6rem}
+:focus-visible{outline:3px solid var(--ring);outline-offset:3px;border-radius:6px}
+
+/* ---------- Header ---------- */
+header.bar{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
+  background:color-mix(in srgb,var(--sugar) 86%,transparent);
+  backdrop-filter:blur(12px); border-bottom:1px solid var(--line);
+}
+.bar-in{display:flex;align-items:center;gap:14px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;margin-right:auto;min-width:0}
+.seal{
+  width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle at 32% 28%,var(--raspberry),#7A1338 70%);
+  color:#fff;font-family:var(--display);font-weight:800;font-size:1.05rem;
+  box-shadow:0 4px 14px rgba(122,19,56,.35)
+}
+.brand b{font-family:var(--display);font-size:1.12rem;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.brand span{display:block;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cocoa-soft);font-weight:600}
+nav.links{display:flex;gap:4px}
+nav.links a{
+  text-decoration:none;font-size:.9rem;font-weight:600;padding:8px 12px;border-radius:999px;
+  color:var(--cocoa-soft);transition:background .18s,color .18s
+}
+nav.links a:hover{background:var(--surface-2);color:var(--cocoa)}
+.icon-btn{
+  width:40px;height:40px;flex:none;border-radius:50%;border:1px solid var(--line);
+  background:var(--surface);color:var(--cocoa);cursor:pointer;display:grid;place-items:center;
+  font-size:1rem;transition:transform .18s,border-color .18s
+}
+.icon-btn:hover{transform:rotate(-12deg) scale(1.06);border-color:var(--raspberry)}
+@media (max-width:820px){nav.links{display:none}}
+
+/* ---------- Botoes ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--body);font-weight:700;font-size:.97rem;text-decoration:none;cursor:pointer;
+  padding:14px 22px;border-radius:999px;border:1.5px solid transparent;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s
+}
+.btn svg{width:19px;height:19px;flex:none}
+.btn-wa{background:#1FA855;color:#fff;box-shadow:0 8px 22px rgba(31,168,85,.32)}
+.btn-wa:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(31,168,85,.42)}
+.btn-ig{
+  color:#fff;background:linear-gradient(115deg,#F4A340,#D6295E 46%,#7B2FF0);
+  box-shadow:0 8px 22px rgba(190,40,110,.32)
+}
+.btn-ig:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(190,40,110,.42)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--cocoa)}
+.btn-ghost:hover{border-color:var(--raspberry);color:var(--raspberry);transform:translateY(-2px)}
+.btn-sm{padding:9px 15px;font-size:.86rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden}
+.hero::before{
+  content:"";position:absolute;inset:-25% -10% auto -30%;height:130%;
+  background:
+    radial-gradient(38% 46% at 18% 20%,color-mix(in srgb,var(--raspberry) 22%,transparent),transparent 70%),
+    radial-gradient(34% 40% at 82% 68%,color-mix(in srgb,var(--caramel) 20%,transparent),transparent 70%);
+  pointer-events:none
+}
+.hero-in{
+  position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:54px;align-items:center;
+  padding-block:60px 70px
+}
+.hero h1{font-size:clamp(2.6rem,6.4vw,4.5rem);font-weight:800;letter-spacing:-.025em}
+.hero h1 em{font-style:italic;color:var(--raspberry);font-variation-settings:"WONK" 1}
+.lead{font-size:1.1rem;color:var(--cocoa-soft);max-width:34ch;margin:1.1rem 0 1.9rem}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+.hero-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;list-style:none;padding:0}
+.hero-facts li{
+  font-size:.82rem;font-weight:600;color:var(--cocoa-soft);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;padding:6px 13px
+}
+.fade{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.3,1) forwards}
+.fade:nth-child(2){animation-delay:.08s}.fade:nth-child(3){animation-delay:.16s}
+@keyframes rise{to{opacity:1;transform:none}}
+
+/* Cartao do Instagram (a imagem inteira e o link) */
+.ig-card{
+  position:relative;display:block;text-decoration:none;border-radius:26px;overflow:hidden;
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);
+  transition:transform .25s cubic-bezier(.2,.7,.3,1),box-shadow .25s
+}
+.ig-card:hover{transform:translateY(-6px) rotate(-.7deg)}
+.ig-photo{
+  aspect-ratio:4/5;max-width:100%;position:relative;display:grid;place-items:center;
+  background:
+    radial-gradient(circle at 30% 26%,#FFD9E4,transparent 55%),
+    radial-gradient(circle at 74% 74%,#FFE2BE,transparent 52%),
+    linear-gradient(150deg,#8E1E42,#3A0F1F);
+}
+.ig-photo svg{width:56%;height:auto;filter:drop-shadow(0 10px 22px rgba(0,0,0,.35))}
+.ig-photo::after{
+  content:"Troque por uma foto sua";position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+  color:#fff;background:rgba(0,0,0,.42);padding:5px 12px;border-radius:999px;white-space:nowrap
+}
+.ig-foot{display:flex;align-items:center;gap:12px;padding:15px 18px}
+.ig-mark{
+  width:36px;height:36px;flex:none;border-radius:11px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(115deg,#F4A340,#D6295E 46%,#7B2FF0)
+}
+.ig-mark svg{width:20px;height:20px}
+.ig-foot b{display:block;font-size:.97rem}
+.ig-foot small{color:var(--cocoa-soft);font-size:.8rem}
+.ig-go{margin-left:auto;font-weight:700;color:var(--raspberry);font-size:.85rem;white-space:nowrap}
+@media (max-width:880px){
+  .hero-in{grid-template-columns:1fr;gap:34px;padding-block:38px 46px}
+  .ig-card{max-width:340px}
+}
+
+/* ---------- Secoes ---------- */
+section{padding-block:clamp(48px,7vw,84px)}
+.sec-head{max-width:56ch;margin-bottom:34px}
+.sec-head h2{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:800;letter-spacing:-.02em}
+.sec-head p{color:var(--cocoa-soft);margin:.7rem 0 0}
+
+/* Como funciona — sequencia real, por isso numerada */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:s}
+.step{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px 22px;
+  position:relative;transition:transform .2s,border-color .2s
+}
+.step:hover{transform:translateY(-4px);border-color:var(--raspberry)}
+.step::before{
+  counter-increment:s;content:counter(s,decimal-leading-zero);
+  font-family:var(--display);font-weight:800;font-size:1.5rem;color:var(--raspberry);
+  display:block;margin-bottom:.5rem
+}
+.step h3{font-size:1.14rem;font-weight:700;margin-bottom:.4rem}
+.step p{margin:0;color:var(--cocoa-soft);font-size:.94rem}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+
+/* ---------- Catalogo ---------- */
+.notice{
+  display:flex;align-items:flex-start;gap:12px;background:var(--surface-2);
+  border:1px dashed var(--raspberry);border-radius:16px;padding:14px 16px;margin-bottom:26px;
+  font-size:.9rem;color:var(--cocoa)
+}
+.notice b{font-weight:700}
+.notice button{
+  margin-left:auto;flex:none;background:none;border:0;cursor:pointer;color:var(--cocoa-soft);
+  font-size:1.1rem;line-height:1;padding:2px 4px
+}
+.shop{display:grid;grid-template-columns:1fr 322px;gap:34px;align-items:start}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+.search{
+  flex:1 1 220px;min-width:0;display:flex;align-items:center;gap:9px;background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;padding:10px 16px
+}
+.search svg{width:17px;height:17px;flex:none;color:var(--cocoa-soft)}
+.search input{
+  border:0;background:none;outline:none;font:inherit;color:var(--cocoa);width:100%;min-width:0
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  font:inherit;font-size:.87rem;font-weight:600;cursor:pointer;padding:9px 16px;border-radius:999px;
+  border:1px solid var(--line);background:var(--surface);color:var(--cocoa-soft);
+  transition:background .18s,color .18s,border-color .18s,transform .18s
+}
+.chip:hover{transform:translateY(-2px);color:var(--cocoa)}
+.chip[aria-pressed="true"]{background:var(--raspberry);border-color:var(--raspberry);color:#fff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:18px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .22s cubic-bezier(.2,.7,.3,1),box-shadow .22s,border-color .22s
+}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--raspberry) 45%,var(--line))}
+.shot{
+  appearance:none;border:0;padding:0;width:100%;aspect-ratio:1/1;cursor:zoom-in;position:relative;
+  display:grid;place-items:center;overflow:hidden
+}
+.shot svg{width:58%;height:auto;transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.card:hover .shot svg{transform:scale(1.09) rotate(-4deg)}
+.tag{
+  position:absolute;top:10px;left:10px;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:700;background:rgba(255,255,255,.9);color:#2B1418;padding:4px 9px;border-radius:999px
+}
+.card-body{padding:15px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card-body h3{font-size:1.04rem;font-weight:700}
+.card-body p{margin:0;font-size:.87rem;color:var(--cocoa-soft);flex:1}
+.price{
+  font-family:var(--display);font-weight:800;font-size:1.22rem;font-variant-numeric:tabular-nums;
+  color:var(--raspberry)
+}
+.price small{font-family:var(--body);font-size:.72rem;font-weight:600;color:var(--cocoa-soft);letter-spacing:.06em}
+.add{
+  margin-top:8px;width:100%;justify-content:center;background:var(--cocoa);color:var(--sugar);
+  border:0;border-radius:999px;padding:11px;font:inherit;font-weight:700;font-size:.9rem;cursor:pointer;
+  transition:background .18s,transform .18s
+}
+.add:hover{background:var(--raspberry);transform:translateY(-2px)}
+.stepper{margin-top:8px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.stepper button{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);
+  color:var(--cocoa);font-size:1.15rem;line-height:1;cursor:pointer;flex:none;
+  transition:border-color .18s,color .18s
+}
+.stepper button:hover{border-color:var(--raspberry);color:var(--raspberry)}
+.stepper output{font-weight:700;font-variant-numeric:tabular-nums;min-width:2ch;text-align:center}
+.empty{
+  grid-column:1/-1;text-align:center;padding:46px 20px;color:var(--cocoa-soft);
+  border:1px dashed var(--line);border-radius:20px
+}
+
+/* Painel do pedido */
+.order{
+  position:sticky;top:calc(84px + env(safe-area-inset-top,0px));
+  background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:22px;
+  box-shadow:var(--shadow);min-width:0
+}
+.order h3{font-size:1.24rem;font-weight:800;margin-bottom:.2rem}
+.order .hint{font-size:.85rem;color:var(--cocoa-soft);margin:0 0 16px}
+.lines{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:11px;max-height:38vh;overflow:auto}
+.lines li{display:flex;gap:10px;align-items:baseline;font-size:.9rem}
+.lines .qt{font-weight:700;color:var(--raspberry);font-variant-numeric:tabular-nums;flex:none}
+.lines .nm{flex:1;min-width:0}
+.lines .vl{font-variant-numeric:tabular-nums;font-weight:600;flex:none}
+.lines .rm{background:none;border:0;cursor:pointer;color:var(--cocoa-soft);font-size:1rem;padding:0 2px;flex:none}
+.lines .rm:hover{color:var(--raspberry)}
+.total{
+  display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--line);
+  padding-top:13px;margin-bottom:16px;font-family:var(--display);font-weight:800;font-size:1.3rem
+}
+.total span:last-child{font-variant-numeric:tabular-nums;color:var(--raspberry)}
+.order .btn{width:100%}
+.order .btn-ghost{margin-top:9px;padding-block:10px;font-size:.87rem}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--cocoa-soft);margin-bottom:6px}
+.field input,.field textarea{
+  width:100%;font:inherit;color:var(--cocoa);background:var(--sugar);border:1px solid var(--line);
+  border-radius:13px;padding:11px 13px;outline:none;resize:vertical
+}
+.field input:focus,.field textarea:focus{border-color:var(--raspberry)}
+@media (max-width:980px){
+  .shop{grid-template-columns:1fr}
+  .order{position:static;top:auto}
+}
+
+/* ---------- Redes ---------- */
+.contact{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.net{
+  background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:26px;
+  display:flex;flex-direction:column;gap:12px
+}
+.net h3{font-size:1.3rem;font-weight:800}
+.net p{margin:0;color:var(--cocoa-soft);font-size:.94rem}
+.phone{
+  font-family:var(--display);font-weight:800;font-size:clamp(1.4rem,3.4vw,1.85rem);
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em;user-select:all;word-break:break-word
+}
+.net .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+@media (max-width:760px){.contact{grid-template-columns:1fr}}
+
+/* ---------- Lightbox ---------- */
+.lb{
+  position:fixed;inset:0;z-index:60;background:rgba(24,8,13,.82);backdrop-filter:blur(6px);
+  display:grid;place-items:center;padding:20px
+}
+.lb-in{
+  background:var(--surface);border-radius:24px;overflow:hidden;max-width:420px;width:100%;
+  box-shadow:0 30px 70px rgba(0,0,0,.5)
+}
+.lb-shot{aspect-ratio:1/1;display:grid;place-items:center}
+.lb-shot svg{width:54%;height:auto}
+.lb-body{padding:20px 22px 24px;display:flex;flex-direction:column;gap:10px}
+.lb-body h3{font-size:1.4rem;font-weight:800}
+.lb-body p{margin:0;color:var(--cocoa-soft);font-size:.92rem}
+.lb-close{
+  position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:16px;width:42px;height:42px;
+  border-radius:50%;border:0;background:rgba(255,255,255,.92);color:#2B1418;font-size:1.3rem;cursor:pointer
+}
+
+/* ---------- FAB + rodape ---------- */
+.fab{
+  position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:50;
+  display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:700;font-size:.93rem;
+  background:#1FA855;color:#fff;padding:13px 19px;border-radius:999px;
+  box-shadow:0 12px 30px rgba(31,168,85,.45);transition:transform .2s
+}
+.fab:hover{transform:scale(1.05)}
+.fab svg{width:21px;height:21px}
+.fab b{display:none}
+@media (min-width:600px){.fab b{display:inline}}
+footer{border-top:1px solid var(--line);padding-block:30px 46px;color:var(--cocoa-soft);font-size:.87rem}
+.foot-in{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+.foot-in a{color:var(--raspberry);font-weight:600;text-decoration:none}
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%) translateY(20px);
+  bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:70;
+  background:var(--cocoa);color:var(--sugar);padding:11px 20px;border-radius:999px;font-size:.88rem;
+  font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .fade{opacity:1;transform:none}
+}
+</style>
+
+<header class="bar">
+  <div class="wrap bar-in">
+    <a class="brand" href="#topo">
+      <span class="seal" aria-hidden="true">L</span>
+      <span><b>Doces da Luh</b><span>Confeitaria artesanal</span></span>
+    </a>
+    <nav class="links" aria-label="Seções">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#como">Como pedir</a>
+      <a href="#redes">Contato</a>
+    </nav>
+    <button class="icon-btn" id="tema" type="button" aria-label="Alternar tema claro e escuro">◐</button>
+    <a class="btn btn-wa btn-sm" id="cta-topo" href="#">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.5-.4-.5-.6-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.8.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.2-.2-.3-.3zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</header>
+
+<main id="topo">
+  <section class="hero">
+    <div class="wrap hero-in">
+      <div>
+        <p class="eyebrow fade">Feito no dia, por encomenda</p>
+        <h1 class="fade">Doce de verdade,<br><em>feito pra sua festa</em></h1>
+        <p class="lead fade">Brigadeiros, bolos, tortas e kits de festa preparados um por um. Monte seu pedido aqui e mande pelo WhatsApp em um toque.</p>
+        <div class="hero-cta fade">
+          <a class="btn btn-wa" id="cta-hero" href="#">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.5-.4-.5-.6-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.8.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.2-.2-.3-.3zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+            Chamar no WhatsApp
+          </a>
+          <a class="btn btn-ghost" href="#catalogo">Ver o catálogo</a>
+        </div>
+        <ul class="hero-facts fade">
+          <li>Encomendas sob medida</li>
+          <li>Kits para festa</li>
+          <li>Recheios à sua escolha</li>
+        </ul>
+      </div>
+
+      <!-- Clique na imagem = abre o Instagram -->
+      <a class="ig-card fade" id="ig-card" href="#" target="_blank" rel="noopener noreferrer"
+         aria-label="Abrir o Instagram da Doces da Luh">
+        <div class="ig-photo">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <ellipse cx="60" cy="104" rx="34" ry="7" fill="rgba(0,0,0,.28)"/>
+            <path d="M28 62h64l-5 32a8 8 0 0 1-8 7H41a8 8 0 0 1-8-7z" fill="#F6E4CF"/>
+            <path d="M26 52h68a4 4 0 0 1 4 6l-3 6H25l-3-6a4 4 0 0 1 4-6z" fill="#FFF4E5"/>
+            <path d="M30 52c4-14 15-22 30-22s26 8 30 22z" fill="#D9738F"/>
+            <circle cx="60" cy="24" r="7" fill="#C62B4F"/>
+            <path d="M60 17c1-4 4-6 7-6-2 3-3 5-3 7z" fill="#2F7B4B"/>
+            <g fill="#fff" opacity=".85">
+              <circle cx="44" cy="44" r="2.2"/><circle cx="72" cy="41" r="2"/><circle cx="58" cy="38" r="1.8"/>
+            </g>
+          </svg>
+        </div>
+        <div class="ig-foot">
+          <span class="ig-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.3 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.4A6.4 6.4 0 1 0 18.4 12 6.4 6.4 0 0 0 12 5.6zm0 10.5A4.1 4.1 0 1 1 16.1 12 4.1 4.1 0 0 1 12 16.1zm6.7-10.8a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5z"/></svg>
+          </span>
+          <span><b>@docesdaluh90</b><small>Fotos dos doces no Instagram</small></span>
+          <span class="ig-go">Abrir →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section id="como">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Como pedir</p>
+        <h2>Três passos até o doce na sua mesa</h2>
+        <p>Você escolhe aqui, a gente combina os detalhes no WhatsApp.</p>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <h3>Monte o pedido</h3>
+          <p>Escolha os doces no catálogo e ajuste as quantidades. O total aparece na hora.</p>
+        </article>
+        <article class="step">
+          <h3>Mande pelo WhatsApp</h3>
+          <p>Um toque no botão e a lista completa vai pronta na mensagem, sem você digitar nada.</p>
+        </article>
+        <article class="step">
+          <h3>Combine e receba</h3>
+          <p>A gente confirma data, sabores, entrega ou retirada e o jeito de pagar.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="catalogo">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Catálogo</p>
+        <h2>Escolha seus doces</h2>
+        <p>Filtre por tipo, busque pelo nome e clique na foto para ver de perto.</p>
+      </div>
+
+      <div class="notice" id="aviso">
+        <span>🍬</span>
+        <span><b>Prévia:</b> as fotos e os preços abaixo são exemplos para você ver o site funcionando. Basta trocar a lista de produtos no início do arquivo pelos itens e valores reais do catálogo.</span>
+        <button type="button" aria-label="Fechar aviso">✕</button>
+      </div>
+
+      <div class="shop">
+        <div>
+          <div class="tools">
+            <label class="search">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input id="busca" type="search" placeholder="Buscar doce..." aria-label="Buscar doce">
+            </label>
+            <div class="chips" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+          </div>
+          <div class="grid" id="grade"></div>
+        </div>
+
+        <aside class="order" aria-label="Seu pedido">
+          <h3>Seu pedido</h3>
+          <p class="hint" id="resumo">Nenhum doce escolhido ainda.</p>
+          <ul class="lines" id="linhas"></ul>
+          <div class="total"><span>Total</span><span id="total">R$ 0,00</span></div>
+          <div class="field">
+            <label for="nome">Seu nome</label>
+            <input id="nome" type="text" placeholder="Como te chamar?" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="obs">Observações</label>
+            <textarea id="obs" rows="2" placeholder="Data da festa, sabores, entrega..."></textarea>
+          </div>
+          <a class="btn btn-wa" id="enviar" href="#" aria-disabled="true">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.5-.4-.5-.6-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.8.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.2-.2-.3-.3zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+            Enviar pedido
+          </a>
+          <button class="btn btn-ghost" id="limpar" type="button">Limpar pedido</button>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section id="redes">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Fale com a Luh</p>
+        <h2>Onde a gente se encontra</h2>
+      </div>
+      <div class="contact">
+        <article class="net">
+          <h3>WhatsApp</h3>
+          <p>Pedidos, orçamentos e dúvidas. Responde por aqui.</p>
+          <p class="phone" id="fone">+55 85 8713-6731</p>
+          <div class="row">
+            <a class="btn btn-wa" id="cta-net" href="#">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.5-.4-.5-.6-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.8.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.2-.2-.3-.3zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+              Abrir conversa
+            </a>
+            <button class="btn btn-ghost" id="copiar" type="button">Copiar número</button>
+          </div>
+        </article>
+        <article class="net">
+          <h3>Instagram</h3>
+          <p>As fotos de tudo que sai da cozinha, dia a dia.</p>
+          <p class="phone">@docesdaluh90</p>
+          <div class="row">
+            <a class="btn btn-ig" id="cta-ig" href="#" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.3 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.4A6.4 6.4 0 1 0 18.4 12 6.4 6.4 0 0 0 12 5.6zm0 10.5A4.1 4.1 0 1 1 16.1 12 4.1 4.1 0 0 1 12 16.1zm6.7-10.8a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5z"/></svg>
+              Seguir @docesdaluh90
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<a class="fab" id="fab" href="#" aria-label="Chamar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.4.5-.6.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.5-.4-.5-.6-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.8.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.2-.2-.3-.3zM12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.4A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg>
+  <b>Pedir agora</b>
+</a>
+
+<div class="lb" id="lb" hidden>
+  <button class="lb-close" id="lb-x" type="button" aria-label="Fechar">✕</button>
+  <div class="lb-in" role="dialog" aria-modal="true" aria-labelledby="lb-nome">
+    <div class="lb-shot" id="lb-shot"></div>
+    <div class="lb-body">
+      <h3 id="lb-nome"></h3>
+      <p id="lb-desc"></p>
+      <p class="price" id="lb-preco"></p>
+      <a class="btn btn-wa" id="lb-wa" href="#">Pedir este doce</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot-in">
+    <span>Doces da Luh — confeitaria artesanal por encomenda.</span>
+    <span><a href="#" id="foot-wa">WhatsApp</a> · <a href="#" id="foot-ig" target="_blank" rel="noopener noreferrer">Instagram</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* =======================================================================
+   EDITE AQUI — dados da Doces da Luh
+   ======================================================================= */
+
+// Número do WhatsApp. TELEFONE_EXIBIDO é o que aparece na tela;
+// TELEFONE_DIGITOS é o que vai no link wa.me (só dígitos, com 55 do Brasil).
+// Se o link não abrir a conversa, o celular provavelmente precisa do 9:
+// troque por "5585987136731".
+const TELEFONE_EXIBIDO = "+55 85 8713-6731";
+const TELEFONE_DIGITOS = "558587136731";
+
+const INSTAGRAM = "https://www.instagram.com/docesdaluh90?stkn=Yzl2bW5jeW1hMW93";
+
+// Catálogo. Troque por seus itens reais.
+// Para usar foto, adicione  foto: "fotos/brigadeiro.jpg"  no item.
+// cat: "docinhos" | "bolos" | "tortas" | "kits"
+const PRODUTOS = [
+  { nome:"Brigadeiro gourmet",      cat:"docinhos", preco:3.5,   un:"unidade", desc:"Chocolate belga cozido no ponto, granulado crocante." },
+  { nome:"Beijinho de coco",        cat:"docinhos", preco:3.5,   un:"unidade", desc:"Coco fresco queimado por cima, bem cremoso." },
+  { nome:"Palha italiana",          cat:"docinhos", preco:8,     un:"fatia",   desc:"Brigadeiro firme com biscoito, cortada grossa." },
+  { nome:"Cento de brigadeiro",     cat:"kits",     preco:120,   un:"100 un",  desc:"Cem docinhos tradicionais em forminha." },
+  { nome:"Kit festa 200 docinhos",  cat:"kits",     preco:230,   un:"200 un",  desc:"Quatro sabores à sua escolha, prontos para a mesa." },
+  { nome:"Bolo de pote ninho",      cat:"bolos",    preco:15,    un:"pote",    desc:"Creme de leite ninho com morango em camadas." },
+  { nome:"Bolo vulcão",             cat:"bolos",    preco:38,    un:"bolo",     desc:"Massa de chocolate com calda escorrendo por cima." },
+  { nome:"Cupcake decorado",        cat:"bolos",    preco:9,     un:"unidade", desc:"Cobertura no bico, tema combinado com você." },
+  { nome:"Torta de limão",          cat:"tortas",   preco:14,    un:"fatia",   desc:"Base de biscoito, creme cítrico e merengue maçaricado." },
+  { nome:"Brownie recheado",        cat:"tortas",   preco:12,    un:"unidade", desc:"Borda casquinha, meio úmido, recheio de doce de leite." },
+  { nome:"Copo da felicidade",      cat:"tortas",   preco:18,    un:"copo",    desc:"Camadas de creme, chocolate e fruta da estação." },
+  { nome:"Torta mousse de maracujá",cat:"tortas",   preco:75,    un:"torta",   desc:"Mousse leve com calda de maracujá e raspas." }
+];
+
+const CATEGORIAS = [
+  { id:"todos",    rotulo:"Tudo" },
+  { id:"docinhos", rotulo:"Docinhos" },
+  { id:"bolos",    rotulo:"Bolos e potes" },
+  { id:"tortas",   rotulo:"Tortas e fatias" },
+  { id:"kits",     rotulo:"Kits de festa" }
+];
+
+/* ===================== fim da área de edição ===================== */
+
+const ARTES = {
+  docinhos:{ fundo:"linear-gradient(150deg,#5A2A18,#2A1109)", svg:`
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="98" rx="30" ry="6" fill="rgba(0,0,0,.3)"/>
+      <path d="M34 70h52l-4 20a6 6 0 0 1-6 5H44a6 6 0 0 1-6-5z" fill="#F3DFC4"/>
+      <circle cx="60" cy="56" r="26" fill="#4A2116"/>
+      <circle cx="52" cy="46" r="8" fill="rgba(255,255,255,.14)"/>
+      <g fill="#FFE9A8"><circle cx="48" cy="52" r="2"/><circle cx="66" cy="45" r="2"/><circle cx="72" cy="60" r="2"/><circle cx="56" cy="66" r="2"/><circle cx="62" cy="55" r="2"/></g>
+    </svg>`},
+  bolos:{ fundo:"linear-gradient(150deg,#8E1E42,#37101F)", svg:`
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="100" rx="34" ry="6" fill="rgba(0,0,0,.3)"/>
+      <rect x="30" y="58" width="60" height="38" rx="6" fill="#F6E2C6"/>
+      <rect x="30" y="70" width="60" height="9" fill="#C0577A"/>
+      <path d="M30 58c0-12 13-20 30-20s30 8 30 20z" fill="#FFF3E3"/>
+      <path d="M30 58c6 6 12 2 16 6s10 4 14 0 8-6 14-2 8 2 12-4v6H30z" fill="#E88CA8"/>
+      <circle cx="60" cy="34" r="6" fill="#C62B4F"/>
+      <rect x="57" y="20" width="6" height="12" rx="3" fill="#FFF3E3"/>
+    </svg>`},
+  tortas:{ fundo:"linear-gradient(150deg,#A8611B,#33170A)", svg:`
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="100" rx="32" ry="6" fill="rgba(0,0,0,.3)"/>
+      <path d="M24 92 60 30l36 62z" fill="#F7E3C3"/>
+      <path d="M36 72 60 30l24 42z" fill="#FFF6E8"/>
+      <path d="M44 58 60 30l16 28z" fill="#E7A53C"/>
+      <path d="M24 92h72l-3 6H27z" fill="#C98B4B"/>
+      <circle cx="60" cy="44" r="5" fill="#fff" opacity=".7"/>
+    </svg>`},
+  kits:{ fundo:"linear-gradient(150deg,#4C1E52,#1E0C24)", svg:`
+    <svg viewBox="0 0 120 120" aria-hidden="true">
+      <ellipse cx="60" cy="100" rx="36" ry="6" fill="rgba(0,0,0,.3)"/>
+      <rect x="22" y="52" width="76" height="44" rx="8" fill="#F5E3C8"/>
+      <rect x="22" y="52" width="76" height="12" rx="6" fill="#E2C69F"/>
+      <g fill="#5A2A18"><circle cx="40" cy="76" r="9"/><circle cx="60" cy="76" r="9"/><circle cx="80" cy="76" r="9"/></g>
+      <g fill="#FFE9A8"><circle cx="38" cy="73" r="1.8"/><circle cx="43" cy="79" r="1.8"/><circle cx="58" cy="72" r="1.8"/><circle cx="63" cy="79" r="1.8"/><circle cx="78" cy="74" r="1.8"/><circle cx="83" cy="79" r="1.8"/></g>
+      <path d="M52 52c0-10 4-16 8-16s8 6 8 16z" fill="#C62B4F"/>
+    </svg>`}
+};
+
+const dinheiro = v => "R$ " + v.toFixed(2).replace(".", ",");
+const waLink = texto => "https://wa.me/" + TELEFONE_DIGITOS + (texto ? "?text=" + encodeURIComponent(texto) : "");
+const $ = s => document.querySelector(s);
+
+// Links fixos
+const OLA = "Oi, Luh! Vi o site e queria fazer um pedido de doces.";
+["#cta-topo","#cta-hero","#cta-net","#fab","#foot-wa"].forEach(s => $(s).href = waLink(OLA));
+["#ig-card","#cta-ig","#foot-ig"].forEach(s => $(s).href = INSTAGRAM);
+$("#fone").textContent = TELEFONE_EXIBIDO;
+
+// Tema
+const temaBtn = $("#tema");
+try {
+  const salvo = localStorage.getItem("luh-tema");
+  if (salvo) document.documentElement.dataset.theme = salvo;
+} catch (e) {}
+temaBtn.addEventListener("click", () => {
+  const escuro = document.documentElement.dataset.theme === "dark"
+    || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+  const novo = escuro ? "light" : "dark";
+  document.documentElement.dataset.theme = novo;
+  try { localStorage.setItem("luh-tema", novo); } catch (e) {}
+});
+
+// Aviso da prévia
+$("#aviso").querySelector("button").addEventListener("click", () => { $("#aviso").hidden = true; });
+
+// Estado
+let filtro = "todos", termo = "", pedido = {};
+
+// Filtros
+const filtros = $("#filtros");
+filtros.innerHTML = CATEGORIAS.map(c =>
+  `<button class="chip" type="button" data-cat="${c.id}" aria-pressed="${c.id === "todos"}">${c.rotulo}</button>`
+).join("");
+filtros.addEventListener("click", e => {
+  const b = e.target.closest(".chip");
+  if (!b) return;
+  filtro = b.dataset.cat;
+  filtros.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c === b)));
+  desenharGrade();
+});
+$("#busca").addEventListener("input", e => { termo = e.target.value.trim().toLowerCase(); desenharGrade(); });
+
+const arte = p => ARTES[p.cat] || ARTES.docinhos;
+const rotulo = id => (CATEGORIAS.find(c => c.id === id) || {}).rotulo || id;
+
+function visiveis() {
+  return PRODUTOS.filter(p =>
+    (filtro === "todos" || p.cat === filtro) &&
+    (!termo || (p.nome + " " + p.desc).toLowerCase().includes(termo))
+  );
+}
+
+function desenharGrade() {
+  const lista = visiveis();
+  const grade = $("#grade");
+  if (!lista.length) {
+    grade.innerHTML = `<p class="empty">Nenhum doce com esse nome. Tente outra busca ou fale com a Luh no WhatsApp.</p>`;
+    return;
+  }
+  grade.innerHTML = lista.map(p => {
+    const i = PRODUTOS.indexOf(p), a = arte(p), q = pedido[i] || 0;
+    const visual = p.foto
+      ? `<img src="${p.foto}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover">`
+      : a.svg;
+    return `<article class="card">
+      <button class="shot" type="button" data-zoom="${i}" style="background:${a.fundo}" aria-label="Ver ${p.nome} de perto">
+        <span class="tag">${rotulo(p.cat)}</span>${visual}
+      </button>
+      <div class="card-body">
+        <h3>${p.nome}</h3>
+        <p>${p.desc}</p>
+        <span class="price">${dinheiro(p.preco)} <small>/ ${p.un}</small></span>
+        ${q ? `<div class="stepper">
+            <button type="button" data-menos="${i}" aria-label="Menos um ${p.nome}">−</button>
+            <output>${q}</output>
+            <button type="button" data-mais="${i}" aria-label="Mais um ${p.nome}">+</button>
+          </div>`
+          : `<button class="add" type="button" data-mais="${i}">Adicionar</button>`}
+      </div>
+    </article>`;
+  }).join("");
+}
+
+$("#grade").addEventListener("click", e => {
+  const mais = e.target.closest("[data-mais]"), menos = e.target.closest("[data-menos]"), zoom = e.target.closest("[data-zoom]");
+  if (mais) { const i = +mais.dataset.mais; pedido[i] = (pedido[i] || 0) + 1; atualizar(); aviso(PRODUTOS[i].nome + " no pedido"); }
+  else if (menos) { const i = +menos.dataset.menos; pedido[i] = (pedido[i] || 0) - 1; if (pedido[i] < 1) delete pedido[i]; atualizar(); }
+  else if (zoom) abrirZoom(+zoom.dataset.zoom);
+});
+
+function itens() {
+  return Object.keys(pedido).map(i => ({ p: PRODUTOS[i], q: pedido[i], i: +i }));
+}
+function totalPedido() {
+  return itens().reduce((s, l) => s + l.p.preco * l.q, 0);
+}
+
+function mensagem() {
+  const nome = $("#nome").value.trim(), obs = $("#obs").value.trim();
+  const linhas = itens().map(l => `• ${l.q}x ${l.p.nome} — ${dinheiro(l.p.preco * l.q)}`);
+  let t = "Oi, Luh! Quero encomendar:\n\n" + linhas.join("\n") + `\n\nTotal: ${dinheiro(totalPedido())}`;
+  if (nome) t += `\n\nMeu nome: ${nome}`;
+  if (obs) t += `\nObservações: ${obs}`;
+  return t;
+}
+
+function atualizar() {
+  const lista = itens(), total = totalPedido();
+  const qtd = lista.reduce((s, l) => s + l.q, 0);
+  $("#linhas").innerHTML = lista.map(l =>
+    `<li><span class="qt">${l.q}x</span><span class="nm">${l.p.nome}</span>
+      <span class="vl">${dinheiro(l.p.preco * l.q)}</span>
+      <button class="rm" type="button" data-tirar="${l.i}" aria-label="Tirar ${l.p.nome}">✕</button></li>`
+  ).join("");
+  $("#total").textContent = dinheiro(total);
+  $("#resumo").textContent = qtd
+    ? `${qtd} ${qtd === 1 ? "doce escolhido" : "doces escolhidos"}. Confira e envie.`
+    : "Nenhum doce escolhido ainda.";
+  const enviar = $("#enviar");
+  enviar.href = qtd ? waLink(mensagem()) : waLink(OLA);
+  enviar.setAttribute("aria-disabled", String(!qtd));
+  enviar.toggleAttribute("disabled", !qtd);
+  desenharGrade();
+}
+
+$("#linhas").addEventListener("click", e => {
+  const b = e.target.closest("[data-tirar]");
+  if (!b) return;
+  delete pedido[+b.dataset.tirar];
+  atualizar();
+});
+$("#limpar").addEventListener("click", () => { pedido = {}; atualizar(); aviso("Pedido limpo"); });
+["#nome","#obs"].forEach(s => $(s).addEventListener("input", () => {
+  if (itens().length) $("#enviar").href = waLink(mensagem());
+}));
+
+// Lightbox
+const lb = $("#lb");
+function abrirZoom(i) {
+  const p = PRODUTOS[i], a = arte(p);
+  $("#lb-shot").style.background = a.fundo;
+  $("#lb-shot").innerHTML = p.foto
+    ? `<img src="${p.foto}" alt="${p.nome}" style="width:100%;height:100%;object-fit:cover">`
+    : a.svg;
+  $("#lb-nome").textContent = p.nome;
+  $("#lb-desc").textContent = p.desc;
+  $("#lb-preco").innerHTML = `${dinheiro(p.preco)} <small>/ ${p.un}</small>`;
+  $("#lb-wa").href = waLink(`Oi, Luh! Queria pedir: ${p.nome} (${dinheiro(p.preco)} / ${p.un}).`);
+  lb.hidden = false;
+  $("#lb-x").focus();
+}
+function fecharZoom() { lb.hidden = true; }
+$("#lb-x").addEventListener("click", fecharZoom);
+lb.addEventListener("click", e => { if (e.target === lb) fecharZoom(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.hidden) fecharZoom(); });
+
+// Copiar número
+$("#copiar").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(TELEFONE_EXIBIDO);
+    aviso("Número copiado");
+  } catch (e) {
+    const r = document.createRange();
+    r.selectNodeContents($("#fone"));
+    const sel = getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+    aviso("Número selecionado — copie com Ctrl+C");
+  }
+});
+
+// Aviso curto
+let tId;
+function aviso(txt) {
+  const t = $("#toast");
+  t.textContent = txt;
+  t.classList.add("on");
+  clearTimeout(tId);
+  tId = setTimeout(() => t.classList.remove("on"), 2000);
+}
+
+atualizar();
+</script>
