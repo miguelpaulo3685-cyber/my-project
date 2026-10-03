@@ -178,6 +178,18 @@ app.get('/api/health', async (req, res) => {
 // a amostra é pequena demais para afirmar qualquer coisa, e o nível fica nulo.
 const RESPOSTAS_MINIMAS = 5;
 
+// O site usa nomes curtos nas rotas; o banco guarda a disciplina como a
+// api.enem.dev a nomeia.
+const AREA_PARA_DISCIPLINA = {
+  'linguagens': 'linguagens',
+  'humanas': 'ciencias-humanas',
+  'natureza': 'ciencias-natureza',
+  'matematica': 'matematica'
+};
+const DISCIPLINA_PARA_AREA = Object.fromEntries(
+  Object.entries(AREA_PARA_DISCIPLINA).map(([area, disc]) => [disc, area])
+);
+
 function calcularNivel(totalRespostas, taxaAcerto) {
   if (totalRespostas < RESPOSTAS_MINIMAS) return null;
   if (taxaAcerto >= 0.75) return 1; // Fácil
@@ -218,17 +230,37 @@ app.post('/api/responder', async (req, res) => {
   }
 });
 
+// Progresso da conta, somado das respostas gravadas. É o que faz o treino
+// continuar de onde parou em qualquer aparelho.
+app.get('/api/meu-progresso', exigirLogin, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT q.disciplina,
+              COUNT(*)::int AS feitas,
+              COUNT(*) FILTER (WHERE r.acertou)::int AS acertos
+         FROM respostas r
+         JOIN questoes q ON q.id = r.questao_id
+        WHERE r.usuario_id = $1
+        GROUP BY q.disciplina`,
+      [req.usuario.id]
+    );
+
+    const progresso = {};
+    for (const linha of rows) {
+      const area = DISCIPLINA_PARA_AREA[linha.disciplina];
+      if (area) progresso[area] = { feitas: linha.feitas, acertos: linha.acertos };
+    }
+    res.json({ progresso });
+  } catch (erro) {
+    console.error('Erro ao ler progresso:', erro.message);
+    res.status(500).json({ error: 'Não consegui ler seu progresso.' });
+  }
+});
+
 // ================== QUESTÕES - GET CACHE ==================
 app.get('/api/questoes/:area', async (req, res) => {
   const { area } = req.params;
-  const areaMap = {
-    'linguagens': 'linguagens',
-    'humanas': 'ciencias-humanas',
-    'natureza': 'ciencias-natureza',
-    'matematica': 'matematica'
-  };
-
-  const disciplina = areaMap[area];
+  const disciplina = AREA_PARA_DISCIPLINA[area];
   if (!disciplina) return res.status(400).json({ error: 'Área inválida' });
 
   try {

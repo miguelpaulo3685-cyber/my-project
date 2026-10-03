@@ -448,6 +448,12 @@
     .post-autor b { font-size: .94rem; }
     .post p { line-height: 1.65; font-size: .96rem; white-space: pre-wrap; word-wrap: break-word; }
 
+    .onde-salva {
+      margin-top: 22px; text-align: center;
+      font-size: .85rem; color: var(--texto-fraco); line-height: 1.6;
+    }
+    .onde-salva a { color: var(--marca-forte); cursor: pointer; font-weight: 700; }
+
     .vazio { text-align: center; padding: 56px 24px; color: var(--texto-fraco); }
     .vazio .cara { font-size: 2.8rem; display: block; margin-bottom: 14px; }
 
@@ -520,6 +526,7 @@
     </div>
 
     <div class="grade-areas" id="grade-areas"></div>
+    <p class="onde-salva" id="onde-salva"></p>
   </main>
 
   <!-- ===================== QUESTÃO ===================== -->
@@ -703,7 +710,38 @@ function carregarProgresso() {
 }
 
 function salvarProgresso() {
+  // Com conta, quem manda é o servidor: gravar aqui tambem faria o
+  // progresso da conta vazar para quem usar o site depois sem entrar.
+  if (usuarioLogado) return;
   guardar(CHAVE_PROGRESSO, JSON.stringify(progresso));
+}
+
+// Busca no servidor o que a conta ja respondeu, de qualquer aparelho.
+async function sincronizarProgresso() {
+  if (!usuarioLogado) { carregarProgresso(); desenharTudo(); return; }
+  try {
+    const r = await fetch(`${API_URL}/api/meu-progresso`, { headers: cabecalhoAuth() });
+    if (r.ok) progresso = (await r.json()).progresso || {};
+  } catch (e) {
+    // sem rede, segue com o que estiver em memoria
+  }
+  desenharTudo();
+}
+
+function desenharTudo() {
+  desenharIndicadores();
+  desenharAreas();
+  desenharOndeSalva();
+}
+
+function desenharOndeSalva() {
+  const alvo = document.getElementById('onde-salva');
+  if (!alvo) return;
+  alvo.innerHTML = usuarioLogado
+    ? `Seu progresso está salvo na conta <strong>${escapar(usuarioLogado.username)}</strong>
+       — continua de onde parou em qualquer aparelho.`
+    : `Seu progresso está guardado só neste navegador.
+       <a onclick="abrirConta('criar')">Crie uma conta</a> para treinar também no celular.`;
 }
 
 function anotarResposta(area, acertou) {
@@ -1157,6 +1195,7 @@ async function enviarConta(evento) {
     guardar(CHAVE_TOKEN, dados.token);
     usuarioLogado = dados.usuario;
     desenharPerfil();
+    await sincronizarProgresso();
     recadoConta(criando ? 'Conta criada! Bem-vindo.' : 'Bem-vindo de volta!', 'bom');
     setTimeout(() => irPara('treinar'), 700);
   } catch (e) {
@@ -1172,6 +1211,8 @@ async function sair() {
   guardar(CHAVE_TOKEN, null);
   usuarioLogado = null;
   desenharPerfil();
+  carregarProgresso(); // volta ao progresso de quem usa sem conta
+  desenharTudo();
   irPara('treinar');
 }
 
@@ -1183,6 +1224,7 @@ async function restaurarSessao() {
     else guardar(CHAVE_TOKEN, null);
   } catch (e) {}
   desenharPerfil();
+  await sincronizarProgresso();
 }
 
 // ===================== FEED =====================
@@ -1266,8 +1308,8 @@ function verificarAPI() {
 // ===================== INÍCIO =====================
 iniciarTema();
 carregarProgresso();
-desenharIndicadores();
-desenharAreas();
+desenharTudo();
+// restaurarSessao troca o progresso pelo da conta, se houver sessao valida
 window.addEventListener('load', () => { verificarAPI(); restaurarSessao(); });
 </script>
 </body>
