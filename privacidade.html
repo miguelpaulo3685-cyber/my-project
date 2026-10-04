@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark light">
+  <title>Política de Privacidade — M&M Estudos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    html[data-tema="escuro"] { --fundo: #0b0e15; --superficie: #141926; --borda: #252d3e; --texto: #e9ecf4; --texto-fraco: #959eb4; --marca: #8b7cff; }
+    html[data-tema="claro"]  { --fundo: #f2f4f9; --superficie: #ffffff; --borda: #e4e8f1; --texto: #141828; --texto-fraco: #697189; --marca: #6d5efc; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--fundo); color: var(--texto); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    main { max-width: 760px; margin: 0 auto; padding: 36px 20px 64px; }
+    .voltar { color: var(--marca); font-weight: 700; text-decoration: none; font-size: .92rem; }
+    h1 { font-family: 'Fraunces', Georgia, serif; font-size: 2rem; letter-spacing: -.01em; margin: 22px 0 4px; }
+    .data { color: var(--texto-fraco); font-size: .88rem; margin-bottom: 28px; }
+    h2 { font-family: 'Fraunces', Georgia, serif; font-size: 1.25rem; margin: 32px 0 10px; }
+    p, li { font-size: .98rem; }
+    p + p { margin-top: 10px; }
+    ul { padding-left: 22px; margin: 8px 0; }
+    li { margin-bottom: 6px; }
+    a { color: var(--marca); }
+    .caixa { background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 18px 20px; margin-top: 12px; }
+  </style>
+  <script>
+    try { const t = localStorage.getItem('mm_tema'); if (t) document.documentElement.dataset.tema = t; } catch (e) {}
+  </script>
+</head>
+<body>
+<main>
+  <a class="voltar" href="./">← Voltar ao site</a>
+  <h1>Política de Privacidade</h1>
+  <p class="data">Última atualização: 4 de outubro de 2026</p>
+
+  <p>Esta página explica quais dados o M&amp;M Estudos guarda sobre você, para que eles servem e
+  o que você pode fazer com eles, conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018, a LGPD).</p>
+
+  <h2>Quem cuida dos seus dados</h2>
+  <p>O M&amp;M Estudos é um projeto independente mantido por Matheus e Miguel, que são os
+  responsáveis (controladores) pelos dados. Para qualquer assunto de privacidade, escreva para
+  <a href="mailto:[E-MAIL DE CONTATO]">[E-MAIL DE CONTATO]</a>.</p>
+
+  <h2>O que guardamos</h2>
+  <ul>
+    <li><b>Dados da conta:</b> nome (como você quer ser chamado), e-mail, data de criação,
+    data do último acesso e a data em que você aceitou estes termos.</li>
+    <li><b>Senha:</b> nunca guardamos a senha em si, só uma "impressão digital" dela (hash scrypt)
+    que não pode ser revertida. Nem nós conseguimos saber qual é a sua senha.</li>
+    <li><b>Seu treino:</b> cada resposta que você dá (qual questão, se acertou e quanto tempo levou).</li>
+    <li><b>Posts no feed:</b> o texto que você publica, junto com o seu nome. Posts são públicos.</li>
+    <li><b>Registros técnicos:</b> o endereço IP e o horário dos acessos ficam por pouco tempo
+    nos registros do servidor, para proteger o site contra abusos e tentativas de invasão.</li>
+    <li><b>No seu navegador:</b> guardamos o tema escolhido (claro/escuro), o código da sua sessão
+    e, se você usa sem conta, o seu progresso. Isso fica só no seu aparelho.</li>
+  </ul>
+  <p>Não usamos cookies de rastreamento, não mostramos anúncios e não vendemos dados para ninguém.</p>
+
+  <h2>Para que usamos</h2>
+  <ul>
+    <li>Manter sua conta e mostrar seu progresso em qualquer aparelho (base legal: execução do
+    serviço que você pediu, art. 7º, V da LGPD).</li>
+    <li>Medir a dificuldade de cada questão. Para isso somamos as respostas de todos os alunos,
+    sem identificar ninguém.</li>
+    <li>Proteger o site contra abusos, como tentativas de adivinhar senhas (base legal: legítimo
+    interesse, art. 7º, IX).</li>
+    <li>Exibir os seus posts no feed, que você escolhe publicar.</li>
+  </ul>
+
+  <h2>Com quem os dados são compartilhados</h2>
+  <p>Não vendemos nem repassamos seus dados. Para o site funcionar, usamos serviços que
+  guardam ou transportam os dados em nosso nome:</p>
+  <ul>
+    <li><b>Neon:</b> banco de dados onde ficam a conta e as respostas.</li>
+    <li><b>Render:</b> servidor que roda o sistema.</li>
+    <li><b>GitHub Pages:</b> hospeda as páginas do site.</li>
+    <li><b>Google Fonts:</b> fornece as fontes do site e, para isso, recebe o seu endereço IP.</li>
+  </ul>
+  <p>Esses serviços ficam nos Estados Unidos, então seus dados podem ser processados fora do
+  Brasil (transferência internacional, art. 33 da LGPD). Todos usam conexão criptografada (HTTPS).</p>
+
+  <h2>Por quanto tempo</h2>
+  <ul>
+    <li>Os dados da conta ficam guardados enquanto ela existir.</li>
+    <li>Cada login vale por 30 dias. Depois disso, a sessão é apagada.</li>
+    <li>Quando você exclui a conta, apagamos na hora o nome, o e-mail, a senha, as sessões e os
+    posts. Suas respostas às questões continuam só como estatística anônima, sem nenhuma ligação
+    com você, e seguem ajudando a medir a dificuldade das questões.</li>
+  </ul>
+
+  <h2>Seus direitos</h2>
+  <p>Pela LGPD (art. 18), você pode a qualquer momento:</p>
+  <ul>
+    <li><b>Excluir sua conta:</b> direto no site, em Minha conta → Excluir minha conta.</li>
+    <li>Saber quais dados temos sobre você e pedir uma cópia deles.</li>
+    <li>Corrigir dados errados.</li>
+    <li>Retirar o seu consentimento.</li>
+  </ul>
+  <p>Para pedidos que não estão no site, escreva para
+  <a href="mailto:[E-MAIL DE CONTATO]">[E-MAIL DE CONTATO]</a>. Respondemos em até 15 dias.
+  Se achar que não fomos corretos, você também pode reclamar na Autoridade Nacional de Proteção
+  de Dados (ANPD), em <a href="https://www.gov.br/anpd">gov.br/anpd</a>.</p>
+
+  <h2>Menores de idade</h2>
+  <div class="caixa">
+    <p>O site é feito para quem estuda para o ENEM, e muita gente aqui tem menos de 18 anos.
+    Por isso coletamos só o mínimo necessário. <b>Quem tem menos de 12 anos só pode criar conta
+    com o consentimento de um dos pais ou responsável</b> (art. 14 da LGPD). Se você é adolescente,
+    recomendamos mostrar esta página para os seus responsáveis.</p>
+  </div>
+
+  <h2>Segurança</h2>
+  <p>As senhas e os códigos de sessão são guardados só como hash, a conexão é sempre criptografada
+  e há limites contra tentativas repetidas de login. Nenhum sistema é 100% seguro, mas, se houver
+  algum incidente que coloque você em risco, vamos avisar.</p>
+
+  <h2>Mudanças nesta política</h2>
+  <p>Se esta política mudar, a data no topo da página será atualizada. Quando a mudança for
+  importante, avisaremos no site.</p>
+</main>
+</body>
+</html>

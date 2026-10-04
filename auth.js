@@ -91,33 +91,45 @@ async function problemaNoEmail(email) {
   return null;
 }
 
-// ============ FREIO CONTRA FORÇA BRUTA ============
-// Sem isso, dá para testar milhares de senhas. Guardado em memória: reinicia
-// junto com o servidor, o que é aceitável para o tamanho deste projeto.
+// ============ FREIOS ============
+// Contam pedidos por chave (IP, IP+e-mail...) dentro de uma janela de tempo.
+// Guardados em memória: reiniciam junto com o servidor, o que é aceitável
+// para o tamanho deste projeto.
 
-const tentativas = new Map();
-const LIMITE = 5;
-const JANELA_MS = 15 * 60 * 1000;
+function criarFreio(limite, janelaMs) {
+  const contagens = new Map();
 
-function bloqueado(chave) {
-  const reg = tentativas.get(chave);
-  if (!reg) return false;
-  if (Date.now() - reg.desde > JANELA_MS) { tentativas.delete(chave); return false; }
-  return reg.contagem >= LIMITE;
+  // Sem essa faxina o mapa cresceria para sempre com IPs que não voltam.
+  setInterval(() => {
+    const agora = Date.now();
+    for (const [chave, reg] of contagens) {
+      if (agora - reg.desde > janelaMs) contagens.delete(chave);
+    }
+  }, janelaMs).unref();
+
+  return {
+    bloqueado(chave) {
+      const reg = contagens.get(chave);
+      if (!reg) return false;
+      if (Date.now() - reg.desde > janelaMs) { contagens.delete(chave); return false; }
+      return reg.contagem >= limite;
+    },
+    registrar(chave) {
+      const reg = contagens.get(chave);
+      if (!reg || Date.now() - reg.desde > janelaMs) {
+        contagens.set(chave, { contagem: 1, desde: Date.now() });
+      } else {
+        reg.contagem++;
+      }
+    },
+    limpar(chave) {
+      contagens.delete(chave);
+    }
+  };
 }
 
-function registrarFalha(chave) {
-  const reg = tentativas.get(chave);
-  if (!reg || Date.now() - reg.desde > JANELA_MS) {
-    tentativas.set(chave, { contagem: 1, desde: Date.now() });
-  } else {
-    reg.contagem++;
-  }
-}
-
-function limparFalhas(chave) {
-  tentativas.delete(chave);
-}
+// Sem isso, dá para testar milhares de senhas.
+const freioDeSenha = criarFreio(5, 15 * 60 * 1000);
 
 module.exports = {
   criarHashDeSenha,
@@ -127,8 +139,7 @@ module.exports = {
   validadeDaSessao,
   problemaNaSenha,
   problemaNoEmail,
-  bloqueado,
-  registrarFalha,
-  limparFalhas,
+  criarFreio,
+  freioDeSenha,
   DIAS_DE_SESSAO
 };

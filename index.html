@@ -425,6 +425,35 @@
     .recado.ruim { background: rgba(239,68,68,.13); color: var(--errado); }
     .recado.bom { background: rgba(34,197,94,.13); color: var(--certo); }
 
+    .form-conta .aceite {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-weight: 500; line-height: 1.5; color: var(--texto-fraco); margin-top: 20px;
+    }
+    .form-conta .aceite input { width: 18px; height: 18px; padding: 0; flex-shrink: 0; margin-top: 2px; accent-color: var(--marca); }
+    .form-conta .aceite a, .rodape a { color: var(--marca-forte); font-weight: 700; }
+
+    .dados-conta { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+    .dados-conta .bolha {
+      width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte));
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem;
+    }
+    .dados-conta b { display: block; font-size: 1.05rem; }
+    .dados-conta small { color: var(--texto-fraco); font-size: .88rem; word-break: break-all; }
+
+    .zona-perigo { margin-top: 30px; border-top: 1px solid var(--borda); padding-top: 18px; }
+    .zona-perigo summary { cursor: pointer; color: var(--errado); font-weight: 700; font-size: .9rem; }
+    .zona-perigo p { font-size: .86rem; color: var(--texto-fraco); line-height: 1.6; margin-top: 12px; }
+    button.acao.perigo { background: var(--errado); width: 100%; margin-top: 18px; padding: 13px; }
+
+    .rodape {
+      max-width: 720px; margin: 0 auto; padding: 10px 20px 40px;
+      text-align: center; font-size: .8rem; color: var(--texto-fraco); line-height: 1.6;
+    }
+    .rodape a { text-decoration: none; }
+    .rodape p { margin-top: 6px; }
+
     /* ===================== FEED ===================== */
     .caixa-texto {
       width: 100%; padding: 15px; min-height: 96px; resize: vertical;
@@ -605,17 +634,52 @@
         <input type="password" id="conta-senha" autocomplete="current-password" required>
         <div class="pista" id="pista-senha"></div>
 
+        <label class="aceite escondido" id="campo-aceite">
+          <input type="checkbox" id="conta-aceite">
+          <span>Li e aceito os <a href="termos.html" target="_blank">Termos de Uso</a>
+          e a <a href="privacidade.html" target="_blank">Política de Privacidade</a>.</span>
+        </label>
+
         <button type="submit" class="acao" id="botao-conta">Entrar</button>
         <div id="recado-conta"></div>
         <div class="alternar" id="alternar-conta"></div>
       </form>
+
+      <div class="form-conta escondido" id="painel-logado">
+        <div class="dados-conta">
+          <span class="bolha" id="conta-inicial">?</span>
+          <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
+        </div>
+        <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
+
+        <details class="zona-perigo">
+          <summary>Excluir minha conta</summary>
+          <p>Apaga sua conta, seus posts e suas sessões. Suas respostas às questões
+          ficam apenas como estatística anônima, sem ligação com você. Não dá para desfazer.</p>
+          <form onsubmit="excluirConta(event)">
+            <label for="excluir-senha">Confirme sua senha</label>
+            <input type="password" id="excluir-senha" autocomplete="current-password" required>
+            <button type="submit" class="acao perigo" id="botao-excluir">Excluir conta para sempre</button>
+          </form>
+          <div id="recado-excluir"></div>
+        </details>
+      </div>
     </div>
   </main>
+
+  <footer class="rodape">
+    <a href="privacidade.html">Privacidade</a> ·
+    <a href="termos.html">Termos de Uso</a>
+    <p>Questões das provas do ENEM, elaboradas pelo INEP, obtidas via api.enem.dev.
+    Site independente, sem vínculo com o INEP ou o MEC.</p>
+  </footer>
 
 <script>
 const API_URL = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? 'http://localhost:3000'
   : 'https://enem-api-cbo6.onrender.com';
+
+const SEM_SERVIDOR = 'Não consegui falar com o servidor. Ele pode estar acordando (leva até 1 minuto) ou fora do ar. Tente de novo daqui a pouco.';
 
 // Ícones desenhados em SVG: emoji muda de desenho em cada sistema e
 // destoa do resto da interface.
@@ -862,11 +926,13 @@ async function abrirMateria(area) {
         Ainda não há questões de ${escapar(nomeDaArea(area))} no banco.</div>`;
       return;
     }
-    if (!r.ok) throw new Error('A API respondeu ' + r.status);
-    questoes = (await r.json()).questoes || [];
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    questoes = dados.questoes || [];
   } catch (e) {
     painel.innerHTML = `<div class="vazio"><span class="cara">🔌</span>
-      Não consegui falar com a API.<br><small>${escapar(e.message)}</small></div>`;
+      ${escapar(e.daApi || SEM_SERVIDOR)}<br>
+      <button class="acao" style="margin:18px auto 0" onclick="abrirMateria(materiaAtual)">Tentar de novo</button></div>`;
     return;
   }
 
@@ -1127,7 +1193,7 @@ function desenharPerfil() {
   const botao = document.getElementById('btn-perfil');
   if (usuarioLogado) {
     botao.textContent = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
-    botao.title = usuarioLogado.username + ' — clique para sair';
+    botao.title = usuarioLogado.username + ' — minha conta';
   } else {
     botao.textContent = '?';
     botao.title = 'Entrar ou criar conta';
@@ -1135,16 +1201,30 @@ function desenharPerfil() {
 }
 
 function cliqueNoPerfil() {
-  if (usuarioLogado) {
-    if (confirm(`Sair da conta de ${usuarioLogado.username}?`)) sair();
-  } else {
-    abrirConta('entrar');
-  }
+  abrirConta(usuarioLogado ? 'logado' : 'entrar');
 }
 
 function abrirConta(modo) {
   modoConta = modo;
+  const logado = modo === 'logado';
+  document.getElementById('form-conta').classList.toggle('escondido', logado);
+  document.getElementById('painel-logado').classList.toggle('escondido', !logado);
+
+  if (logado) {
+    document.getElementById('titulo-conta').textContent = 'Minha conta';
+    document.getElementById('sub-conta').textContent = 'Seu progresso fica salvo aqui, em qualquer aparelho.';
+    document.getElementById('conta-inicial').textContent = (usuarioLogado.username || '?').charAt(0).toUpperCase();
+    document.getElementById('conta-nome-exibido').textContent = usuarioLogado.username;
+    document.getElementById('conta-email-exibido').textContent = usuarioLogado.email;
+    document.getElementById('excluir-senha').value = '';
+    document.getElementById('recado-excluir').innerHTML = '';
+    document.querySelector('.zona-perigo').open = false;
+    irPara('conta');
+    return;
+  }
+
   const criando = modo === 'criar';
+  document.getElementById('campo-aceite').classList.toggle('escondido', !criando);
 
   document.getElementById('titulo-conta').textContent = criando ? 'Criar conta' : 'Entrar';
   document.getElementById('sub-conta').textContent = criando
@@ -1177,7 +1257,14 @@ async function enviarConta(evento) {
     email: document.getElementById('conta-email').value.trim(),
     senha: document.getElementById('conta-senha').value
   };
-  if (criando) corpo.nome = document.getElementById('conta-nome').value.trim();
+  if (criando) {
+    corpo.nome = document.getElementById('conta-nome').value.trim();
+    corpo.aceite = document.getElementById('conta-aceite').checked;
+    if (!corpo.aceite) {
+      recadoConta('Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.', 'ruim');
+      return;
+    }
+  }
 
   botao.disabled = true;
   botao.textContent = criando ? 'Criando…' : 'Entrando…';
@@ -1199,21 +1286,55 @@ async function enviarConta(evento) {
     recadoConta(criando ? 'Conta criada! Bem-vindo.' : 'Bem-vindo de volta!', 'bom');
     setTimeout(() => irPara('treinar'), 700);
   } catch (e) {
-    recadoConta('Não consegui falar com o servidor: ' + e.message, 'ruim');
+    recadoConta(SEM_SERVIDOR, 'ruim');
   } finally {
     botao.disabled = false;
     botao.textContent = criando ? 'Criar minha conta' : 'Entrar';
   }
 }
 
-async function sair() {
-  try { await fetch(`${API_URL}/api/auth/sair`, { method: 'POST', headers: cabecalhoAuth() }); } catch (e) {}
+async function excluirConta(evento) {
+  evento.preventDefault();
+  if (!confirm('Tem certeza? Sua conta e seus posts serão apagados para sempre.')) return;
+
+  const botao = document.getElementById('botao-excluir');
+  const recado = texto => {
+    document.getElementById('recado-excluir').innerHTML = `<div class="recado ruim">${escapar(texto)}</div>`;
+  };
+  botao.disabled = true;
+  botao.textContent = 'Excluindo…';
+
+  try {
+    const r = await fetch(`${API_URL}/api/conta`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify({ senha: document.getElementById('excluir-senha').value })
+    });
+    const dados = await r.json();
+    if (!r.ok) { recado(dados.error || 'Não deu certo.'); return; }
+
+    esquecerConta();
+    alert('Sua conta foi excluída.');
+  } catch (e) {
+    recado(SEM_SERVIDOR);
+  } finally {
+    botao.disabled = false;
+    botao.textContent = 'Excluir conta para sempre';
+  }
+}
+
+function esquecerConta() {
   guardar(CHAVE_TOKEN, null);
   usuarioLogado = null;
   desenharPerfil();
   carregarProgresso(); // volta ao progresso de quem usa sem conta
   desenharTudo();
   irPara('treinar');
+}
+
+async function sair() {
+  try { await fetch(`${API_URL}/api/auth/sair`, { method: 'POST', headers: cabecalhoAuth() }); } catch (e) {}
+  esquecerConta();
 }
 
 async function restaurarSessao() {
@@ -1246,7 +1367,7 @@ async function publicar() {
     if (r.ok) { caixa.value = ''; await abrirFeed(); return; }
     alert((await r.json()).error || 'Não consegui publicar.');
   } catch (e) {
-    alert('Não consegui publicar: ' + e.message);
+    alert(SEM_SERVIDOR);
   } finally {
     botao.disabled = false;
     botao.textContent = 'Publicar';
@@ -1281,8 +1402,8 @@ async function abrirFeed() {
             <p>${escapar(p.conteudo)}</p>
           </article>`).join('');
   } catch (e) {
-    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>Não consegui carregar os posts.<br>
-      <small>${escapar(e.message)}</small></div>`;
+    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(SEM_SERVIDOR)}<br>
+      <button class="acao" style="margin:18px auto 0" onclick="abrirFeed()">Tentar de novo</button></div>`;
   }
 }
 
@@ -1301,7 +1422,7 @@ function verificarAPI() {
     })
     .catch(e => {
       bolinha.className = 'bolinha ruim';
-      texto.textContent = 'Sem conexão com a API: ' + e.message;
+      texto.textContent = 'Servidor fora do ar ou acordando. Tente de novo em instantes.';
     });
 }
 

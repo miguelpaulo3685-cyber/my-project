@@ -6,6 +6,7 @@ const { Pool } = require('pg');
 const cron = require('node-cron');
 const axios = require('axios');
 const path = require('path');
+const crypto = require('crypto');
 const auth = require('./auth');
 
 const app = express();
@@ -21,11 +22,56 @@ const pool = new Pool({
   connectionTimeoutMillis: 20000,
 });
 
-// Middleware
-app.use(cors());
+// O Render fica na frente do servidor como proxy: sem isto, req.ip seria o
+// IP do proxy e todos os freios tratariam o site inteiro como uma pessoa só.
+app.set('trust proxy', 1);
+
+const ORIGENS_PERMITIDAS = (process.env.ORIGENS_PERMITIDAS ||
+  'https://miguelpaulo3685-cyber.github.io,http://localhost:3000,http://127.0.0.1:3000'
+).split(',').map(o => o.trim()).filter(Boolean);
+
+// Pedidos sem Origin (curl, o próprio servidor) não passam pelo navegador,
+// e CORS não se aplica a eles.
+app.use(cors({ origin: (origem, ok) => ok(null, !origem || ORIGENS_PERMITIDAS.includes(origem)) }));
 app.use(morgan('combined'));
-app.use(express.json());
-app.use(express.static(path.join(__dirname)));
+app.use(express.json({ limit: '20kb' }));
+
+// Só as páginas do site. Servir a pasta inteira entregava o código do
+// servidor (e o .env, se existisse) para quem pedisse.
+for (const pagina of ['index.html', 'privacidade.html', 'termos.html']) {
+  app.get(pagina === 'index.html' ? ['/', '/index.html'] : `/${pagina}`, (req, res) => {
+    res.sendFile(path.join(__dirname, pagina));
+  });
+}
+
+function limitar(freio, mensagem, chaveDe = req => req.ip) {
+  return (req, res, next) => {
+    const chave = chaveDe(req);
+    if (freio.bloqueado(chave)) return res.status(429).json({ error: mensagem });
+    freio.registrar(chave);
+    next();
+  };
+}
+
+// Limites folgados de propósito: numa escola, uma sala inteira sai pelo
+// mesmo IP.
+app.use('/api', limitar(auth.criarFreio(300, 60 * 1000), 'Muitos pedidos seguidos. Espere um minuto.'));
+const freioCadastro = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Muitas contas criadas daqui. Tente mais tarde.');
+const freioRespostas = limitar(auth.criarFreio(120, 60 * 1000), 'Calma! Respostas demais em pouco tempo.');
+const freioPosts = limitar(auth.criarFreio(10, 10 * 60 * 1000), 'Você publicou muito em pouco tempo. Espere uns minutos.',
+  req => `u${req.usuario.id}`);
+
+// Rotas que buscam questões na api.enem.dev e gravam no banco. Ficam
+// fechadas por chave: abertas, qualquer um poderia dispará-las sem parar.
+function exigirAdmin(req, res, next) {
+  const esperada = process.env.ADMIN_KEY;
+  if (!esperada) return res.status(503).json({ error: 'Rota de administração desativada (ADMIN_KEY não configurada).' });
+  const recebida = String(req.headers['x-admin-key'] || '');
+  const a = crypto.createHash('sha256').update(recebida).digest();
+  const b = crypto.createHash('sha256').update(esperada).digest();
+  if (!crypto.timingSafeEqual(a, b)) return res.status(403).json({ error: 'Chave de administração inválida.' });
+  next();
+}
 
 // ================== CONTAS E LOGIN ==================
 
@@ -70,11 +116,14 @@ async function abrirSessao(usuarioId) {
   return token;
 }
 
-app.post('/api/auth/registrar', async (req, res) => {
-  const { nome, email, senha } = req.body || {};
+app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
+  const { nome, email, senha, aceite } = req.body || {};
 
   if (!nome || String(nome).trim().length < 2) {
     return res.status(400).json({ error: 'Diga seu nome (ao menos 2 letras).' });
+  }
+  if (aceite !== true) {
+    return res.status(400).json({ error: 'Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.' });
   }
   const problemaEmail = await auth.problemaNoEmail(email);
   if (problemaEmail) return res.status(400).json({ error: problemaEmail });
@@ -90,10 +139,10 @@ app.post('/api/auth/registrar', async (req, res) => {
     }
 
     const { rows } = await pool.query(
-      `INSERT INTO usuarios (username, email, senha_hash)
-       VALUES ($1, $2, $3)
+      `INSERT INTO usuarios (username, email, senha_hash, termos_aceitos_em)
+       VALUES ($1, $2, $3, NOW())
        RETURNING id, username, email`,
-      [String(nome).trim(), emailLimpo, await auth.criarHashDeSenha(senha)]
+      [String(nome).trim().slice(0, 60), emailLimpo, await auth.criarHashDeSenha(senha)]
     );
 
     const token = await abrirSessao(rows[0].id);
@@ -112,7 +161,7 @@ app.post('/api/auth/login', async (req, res) => {
   const emailLimpo = String(email || '').trim().toLowerCase();
   const chaveDoFreio = `${req.ip}:${emailLimpo}`;
 
-  if (auth.bloqueado(chaveDoFreio)) {
+  if (auth.freioDeSenha.bloqueado(chaveDoFreio)) {
     return res.status(429).json({ error: 'Muitas tentativas. Espere 15 minutos e tente de novo.' });
   }
 
@@ -127,11 +176,11 @@ app.post('/api/auth/login', async (req, res) => {
     // dois falhou entregaria para um estranho quais e-mails tem conta aqui.
     const ok = usuario && await auth.senhaConfere(String(senha || ''), usuario.senha_hash);
     if (!ok) {
-      auth.registrarFalha(chaveDoFreio);
+      auth.freioDeSenha.registrar(chaveDoFreio);
       return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
     }
 
-    auth.limparFalhas(chaveDoFreio);
+    auth.freioDeSenha.limpar(chaveDoFreio);
     const token = await abrirSessao(usuario.id);
     res.json({
       token,
@@ -160,6 +209,32 @@ app.post('/api/auth/sair', async (req, res) => {
   res.json({ message: 'Você saiu da conta.' });
 });
 
+// Exclusão pedida pela própria pessoa (direito garantido pela LGPD). Pede a
+// senha de novo: um celular esquecido aberto não pode apagar a conta de alguém.
+// As respostas ficam, mas sem dono (usuario_id vira NULL): anônimas, seguem
+// servindo para medir a dificuldade das questões.
+app.delete('/api/conta', exigirLogin, async (req, res) => {
+  const chaveDoFreio = `${req.ip}:${req.usuario.email}`;
+  if (auth.freioDeSenha.bloqueado(chaveDoFreio)) {
+    return res.status(429).json({ error: 'Muitas tentativas. Espere 15 minutos e tente de novo.' });
+  }
+
+  try {
+    const { rows } = await pool.query('SELECT senha_hash FROM usuarios WHERE id = $1', [req.usuario.id]);
+    if (!rows[0] || !await auth.senhaConfere(String(req.body?.senha || ''), rows[0].senha_hash)) {
+      auth.freioDeSenha.registrar(chaveDoFreio);
+      return res.status(401).json({ error: 'Senha incorreta.' });
+    }
+
+    // Sessões e posts vão junto pelo ON DELETE CASCADE.
+    await pool.query('DELETE FROM usuarios WHERE id = $1', [req.usuario.id]);
+    res.json({ message: 'Sua conta e seus dados foram apagados.' });
+  } catch (erro) {
+    console.error('Erro ao excluir conta:', erro.message);
+    res.status(500).json({ error: 'Não consegui excluir a conta agora.' });
+  }
+});
+
 // ================== HEALTH CHECK ==================
 // Responde 200 mesmo sem banco: o Render usa esta rota para saber se o
 // servico esta de pe, e derrubar o site inteiro por causa do banco e pior.
@@ -168,7 +243,8 @@ app.get('/api/health', async (req, res) => {
     const result = await pool.query('SELECT NOW()');
     res.json({ status: 'ok', banco: 'conectado', timestamp: result.rows[0].now });
   } catch (error) {
-    res.json({ status: 'ok', banco: 'sem conexao', detalhe: error.message });
+    console.error('Health check sem banco:', error.message);
+    res.json({ status: 'ok', banco: 'sem conexao' });
   }
 });
 
@@ -198,7 +274,7 @@ function calcularNivel(totalRespostas, taxaAcerto) {
   return 4;                         // Desafio
 }
 
-app.post('/api/responder', async (req, res) => {
+app.post('/api/responder', freioRespostas, async (req, res) => {
   const { questao_id, acertou, segundos } = req.body || {};
   if (!Number.isInteger(questao_id) || typeof acertou !== 'boolean') {
     return res.status(400).json({ error: 'Informe questao_id e acertou.' });
@@ -338,7 +414,7 @@ async function gravarQuestoes(questoes) {
 
 // Baixa a prova inteira de um ano, pagina por pagina, ate a API dizer que
 // acabou (hasMore). Diferente do sorteio, aqui da para saber que terminou.
-app.post('/api/carregar-ano/:ano', async (req, res) => {
+app.post('/api/carregar-ano/:ano', exigirAdmin, async (req, res) => {
   const ano = Number(req.params.ano);
   if (!ANOS_DISPONIVEIS.includes(ano)) {
     return res.status(400).json({ error: `Ano invalido. Disponiveis: ${ANOS_DISPONIVEIS.join(', ')}` });
@@ -391,27 +467,33 @@ app.get('/api/estatisticas', async (req, res) => {
       anos_faltando: ANOS_DISPONIVEIS.filter(a => !porAno.rows.some(r => r.ano === a))
     });
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao ler estatisticas', detalhe: error.message });
+    console.error('Erro ao ler estatisticas:', error.message);
+    res.status(500).json({ error: 'Erro ao ler estatisticas' });
   }
 });
 
-app.post('/api/atualizar-cache', async (req, res) => {
+// Sorteia um ano e um trecho da prova e grava o que for novo. Chamada direto
+// pelo cron, sem passar por HTTP, para não precisar da chave de admin.
+async function atualizarCache() {
   const ano = ANOS_DISPONIVEIS[Math.floor(Math.random() * ANOS_DISPONIVEIS.length)];
+  console.log(`🔄 Buscando questões do ENEM ${ano}...`);
 
+  const response = await axios.get(
+    `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+    { params: { limit: 50, offset: Math.floor(Math.random() * 120) }, timeout: 30000 }
+  );
+
+  const questoes = response.data?.questions || [];
+  const inseridas = await gravarQuestoes(questoes);
+
+  const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
+  console.log(`✅ ${msg}`);
+  return { message: msg, ano, recebidas: questoes.length, inseridas };
+}
+
+app.post('/api/atualizar-cache', exigirAdmin, async (req, res) => {
   try {
-    console.log(`🔄 Buscando questões do ENEM ${ano}...`);
-
-    const response = await axios.get(
-      `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
-      { params: { limit: 50, offset: Math.floor(Math.random() * 120) }, timeout: 30000 }
-    );
-
-    const questoes = response.data?.questions || [];
-    const inseridas = await gravarQuestoes(questoes);
-
-    const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
-    console.log(`✅ ${msg}`);
-    res.json({ message: msg, ano, recebidas: questoes.length, inseridas });
+    res.json(await atualizarCache());
   } catch (error) {
     console.error('❌ Erro na atualização:', error.message);
     res.status(500).json({ error: 'Erro ao atualizar cache', detalhe: error.message });
@@ -419,7 +501,7 @@ app.post('/api/atualizar-cache', async (req, res) => {
 });
 
 // ================== SALVAR POST DO FEED ==================
-app.post('/api/posts', exigirLogin, async (req, res) => {
+app.post('/api/posts', exigirLogin, freioPosts, async (req, res) => {
   const { conteudo } = req.body;
   if (!conteudo || !String(conteudo).trim()) {
     return res.status(400).json({ error: 'Escreva alguma coisa antes de publicar.' });
@@ -427,12 +509,13 @@ app.post('/api/posts', exigirLogin, async (req, res) => {
 
   try {
     // O autor vem da sessão, nunca do que o navegador mandou: senão qualquer
-    // um poderia publicar no nome de outra pessoa.
+    // um poderia publicar no nome de outra pessoa. usuario_id guarda o nome
+    // exibido; autor_id liga o post à conta, para ele sumir junto com ela.
     const result = await pool.query(
-      `INSERT INTO posts (usuario_id, conteudo, created_at)
-       VALUES ($1, $2, NOW())
-       RETURNING *`,
-      [req.usuario.username, String(conteudo).trim().slice(0, 2000)]
+      `INSERT INTO posts (usuario_id, autor_id, conteudo, created_at)
+       VALUES ($1, $2, $3, NOW())
+       RETURNING id, usuario_id, conteudo, created_at`,
+      [req.usuario.username, req.usuario.id, String(conteudo).trim().slice(0, 2000)]
     );
     res.json({ post: result.rows[0] });
   } catch (error) {
@@ -445,7 +528,7 @@ app.post('/api/posts', exigirLogin, async (req, res) => {
 app.get('/api/posts', async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT * FROM posts
+      `SELECT id, usuario_id, conteudo, created_at FROM posts
        ORDER BY created_at DESC
        LIMIT 50`
     );
@@ -461,8 +544,7 @@ app.get('/api/posts', async (req, res) => {
 cron.schedule('0 * * * *', async () => {
   console.log('⏰ Cron: Atualizando cache automático...');
   try {
-    const response = await axios.post(`http://localhost:${PORT}/api/atualizar-cache`);
-    console.log('✅ Cache atualizado:', response.data.message);
+    await atualizarCache();
   } catch (error) {
     console.error('❌ Erro no cron:', error.message);
   }
@@ -499,8 +581,7 @@ const server = app.listen(PORT, () => {
 
   // Atualizar cache ao iniciar
   setTimeout(() => {
-    axios.post(`http://localhost:${PORT}/api/atualizar-cache`)
-      .then(() => console.log('✅ Cache atualizado na inicialização'))
+    atualizarCache()
       .catch(err => console.error('❌ Erro ao atualizar cache:', err.message));
   }, 2000);
 });

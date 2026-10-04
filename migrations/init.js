@@ -67,6 +67,12 @@ async function runMigrations() {
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS senha_hash TEXT;
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS email_verificado BOOLEAN DEFAULT FALSE;
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ultimo_acesso TIMESTAMP;
+      -- Quando a pessoa aceitou os Termos e a Política de Privacidade.
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS termos_aceitos_em TIMESTAMP;
+
+      -- Liga cada post à conta de quem escreveu, para apagar junto com ela.
+      ALTER TABLE posts ADD COLUMN IF NOT EXISTS autor_id INT REFERENCES usuarios(id) ON DELETE CASCADE;
+      CREATE INDEX IF NOT EXISTS idx_posts_autor ON posts(autor_id);
     `);
     console.log('✅ Tabela usuarios criada');
 
