@@ -253,7 +253,7 @@ const freioReenvio = limitar(auth.criarFreio(3, 60 * 60 * 1000), 'Você já pedi
 const RESPOSTA_ESQUECI = 'Se existir uma conta com esse e-mail, enviamos um link para criar uma nova senha. Confira também a caixa de spam.';
 
 app.post('/api/auth/esqueci', freioEsqueciIp, async (req, res) => {
-  if (!correio.configurado && process.env.NODE_ENV === 'production') {
+  if (!correio.configurado && correio.emProducao) {
     return res.status(503).json({ error: 'A recuperação de senha ainda não está disponível.' });
   }
 

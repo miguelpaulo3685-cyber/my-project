@@ -5,9 +5,20 @@ const nodemailer = require('nodemailer');
 // redefinição da senha de outra pessoa com um link para um site falso.
 const SITE_URL = (process.env.SITE_URL || 'https://miguelpaulo3685-cyber.github.io/my-project/').replace(/\/?$/, '/');
 
+// O Render define RENDER=true; NODE_ENV pode não ter sido configurado lá.
+const emProducao = process.env.NODE_ENV === 'production' || Boolean(process.env.RENDER);
+
+// No Gmail o usuário SMTP já é o endereço. No Resend o usuário é "resend",
+// então o remetente precisa vir de EMAIL_REMETENTE.
+const remetente = process.env.EMAIL_REMETENTE ||
+  (String(process.env.SMTP_USER || '').includes('@') ? `M&M Estudos <${process.env.SMTP_USER}>` : '');
+
 // SMTP genérico: funciona com Gmail (senha de app) hoje e com Resend ou
 // qualquer outro serviço depois, trocando só as variáveis no Render.
-const configurado = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+const configurado = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && remetente);
+if (process.env.SMTP_HOST && !configurado) {
+  console.error('❌ E-mail mal configurado: confira SMTP_USER, SMTP_PASS e EMAIL_REMETENTE.');
+}
 
 const transporte = configurado && nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -15,8 +26,6 @@ const transporte = configurado && nodemailer.createTransport({
   secure: Number(process.env.SMTP_PORT || 465) === 465,
   auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
 });
-
-const remetente = process.env.EMAIL_REMETENTE || `M&M Estudos <${process.env.SMTP_USER}>`;
 
 function escaparHtml(texto) {
   return String(texto).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -43,7 +52,7 @@ async function enviar(para, mensagem) {
   if (!configurado) {
     // Sem SMTP o e-mail não sai. Em produção isso é erro; rodando local,
     // mostrar o link no terminal basta para testar.
-    if (process.env.NODE_ENV === 'production') throw new Error('Envio de e-mail não configurado (SMTP_HOST/SMTP_USER/SMTP_PASS).');
+    if (emProducao) throw new Error('Envio de e-mail não configurado (SMTP_HOST/SMTP_USER/SMTP_PASS).');
     console.log(`📧 [e-mail não enviado: SMTP não configurado] Para ${para}: ${mensagem.subject}\n${mensagem.text}`);
     return;
   }
@@ -72,4 +81,4 @@ function enviarConfirmacao(para, nome, token) {
   }));
 }
 
-module.exports = { configurado, enviarRedefinicao, enviarConfirmacao };
+module.exports = { configurado, emProducao, enviarRedefinicao, enviarConfirmacao };
