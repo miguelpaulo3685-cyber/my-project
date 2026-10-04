@@ -8,17 +8,23 @@
     "dev": "nodemon server.js",
     "migrate": "node migrations/init.js"
   },
-  "keywords": ["enem", "estudos", "neon", "postgresql"],
+  "keywords": [
+    "enem",
+    "estudos",
+    "neon",
+    "postgresql"
+  ],
   "author": "Miguel Paulo",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "pg": "^8.10.0",
-    "dotenv": "^16.3.1",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
     "node-cron": "^3.0.2",
-    "morgan": "^1.10.0"
+    "nodemailer": "^6.10.1",
+    "pg": "^8.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

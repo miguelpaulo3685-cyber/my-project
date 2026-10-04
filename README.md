@@ -27,6 +27,9 @@ uma tabela ou coluna que o código espera.
 | `DATABASE_URL` | Conexão com o Neon |
 | `ENEM_API_BASE` | `https://api.enem.dev` |
 | `ADMIN_KEY` | Libera as rotas de administração. Sem ela, essas rotas ficam desligadas |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Envio dos e-mails de confirmação e de "Esqueci minha senha". Hoje é o Gmail, com senha de app |
+| `EMAIL_REMETENTE` | Opcional. Nome e endereço que aparecem como remetente |
+| `SITE_URL` | Endereço do site, usado nos links dos e-mails |
 | `ORIGENS_PERMITIDAS` | Sites que podem chamar a API pelo navegador, separados por vírgula. Padrão: GitHub Pages do projeto e localhost |
 
 ## Rotas da API
@@ -38,6 +41,8 @@ uma tabela ou coluna que o código espera.
 | `GET /api/estatisticas` | livre |
 | `POST /api/responder` | livre (com login, conta no progresso) |
 | `POST /api/auth/registrar`, `POST /api/auth/login`, `POST /api/auth/sair`, `GET /api/auth/eu` | livre |
+| `POST /api/auth/esqueci`, `POST /api/auth/redefinir`, `POST /api/auth/confirmar` | livre |
+| `POST /api/auth/reenviar-confirmacao` | login |
 | `GET /api/meu-progresso` | login |
 | `DELETE /api/conta` (pede a senha) | login |
 | `GET /api/posts` / `POST /api/posts` | livre / login |

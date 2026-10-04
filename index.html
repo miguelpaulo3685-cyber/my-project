@@ -440,6 +440,13 @@
       font-weight: 800; font-size: 1.1rem;
     }
     .dados-conta b { display: block; font-size: 1.05rem; }
+    #status-email .recado { margin: 0 0 20px; }
+    #status-email button {
+      display: block; margin-top: 8px; background: none; border: none; padding: 0;
+      color: inherit; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer;
+    }
+    .recado.aviso { background: rgba(245,158,11,.13); color: var(--aviso); }
+    #aviso-topo .recado { margin: 0 0 18px; }
     .dados-conta small { color: var(--texto-fraco); font-size: .88rem; word-break: break-all; }
 
     .zona-perigo { margin-top: 30px; border-top: 1px solid var(--borda); padding-top: 18px; }
@@ -549,6 +556,8 @@
       <p>Questões reais do ENEM, de 2009 a 2023, sorteadas do nosso banco.</p>
     </div>
 
+    <div id="aviso-topo"></div>
+
     <div class="faixa-status">
       <span class="bolinha" id="bolinha"></span>
       <span id="texto-status">Verificando conexão…</span>
@@ -626,13 +635,17 @@
           <input type="text" id="conta-nome" autocomplete="name" maxlength="60">
         </div>
 
-        <label for="conta-email">E-mail</label>
-        <input type="email" id="conta-email" autocomplete="email" required>
-        <div class="pista" id="pista-email"></div>
+        <div id="campo-email">
+          <label for="conta-email">E-mail</label>
+          <input type="email" id="conta-email" autocomplete="email" required>
+          <div class="pista" id="pista-email"></div>
+        </div>
 
-        <label for="conta-senha">Senha</label>
-        <input type="password" id="conta-senha" autocomplete="current-password" required>
-        <div class="pista" id="pista-senha"></div>
+        <div id="campo-senha">
+          <label for="conta-senha" id="rotulo-senha">Senha</label>
+          <input type="password" id="conta-senha" autocomplete="current-password" required>
+          <div class="pista" id="pista-senha"></div>
+        </div>
 
         <label class="aceite escondido" id="campo-aceite">
           <input type="checkbox" id="conta-aceite">
@@ -650,6 +663,7 @@
           <span class="bolha" id="conta-inicial">?</span>
           <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
         </div>
+        <div id="status-email"></div>
         <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
 
         <details class="zona-perigo">
@@ -1219,30 +1233,61 @@ function abrirConta(modo) {
     document.getElementById('excluir-senha').value = '';
     document.getElementById('recado-excluir').innerHTML = '';
     document.querySelector('.zona-perigo').open = false;
+    desenharStatusEmail();
     irPara('conta');
     return;
   }
 
-  const criando = modo === 'criar';
-  document.getElementById('campo-aceite').classList.toggle('escondido', !criando);
+  const m = MODOS_CONTA[modo];
+  const tem = campo => m.campos.includes(campo);
+  for (const campo of ['nome', 'email', 'senha', 'aceite']) {
+    document.getElementById('campo-' + campo).classList.toggle('escondido', !tem(campo));
+  }
+  document.getElementById('conta-nome').required = tem('nome');
+  document.getElementById('conta-email').required = tem('email');
+  document.getElementById('conta-senha').required = tem('senha');
 
-  document.getElementById('titulo-conta').textContent = criando ? 'Criar conta' : 'Entrar';
-  document.getElementById('sub-conta').textContent = criando
-    ? 'Leva menos de um minuto.' : 'Bom te ver de novo.';
-  document.getElementById('campo-nome').classList.toggle('escondido', !criando);
-  document.getElementById('conta-nome').required = criando;
-  document.getElementById('botao-conta').textContent = criando ? 'Criar minha conta' : 'Entrar';
-  document.getElementById('conta-senha').autocomplete = criando ? 'new-password' : 'current-password';
-  document.getElementById('pista-senha').textContent = criando ? 'Ao menos 8 caracteres, com letras e números.' : '';
-  document.getElementById('pista-email').textContent = criando ? 'Conferimos se o domínio existe de verdade.' : '';
+  const senhaNova = modo === 'criar' || modo === 'redefinir';
+  document.getElementById('titulo-conta').textContent = m.titulo;
+  document.getElementById('sub-conta').textContent = m.sub;
+  document.getElementById('botao-conta').textContent = m.botao;
+  document.getElementById('rotulo-senha').textContent = modo === 'redefinir' ? 'Nova senha' : 'Senha';
+  document.getElementById('conta-senha').autocomplete = senhaNova ? 'new-password' : 'current-password';
+  document.getElementById('pista-senha').textContent = senhaNova ? 'Ao menos 8 caracteres, com letras e números.' : '';
+  document.getElementById('pista-email').textContent = modo === 'criar' ? 'Conferimos se o domínio existe de verdade.' : '';
   document.getElementById('recado-conta').innerHTML = '';
   document.getElementById('form-conta').reset();
-  document.getElementById('alternar-conta').innerHTML = criando
-    ? `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
-    : `Ainda não tem conta? <a onclick="abrirConta('criar')">Criar agora</a>`;
+  document.getElementById('alternar-conta').innerHTML = m.alternar;
 
   irPara('conta');
 }
+
+const MODOS_CONTA = {
+  entrar: {
+    titulo: 'Entrar', sub: 'Bom te ver de novo.', botao: 'Entrar', carregando: 'Entrando…',
+    campos: ['email', 'senha'], rota: 'login',
+    alternar: `<a onclick="abrirConta('esqueci')">Esqueci minha senha</a><br><br>
+               Ainda não tem conta? <a onclick="abrirConta('criar')">Criar agora</a>`
+  },
+  criar: {
+    titulo: 'Criar conta', sub: 'Leva menos de um minuto.', botao: 'Criar minha conta', carregando: 'Criando…',
+    campos: ['nome', 'email', 'senha', 'aceite'], rota: 'registrar',
+    alternar: `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
+  },
+  esqueci: {
+    titulo: 'Esqueci minha senha', sub: 'Digite o e-mail da sua conta. Enviamos um link para você criar uma senha nova.',
+    botao: 'Enviar link', carregando: 'Enviando…', campos: ['email'], rota: 'esqueci',
+    alternar: `Lembrou? <a onclick="abrirConta('entrar')">Entrar</a>`
+  },
+  redefinir: {
+    titulo: 'Nova senha', sub: 'Escolha a nova senha da sua conta.', botao: 'Salvar nova senha', carregando: 'Salvando…',
+    campos: ['senha'], rota: 'redefinir',
+    alternar: `<a onclick="abrirConta('esqueci')">Pedir outro link</a>`
+  }
+};
+
+// Vem do link do e-mail (?redefinir=...). Fica só na memória da página.
+let tokenRedefinir = null;
 
 function recadoConta(texto, tipo) {
   document.getElementById('recado-conta').innerHTML = `<div class="recado ${tipo}">${escapar(texto)}</div>`;
@@ -1251,13 +1296,14 @@ function recadoConta(texto, tipo) {
 async function enviarConta(evento) {
   evento.preventDefault();
   const botao = document.getElementById('botao-conta');
-  const criando = modoConta === 'criar';
+  const modo = modoConta;
+  const m = MODOS_CONTA[modo];
 
-  const corpo = {
-    email: document.getElementById('conta-email').value.trim(),
-    senha: document.getElementById('conta-senha').value
-  };
-  if (criando) {
+  const corpo = {};
+  if (m.campos.includes('email')) corpo.email = document.getElementById('conta-email').value.trim();
+  if (m.campos.includes('senha')) corpo.senha = document.getElementById('conta-senha').value;
+  if (modo === 'redefinir') corpo.token = tokenRedefinir;
+  if (modo === 'criar') {
     corpo.nome = document.getElementById('conta-nome').value.trim();
     corpo.aceite = document.getElementById('conta-aceite').checked;
     if (!corpo.aceite) {
@@ -1267,10 +1313,10 @@ async function enviarConta(evento) {
   }
 
   botao.disabled = true;
-  botao.textContent = criando ? 'Criando…' : 'Entrando…';
+  botao.textContent = m.carregando;
 
   try {
-    const r = await fetch(`${API_URL}/api/auth/${criando ? 'registrar' : 'login'}`, {
+    const r = await fetch(`${API_URL}/api/auth/${m.rota}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(corpo)
@@ -1279,17 +1325,78 @@ async function enviarConta(evento) {
 
     if (!r.ok) { recadoConta(dados.error || 'Não deu certo.', 'ruim'); return; }
 
+    if (modo === 'esqueci') { recadoConta(dados.message, 'bom'); return; }
+
+    if (modo === 'redefinir') tokenRedefinir = null;
     guardar(CHAVE_TOKEN, dados.token);
     usuarioLogado = dados.usuario;
     desenharPerfil();
     await sincronizarProgresso();
-    recadoConta(criando ? 'Conta criada! Bem-vindo.' : 'Bem-vindo de volta!', 'bom');
-    setTimeout(() => irPara('treinar'), 700);
+    recadoConta({
+      criar: 'Conta criada! Enviamos um link para confirmar seu e-mail.',
+      entrar: 'Bem-vindo de volta!',
+      redefinir: 'Senha trocada! Você já está dentro.'
+    }[modo], 'bom');
+    setTimeout(() => irPara('treinar'), modo === 'criar' ? 1600 : 700);
   } catch (e) {
     recadoConta(SEM_SERVIDOR, 'ruim');
   } finally {
     botao.disabled = false;
-    botao.textContent = criando ? 'Criar minha conta' : 'Entrar';
+    botao.textContent = m.botao;
+  }
+}
+
+function desenharStatusEmail() {
+  document.getElementById('status-email').innerHTML = usuarioLogado.email_verificado ? '' :
+    `<div class="recado aviso">Seu e-mail ainda não foi confirmado. Abra o link que enviamos
+     para garantir que ele está certo: é por ele que você recupera a conta.
+     <button onclick="reenviarConfirmacao(this)">Reenviar e-mail de confirmação</button></div>`;
+}
+
+async function reenviarConfirmacao(botao) {
+  botao.disabled = true;
+  botao.textContent = 'Enviando…';
+  try {
+    const r = await fetch(`${API_URL}/api/auth/reenviar-confirmacao`, { method: 'POST', headers: cabecalhoAuth() });
+    const dados = await r.json();
+    botao.outerHTML = `<span style="display:block;margin-top:8px;font-weight:700">${escapar(dados.message || dados.error)}</span>`;
+  } catch (e) {
+    botao.disabled = false;
+    botao.textContent = 'Não consegui enviar. Tentar de novo';
+  }
+}
+
+function avisoTopo(texto, tipo) {
+  document.getElementById('aviso-topo').innerHTML = `<div class="recado ${tipo}">${escapar(texto)}</div>`;
+}
+
+// Links dos e-mails chegam como ?redefinir=... ou ?confirmar=... O token sai
+// da barra de endereço na hora, para não ficar no histórico nem ser copiado.
+async function tratarLinkDoEmail(sessaoRestaurada) {
+  const params = new URLSearchParams(location.search);
+  const redefinir = params.get('redefinir');
+  const confirmar = params.get('confirmar');
+  if (!redefinir && !confirmar) return;
+  history.replaceState(null, '', location.pathname);
+
+  if (redefinir) {
+    tokenRedefinir = redefinir;
+    abrirConta('redefinir');
+    return;
+  }
+
+  try {
+    const r = await fetch(`${API_URL}/api/auth/confirmar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: confirmar })
+    });
+    const dados = await r.json();
+    await sessaoRestaurada;
+    if (r.ok && usuarioLogado) usuarioLogado.email_verificado = true;
+    avisoTopo(r.ok ? 'E-mail confirmado! Sua conta está completa.' : dados.error, r.ok ? 'bom' : 'ruim');
+  } catch (e) {
+    avisoTopo(SEM_SERVIDOR, 'ruim');
   }
 }
 
@@ -1431,7 +1538,7 @@ iniciarTema();
 carregarProgresso();
 desenharTudo();
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
-window.addEventListener('load', () => { verificarAPI(); restaurarSessao(); });
+window.addEventListener('load', () => { verificarAPI(); tratarLinkDoEmail(restaurarSessao()); });
 </script>
 </body>
 </html>

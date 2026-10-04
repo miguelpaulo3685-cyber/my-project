@@ -8,6 +8,7 @@ const axios = require('axios');
 const path = require('path');
 const crypto = require('crypto');
 const auth = require('./auth');
+const correio = require('./email');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -85,7 +86,8 @@ async function identificar(req, res, next) {
   if (token) {
     try {
       const { rows } = await pool.query(
-        `SELECT u.id, u.username, u.email, u.bio, u.avatar_url
+        `SELECT u.id, u.username, u.email, u.bio, u.avatar_url,
+                COALESCE(u.email_verificado, FALSE) AS email_verificado
            FROM sessoes s
            JOIN usuarios u ON u.id = s.usuario_id
           WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
@@ -141,9 +143,15 @@ app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO usuarios (username, email, senha_hash, termos_aceitos_em)
        VALUES ($1, $2, $3, NOW())
-       RETURNING id, username, email`,
+       RETURNING id, username, email, FALSE AS email_verificado`,
       [String(nome).trim().slice(0, 60), emailLimpo, await auth.criarHashDeSenha(senha)]
     );
+
+    // A conta funciona mesmo se o e-mail de confirmação não sair: dá para
+    // pedir de novo depois, em Minha conta.
+    criarTokenEmail(rows[0].id, 'confirmar', 7 * 24)
+      .then(t => correio.enviarConfirmacao(rows[0].email, rows[0].username, t))
+      .catch(erro => console.error('Erro ao enviar confirmação:', erro.message));
 
     const token = await abrirSessao(rows[0].id);
     res.status(201).json({ token, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO });
@@ -167,7 +175,7 @@ app.post('/api/auth/login', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      'SELECT id, username, email, senha_hash FROM usuarios WHERE email = $1',
+      'SELECT id, username, email, senha_hash, COALESCE(email_verificado, FALSE) AS email_verificado FROM usuarios WHERE email = $1',
       [emailLimpo]
     );
     const usuario = rows[0];
@@ -184,7 +192,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = await abrirSessao(usuario.id);
     res.json({
       token,
-      usuario: { id: usuario.id, username: usuario.username, email: usuario.email },
+      usuario: { id: usuario.id, username: usuario.username, email: usuario.email, email_verificado: usuario.email_verificado },
       dias_de_sessao: auth.DIAS_DE_SESSAO
     });
   } catch (erro) {
@@ -207,6 +215,119 @@ app.post('/api/auth/sair', async (req, res) => {
     await pool.query('DELETE FROM sessoes WHERE token_hash = $1', [auth.hashDeToken(token)]);
   }
   res.json({ message: 'Você saiu da conta.' });
+});
+
+// ================== LINKS POR E-MAIL ==================
+
+// Um link novo invalida os anteriores do mesmo tipo: só o último e-mail vale.
+async function criarTokenEmail(usuarioId, tipo, horas) {
+  const { token, hash } = auth.criarToken();
+  await pool.query('DELETE FROM tokens_email WHERE usuario_id = $1 AND tipo = $2', [usuarioId, tipo]);
+  await pool.query(
+    `INSERT INTO tokens_email (token_hash, usuario_id, tipo, expira_em)
+     VALUES ($1, $2, $3, NOW() + make_interval(hours => $4))`,
+    [hash, usuarioId, tipo, horas]
+  );
+  return token;
+}
+
+// Gasta o token numa única operação: dois cliques no mesmo link não
+// conseguem usá-lo duas vezes.
+async function gastarTokenEmail(token, tipo) {
+  const { rows } = await pool.query(
+    `UPDATE tokens_email SET usado_em = NOW()
+      WHERE token_hash = $1 AND tipo = $2 AND usado_em IS NULL AND expira_em > NOW()
+      RETURNING usuario_id`,
+    [auth.hashDeToken(String(token || '')), tipo]
+  );
+  return rows[0] ? rows[0].usuario_id : null;
+}
+
+const freioEsqueciIp = limitar(auth.criarFreio(30, 60 * 60 * 1000), 'Muitos pedidos daqui. Tente de novo mais tarde.');
+// O token tem 256 bits: não dá para adivinhar, então o limite só segura abuso.
+const freioLinkIp = limitar(auth.criarFreio(100, 60 * 60 * 1000), 'Muitos pedidos daqui. Tente de novo mais tarde.');
+const freioEsqueciEmail = auth.criarFreio(3, 60 * 60 * 1000);
+const freioReenvio = limitar(auth.criarFreio(3, 60 * 60 * 1000), 'Você já pediu vários e-mails. Espere um pouco.',
+  req => `u${req.usuario.id}`);
+
+const RESPOSTA_ESQUECI = 'Se existir uma conta com esse e-mail, enviamos um link para criar uma nova senha. Confira também a caixa de spam.';
+
+app.post('/api/auth/esqueci', freioEsqueciIp, async (req, res) => {
+  if (!correio.configurado && process.env.NODE_ENV === 'production') {
+    return res.status(503).json({ error: 'A recuperação de senha ainda não está disponível.' });
+  }
+
+  const emailLimpo = String(req.body?.email || '').trim().toLowerCase();
+  // A resposta é sempre a mesma, exista a conta ou não: senão daria para
+  // descobrir quem tem conta aqui. Pelo mesmo motivo o envio não é esperado.
+  res.json({ message: RESPOSTA_ESQUECI });
+
+  if (!emailLimpo || freioEsqueciEmail.bloqueado(emailLimpo)) return;
+  freioEsqueciEmail.registrar(emailLimpo);
+
+  try {
+    const { rows } = await pool.query('SELECT id, username, email FROM usuarios WHERE email = $1', [emailLimpo]);
+    if (!rows[0]) return;
+    const token = await criarTokenEmail(rows[0].id, 'redefinir', 1);
+    await correio.enviarRedefinicao(rows[0].email, rows[0].username, token);
+  } catch (erro) {
+    console.error('Erro ao enviar redefinição:', erro.message);
+  }
+});
+
+app.post('/api/auth/redefinir', freioLinkIp, async (req, res) => {
+  const { token, senha } = req.body || {};
+  const problemaSenha = auth.problemaNaSenha(senha);
+  if (problemaSenha) return res.status(400).json({ error: problemaSenha });
+
+  try {
+    const usuarioId = await gastarTokenEmail(token, 'redefinir');
+    if (!usuarioId) {
+      return res.status(400).json({ error: 'Esse link expirou ou já foi usado. Peça um novo em "Esqueci minha senha".' });
+    }
+
+    // Quem chegou aqui provou que lê esse e-mail, então ele fica confirmado.
+    // As outras sessões caem: se alguém tinha a senha antiga, perde o acesso.
+    const { rows } = await pool.query(
+      `UPDATE usuarios SET senha_hash = $1, email_verificado = TRUE WHERE id = $2
+       RETURNING id, username, email, email_verificado`,
+      [await auth.criarHashDeSenha(senha), usuarioId]
+    );
+    await pool.query('DELETE FROM sessoes WHERE usuario_id = $1', [usuarioId]);
+    auth.freioDeSenha.limpar(`${req.ip}:${rows[0].email}`);
+
+    const novoToken = await abrirSessao(usuarioId);
+    res.json({ token: novoToken, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO });
+  } catch (erro) {
+    console.error('Erro ao redefinir senha:', erro.message);
+    res.status(500).json({ error: 'Não consegui trocar a senha agora.' });
+  }
+});
+
+app.post('/api/auth/confirmar', freioLinkIp, async (req, res) => {
+  try {
+    const usuarioId = await gastarTokenEmail(req.body?.token, 'confirmar');
+    if (!usuarioId) {
+      return res.status(400).json({ error: 'Esse link de confirmação expirou ou já foi usado. Peça outro em Minha conta.' });
+    }
+    await pool.query('UPDATE usuarios SET email_verificado = TRUE WHERE id = $1', [usuarioId]);
+    res.json({ message: 'E-mail confirmado!' });
+  } catch (erro) {
+    console.error('Erro ao confirmar e-mail:', erro.message);
+    res.status(500).json({ error: 'Não consegui confirmar agora.' });
+  }
+});
+
+app.post('/api/auth/reenviar-confirmacao', exigirLogin, freioReenvio, async (req, res) => {
+  if (req.usuario.email_verificado) return res.json({ message: 'Seu e-mail já está confirmado.' });
+  try {
+    const token = await criarTokenEmail(req.usuario.id, 'confirmar', 7 * 24);
+    await correio.enviarConfirmacao(req.usuario.email, req.usuario.username, token);
+    res.json({ message: `Enviamos um novo link para ${req.usuario.email}. Confira também a caixa de spam.` });
+  } catch (erro) {
+    console.error('Erro ao reenviar confirmação:', erro.message);
+    res.status(500).json({ error: 'Não consegui enviar o e-mail agora.' });
+  }
 });
 
 // Exclusão pedida pela própria pessoa (direito garantido pela LGPD). Pede a
@@ -555,6 +676,7 @@ cron.schedule('0 4 * * *', async () => {
   try {
     const r = await pool.query('DELETE FROM sessoes WHERE expira_em < NOW()');
     if (r.rowCount > 0) console.log(`🧹 ${r.rowCount} sessões expiradas removidas`);
+    await pool.query('DELETE FROM tokens_email WHERE expira_em < NOW() OR usado_em IS NOT NULL');
   } catch (erro) {
     console.error('❌ Erro ao limpar sessões:', erro.message);
   }

@@ -98,6 +98,21 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela sessoes criada');
 
+    // Links enviados por e-mail (redefinir senha, confirmar e-mail). Como nas
+    // sessões, só o hash do token fica guardado.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tokens_email (
+        token_hash TEXT PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        tipo VARCHAR(20) NOT NULL,
+        expira_em TIMESTAMP NOT NULL,
+        usado_em TIMESTAMP
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_tokens_email_usuario ON tokens_email(usuario_id, tipo);
+    `);
+    console.log('✅ Tabela tokens_email criada');
+
     // Cada resposta dada no site. É daqui que sai o nível de dificuldade:
     // a fonte das questões não informa se são fáceis ou difíceis, então
     // medimos pela proporção de quem acerta.
