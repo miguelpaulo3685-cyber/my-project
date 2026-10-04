@@ -1,6 +1,13 @@
 require('dotenv').config();
 const { Pool } = require('pg');
 
+// Sem DATABASE_URL o pg tenta um banco em localhost e falha com um
+// ECONNREFUSED que não diz qual é o problema real.
+if (!process.env.DATABASE_URL) {
+  console.error('❌ DATABASE_URL não está configurada. No Render: Environment > adicione DATABASE_URL com a URL do Neon.');
+  process.exit(1);
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
