@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 
 // Endereço onde o site está publicado. Os links dos e-mails apontam para cá,
 // e nunca para um endereço vindo do navegador: senão alguém poderia pedir a
@@ -13,14 +14,24 @@ const emProducao = process.env.NODE_ENV === 'production' || Boolean(process.env.
 const remetente = process.env.EMAIL_REMETENTE ||
   (String(process.env.SMTP_USER || '').includes('@') ? `M&M Estudos <${process.env.SMTP_USER}>` : '');
 
-// SMTP genérico: funciona com Gmail (senha de app) hoje e com Resend ou
-// qualquer outro serviço depois, trocando só as variáveis no Render.
-const configurado = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS && remetente);
-if (process.env.SMTP_HOST && !configurado) {
-  console.error('❌ E-mail mal configurado: confira SMTP_USER, SMTP_PASS e EMAIL_REMETENTE.');
+// Dois jeitos de enviar:
+// - Brevo, pela API HTTPS. O plano grátis do Render bloqueia as portas de
+//   SMTP, mas não HTTPS. Tem prioridade quando BREVO_API_KEY existe.
+// - SMTP genérico (Gmail com senha de app, Resend etc.).
+const usaBrevo = Boolean(process.env.BREVO_API_KEY);
+const usaSmtp = !usaBrevo && Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+const configurado = Boolean((usaBrevo || usaSmtp) && remetente);
+if ((process.env.BREVO_API_KEY || process.env.SMTP_HOST) && !configurado) {
+  console.error('❌ E-mail mal configurado: falta o remetente (EMAIL_REMETENTE).');
 }
 
-const transporte = configurado && nodemailer.createTransport({
+// "M&M Estudos <x@gmail.com>" -> { name, email }
+function separarRemetente(texto) {
+  const m = texto.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+  return m ? { name: m[1] || 'M&M Estudos', email: m[2] } : { name: 'M&M Estudos', email: texto.trim() };
+}
+
+const transporte = usaSmtp && configurado && nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT || 465),
   secure: Number(process.env.SMTP_PORT || 465) === 465,
@@ -52,10 +63,29 @@ async function enviar(para, mensagem) {
   if (!configurado) {
     // Sem SMTP o e-mail não sai. Em produção isso é erro; rodando local,
     // mostrar o link no terminal basta para testar.
-    if (emProducao) throw new Error('Envio de e-mail não configurado (SMTP_HOST/SMTP_USER/SMTP_PASS).');
-    console.log(`📧 [e-mail não enviado: SMTP não configurado] Para ${para}: ${mensagem.subject}\n${mensagem.text}`);
+    if (emProducao) throw new Error('Envio de e-mail não configurado (BREVO_API_KEY ou SMTP_*).');
+    console.log(`📧 [e-mail não enviado: envio não configurado] Para ${para}: ${mensagem.subject}\n${mensagem.text}`);
     return;
   }
+
+  if (usaBrevo) {
+    try {
+      await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: separarRemetente(remetente),
+        to: [{ email: para }],
+        subject: mensagem.subject,
+        htmlContent: mensagem.html,
+        textContent: mensagem.text
+      }, { headers: { 'api-key': process.env.BREVO_API_KEY }, timeout: 15000 });
+    } catch (erro) {
+      // A mensagem do Brevo diz o motivo (chave errada, remetente não
+      // verificado...); sem ela o log mostraria só "status 400".
+      const motivo = erro.response?.data?.message || erro.message;
+      throw new Error(`Brevo recusou o envio: ${motivo}`);
+    }
+    return;
+  }
+
   await transporte.sendMail({ from: remetente, to: para, ...mensagem });
 }
 

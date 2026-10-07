@@ -27,7 +27,8 @@ uma tabela ou coluna que o código espera.
 | `DATABASE_URL` | Conexão com o Neon |
 | `ENEM_API_BASE` | `https://api.enem.dev` |
 | `ADMIN_KEY` | Libera as rotas de administração. Sem ela, essas rotas ficam desligadas |
-| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Envio dos e-mails de confirmação e de "Esqueci minha senha". Hoje é o Gmail, com senha de app |
+| `BREVO_API_KEY` | Envio dos e-mails de confirmação e de "Esqueci minha senha" pela API do Brevo (HTTPS). Tem prioridade sobre o SMTP, que o plano grátis do Render bloqueia |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Alternativa ao Brevo: envio por SMTP (Gmail com senha de app, Resend etc.) |
 | `EMAIL_REMETENTE` | Opcional. Nome e endereço que aparecem como remetente |
 | `SITE_URL` | Endereço do site, usado nos links dos e-mails |
 | `ORIGENS_PERMITIDAS` | Sites que podem chamar a API pelo navegador, separados por vírgula. Padrão: GitHub Pages do projeto e localhost |
