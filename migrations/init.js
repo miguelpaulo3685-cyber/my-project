@@ -34,6 +34,18 @@ async function runMigrations() {
 
       CREATE INDEX IF NOT EXISTS idx_questoes_disciplina ON questoes(disciplina);
       CREATE INDEX IF NOT EXISTS idx_questoes_created_at ON questoes(created_at DESC);
+
+      -- Número e idioma (inglês/espanhol) da questão na prova, como a
+      -- api.enem.dev informa. É o que permite achá-la nos microdados do INEP.
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS numero INT;
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS lingua VARCHAR(10);
+
+      -- Parâmetros da TRI calculados pelo INEP (pasta TRI/): A = discriminação,
+      -- B = dificuldade, C = acerto ao acaso. Nulos quando não deu para casar.
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS tri_item INT;
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS tri_a REAL;
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS tri_b REAL;
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS tri_c REAL;
     `);
     console.log('✅ Tabela questoes criada');
 

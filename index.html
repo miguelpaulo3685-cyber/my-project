@@ -878,16 +878,28 @@ function nomeDaArea(id) {
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 const POR_BLOCO = 5;
 
-// O nível vem do servidor, calculado pela proporção de acertos de quem já
-// respondeu. Questão nova ainda não tem gente suficiente para classificar.
+// O nível vem do servidor. Quando a questão foi encontrada nos microdados do
+// INEP, é a dificuldade oficial da TRI (comparada às outras questões do ENEM
+// na mesma área); senão, a proporção de acertos de quem já respondeu aqui.
 const NIVEIS = {
-  1: { classe: 'n1', selo: 'Nv 1', nome: 'Fácil',   ajuda: 'A maioria acerta esta questão.' },
-  2: { classe: 'n2', selo: 'Nv 2', nome: 'Médio',   ajuda: 'Cerca de metade acerta.' },
-  3: { classe: 'n3', selo: 'Nv 3', nome: 'Difícil', ajuda: 'Poucos acertam esta.' },
-  4: { classe: 'n4', selo: 'Nv 4', nome: 'Desafio', ajuda: 'Menos de um quarto acerta.' },
+  1: { classe: 'n1', selo: 'Nv 1', nome: 'Fácil',
+       tri: 'Está entre as 25% mais fáceis do ENEM nesta área.', alunos: 'A maioria acerta esta questão.' },
+  2: { classe: 'n2', selo: 'Nv 2', nome: 'Médio',
+       tri: 'Dificuldade intermediária para o ENEM nesta área.', alunos: 'Cerca de metade acerta.' },
+  3: { classe: 'n3', selo: 'Nv 3', nome: 'Difícil',
+       tri: 'Mais difícil que a maioria das questões do ENEM nesta área.', alunos: 'Poucos acertam esta.' },
+  4: { classe: 'n4', selo: 'Nv 4', nome: 'Desafio',
+       tri: 'Está entre as 15% mais difíceis do ENEM nesta área.', alunos: 'Menos de um quarto acerta.' },
   novo: { classe: 'novo', selo: 'Nova', nome: 'sem nível',
-          ajuda: 'Ainda não há respostas suficientes para medir a dificuldade.' }
+          alunos: 'Ainda não há respostas suficientes para medir a dificuldade.' }
 };
+
+function ajudaDoNivel(q) {
+  const n = NIVEIS[q.nivel] || NIVEIS.novo;
+  return q.nivel_fonte === 'tri'
+    ? `${n.tri} Dificuldade oficial do INEP, calculada pela TRI.`
+    : n.alunos;
+}
 
 let bloco = null;
 let eliminadas = new Set();
@@ -998,7 +1010,9 @@ function desenharQuestao() {
   const desafio = q.nivel === 4 ? `
     <div class="faixa-desafio">
       <span>🔥</span>
-      <span>Questão desafio — pouca gente acerta esta. Capricha!</span>
+      <span>${q.nivel_fonte === 'tri'
+        ? 'Questão desafio — uma das mais difíceis do ENEM, segundo o INEP. Capricha!'
+        : 'Questão desafio — pouca gente acerta esta. Capricha!'}</span>
     </div>` : '';
 
   document.getElementById('painel-questao').innerHTML = `
@@ -1007,8 +1021,8 @@ function desenharQuestao() {
         <div class="ano">ENEM ${escapar(q.ano)}</div>
         <div class="materia">${escapar(nomeDaArea(materiaAtual))}</div>
       </div>
-      <span class="nivel ${n.classe}" title="${escapar(n.ajuda)}">
-        ${n.selo}<small>${n.nome}</small>
+      <span class="nivel ${n.classe}" title="${escapar(ajudaDoNivel(q))}">
+        ${n.selo}<small>${n.nome}${q.nivel_fonte === 'tri' ? ' · TRI' : ''}</small>
       </span>
     </div>
     ${desafio}

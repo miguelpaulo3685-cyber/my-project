@@ -9,6 +9,10 @@ const path = require('path');
 const crypto = require('crypto');
 const auth = require('./auth');
 const correio = require('./email');
+const tri = require('./tri');
+
+const ITENS_INEP = tri.carregar();
+const CORTES_TRI = tri.calcularCortes(ITENS_INEP);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -395,6 +399,15 @@ function calcularNivel(totalRespostas, taxaAcerto) {
   return 4;                         // Desafio
 }
 
+// A dificuldade oficial do INEP (TRI) vale mais que a medida pelos nossos
+// alunos, que ainda são poucos. Esta só entra quando a questão não tem TRI.
+function nivelDaQuestao(q, totalRespostas, taxaAcerto) {
+  const pelaTri = tri.nivelPelaTri(CORTES_TRI, q.disciplina, q.tri_b);
+  if (pelaTri) return { nivel: pelaTri, nivel_fonte: 'tri' };
+  const pelosAlunos = calcularNivel(totalRespostas, taxaAcerto);
+  return { nivel: pelosAlunos, nivel_fonte: pelosAlunos ? 'alunos' : null };
+}
+
 app.post('/api/responder', freioRespostas, async (req, res) => {
   const { questao_id, acertou, segundos } = req.body || {};
   if (!Number.isInteger(questao_id) || typeof acertou !== 'boolean') {
@@ -409,16 +422,19 @@ app.post('/api/responder', freioRespostas, async (req, res) => {
     );
 
     const { rows } = await pool.query(
-      `SELECT COUNT(*)::int AS total,
-              AVG(CASE WHEN acertou THEN 1.0 ELSE 0 END)::float AS taxa
-         FROM respostas WHERE questao_id = $1`,
+      `SELECT q.disciplina, q.tri_b,
+              COUNT(r.id)::int AS total,
+              AVG(CASE WHEN r.acertou THEN 1.0 ELSE 0 END)::float AS taxa
+         FROM questoes q LEFT JOIN respostas r ON r.questao_id = q.id
+        WHERE q.id = $1
+        GROUP BY q.id`,
       [questao_id]
     );
 
     res.json({
       registrado: true,
       total_respostas: rows[0].total,
-      nivel: calcularNivel(rows[0].total, rows[0].taxa)
+      ...nivelDaQuestao(rows[0], rows[0].total, rows[0].taxa)
     });
   } catch (erro) {
     if (erro.code === '23503') return res.status(404).json({ error: 'Questão não encontrada.' });
@@ -476,8 +492,9 @@ app.get('/api/questoes/:area', async (req, res) => {
     );
 
     result.rows.forEach(q => {
-      q.nivel = calcularNivel(q.total_respostas, q.taxa_acerto);
+      Object.assign(q, nivelDaQuestao(q, q.total_respostas, q.taxa_acerto));
       delete q.taxa_acerto; // não expõe o gabarito indireto de quem acerta
+      for (const campo of ['tri_item', 'tri_a', 'tri_b', 'tri_c']) delete q[campo];
     });
 
     if (result.rows.length === 0) {
@@ -507,8 +524,16 @@ function prepararQuestao(q) {
     JSON.stringify(alternativas.map(a => a.text)),
     correta,
     q.year,
-    q.files?.[0] || null
+    q.files?.[0] || null,
+    numeroDaQuestao(q),
+    q.language || null
   ];
+}
+
+function numeroDaQuestao(q) {
+  if (Number.isInteger(q.index)) return q.index;
+  const m = String(q.title || '').match(/quest[aã]o\s+(\d+)/i);
+  return m ? Number(m[1]) : null;
 }
 
 const ANOS_DISPONIVEIS = [
@@ -523,8 +548,8 @@ async function gravarQuestoes(questoes) {
     if (!valores) continue;
 
     const result = await pool.query(
-      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url, numero, lingua)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        ON CONFLICT (titulo) DO NOTHING`,
       valores
     );
@@ -532,6 +557,101 @@ async function gravarQuestoes(questoes) {
   }
   return inseridas;
 }
+
+async function buscarProvaInteira(ano) {
+  const todas = [];
+  let offset = 0;
+  while (true) {
+    const { data } = await axios.get(
+      `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+      { params: { limit: 50, offset }, timeout: 30000 }
+    );
+    const questoes = data?.questions || [];
+    if (questoes.length === 0) break;
+    todas.push(...questoes);
+    if (!data?.metadata?.hasMore) break;
+    offset += questoes.length;
+  }
+  return todas;
+}
+
+// Questões gravadas antes de existir a coluna numero: busca de novo na
+// api.enem.dev só para descobrir número e idioma. Roda uma vez por ano que
+// ainda tenha questão sem número; depois disso não faz nada.
+async function preencherNumeros() {
+  const { rows } = await pool.query('SELECT DISTINCT ano FROM questoes WHERE numero IS NULL ORDER BY ano');
+  for (const { ano } of rows) {
+    try {
+      const daApi = await buscarProvaInteira(ano);
+      // Se inglês e espanhol tiverem o mesmo título, não dá para saber qual
+      // das duas foi gravada: o número serve, o idioma fica em branco.
+      const porTitulo = new Map();
+      for (const q of daApi) {
+        if (!q.title) continue;
+        if (!porTitulo.has(q.title)) porTitulo.set(q.title, []);
+        porTitulo.get(q.title).push(q);
+      }
+      let atualizadas = 0;
+      for (const [titulo, versoes] of porTitulo) {
+        const idiomas = new Set(versoes.map(v => v.language || null));
+        const r = await pool.query(
+          'UPDATE questoes SET numero = $1, lingua = $2 WHERE titulo = $3 AND numero IS NULL',
+          [numeroDaQuestao(versoes[0]), idiomas.size === 1 ? [...idiomas][0] : null, titulo]
+        );
+        atualizadas += r.rowCount;
+      }
+      console.log(`🔢 ENEM ${ano}: número preenchido em ${atualizadas} questões`);
+    } catch (erro) {
+      console.error(`❌ Não consegui preencher números de ${ano}:`, erro.message);
+    }
+  }
+}
+
+// Casa as questões do banco com os itens do INEP e grava os parâmetros da TRI.
+// Refaz tudo a cada vez: é rápido e corrige qualquer casamento antigo.
+async function aplicarTri() {
+  const { rows } = await pool.query(
+    'SELECT id, ano, disciplina, numero, lingua, correta FROM questoes WHERE numero IS NOT NULL'
+  );
+  const { casadas, relatorio } = tri.casar(rows, ITENS_INEP);
+
+  const ids = casadas.map(c => c.id);
+  await pool.query(
+    'UPDATE questoes SET tri_item = NULL, tri_a = NULL, tri_b = NULL, tri_c = NULL WHERE tri_item IS NOT NULL AND NOT (id = ANY($1::int[]))',
+    [ids]
+  );
+  await pool.query(
+    `UPDATE questoes q SET tri_item = v.item, tri_a = v.a, tri_b = v.b, tri_c = v.c
+       FROM (SELECT UNNEST($1::int[]) AS id, UNNEST($2::int[]) AS item, UNNEST($3::real[]) AS a,
+                    UNNEST($4::real[]) AS b, UNNEST($5::real[]) AS c) v
+      WHERE q.id = v.id`,
+    [ids, casadas.map(c => c.item), casadas.map(c => c.a), casadas.map(c => c.b), casadas.map(c => c.c)]
+  );
+
+  console.log(`📐 TRI: ${casadas.length} de ${rows.length} questões numeradas receberam a dificuldade oficial do INEP`);
+  for (const l of relatorio) {
+    console.log(`   ${l.ano} ${l.area}: ${l.casadas}/${l.questoes} casadas | caderno ${l.caderno} | gabaritos iguais em ${l.concordancia}%`);
+  }
+  return { casadas: casadas.length, numeradas: rows.length, relatorio };
+}
+
+async function prepararTri() {
+  try {
+    await preencherNumeros();
+    await aplicarTri();
+  } catch (erro) {
+    console.error('❌ Erro ao aplicar TRI:', erro.message);
+  }
+}
+
+app.post('/api/admin/tri', exigirAdmin, async (req, res) => {
+  try {
+    await preencherNumeros();
+    res.json(await aplicarTri());
+  } catch (erro) {
+    res.status(500).json({ error: 'Erro ao aplicar TRI', detalhe: erro.message });
+  }
+});
 
 // Baixa a prova inteira de um ano, pagina por pagina, ate a API dizer que
 // acabou (hasMore). Diferente do sorteio, aqui da para saber que terminou.
@@ -543,25 +663,10 @@ app.post('/api/carregar-ano/:ano', exigirAdmin, async (req, res) => {
 
   try {
     console.log(`🔄 Carregando ENEM ${ano} por completo...`);
-    let offset = 0;
-    let recebidas = 0;
-    let inseridas = 0;
-
-    while (true) {
-      const { data } = await axios.get(
-        `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
-        { params: { limit: 50, offset }, timeout: 30000 }
-      );
-
-      const questoes = data?.questions || [];
-      if (questoes.length === 0) break;
-
-      recebidas += questoes.length;
-      inseridas += await gravarQuestoes(questoes);
-
-      if (!data?.metadata?.hasMore) break;
-      offset += questoes.length;
-    }
+    const questoes = await buscarProvaInteira(ano);
+    const recebidas = questoes.length;
+    const inseridas = await gravarQuestoes(questoes);
+    if (inseridas > 0) await aplicarTri();
 
     const msg = `ENEM ${ano} completo: ${recebidas} questoes lidas, ${inseridas} novas gravadas`;
     console.log(`✅ ${msg}`);
@@ -576,13 +681,14 @@ app.post('/api/carregar-ano/:ano', exigirAdmin, async (req, res) => {
 app.get('/api/estatisticas', async (req, res) => {
   try {
     const [total, porArea, porAno] = await Promise.all([
-      pool.query('SELECT COUNT(*)::int AS total FROM questoes'),
-      pool.query('SELECT disciplina, COUNT(*)::int AS total FROM questoes GROUP BY disciplina ORDER BY total DESC'),
-      pool.query('SELECT ano, COUNT(*)::int AS total FROM questoes GROUP BY ano ORDER BY ano')
+      pool.query('SELECT COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes'),
+      pool.query('SELECT disciplina, COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes GROUP BY disciplina ORDER BY total DESC'),
+      pool.query('SELECT ano, COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes GROUP BY ano ORDER BY ano')
     ]);
 
     res.json({
       total: total.rows[0].total,
+      com_tri: total.rows[0].com_tri,
       por_materia: porArea.rows,
       por_ano: porAno.rows,
       anos_faltando: ANOS_DISPONIVEIS.filter(a => !porAno.rows.some(r => r.ano === a))
@@ -606,6 +712,7 @@ async function atualizarCache() {
 
   const questoes = response.data?.questions || [];
   const inseridas = await gravarQuestoes(questoes);
+  if (inseridas > 0) await aplicarTri();
 
   const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
   console.log(`✅ ${msg}`);
@@ -701,10 +808,11 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
   console.log(`📊 Database: ${process.env.DATABASE_URL?.split('@')[1] || 'config pendente'}`);
 
-  // Atualizar cache ao iniciar
+  // Atualizar cache ao iniciar; depois, numerar o que faltar e aplicar a TRI.
   setTimeout(() => {
     atualizarCache()
-      .catch(err => console.error('❌ Erro ao atualizar cache:', err.message));
+      .catch(err => console.error('❌ Erro ao atualizar cache:', err.message))
+      .then(prepararTri);
   }, 2000);
 });
 
