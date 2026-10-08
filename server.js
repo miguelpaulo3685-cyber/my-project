@@ -470,6 +470,42 @@ app.get('/api/meu-progresso', exigirLogin, async (req, res) => {
   }
 });
 
+// ================== NOTA TRI DO ALUNO ==================
+// Com conta, usa as respostas gravadas no banco; sem conta, o navegador manda
+// a lista que guardou. Vale só a primeira resposta de cada questão: refazer
+// depois de ver o gabarito inflaria a nota.
+app.post('/api/tri', async (req, res) => {
+  try {
+    let linhas;
+    if (req.usuario) {
+      ({ rows: linhas } = await pool.query(
+        `SELECT DISTINCT ON (r.questao_id) q.disciplina, q.tri_a AS a, q.tri_b AS b, q.tri_c AS c, r.acertou
+           FROM respostas r JOIN questoes q ON q.id = r.questao_id
+          WHERE r.usuario_id = $1 AND q.tri_b IS NOT NULL
+          ORDER BY r.questao_id, r.created_at ASC`,
+        [req.usuario.id]
+      ));
+    } else {
+      const primeira = new Map();
+      for (const r of (Array.isArray(req.body?.respostas) ? req.body.respostas : []).slice(0, 2000)) {
+        if (Number.isInteger(r?.questao_id) && typeof r.acertou === 'boolean' && !primeira.has(r.questao_id)) {
+          primeira.set(r.questao_id, r.acertou);
+        }
+      }
+      const { rows } = primeira.size === 0 ? { rows: [] } : await pool.query(
+        `SELECT id, disciplina, tri_a AS a, tri_b AS b, tri_c AS c
+           FROM questoes WHERE id = ANY($1::int[]) AND tri_b IS NOT NULL`,
+        [[...primeira.keys()]]
+      );
+      linhas = rows.map(q => ({ ...q, acertou: primeira.get(q.id) }));
+    }
+    res.json({ notas: tri.notasPorArea(linhas, DISCIPLINA_PARA_AREA), minimo: tri.MINIMO_PARA_NOTA });
+  } catch (erro) {
+    console.error('Erro ao calcular nota TRI:', erro.message);
+    res.status(500).json({ error: 'Não consegui calcular a nota TRI agora.' });
+  }
+});
+
 // ================== QUESTÕES - GET CACHE ==================
 app.get('/api/questoes/:area', async (req, res) => {
   const { area } = req.params;

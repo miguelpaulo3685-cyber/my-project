@@ -67,6 +67,11 @@ casamento usa o nível medido pelas respostas dos alunos.
 O relatório fica no log do Render (linhas com 📐) e o total em `GET /api/estatisticas` (`com_tri`).
 Para refazer na hora: `POST /api/admin/tri` com o cabeçalho `X-Admin-Key`.
 
+A nota do aluno (`POST /api/tri`) usa o modelo de 3 parâmetros e a estimativa EAP do ENEM
+(nota = 500 + 100 × theta, referência normal(0,1)), com a primeira resposta de cada questão que
+tenha TRI. Aparece a partir de 5 questões na área. Com conta, lê as respostas do banco; sem conta,
+o navegador manda a lista que guardou.
+
 ## Proteções
 
 - Senhas e tokens de sessão guardados só como hash

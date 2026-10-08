@@ -202,6 +202,16 @@
       padding: 15px 24px;
       display: flex; align-items: center; gap: 22px;
     }
+    /* nota TRI estimada da area, embaixo do rodape */
+    .tri-area {
+      border-top: 1px solid var(--borda);
+      padding: 12px 24px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      font-size: .82rem; color: var(--texto-fraco);
+    }
+    .tri-area .rotulo { text-transform: uppercase; letter-spacing: .5px; font-size: .72rem; font-weight: 700; }
+    .tri-area b { font-family: var(--fonte-titulo); font-size: 1.35rem; color: var(--texto); }
+    .tri-area .falta { color: var(--texto-fraco); }
+
     .metrica { line-height: 1.2; }
     .metrica b { font-size: 1.22rem; font-weight: 800; display: block; }
     .metrica span { font-size: .74rem; color: var(--texto-fraco); text-transform: uppercase; letter-spacing: .5px; }
@@ -384,7 +394,7 @@
     .estrelas i.acesa { opacity: 1; transform: scale(1.12); }
 
     .cartoes-final {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      display: grid; grid-template-columns: 1fr 1fr;
       gap: 16px; max-width: 520px; margin: 0 auto 30px;
     }
     .cartao-final {
@@ -397,6 +407,8 @@
     .cartao-final .subiu { color: var(--certo); }
     .cartao-final .desceu { color: var(--errado); }
     .cartao-final .legenda { font-size: .82rem; color: var(--texto-fraco); margin-top: 5px; }
+    .cartao-final.destaque { grid-column: 1 / -1; border-color: var(--marca); background: var(--marca-suave); }
+    .cartao-final.destaque .valor { font-size: 2.3rem; }
 
     .botoes-final { max-width: 420px; margin: 0 auto; display: grid; gap: 11px; }
     .botoes-final button { width: 100%; padding: 14px; font-size: 1rem; }
@@ -590,6 +602,11 @@
       <div class="estrelas" id="res-estrelas"></div>
 
       <div class="cartoes-final">
+        <div class="cartao-final destaque">
+          <span class="icone">🎯</span>
+          <div class="valor" id="res-tri">…</div>
+          <div class="legenda" id="res-tri-legenda">Nota TRI estimada</div>
+        </div>
         <div class="cartao-final">
           <span class="icone">📚</span>
           <div class="valor" id="res-nota"></div>
@@ -721,6 +738,11 @@ const AREAS = [
 const CHAVE_TOKEN = 'mm_token';
 const CHAVE_TEMA = 'mm_tema';
 const CHAVE_PROGRESSO = 'mm_progresso';
+// Sem conta, cada resposta fica aqui para o servidor calcular a nota TRI.
+const CHAVE_RESPOSTAS = 'mm_respostas';
+const MINIMO_TRI = 5;
+let notasTri = {};
+let ultimaGravacao = Promise.resolve();
 
 let usuarioLogado = null;
 let modoConta = 'entrar';
@@ -796,7 +818,7 @@ function salvarProgresso() {
 
 // Busca no servidor o que a conta ja respondeu, de qualquer aparelho.
 async function sincronizarProgresso() {
-  if (!usuarioLogado) { carregarProgresso(); desenharTudo(); return; }
+  if (!usuarioLogado) { carregarProgresso(); desenharTudo(); buscarNotasTri(); return; }
   try {
     const r = await fetch(`${API_URL}/api/meu-progresso`, { headers: cabecalhoAuth() });
     if (r.ok) progresso = (await r.json()).progresso || {};
@@ -804,6 +826,37 @@ async function sincronizarProgresso() {
     // sem rede, segue com o que estiver em memoria
   }
   desenharTudo();
+  buscarNotasTri();
+}
+
+function respostasLocais() {
+  try { return JSON.parse(ler(CHAVE_RESPOSTAS)) || []; } catch (e) { return []; }
+}
+
+// Guarda só a primeira resposta de cada questão, como o servidor faz.
+function anotarRespostaLocal(questaoId, acertou) {
+  if (usuarioLogado || !Number.isInteger(questaoId)) return;
+  const lista = respostasLocais();
+  if (lista.some(r => r.questao_id === questaoId)) return;
+  lista.push({ questao_id: questaoId, acertou });
+  guardar(CHAVE_RESPOSTAS, JSON.stringify(lista.slice(-2000)));
+}
+
+// O cálculo é no servidor, que tem os parâmetros de cada questão. Com conta
+// ele lê as respostas do banco; sem conta, usa a lista deste navegador.
+async function buscarNotasTri() {
+  try {
+    const r = await fetch(`${API_URL}/api/tri`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify(usuarioLogado ? {} : { respostas: respostasLocais() })
+    });
+    if (r.ok) notasTri = (await r.json()).notas || {};
+  } catch (e) {
+    // sem rede: mantém as notas que já estavam na tela
+  }
+  desenharAreas();
+  return notasTri;
 }
 
 function desenharTudo() {
@@ -866,8 +919,21 @@ function desenharAreas() {
           <div class="metrica"><b>${p.feitas ? taxa + '%' : '—'}</b><span>Acerto</span></div>
           <button class="acao" onclick="abrirMateria('${a.id}')">Treinar</button>
         </div>
+        <div class="tri-area" title="Estimativa com a mesma TRI do ENEM e os parâmetros oficiais do INEP. Conta só a primeira resposta de cada questão.">
+          ${linhaTri(notasTri[a.id])}
+        </div>
       </article>`;
   }).join('');
+}
+
+function linhaTri(n) {
+  if (n && n.nota !== null) {
+    return `<span class="rotulo">Nota TRI estimada</span><b>${n.nota}</b>
+            <span>±${n.margem} · ${n.questoes} questões</span>`;
+  }
+  const faltam = n ? n.faltam : MINIMO_TRI;
+  return `<span class="rotulo">Nota TRI</span>
+          <span class="falta">responda mais ${faltam} ${faltam === 1 ? 'questão' : 'questões'} para ver sua nota</span>`;
 }
 
 // ===================== QUESTÕES =====================
@@ -967,7 +1033,8 @@ async function abrirMateria(area) {
     return;
   }
 
-  bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now() };
+  bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(),
+            notaAntes: notasTri[area] ? notasTri[area].nota : null };
   atualizarTrilho();
   iniciarCronometro();
   desenharQuestao();
@@ -1107,6 +1174,7 @@ function responder(escolhida) {
   anotarResposta(materiaAtual, acertou);
   atualizarTrilho();
   if (acertou) soltarConfete();
+  anotarRespostaLocal(q.id, acertou);
   registrarResposta(q.id, acertou, segundos);
 
   document.querySelectorAll('.alt').forEach(b => b.disabled = true);
@@ -1143,7 +1211,9 @@ function responder(escolhida) {
 // erro só vai para o console.
 function registrarResposta(questaoId, acertou, segundos) {
   if (!Number.isInteger(questaoId)) return;
-  fetch(`${API_URL}/api/responder`, {
+  // Guardada para o resultado do bloco esperar a última resposta chegar ao
+  // banco antes de recalcular a nota TRI.
+  ultimaGravacao = fetch(`${API_URL}/api/responder`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
     body: JSON.stringify({ questao_id: questaoId, acertou, segundos })
@@ -1189,10 +1259,37 @@ function mostrarResultado() {
   document.getElementById('res-tempo').textContent = formatarTempo(media);
 
   document.getElementById('res-aviso').textContent =
-    'O aproveitamento é a conta simples de acertos sobre questões. Não é a nota do TRI, ' +
-    'que depende de parâmetros estatísticos de cada questão que a fonte não fornece.';
+    'A nota TRI usa o mesmo cálculo do ENEM, com os parâmetros oficiais do INEP para cada questão: ' +
+    'acertar questão difícil vale mais, e errar fácil pesa mais. É uma estimativa — quanto mais ' +
+    'questões você faz, menor a margem. Conta só a primeira vez que você responde cada questão.';
 
   irPara('resultado');
+  mostrarNotaTriDoBloco();
+}
+
+async function mostrarNotaTriDoBloco() {
+  const valor = document.getElementById('res-tri');
+  const legenda = document.getElementById('res-tri-legenda');
+  const area = materiaAtual;
+  const antes = bloco.notaAntes;
+  valor.textContent = '…';
+  legenda.textContent = 'Nota TRI estimada';
+
+  await ultimaGravacao;
+  const n = (await buscarNotasTri())[area];
+  if (materiaAtual !== area) return; // a pessoa já saiu da tela
+
+  if (!n || n.nota === null) {
+    const faltam = n ? n.faltam : MINIMO_TRI;
+    valor.textContent = '—';
+    legenda.textContent = `Nota TRI: faltam ${faltam} ${faltam === 1 ? 'questão' : 'questões'}`;
+    return;
+  }
+  const dif = antes === null ? null : n.nota - antes;
+  const variacao = dif === null || dif === 0 ? ''
+    : `<small class="${dif > 0 ? 'subiu' : 'desceu'}">${dif > 0 ? '▲ +' : '▼ '}${dif}</small>`;
+  valor.innerHTML = `${n.nota}${variacao}`;
+  legenda.textContent = `Nota TRI estimada (±${n.margem})`;
 }
 
 function soltarConfete() {
@@ -1449,7 +1546,9 @@ function esquecerConta() {
   usuarioLogado = null;
   desenharPerfil();
   carregarProgresso(); // volta ao progresso de quem usa sem conta
+  notasTri = {};
   desenharTudo();
+  buscarNotasTri();
   irPara('treinar');
 }
 
@@ -1459,7 +1558,7 @@ async function sair() {
 }
 
 async function restaurarSessao() {
-  if (!ler(CHAVE_TOKEN)) { desenharPerfil(); return; }
+  if (!ler(CHAVE_TOKEN)) { desenharPerfil(); await buscarNotasTri(); return; }
   try {
     const r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() });
     if (r.ok) usuarioLogado = (await r.json()).usuario;

@@ -165,4 +165,62 @@ function casar(questoes, porAno) {
   return { casadas, relatorio };
 }
 
-module.exports = { carregar, calcularCortes, nivelPelaTri, casar, SIGLA_DA_DISCIPLINA };
+// ================== NOTA DO ALUNO ==================
+// Modelo de 3 parâmetros, o mesmo do ENEM: a chance de acertar sobe com a
+// proficiência (theta), a partir do piso C (chute), com inclinação A, e
+// passa da metade do caminho em theta = B. Os parâmetros do INEP já estão na
+// métrica logística, então não há fator D.
+function chanceDeAcertar(theta, { a, b, c }) {
+  return c + (1 - c) / (1 + Math.exp(-a * (theta - b)));
+}
+
+// Estimativa EAP (média da distribuição a posteriori), como o INEP faz, com
+// a mesma referência: normal(0, 1) na escala em que nota = 500 + 100 * theta.
+// Com poucas questões a nota fica perto de 500 e a margem é grande; cada
+// resposta puxa para cima ou para baixo conforme a dificuldade da questão.
+const PASSO = 0.02;
+const GRADE = Array.from({ length: Math.round(9 / PASSO) + 1 }, (_, i) => -4 + i * PASSO);
+const MINIMO_PARA_NOTA = 5;
+
+function estimarNota(respostas) {
+  const logPost = GRADE.map(theta => {
+    let soma = -theta * theta / 2;
+    for (const r of respostas) {
+      const p = Math.min(Math.max(chanceDeAcertar(theta, r), 1e-9), 1 - 1e-9);
+      soma += Math.log(r.acertou ? p : 1 - p);
+    }
+    return soma;
+  });
+  const maior = Math.max(...logPost);
+  const pesos = logPost.map(l => Math.exp(l - maior));
+  const total = pesos.reduce((s, w) => s + w, 0);
+  const media = GRADE.reduce((s, t, i) => s + t * pesos[i], 0) / total;
+  const variancia = GRADE.reduce((s, t, i) => s + (t - media) ** 2 * pesos[i], 0) / total;
+  return {
+    nota: Math.round(500 + 100 * media),
+    margem: Math.round(100 * Math.sqrt(variancia)),
+    questoes: respostas.length
+  };
+}
+
+// respostas: [{ disciplina, a, b, c, acertou }] -> { matematica: {...}, ... }
+// usando as chaves curtas do site (linguagens, humanas, natureza, matematica).
+function notasPorArea(respostas, areaDaDisciplina) {
+  const grupos = {};
+  for (const r of respostas) {
+    const area = areaDaDisciplina[r.disciplina];
+    if (area && r.b !== null && r.b !== undefined) (grupos[area] = grupos[area] || []).push(r);
+  }
+  const notas = {};
+  for (const [area, lista] of Object.entries(grupos)) {
+    notas[area] = lista.length >= MINIMO_PARA_NOTA
+      ? estimarNota(lista)
+      : { nota: null, questoes: lista.length, faltam: MINIMO_PARA_NOTA - lista.length };
+  }
+  return notas;
+}
+
+module.exports = {
+  carregar, calcularCortes, nivelPelaTri, casar, SIGLA_DA_DISCIPLINA,
+  chanceDeAcertar, estimarNota, notasPorArea, MINIMO_PARA_NOTA
+};
