@@ -6,6 +6,10 @@ const scrypt = promisify(crypto.scrypt);
 
 const DIAS_DE_SESSAO = 30;
 const TAMANHO_MINIMO_SENHA = 8;
+// Limite de cima: sem ele, alguém mandaria senhas enormes só para ocupar o
+// servidor calculando hash.
+const TAMANHO_MAXIMO_SENHA = 128;
+const TAMANHO_MAXIMO_EMAIL = 254;
 
 // ============ SENHAS ============
 // A senha nunca é guardada. Guardamos "salt:hash", e o hash scrypt não pode
@@ -17,7 +21,17 @@ async function criarHashDeSenha(senha) {
   return `${salt}:${hash.toString('hex')}`;
 }
 
+// Quando o e-mail não existe, o login responderia mais rápido (não há hash
+// para conferir), e pelo tempo daria para descobrir quem tem conta. Esta
+// função gasta o mesmo tempo de uma conferência de verdade.
+const SAL_FALSO = crypto.randomBytes(16).toString('hex');
+async function gastarTempoDeConferencia(senha) {
+  await scrypt(String(senha).slice(0, TAMANHO_MAXIMO_SENHA), SAL_FALSO, 64);
+  return false;
+}
+
 async function senhaConfere(senha, guardado) {
+  if (typeof senha !== 'string' || senha.length > TAMANHO_MAXIMO_SENHA) return false;
   if (!guardado || !guardado.includes(':')) return false;
   const [salt, hashGuardado] = guardado.split(':');
   const hashDaTentativa = await scrypt(senha, salt, 64);
@@ -52,6 +66,9 @@ function problemaNaSenha(senha) {
   if (typeof senha !== 'string' || senha.length < TAMANHO_MINIMO_SENHA) {
     return `A senha precisa de pelo menos ${TAMANHO_MINIMO_SENHA} caracteres.`;
   }
+  if (senha.length > TAMANHO_MAXIMO_SENHA) {
+    return `A senha pode ter no máximo ${TAMANHO_MAXIMO_SENHA} caracteres.`;
+  }
   if (!/[a-zA-Z]/.test(senha) || !/[0-9]/.test(senha)) {
     return 'A senha precisa misturar letras e números.';
   }
@@ -64,12 +81,19 @@ const DOMINIOS_COMUNS = {
   'outlok.com': 'outlook.com', 'yaho.com': 'yahoo.com'
 };
 
+const PROVEDORES_CONHECIDOS = new Set([
+  'gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.com.br', 'outlook.com', 'outlook.com.br',
+  'live.com', 'msn.com', 'yahoo.com', 'yahoo.com.br', 'icloud.com', 'me.com', 'uol.com.br',
+  'bol.com.br', 'terra.com.br', 'ig.com.br', 'protonmail.com', 'proton.me'
+]);
+
 // Confere o formato e pergunta ao DNS se o domínio realmente recebe e-mails.
 // Isso pega erro de digitação e domínio inventado. O que NÃO dá para saber por
 // aqui é se a caixa existe: só o Google sabe, e não conta para ninguém. Para
 // isso seria preciso enviar um e-mail de confirmação ou usar login do Google.
 async function problemaNoEmail(email) {
-  if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) {
+  if (typeof email !== 'string' || email.length > TAMANHO_MAXIMO_EMAIL ||
+      !/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) {
     return 'Esse e-mail não parece válido.';
   }
 
@@ -77,6 +101,10 @@ async function problemaNoEmail(email) {
   if (DOMINIOS_COMUNS[dominio]) {
     return `Você quis dizer @${DOMINIOS_COMUNS[dominio]}?`;
   }
+
+  // Provedores conhecidos recebem e-mail com certeza: consultar o DNS só
+  // abriria a chance de recusar um aluno por uma falha passageira de rede.
+  if (PROVEDORES_CONHECIDOS.has(dominio)) return null;
 
   try {
     const mx = await dns.resolveMx(dominio);
@@ -134,6 +162,7 @@ const freioDeSenha = criarFreio(5, 15 * 60 * 1000);
 module.exports = {
   criarHashDeSenha,
   senhaConfere,
+  gastarTempoDeConferencia,
   criarToken,
   hashDeToken,
   validadeDaSessao,

@@ -14,6 +14,7 @@ progresso salvo na conta, nível de dificuldade medido pelas respostas e um feed
 npm install
 cp .env.example .env   # preencha DATABASE_URL (e ADMIN_KEY, se for carregar questões)
 npm start              # roda as migrações e sobe o servidor em http://localhost:3000
+npm run dev            # o mesmo, reiniciando sozinho a cada mudança no código
 ```
 
 `npm start` sempre roda `migrations/init.js` antes do servidor. As migrações só criam o que
@@ -74,7 +75,22 @@ o navegador manda a lista que guardou.
 
 ## Proteções
 
-- Senhas e tokens de sessão guardados só como hash
+- Senhas guardadas só como hash scrypt com sal; tokens de sessão e de e-mail guardados só como hash
+- Login com tempo de resposta igual para e-mail existente ou não (não revela quem tem conta)
 - Limites por IP: 300 pedidos/min na API, 20 cadastros/hora, 120 respostas/min, 10 posts a cada 10 min por conta e 5 tentativas de senha a cada 15 min
-- CORS restrito às origens permitidas
+- Tamanho máximo de e-mail (254), senha (128) e corpo de requisição (20 KB)
+- CORS restrito às origens permitidas; rotas de administração exigem `X-Admin-Key`
+- Cabeçalhos de segurança no servidor (CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy) e CSP nas páginas do GitHub Pages
+- Respostas da API com `Cache-Control: no-store`
 - O servidor só entrega as páginas do site, nunca os arquivos do código
+- Consultas ao banco sempre parametrizadas; texto vindo de usuários sempre escapado antes de ir para a tela
+
+## Testes
+
+```bash
+npm test
+```
+
+Testam senhas, limites, validação de e-mail, casamento com o INEP e a nota TRI. Rodam também no
+GitHub a cada push (`.github/workflows/testes.yml`), junto com `npm audit` nas dependências.
+O `package-lock.json` fica no repositório para o Render instalar sempre as mesmas versões.

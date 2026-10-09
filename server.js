@@ -33,6 +33,39 @@ const pool = new Pool({
 // O Render fica na frente do servidor como proxy: sem isto, req.ip seria o
 // IP do proxy e todos os freios tratariam o site inteiro como uma pessoa só.
 app.set('trust proxy', 1);
+app.disable('x-powered-by'); // não anuncia que é Express
+
+// Cabeçalhos que pedem ao navegador para bloquear ataques comuns: o site
+// dentro de um iframe alheio (clickjacking), adivinhação de tipo de arquivo,
+// acesso por HTTP sem criptografia e recursos de fora que a página não usa.
+const POLITICA_DE_CONTEUDO = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src https://fonts.gstatic.com",
+  "img-src 'self' data: https:",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'none'",
+  "form-action 'self'",
+  "frame-ancestors 'none'"
+].join('; ');
+
+app.use((req, res, next) => {
+  res.set({
+    'Content-Security-Policy': POLITICA_DE_CONTEUDO,
+    'X-Content-Type-Options': 'nosniff',
+    'X-Frame-Options': 'DENY',
+    'Referrer-Policy': 'strict-origin-when-cross-origin',
+    'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+    'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
+    'Cross-Origin-Opener-Policy': 'same-origin'
+  });
+  // Respostas da API podem ter token de sessão ou dados da conta: nada de
+  // guardar em cache do navegador ou de proxies no caminho.
+  if (req.path.startsWith('/api/')) res.set('Cache-Control', 'no-store');
+  next();
+});
 
 const ORIGENS_PERMITIDAS = (process.env.ORIGENS_PERMITIDAS ||
   'https://miguelpaulo3685-cyber.github.io,http://localhost:3000,http://127.0.0.1:3000'
@@ -189,7 +222,9 @@ app.post('/api/auth/login', async (req, res) => {
 
     // Mesma resposta para e-mail inexistente e senha errada: dizer qual dos
     // dois falhou entregaria para um estranho quais e-mails tem conta aqui.
-    const ok = usuario && await auth.senhaConfere(String(senha || ''), usuario.senha_hash);
+    const ok = usuario
+      ? await auth.senhaConfere(String(senha || ''), usuario.senha_hash)
+      : await auth.gastarTempoDeConferencia(String(senha || ''));
     if (!ok) {
       auth.freioDeSenha.registrar(chaveDoFreio);
       return res.status(401).json({ error: 'E-mail ou senha incorretos.' });
