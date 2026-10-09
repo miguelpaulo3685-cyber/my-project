@@ -11,6 +11,9 @@ const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
 
+// Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
+const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
+
 const ITENS_INEP = tri.carregar();
 const CORTES_TRI = tri.calcularCortes(ITENS_INEP);
 
@@ -599,7 +602,7 @@ async function buscarProvaInteira(ano) {
   let offset = 0;
   while (true) {
     const { data } = await axios.get(
-      `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+      `${ENEM_API}/v1/exams/${ano}/questions`,
       { params: { limit: 50, offset }, timeout: 30000 }
     );
     const questoes = data?.questions || [];
@@ -754,7 +757,7 @@ async function atualizarCache() {
   console.log(`🔄 Buscando questões do ENEM ${ano}...`);
 
   const response = await axios.get(
-    `${process.env.ENEM_API_BASE}/v1/exams/${ano}/questions`,
+    `${ENEM_API}/v1/exams/${ano}/questions`,
     { params: { limit: 50, offset: Math.floor(Math.random() * 120) }, timeout: 30000 }
   );
 
