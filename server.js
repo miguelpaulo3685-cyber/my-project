@@ -619,11 +619,12 @@ async function buscarProvaInteira(ano) {
 // ainda tenha questão sem número; depois disso não faz nada.
 // O que aconteceu na última preparação da TRI, para conferir pelo navegador
 // em /api/estatisticas sem precisar abrir o log do Render.
-const diagnosticoTri = { numeros: {}, relatorio: null, erro: null };
+const diagnosticoTri = { etapa: 'aguardando', numeros: {}, relatorio: null, erro: null };
 
 async function preencherNumeros() {
   const { rows } = await pool.query('SELECT DISTINCT ano FROM questoes WHERE numero IS NULL ORDER BY ano');
   for (const { ano } of rows) {
+    diagnosticoTri.etapa = `buscando números de ${ano}`;
     try {
       const daApi = await buscarProvaInteira(ano);
       // Se inglês e espanhol tiverem o mesmo título, não dá para saber qual
@@ -634,19 +635,31 @@ async function preencherNumeros() {
         if (!porTitulo.has(q.title)) porTitulo.set(q.title, []);
         porTitulo.get(q.title).push(q);
       }
-      let atualizadas = 0;
+      const titulos = [], numeros = [], linguas = [];
       for (const [titulo, versoes] of porTitulo) {
         const idiomas = new Set(versoes.map(v => v.language || null));
-        const r = await pool.query(
-          'UPDATE questoes SET numero = $1, lingua = $2 WHERE titulo = $3 AND numero IS NULL',
-          [numeroDaQuestao(versoes[0]), idiomas.size === 1 ? [...idiomas][0] : null, titulo]
-        );
-        atualizadas += r.rowCount;
+        titulos.push(titulo);
+        numeros.push(numeroDaQuestao(versoes[0]));
+        linguas.push(idiomas.size === 1 ? [...idiomas][0] : null);
       }
-      console.log(`🔢 ENEM ${ano}: número preenchido em ${atualizadas} questões`);
+      // Um UPDATE por ano: um por questão eram milhares de idas ao banco.
+      const r = await pool.query(
+        `UPDATE questoes q SET numero = v.numero, lingua = v.lingua
+           FROM (SELECT UNNEST($1::text[]) AS titulo, UNNEST($2::int[]) AS numero,
+                        UNNEST($3::text[]) AS lingua) v
+          WHERE q.titulo = v.titulo AND q.numero IS NULL`,
+        [titulos, numeros, linguas]
+      );
+      console.log(`🔢 ENEM ${ano}: número preenchido em ${r.rowCount} questões`);
+
+      // Exemplos para comparar, caso os títulos da API e do banco não batam.
+      const sobra = await pool.query('SELECT titulo FROM questoes WHERE ano = $1 AND numero IS NULL LIMIT 1', [ano]);
       const exemplo = daApi[0] || {};
-      diagnosticoTri.numeros[ano] = { da_api: daApi.length, preenchidas: atualizadas,
-        exemplo: { title: exemplo.title, index: exemplo.index, language: exemplo.language } };
+      diagnosticoTri.numeros[ano] = {
+        da_api: daApi.length, preenchidas: r.rowCount,
+        exemplo_api: { title: exemplo.title, index: exemplo.index, language: exemplo.language },
+        exemplo_banco_sem_numero: sobra.rows[0] ? sobra.rows[0].titulo.slice(0, 80) : null
+      };
     } catch (erro) {
       console.error(`❌ Não consegui preencher números de ${ano}:`, erro.message);
       diagnosticoTri.numeros[ano] = { erro: erro.message };
@@ -686,7 +699,9 @@ async function aplicarTri() {
 async function prepararTri() {
   try {
     await preencherNumeros();
+    diagnosticoTri.etapa = 'casando com o INEP';
     await aplicarTri();
+    diagnosticoTri.etapa = 'concluída';
   } catch (erro) {
     console.error('❌ Erro ao aplicar TRI:', erro.message);
     diagnosticoTri.erro = erro.message;
