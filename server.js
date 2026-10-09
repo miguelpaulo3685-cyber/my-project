@@ -614,6 +614,10 @@ async function buscarProvaInteira(ano) {
 // Questões gravadas antes de existir a coluna numero: busca de novo na
 // api.enem.dev só para descobrir número e idioma. Roda uma vez por ano que
 // ainda tenha questão sem número; depois disso não faz nada.
+// O que aconteceu na última preparação da TRI, para conferir pelo navegador
+// em /api/estatisticas sem precisar abrir o log do Render.
+const diagnosticoTri = { numeros: {}, relatorio: null, erro: null };
+
 async function preencherNumeros() {
   const { rows } = await pool.query('SELECT DISTINCT ano FROM questoes WHERE numero IS NULL ORDER BY ano');
   for (const { ano } of rows) {
@@ -637,8 +641,12 @@ async function preencherNumeros() {
         atualizadas += r.rowCount;
       }
       console.log(`🔢 ENEM ${ano}: número preenchido em ${atualizadas} questões`);
+      const exemplo = daApi[0] || {};
+      diagnosticoTri.numeros[ano] = { da_api: daApi.length, preenchidas: atualizadas,
+        exemplo: { title: exemplo.title, index: exemplo.index, language: exemplo.language } };
     } catch (erro) {
       console.error(`❌ Não consegui preencher números de ${ano}:`, erro.message);
+      diagnosticoTri.numeros[ano] = { erro: erro.message };
     }
   }
 }
@@ -668,6 +676,7 @@ async function aplicarTri() {
   for (const l of relatorio) {
     console.log(`   ${l.ano} ${l.area}: ${l.casadas}/${l.questoes} casadas | caderno ${l.caderno} | gabaritos iguais em ${l.concordancia}%`);
   }
+  diagnosticoTri.relatorio = relatorio.map(l => `${l.ano} ${l.area}: ${l.casadas}/${l.questoes} | ${l.caderno} | ${l.concordancia}%`);
   return { casadas: casadas.length, numeradas: rows.length, relatorio };
 }
 
@@ -677,6 +686,7 @@ async function prepararTri() {
     await aplicarTri();
   } catch (erro) {
     console.error('❌ Erro ao aplicar TRI:', erro.message);
+    diagnosticoTri.erro = erro.message;
   }
 }
 
@@ -717,7 +727,7 @@ app.post('/api/carregar-ano/:ano', exigirAdmin, async (req, res) => {
 app.get('/api/estatisticas', async (req, res) => {
   try {
     const [total, porArea, porAno] = await Promise.all([
-      pool.query('SELECT COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes'),
+      pool.query('SELECT COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri, COUNT(numero)::int AS com_numero FROM questoes'),
       pool.query('SELECT disciplina, COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes GROUP BY disciplina ORDER BY total DESC'),
       pool.query('SELECT ano, COUNT(*)::int AS total, COUNT(tri_b)::int AS com_tri FROM questoes GROUP BY ano ORDER BY ano')
     ]);
@@ -725,6 +735,8 @@ app.get('/api/estatisticas', async (req, res) => {
     res.json({
       total: total.rows[0].total,
       com_tri: total.rows[0].com_tri,
+      com_numero: total.rows[0].com_numero,
+      tri_diagnostico: diagnosticoTri,
       por_materia: porArea.rows,
       por_ano: porAno.rows,
       anos_faltando: ANOS_DISPONIVEIS.filter(a => !porAno.rows.some(r => r.ano === a))
