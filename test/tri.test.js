@@ -11,32 +11,67 @@ function caderno(ano, cor, area) {
   return linhas.filter(l => l.prova === linhas[0].prova);
 }
 
-function comoQuestoes(linhas, ano, area) {
-  return linhas.map((l, i) => ({
-    id: i + 1, ano, disciplina: AREA[area], numero: l.pos, lingua: l.lingua,
-    correta: 'ABCDE'.indexOf(l.gab), esperado: l.item
-  }));
-}
-
 test('carrega os 15 anos dos microdados', () => {
   for (let ano = 2009; ano <= 2023; ano++) assert.ok(porAno.get(ano)?.length > 0, `faltou ${ano}`);
 });
 
-test('casamento: acha o caderno certo e nunca atribui item errado', () => {
-  for (const [ano, area] of [[2023, 'LC'], [2015, 'CH'], [2009, 'MT'], [2020, 'CN']]) {
-    const qs = comoQuestoes(caderno(ano, 'AZUL', area), ano, area);
-    const { casadas, relatorio } = tri.casar(qs, porAno);
-    assert.ok(relatorio[0].concordancia >= 95, `${ano} ${area}: concordância ${relatorio[0].concordancia}%`);
-    assert.ok(casadas.length >= qs.length - 5, `${ano} ${area}: casou só ${casadas.length}/${qs.length}`);
-    for (const c of casadas) {
-      assert.strictEqual(c.item, qs.find(q => q.id === c.id).esperado, `${ano} ${area}: item errado`);
+// Prova inteira de um ano como a api.enem.dev entrega (1 a 180), a partir dos
+// cadernos azuis. Títulos repetidos (inglês/espanhol) ficam só uma vez.
+function provaApi(ano, numerar, { semLingua = false } = {}) {
+  const linhas = porAno.get(ano).filter(l => l.cor.toUpperCase().startsWith('AZUL'));
+  const qs = [];
+  const vistos = new Set();
+  for (const area of ['LC', 'CH', 'CN', 'MT']) {
+    const daArea = linhas.filter(l => l.area === area);
+    for (const l of daArea.filter(x => x.prova === daArea[0].prova)) {
+      const numero = numerar(area, l.pos);
+      if (vistos.has(numero) || !'ABCDE'.includes(l.gab) || !l.gab) continue;
+      vistos.add(numero);
+      qs.push({ id: qs.length + 1, ano, numero, lingua: semLingua ? null : l.lingua,
+        correta: 'ABCDE'.indexOf(l.gab), disciplina: AREA[area], esperado: l.item, areaReal: area });
     }
   }
+  return qs;
+}
+
+function conferir(qs, minimo) {
+  const { casadas } = tri.casar(qs, porAno);
+  assert.ok(casadas.length >= minimo, `casou só ${casadas.length}/${qs.length}`);
+  for (const c of casadas) {
+    const q = qs.find(x => x.id === c.id);
+    assert.strictEqual(c.item, q.esperado, `questão ${q.numero}: item errado`);
+    assert.strictEqual(c.disciplina, AREA[q.areaReal], `questão ${q.numero}: área errada`);
+  }
+  return casadas;
+}
+
+test('casamento: anos com numeração 1-180 igual à do INEP', () => {
+  for (const ano of [2009, 2012, 2015, 2020, 2023]) conferir(provaApi(ano, (a, pos) => pos), 170);
+});
+
+test('casamento: 2017, em que o INEP numera cada área de 1 a 45 e o espanhol de 6 a 10', () => {
+  const numerar = (a, pos) => a === 'LC' ? (pos <= 10 ? ((pos - 1) % 5) + 1 : pos - 5) : ({ CH: 45, CN: 90, MT: 135 })[a] + pos;
+  conferir(provaApi(2017, numerar), 178);
+  conferir(provaApi(2017, numerar, { semLingua: true }), 170);
+});
+
+test('casamento: ordem das áreas diferente da do INEP', () => {
+  const numerar = (a, pos) => ({ LC: pos + 90, CH: pos - 45, CN: pos - 45, MT: pos })[a];
+  conferir(provaApi(2016, numerar), 170);
+});
+
+test('casamento: questão na área errada é corrigida para a área do INEP', () => {
+  const qs = provaApi(2010, (a, pos) => pos);
+  let trocadas = 0;
+  for (const q of qs) if (q.areaReal === 'LC' && trocadas < 30) { q.disciplina = 'ciencias-humanas'; trocadas++; }
+  const casadas = conferir(qs, 160);
+  const corrigidas = casadas.filter(c => qs.find(q => q.id === c.id).disciplina !== c.disciplina);
+  assert.ok(corrigidas.length >= 25, `corrigiu só ${corrigidas.length} de 30`);
 });
 
 test('casamento: gabaritos aleatórios não casam com nada', () => {
-  const qs = Array.from({ length: 40 }, (_, i) => ({
-    id: i + 1, ano: 2022, disciplina: 'matematica', numero: 136 + i, lingua: null, correta: (i * 7) % 5
+  const qs = Array.from({ length: 180 }, (_, i) => ({
+    id: i + 1, ano: 2022, disciplina: 'matematica', numero: i + 1, lingua: null, correta: (i * 7 + 3) % 5
   }));
   assert.strictEqual(tri.casar(qs, porAno).casadas.length, 0);
 });

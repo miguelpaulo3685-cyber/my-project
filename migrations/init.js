@@ -39,6 +39,8 @@ async function runMigrations() {
       -- api.enem.dev informa. É o que permite achá-la nos microdados do INEP.
       ALTER TABLE questoes ADD COLUMN IF NOT EXISTS numero INT;
       ALTER TABLE questoes ADD COLUMN IF NOT EXISTS lingua VARCHAR(10);
+      -- Área como a api.enem.dev mandou, quando o caderno do INEP indicou outra.
+      ALTER TABLE questoes ADD COLUMN IF NOT EXISTS disciplina_api VARCHAR(50);
 
       -- Parâmetros da TRI calculados pelo INEP (pasta TRI/): A = discriminação,
       -- B = dificuldade, C = acerto ao acaso. Nulos quando não deu para casar.

@@ -17,7 +17,6 @@ const LETRAS = 'ABCDE';
 
 // Abaixo disso o "melhor caderno" pode ter vencido por acaso: não usamos.
 const CONCORDANCIA_MINIMA = 0.7;
-const QUESTOES_MINIMAS = 5;
 
 function numero(texto) {
   const t = String(texto || '').trim().replace(',', '.');
@@ -93,75 +92,107 @@ function nivelPelaTri(cortes, disciplina, b) {
   return 4;
 }
 
-// Linhas do caderno naquela posição que servem para a questão: se sabemos o
-// idioma, só a versão dele; se não, qualquer uma.
-function candidatas(caderno, q) {
-  const linhas = caderno.get(q.numero) || [];
+// Cada ano do INEP numera de um jeito: em 2009 Natureza vem antes de Humanas,
+// a partir de 2016 Linguagens vem primeiro, em 2017 cada área vai de 1 a 45 e
+// o espanhol tem posições próprias. A api.enem.dev numera de 1 a 180 e às vezes
+// põe a questão na área errada. Por isso o casamento não confia nem na
+// numeração nem na área: testa cada caderno com cada deslocamento possível.
+const DESLOCAMENTOS = [];
+for (let blocos = -4; blocos <= 4; blocos++) {
+  for (const ajuste of [-5, 0, 5]) DESLOCAMENTOS.push(blocos * 45 + ajuste);
+}
+const MINIMO_DE_ACERTOS = 5;
+
+const SIGLA_PARA_DISCIPLINA = Object.fromEntries(
+  Object.entries(SIGLA_DA_DISCIPLINA).map(([disc, sigla]) => [sigla, disc])
+);
+
+// Linhas do caderno que servem para a questão: se sabemos o idioma, só a
+// versão dele; se não, qualquer uma.
+function candidatas(posicoes, posicao, q) {
+  const linhas = posicoes.get(posicao) || [];
   return q.lingua ? linhas.filter(l => !l.lingua || l.lingua === q.lingua) : linhas;
 }
 
-function bate(caderno, q) {
-  return candidatas(caderno, q).some(l => l.gab === LETRAS[q.correta]);
+// O item do INEP que corresponde à questão, ou null se não dá para ter certeza.
+function itemDaQuestao(posicoes, posicao, q) {
+  const linhas = candidatas(posicoes, posicao, q);
+  const certas = linhas.filter(l => l.gab === LETRAS[q.correta]);
+  const itens = new Map(certas.map(l => [l.item, l]));
+  // Duas versões (inglês e espanhol) com o mesmo gabarito: não dá para saber qual.
+  if (itens.size !== 1) return null;
+  const it = [...itens.values()][0];
+  // Questão de idioma sem saber o idioma, num caderno em que a outra versão
+  // fica em outra posição (2017): poderia ser a versão errada.
+  if (!q.lingua && it.lingua && !linhas.some(l => l.lingua && l.lingua !== it.lingua)) return null;
+  return it.b === null ? null : it;
 }
 
 // questoes: [{ id, ano, disciplina, numero, lingua, correta }]
-// A numeração das nossas questões segue um dos cadernos do INEP, mas não
-// sabemos qual (muda a cor, a aplicação, o idioma). Para cada ano e área,
-// testamos todos os cadernos e ficamos com o que mais concorda nos gabaritos.
-// Num caderno errado a concordância fica perto de 20% (chute entre 5 letras).
+// Para cada ano, escolhe repetidamente o par (caderno, deslocamento) que mais
+// acerta gabaritos entre as questões ainda sem par. Num par errado a
+// concordância fica perto de 20% (chute entre 5 letras); só aceitamos com
+// pelo menos 70% e 5 acertos. Cada questão casada leva a área do INEP.
 function casar(questoes, porAno) {
-  const grupos = new Map();
+  const porAnoQ = new Map();
   for (const q of questoes) {
-    const area = SIGLA_DA_DISCIPLINA[q.disciplina];
-    if (!area || !Number.isInteger(q.numero) || !Number.isInteger(q.correta)) continue;
-    const chave = `${q.ano}|${area}`;
-    if (!grupos.has(chave)) grupos.set(chave, []);
-    grupos.get(chave).push(q);
+    if (!Number.isInteger(q.numero) || !Number.isInteger(q.correta)) continue;
+    if (!porAnoQ.has(q.ano)) porAnoQ.set(q.ano, []);
+    porAnoQ.get(q.ano).push(q);
   }
 
   const casadas = [];
   const relatorio = [];
 
-  for (const [chave, grupo] of grupos) {
-    const [ano, area] = chave.split('|');
+  for (const [ano, grupo] of porAnoQ) {
     const cadernos = new Map();
     for (const it of porAno.get(Number(ano)) || []) {
-      if (it.area !== area) continue;
-      if (!cadernos.has(it.prova)) cadernos.set(it.prova, { cor: it.cor, posicoes: new Map() });
+      if (!cadernos.has(it.prova)) cadernos.set(it.prova, { prova: it.prova, area: it.area, cor: it.cor, posicoes: new Map() });
       const pos = cadernos.get(it.prova).posicoes;
       if (!pos.has(it.pos)) pos.set(it.pos, []);
       pos.get(it.pos).push(it);
     }
 
-    let melhor = null;
-    for (const [prova, cad] of cadernos) {
-      const acertos = grupo.filter(q => bate(cad.posicoes, q)).length;
-      if (!melhor || acertos > melhor.acertos) melhor = { prova, cor: cad.cor, posicoes: cad.posicoes, acertos };
-    }
-
-    const linha = {
-      ano: Number(ano), area, questoes: grupo.length, casadas: 0,
-      caderno: melhor ? `${melhor.cor || '?'} (${melhor.prova})` : 'nenhum',
-      concordancia: melhor ? Math.round(100 * melhor.acertos / grupo.length) : 0
-    };
+    const linha = { ano: Number(ano), questoes: grupo.length, casadas: 0, cadernos: [] };
     relatorio.push(linha);
+    let pendentes = grupo.slice();
 
-    if (!melhor || grupo.length < QUESTOES_MINIMAS || melhor.acertos / grupo.length < CONCORDANCIA_MINIMA) continue;
+    while (pendentes.length >= MINIMO_DE_ACERTOS) {
+      let melhor = null;
+      for (const cad of cadernos.values()) {
+        for (const desl of DESLOCAMENTOS) {
+          let cobertas = 0, acertos = 0;
+          for (const q of pendentes) {
+            const linhas = candidatas(cad.posicoes, q.numero + desl, q);
+            if (linhas.length === 0) continue;
+            cobertas++;
+            if (linhas.some(l => l.gab === LETRAS[q.correta])) acertos++;
+          }
+          if (acertos >= MINIMO_DE_ACERTOS && acertos / cobertas >= CONCORDANCIA_MINIMA &&
+              (!melhor || acertos > melhor.acertos)) {
+            melhor = { cad, desl, cobertas, acertos };
+          }
+        }
+      }
+      if (!melhor) break;
 
-    for (const q of grupo) {
-      const certas = candidatas(melhor.posicoes, q).filter(l => l.gab === LETRAS[q.correta]);
-      const itens = new Map(certas.map(l => [l.item, l]));
-      // Duas versões (inglês e espanhol) com o mesmo gabarito e sem saber o
-      // idioma: não dá para dizer qual é. Melhor sem nível do que com o errado.
-      if (itens.size !== 1) continue;
-      const it = [...itens.values()][0];
-      if (it.b === null) continue;
-      casadas.push({ id: q.id, item: it.item, a: it.a, b: it.b, c: it.c });
-      linha.casadas++;
+      const { cad, desl } = melhor;
+      linha.cadernos.push(`${cad.area} ${cad.cor || '?'} (${cad.prova}) desl ${desl}: ${melhor.acertos}/${melhor.cobertas}`);
+      const restantes = [];
+      for (const q of pendentes) {
+        // Toda questão que cai na faixa deste caderno é explicada por ele,
+        // casando ou não; assim ela não sobra para um par errado depois.
+        if (candidatas(cad.posicoes, q.numero + desl, q).length === 0) { restantes.push(q); continue; }
+        const it = itemDaQuestao(cad.posicoes, q.numero + desl, q);
+        if (!it) continue;
+        casadas.push({ id: q.id, item: it.item, a: it.a, b: it.b, c: it.c, disciplina: SIGLA_PARA_DISCIPLINA[cad.area] });
+        linha.casadas++;
+      }
+      pendentes = restantes;
     }
   }
 
-  relatorio.sort((x, y) => x.ano - y.ano || x.area.localeCompare(y.area));
+  relatorio.sort((x, y) => x.ano - y.ano);
   return { casadas, relatorio };
 }
 

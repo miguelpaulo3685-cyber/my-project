@@ -656,50 +656,27 @@ async function buscarProvaInteira(ano) {
 // em /api/estatisticas sem precisar abrir o log do Render.
 const diagnosticoTri = { etapa: 'aguardando', numeros: {}, relatorio: null, erro: null };
 
+// O número da questão já está no título ("Questão 101 - ENEM 2015"). Ler
+// dali evita buscar a prova de novo na api.enem.dev, que bloqueia (erro 429)
+// quando recebe muitos pedidos seguidos.
 async function preencherNumeros() {
-  const { rows } = await pool.query('SELECT DISTINCT ano FROM questoes WHERE numero IS NULL ORDER BY ano');
-  for (const { ano } of rows) {
-    diagnosticoTri.etapa = `buscando números de ${ano}`;
-    try {
-      const daApi = await buscarProvaInteira(ano);
-      // Se inglês e espanhol tiverem o mesmo título, não dá para saber qual
-      // das duas foi gravada: o número serve, o idioma fica em branco.
-      const porTitulo = new Map();
-      for (const q of daApi) {
-        if (!q.title) continue;
-        if (!porTitulo.has(q.title)) porTitulo.set(q.title, []);
-        porTitulo.get(q.title).push(q);
-      }
-      const titulos = [], numeros = [], linguas = [];
-      for (const [titulo, versoes] of porTitulo) {
-        const idiomas = new Set(versoes.map(v => v.language || null));
-        titulos.push(titulo);
-        numeros.push(numeroDaQuestao(versoes[0]));
-        linguas.push(idiomas.size === 1 ? [...idiomas][0] : null);
-      }
-      // Um UPDATE por ano: um por questão eram milhares de idas ao banco.
-      const r = await pool.query(
-        `UPDATE questoes q SET numero = v.numero, lingua = v.lingua
-           FROM (SELECT UNNEST($1::text[]) AS titulo, UNNEST($2::int[]) AS numero,
-                        UNNEST($3::text[]) AS lingua) v
-          WHERE q.titulo = v.titulo AND q.numero IS NULL`,
-        [titulos, numeros, linguas]
-      );
-      console.log(`🔢 ENEM ${ano}: número preenchido em ${r.rowCount} questões`);
-
-      // Exemplos para comparar, caso os títulos da API e do banco não batam.
-      const sobra = await pool.query('SELECT titulo FROM questoes WHERE ano = $1 AND numero IS NULL LIMIT 1', [ano]);
-      const exemplo = daApi[0] || {};
-      diagnosticoTri.numeros[ano] = {
-        da_api: daApi.length, preenchidas: r.rowCount,
-        exemplo_api: { title: exemplo.title, index: exemplo.index, language: exemplo.language },
-        exemplo_banco_sem_numero: sobra.rows[0] ? sobra.rows[0].titulo.slice(0, 80) : null
-      };
-    } catch (erro) {
-      console.error(`❌ Não consegui preencher números de ${ano}:`, erro.message);
-      diagnosticoTri.numeros[ano] = { erro: erro.message };
-    }
-  }
+  diagnosticoTri.etapa = 'lendo números dos títulos';
+  const r = await pool.query(
+    `UPDATE questoes
+        SET numero = substring(titulo from '[Qq]uest[ãa]o[[:space:]]+([0-9]+)')::int,
+            lingua = COALESCE(lingua, CASE WHEN titulo ~* 'ingl[eê]s' THEN 'ingles'
+                                           WHEN titulo ~* 'espanhol' THEN 'espanhol' END)
+      WHERE numero IS NULL AND titulo ~* 'quest[ãa]o[[:space:]]+[0-9]+'`
+  );
+  const sobra = await pool.query(
+    'SELECT COUNT(*)::int AS total, MIN(titulo) AS exemplo FROM questoes WHERE numero IS NULL'
+  );
+  diagnosticoTri.numeros = {
+    preenchidas_agora: r.rowCount,
+    sem_numero: sobra.rows[0].total,
+    exemplo_sem_numero: sobra.rows[0].exemplo ? sobra.rows[0].exemplo.slice(0, 80) : null
+  };
+  console.log(`🔢 Número lido do título em ${r.rowCount} questões; ${sobra.rows[0].total} ainda sem número`);
 }
 
 // Casa as questões do banco com os itens do INEP e grava os parâmetros da TRI.
@@ -723,12 +700,27 @@ async function aplicarTri() {
     [ids, casadas.map(c => c.item), casadas.map(c => c.a), casadas.map(c => c.b), casadas.map(c => c.c)]
   );
 
-  console.log(`📐 TRI: ${casadas.length} de ${rows.length} questões numeradas receberam a dificuldade oficial do INEP`);
-  for (const l of relatorio) {
-    console.log(`   ${l.ano} ${l.area}: ${l.casadas}/${l.questoes} casadas | caderno ${l.caderno} | gabaritos iguais em ${l.concordancia}%`);
+  // A api.enem.dev às vezes põe a questão na área errada (em 2010, dezenas
+  // de questões de Linguagens aparecem como Humanas). O caderno do INEP diz
+  // a área certa; a original fica em disciplina_api, para dar para desfazer.
+  const atual = new Map(rows.map(q => [q.id, q.disciplina]));
+  const trocar = casadas.filter(c => c.disciplina && c.disciplina !== atual.get(c.id));
+  if (trocar.length > 0) {
+    await pool.query(
+      `UPDATE questoes q SET disciplina_api = COALESCE(q.disciplina_api, q.disciplina), disciplina = v.disciplina
+         FROM (SELECT UNNEST($1::int[]) AS id, UNNEST($2::text[]) AS disciplina) v
+        WHERE q.id = v.id`,
+      [trocar.map(c => c.id), trocar.map(c => c.disciplina)]
+    );
   }
-  diagnosticoTri.relatorio = relatorio.map(l => `${l.ano} ${l.area}: ${l.casadas}/${l.questoes} | ${l.caderno} | ${l.concordancia}%`);
-  return { casadas: casadas.length, numeradas: rows.length, relatorio };
+
+  console.log(`📐 TRI: ${casadas.length} de ${rows.length} questões numeradas receberam a dificuldade oficial do INEP; ${trocar.length} mudaram de área`);
+  for (const l of relatorio) {
+    console.log(`   ${l.ano}: ${l.casadas}/${l.questoes} casadas | ${l.cadernos.join(' | ')}`);
+  }
+  diagnosticoTri.reclassificadas = trocar.length;
+  diagnosticoTri.relatorio = relatorio.map(l => `${l.ano}: ${l.casadas}/${l.questoes} | ${l.cadernos.join(' | ')}`);
+  return { casadas: casadas.length, numeradas: rows.length, reclassificadas: trocar.length, relatorio };
 }
 
 async function prepararTri() {

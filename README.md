@@ -59,11 +59,14 @@ curl -X POST -H "X-Admin-Key: $ADMIN_KEY" https://enem-api-cbo6.onrender.com/api
 ## Dificuldade das questões (TRI)
 
 A pasta `TRI/` tem os arquivos `ITENS_PROVA_<ano>.csv` dos microdados do ENEM (INEP), com os
-parâmetros da TRI de cada item. A cada início do servidor, `tri.js` casa cada questão do banco
-com o item do INEP: para cada ano e área, escolhe o caderno cuja sequência de gabaritos mais
-concorda com a nossa (mínimo de 70%) e confere o gabarito questão por questão. O nível
-(1 a 4) sai da dificuldade B, comparada às outras questões do ENEM na mesma área. Questão sem
-casamento usa o nível medido pelas respostas dos alunos.
+parâmetros da TRI de cada item. A cada início do servidor, o número de cada questão é lido do
+título ("Questão 101 - ENEM 2015") e `tri.js` casa as questões com os itens do INEP. Como cada ano
+numera de um jeito (ordem das áreas, numeração por área em 2017, espanhol em posições próprias) e
+a api.enem.dev às vezes põe a questão na área errada, o casamento testa cada caderno do INEP com
+cada deslocamento de numeração e fica com os pares em que os gabaritos concordam (mínimo de 70% e
+5 acertos), conferindo questão por questão. A área passa a ser a do caderno do INEP; a original
+fica em `disciplina_api`. O nível (1 a 4) sai da dificuldade B, comparada às outras questões do
+ENEM na mesma área. Questão sem casamento usa o nível medido pelas respostas dos alunos.
 
 O relatório fica no log do Render (linhas com 📐) e o total em `GET /api/estatisticas` (`com_tri`).
 Para refazer na hora: `POST /api/admin/tri` com o cabeçalho `X-Admin-Key`.
