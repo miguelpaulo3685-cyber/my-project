@@ -788,7 +788,7 @@ app.get('/api/estatisticas', async (req, res) => {
       total: total.rows[0].total,
       com_tri: total.rows[0].com_tri,
       com_numero: total.rows[0].com_numero,
-      tri_diagnostico: diagnosticoTri,
+      tri_etapa: diagnosticoTri.etapa,
       por_materia: porArea.rows,
       por_ano: porAno.rows,
       anos_faltando: ANOS_DISPONIVEIS.filter(a => !porAno.rows.some(r => r.ano === a))
