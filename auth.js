@@ -159,6 +159,33 @@ function criarFreio(limite, janelaMs) {
 // Sem isso, dá para testar milhares de senhas.
 const freioDeSenha = criarFreio(5, 15 * 60 * 1000);
 
+// ============ LOGIN COM GOOGLE ============
+// O botão do Google entrega ao navegador um "ID token" assinado. Quem confere
+// a assinatura é o próprio Google (rota tokeninfo); aqui conferimos que o
+// token foi emitido para o NOSSO site, que não venceu e que o e-mail foi
+// verificado pelo Google. Devolve { email, nome } ou null.
+const EMISSORES_GOOGLE = new Set(['accounts.google.com', 'https://accounts.google.com']);
+
+async function conferirTokenGoogle(credencial, clientId, buscar = fetch) {
+  if (!clientId || typeof credencial !== 'string' || credencial.length > 4096) return null;
+  let dados;
+  try {
+    const r = await buscar('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(credencial));
+    if (!r.ok) return null;
+    dados = await r.json();
+  } catch (erro) {
+    console.error('Falha ao conferir token do Google:', erro.message);
+    return null;
+  }
+  if (dados.aud !== clientId) return null;
+  if (!EMISSORES_GOOGLE.has(dados.iss)) return null;
+  if (!(Number(dados.exp) * 1000 > Date.now())) return null;
+  if (dados.email_verified !== true && dados.email_verified !== 'true') return null;
+  if (typeof dados.email !== 'string' || dados.email.length > TAMANHO_MAXIMO_EMAIL) return null;
+  const nome = String(dados.given_name || dados.name || dados.email.split('@')[0]).trim().slice(0, 60);
+  return { email: dados.email.trim().toLowerCase(), nome };
+}
+
 module.exports = {
   criarHashDeSenha,
   senhaConfere,
@@ -170,5 +197,6 @@ module.exports = {
   problemaNoEmail,
   criarFreio,
   freioDeSenha,
+  conferirTokenGoogle,
   DIAS_DE_SESSAO
 };

@@ -58,3 +58,21 @@ test('e-mail: provedores conhecidos passam sem depender do DNS', async () => {
   assert.strictEqual(await auth.problemaNoEmail('aluno@gmail.com'), null);
   assert.strictEqual(await auth.problemaNoEmail('aluno@hotmail.com'), null);
 });
+
+test('google: só aceita token do nosso site, válido e com e-mail verificado', async () => {
+  const CLIENTE = 'nosso.apps.googleusercontent.com';
+  const daqui1h = String(Math.floor(Date.now() / 1000) + 3600);
+  const valido = { aud: CLIENTE, iss: 'https://accounts.google.com', exp: daqui1h,
+    email: 'Aluna@Gmail.com', email_verified: 'true', given_name: 'Ana' };
+  const google = (dados, ok = true) => async () => ({ ok, json: async () => dados });
+
+  assert.deepStrictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google(valido)),
+    { email: 'aluna@gmail.com', nome: 'Ana' });
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google({ ...valido, aud: 'outro-site' })), null);
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google({ ...valido, iss: 'falso.com' })), null);
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google({ ...valido, exp: '1000' })), null);
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google({ ...valido, email_verified: 'false' })), null);
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, google(valido, false)), null);
+  assert.strictEqual(await auth.conferirTokenGoogle('t', '', google(valido)), null, 'sem GOOGLE_CLIENT_ID fica desligado');
+  assert.strictEqual(await auth.conferirTokenGoogle('t', CLIENTE, async () => { throw new Error('rede'); }), null);
+});

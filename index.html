@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://enem-api-cbo6.onrender.com http://localhost:3000 http://127.0.0.1:3000; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://enem-api-cbo6.onrender.com http://localhost:3000 http://127.0.0.1:3000 https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="dark light">
   <title>M&M Estudos — ENEM</title>
@@ -512,6 +512,90 @@
       font-size: .8rem; color: var(--texto-fraco); line-height: 1.6;
     }
 
+    /* ===================== ENTRADA ===================== */
+    /* Primeira tela de quem chega sem conta: sempre preta, com a cor da marca,
+       seja qual for o tema ou as cores escolhidas dentro do site. */
+    #entrada {
+      --fundo: #060606; --superficie-2: #0e0e0e; --borda: #262321;
+      --texto: #f2eadc; --texto-fraco: #8f877a;
+      --marca: #c8a96e; --marca-forte: #e4cfa3; --marca-texto: #e4cfa3;
+      --marca-suave: rgba(200,169,110,.14); --marca-sombra: rgba(200,169,110,.28); --sobre-marca: #17130d;
+      position: fixed; inset: 0; z-index: 300;
+      display: none; overflow-y: auto; overscroll-behavior: contain;
+      background: var(--fundo); color: var(--texto);
+    }
+    html.com-entrada #entrada { display: block; }
+    html.com-entrada body { overflow: hidden; }
+
+    .entrada-figuras { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .entrada-figuras .traco { fill: none; stroke: url(#traco-bege); stroke-width: 1; }
+    .entrada-figuras .flutua { transform-box: fill-box; transform-origin: center; animation: flutuar 14s ease-in-out infinite; }
+    .entrada-figuras .flutua.b { animation-duration: 18s; animation-delay: -6s; }
+    .entrada-figuras .flutua.c { animation-duration: 22s; animation-delay: -11s; }
+    .entrada-figuras .gira { transform-box: view-box; transform-origin: 720px 430px; animation: girar 120s linear infinite; }
+    .entrada-figuras .brilha { animation: brilhar 5s ease-in-out infinite; }
+    .entrada-figuras .brilha:nth-of-type(2n) { animation-delay: -2.5s; }
+    @keyframes flutuar { 50% { transform: translateY(-14px) rotate(6deg); } }
+    @keyframes girar { to { transform: rotate(360deg); } }
+    @keyframes brilhar { 50% { opacity: .15; } }
+
+    .entrada-miolo {
+      position: relative; min-height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px 16px 28px;
+    }
+    .entrada-cartao { width: 100%; max-width: 400px; text-align: center; animation: surgir .7s ease both; }
+    @keyframes surgir { from { opacity: 0; transform: translateY(12px); } }
+
+    .logo-mm { position: relative; width: 88px; height: 88px; margin: 0 auto 26px; }
+    .logo-mm svg { width: 100%; height: 100%; overflow: visible; }
+    .logo-mm .orbita { transform-origin: 44px 44px; animation: girar 24s linear infinite; }
+    .logo-mm text { font-family: var(--fonte-titulo); font-weight: 600; }
+    .logo-mm::before {
+      content: ''; position: absolute; inset: -30px; border-radius: 50%; z-index: -1;
+      background: radial-gradient(circle, rgba(200,169,110,.22), transparent 65%);
+    }
+
+    .entrada-cartao h1 { font-size: 1.75rem; margin-bottom: 8px; }
+    .entrada-cartao .sub { color: var(--texto-fraco); font-size: .93rem; line-height: 1.55; margin-bottom: 28px; }
+
+    #area-google { display: flex; flex-direction: column; align-items: center; }
+    #botao-google { min-height: 44px; display: flex; justify-content: center; }
+    .aviso-google { font-size: .74rem; color: var(--texto-fraco); margin-top: 10px; line-height: 1.5; }
+    .aviso-google a { color: var(--texto); }
+    .divisor {
+      display: flex; align-items: center; gap: 14px; margin: 22px 0 4px;
+      color: var(--texto-fraco); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+    }
+    .divisor::before, .divisor::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--borda), transparent); }
+
+    #entrada .form-conta { text-align: left; }
+    #entrada .form-conta label { font-weight: 600; color: #cfc6b6; }
+    #entrada .form-conta input:not([type=checkbox]) {
+      border-width: 1px; padding: 13px 14px; background: rgba(14,14,14,.85);
+      transition: border-color .15s, box-shadow .15s;
+    }
+    #entrada .form-conta input:focus { box-shadow: 0 0 0 3px var(--marca-suave); }
+    #entrada .form-conta button[type=submit] {
+      border-radius: 11px; background: linear-gradient(180deg, var(--marca-forte), var(--marca));
+    }
+    #entrada .alternar { line-height: 1.9; }
+    #entrada .alternar .ponto { margin: 0 8px; opacity: .5; }
+
+    .entrada-pe { margin-top: 34px; display: grid; gap: 14px; justify-items: center; }
+    .sem-conta {
+      background: none; border: 1px solid var(--borda); color: var(--texto-fraco);
+      font: inherit; font-size: .86rem; font-weight: 600; cursor: pointer;
+      padding: 9px 18px; border-radius: 999px; transition: color .15s, border-color .15s;
+    }
+    .sem-conta:hover { color: var(--texto); border-color: var(--marca); }
+    .entrada-pe small { font-size: .76rem; color: var(--texto-fraco); }
+    .entrada-pe small a { color: var(--texto-fraco); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .entrada-figuras *, .logo-mm *, .entrada-cartao { animation: none !important; }
+    }
+
     /* ===================== CONTA ===================== */
     .form-conta { max-width: 420px; margin: 0 auto; }
     .form-conta label { display: block; font-size: .86rem; font-weight: 700; margin: 18px 0 7px; }
@@ -635,8 +719,139 @@
       #btn-tema { display: none; } /* no celular o tema fica dentro de 🎨 Aparência */
     }
   </style>
+  <script>
+    // Decide antes de desenhar a página se a tela de entrada aparece. Depois
+    // seria tarde: quem já tem conta veria a tela piscar ao abrir o site.
+    try {
+      const p = new URLSearchParams(location.search);
+      const semConta = sessionStorage.getItem('mm_sem_conta');
+      if (p.has('redefinir') || (!localStorage.getItem('mm_token') && !semConta && !p.has('confirmar'))) {
+        document.documentElement.classList.add('com-entrada');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <!-- ===================== ENTRADA ===================== -->
+  <div id="entrada" role="dialog" aria-modal="true" aria-labelledby="titulo-entrada">
+    <svg class="entrada-figuras" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="traco-bege" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#e4cfa3" stop-opacity=".55"/>
+          <stop offset="1" stop-color="#c8a96e" stop-opacity=".08"/>
+        </linearGradient>
+        <radialGradient id="luz-topo" cx="50%" cy="0%" r="60%">
+          <stop offset="0" stop-color="#c8a96e" stop-opacity=".22"/>
+          <stop offset=".55" stop-color="#c8a96e" stop-opacity=".04"/>
+          <stop offset="1" stop-color="#c8a96e" stop-opacity="0"/>
+        </radialGradient>
+        <pattern id="pontos" width="30" height="30" patternUnits="userSpaceOnUse">
+          <circle cx="1.2" cy="1.2" r="1.2" fill="#e4cfa3" fill-opacity=".16"/>
+        </pattern>
+        <radialGradient id="some-nas-bordas" cx="50%" cy="45%" r="55%">
+          <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/>
+        </radialGradient>
+        <mask id="mascara-pontos"><rect width="1440" height="900" fill="url(#some-nas-bordas)"/></mask>
+      </defs>
+
+      <rect width="1440" height="900" fill="url(#pontos)" mask="url(#mascara-pontos)"/>
+      <rect width="1440" height="900" fill="url(#luz-topo)"/>
+
+      <!-- anéis atrás do cartão -->
+      <g class="traco" opacity=".7">
+        <circle cx="720" cy="430" r="300" stroke-opacity=".35"/>
+        <circle cx="720" cy="430" r="420" stroke-opacity=".22"/>
+        <circle cx="720" cy="430" r="560" stroke-opacity=".12"/>
+      </g>
+      <g class="gira">
+        <circle cx="720" cy="430" r="360" fill="none" stroke="#c8a96e" stroke-opacity=".18" stroke-dasharray="2 14"/>
+        <circle cx="1080" cy="430" r="3.5" fill="#e4cfa3" fill-opacity=".7"/>
+        <circle cx="360" cy="430" r="2" fill="#e4cfa3" fill-opacity=".5"/>
+      </g>
+
+      <!-- figuras soltas -->
+      <g class="flutua"><rect class="traco" x="150" y="150" width="96" height="96" rx="6" transform="rotate(45 198 198)"/></g>
+      <g class="flutua b"><path class="traco" d="M1225 610 l70 121 h-140 z"/></g>
+      <g class="flutua c"><circle class="traco" cx="1210" cy="190" r="46"/><circle class="traco" cx="1210" cy="190" r="26" stroke-opacity=".5"/></g>
+      <g class="flutua b"><path class="traco" d="M250 640 l52 30 v60 l-52 30 l-52 -30 v-60 z"/></g>
+      <!-- perto do centro: são as que aparecem no celular -->
+      <g class="flutua c"><rect class="traco" x="560" y="60" width="38" height="38" rx="3" transform="rotate(45 579 79)"/></g>
+      <g class="flutua"><circle class="traco" cx="860" cy="820" r="22"/></g>
+      <path class="traco" d="M-40 860 C 300 640, 520 900, 820 760 S 1300 560, 1500 700" stroke-opacity=".5"/>
+      <path class="traco" d="M-60 90 C 260 260, 420 20, 700 120" stroke-opacity=".35"/>
+
+      <!-- brilhos -->
+      <g fill="#e4cfa3">
+        <path class="brilha" d="M420 250 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3 z" opacity=".6"/>
+        <path class="brilha" d="M1040 120 l2 7 7 2 -7 2 -2 7 -2 -7 -7 -2 7 -2 z" opacity=".5"/>
+        <path class="brilha" d="M1100 780 l3 9 9 3 -9 3 -3 9 -3 -9 -9 -3 9 -3 z" opacity=".55"/>
+        <path class="brilha" d="M110 470 l2 7 7 2 -7 2 -2 7 -2 -7 -7 -2 7 -2 z" opacity=".45"/>
+      </g>
+    </svg>
+
+    <div class="entrada-miolo">
+      <div class="entrada-cartao">
+        <div class="logo-mm" aria-hidden="true">
+          <svg viewBox="0 0 88 88">
+            <defs>
+              <linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f3e3bf"/><stop offset=".5" stop-color="#c8a96e"/><stop offset="1" stop-color="#8a6d3b"/>
+              </linearGradient>
+            </defs>
+            <circle cx="44" cy="44" r="42" fill="#0b0a09" stroke="url(#ouro)" stroke-width="1.5"/>
+            <circle cx="44" cy="44" r="36" fill="none" stroke="#c8a96e" stroke-opacity=".25"/>
+            <g class="orbita"><circle cx="44" cy="2" r="2.4" fill="#f3e3bf"/></g>
+            <text x="44" y="51" text-anchor="middle" font-size="23" fill="url(#ouro)" letter-spacing="-.5">M<tspan font-style="italic" font-size="19" dx="1" dy="-1">&amp;</tspan><tspan dx="1" dy="1">M</tspan></text>
+          </svg>
+        </div>
+
+        <h1 id="titulo-entrada">Entrar no M&amp;M Estudos</h1>
+        <p class="sub" id="sub-entrada">Questões reais do ENEM, com a sua nota TRI.</p>
+
+        <div id="area-google" class="escondido">
+          <div id="botao-google"></div>
+          <p class="aviso-google" id="aviso-google">Ao continuar com o Google, você aceita os
+            <a href="termos.html" target="_blank">Termos</a> e a <a href="privacidade.html" target="_blank">Privacidade</a>.</p>
+          <div class="divisor">ou</div>
+        </div>
+
+        <form class="form-conta" id="form-conta" onsubmit="enviarConta(event)">
+          <div id="campo-nome" class="escondido">
+            <label for="conta-nome">Como quer ser chamado</label>
+            <input type="text" id="conta-nome" autocomplete="name" maxlength="60">
+          </div>
+
+          <div id="campo-email">
+            <label for="conta-email">E-mail</label>
+            <input type="email" id="conta-email" autocomplete="email" placeholder="voce@gmail.com" required>
+            <div class="pista" id="pista-email"></div>
+          </div>
+
+          <div id="campo-senha">
+            <label for="conta-senha" id="rotulo-senha">Senha</label>
+            <input type="password" id="conta-senha" autocomplete="current-password" required>
+            <div class="pista" id="pista-senha"></div>
+          </div>
+
+          <label class="aceite escondido" id="campo-aceite">
+            <input type="checkbox" id="conta-aceite">
+            <span>Li e aceito os <a href="termos.html" target="_blank">Termos de Uso</a>
+            e a <a href="privacidade.html" target="_blank">Política de Privacidade</a>.</span>
+          </label>
+
+          <button type="submit" class="acao" id="botao-conta">Entrar</button>
+          <div id="recado-conta"></div>
+          <div class="alternar" id="alternar-conta"></div>
+        </form>
+
+        <div class="entrada-pe">
+          <button class="sem-conta" onclick="continuarSemConta()">Continuar sem conta →</button>
+          <small><a href="termos.html">Termos de Uso</a> · <a href="privacidade.html">Privacidade</a></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="fundo-imagem" aria-hidden="true" hidden></div>
   <div id="confete"></div>
 
@@ -821,36 +1036,7 @@
     </div>
 
     <div class="painel">
-      <form class="form-conta" id="form-conta" onsubmit="enviarConta(event)">
-        <div id="campo-nome" class="escondido">
-          <label for="conta-nome">Como quer ser chamado</label>
-          <input type="text" id="conta-nome" autocomplete="name" maxlength="60">
-        </div>
-
-        <div id="campo-email">
-          <label for="conta-email">E-mail</label>
-          <input type="email" id="conta-email" autocomplete="email" required>
-          <div class="pista" id="pista-email"></div>
-        </div>
-
-        <div id="campo-senha">
-          <label for="conta-senha" id="rotulo-senha">Senha</label>
-          <input type="password" id="conta-senha" autocomplete="current-password" required>
-          <div class="pista" id="pista-senha"></div>
-        </div>
-
-        <label class="aceite escondido" id="campo-aceite">
-          <input type="checkbox" id="conta-aceite">
-          <span>Li e aceito os <a href="termos.html" target="_blank">Termos de Uso</a>
-          e a <a href="privacidade.html" target="_blank">Política de Privacidade</a>.</span>
-        </label>
-
-        <button type="submit" class="acao" id="botao-conta">Entrar</button>
-        <div id="recado-conta"></div>
-        <div class="alternar" id="alternar-conta"></div>
-      </form>
-
-      <div class="form-conta escondido" id="painel-logado">
+      <div class="form-conta" id="painel-logado">
         <div class="dados-conta">
           <span class="bolha" id="conta-inicial">?</span>
           <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
@@ -864,7 +1050,7 @@
           <p>Apaga sua conta, seus posts e suas sessões. Suas respostas às questões
           ficam apenas como estatística anônima, sem ligação com você. Não dá para desfazer.</p>
           <form onsubmit="excluirConta(event)">
-            <label for="excluir-senha">Confirme sua senha</label>
+            <label for="excluir-senha" id="rotulo-excluir">Confirme sua senha</label>
             <input type="password" id="excluir-senha" autocomplete="current-password" required>
             <button type="submit" class="acao perigo" id="botao-excluir">Excluir conta para sempre</button>
           </form>
@@ -1893,19 +2079,22 @@ function cliqueNoPerfil() {
   abrirConta(usuarioLogado ? 'logado' : 'entrar');
 }
 
-function abrirConta(modo) {
-  modoConta = modo;
-  const logado = modo === 'logado';
-  document.getElementById('form-conta').classList.toggle('escondido', logado);
-  document.getElementById('painel-logado').classList.toggle('escondido', !logado);
-
-  if (logado) {
+// Entrar, criar conta, esqueci e nova senha aparecem na tela de entrada, por
+// cima do site. "Minha conta" (já logado) é uma página normal.
+function abrirConta(modo, mostrar = true) {
+  if (modo === 'logado') {
     document.getElementById('titulo-conta').textContent = 'Minha conta';
     document.getElementById('sub-conta').textContent = 'Seu progresso fica salvo aqui, em qualquer aparelho.';
     document.getElementById('conta-inicial').textContent = (usuarioLogado.username || '?').charAt(0).toUpperCase();
     document.getElementById('conta-nome-exibido').textContent = usuarioLogado.username;
     document.getElementById('conta-email-exibido').textContent = usuarioLogado.email;
-    document.getElementById('excluir-senha').value = '';
+    // Conta criada pelo Google não tem senha: confirma digitando o e-mail.
+    const semSenha = usuarioLogado.tem_senha === false;
+    const campoExcluir = document.getElementById('excluir-senha');
+    document.getElementById('rotulo-excluir').textContent = semSenha ? 'Digite seu e-mail para confirmar' : 'Confirme sua senha';
+    campoExcluir.type = semSenha ? 'email' : 'password';
+    campoExcluir.autocomplete = semSenha ? 'off' : 'current-password';
+    campoExcluir.value = '';
     document.getElementById('recado-excluir').innerHTML = '';
     document.querySelector('.zona-perigo').open = false;
     desenharStatusEmail();
@@ -1913,6 +2102,7 @@ function abrirConta(modo) {
     return;
   }
 
+  modoConta = modo;
   const m = MODOS_CONTA[modo];
   const tem = campo => m.campos.includes(campo);
   for (const campo of ['nome', 'email', 'senha', 'aceite']) {
@@ -1923,8 +2113,9 @@ function abrirConta(modo) {
   document.getElementById('conta-senha').required = tem('senha');
 
   const senhaNova = modo === 'criar' || modo === 'redefinir';
-  document.getElementById('titulo-conta').textContent = m.titulo;
-  document.getElementById('sub-conta').textContent = m.sub;
+  document.getElementById('titulo-entrada').textContent = m.titulo;
+  document.getElementById('sub-entrada').textContent = m.sub;
+  document.getElementById('area-google').classList.toggle('escondido', !googleLigado || !['entrar', 'criar'].includes(modo));
   document.getElementById('botao-conta').textContent = m.botao;
   document.getElementById('rotulo-senha').textContent = modo === 'redefinir' ? 'Nova senha' : 'Senha';
   document.getElementById('conta-senha').autocomplete = senhaNova ? 'new-password' : 'current-password';
@@ -1934,18 +2125,38 @@ function abrirConta(modo) {
   document.getElementById('form-conta').reset();
   document.getElementById('alternar-conta').innerHTML = m.alternar;
 
-  irPara('conta');
+  if (mostrar) abrirEntrada();
 }
+
+function abrirEntrada() {
+  document.documentElement.classList.add('com-entrada');
+  document.getElementById('entrada').scrollTop = 0;
+}
+
+function fecharEntrada() {
+  document.documentElement.classList.remove('com-entrada');
+}
+
+// Quem escolhe usar sem conta não vê a entrada de novo até fechar o navegador.
+function continuarSemConta() {
+  try { sessionStorage.setItem('mm_sem_conta', '1'); } catch (e) {}
+  fecharEntrada();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.documentElement.classList.contains('com-entrada') && modoConta !== 'redefinir') {
+    continuarSemConta();
+  }
+});
 
 const MODOS_CONTA = {
   entrar: {
-    titulo: 'Entrar', sub: 'Bom te ver de novo.', botao: 'Entrar', carregando: 'Entrando…',
+    titulo: 'Entrar no M&M Estudos', sub: 'Questões reais do ENEM, com a sua nota TRI.', botao: 'Entrar', carregando: 'Entrando…',
     campos: ['email', 'senha'], rota: 'login',
-    alternar: `<a onclick="abrirConta('esqueci')">Esqueci minha senha</a><br><br>
-               Ainda não tem conta? <a onclick="abrirConta('criar')">Criar agora</a>`
+    alternar: `<a onclick="abrirConta('criar')">Criar uma conta</a><span class="ponto">·</span><a onclick="abrirConta('esqueci')">Esqueci minha senha</a>`
   },
   criar: {
-    titulo: 'Criar conta', sub: 'Leva menos de um minuto.', botao: 'Criar minha conta', carregando: 'Criando…',
+    titulo: 'Criar sua conta', sub: 'Leva menos de um minuto, e o seu progresso vai junto para qualquer aparelho.', botao: 'Criar minha conta', carregando: 'Criando…',
     campos: ['nome', 'email', 'senha', 'aceite'], rota: 'registrar',
     alternar: `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
   },
@@ -2003,21 +2214,73 @@ async function enviarConta(evento) {
     if (modo === 'esqueci') { recadoConta(dados.message, 'bom'); return; }
 
     if (modo === 'redefinir') tokenRedefinir = null;
-    guardar(CHAVE_TOKEN, dados.token);
-    usuarioLogado = dados.usuario;
-    desenharPerfil();
-    await sincronizarProgresso();
-    recadoConta({
+    await concluirEntrada(dados, {
       criar: 'Conta criada! Enviamos um link para confirmar seu e-mail.',
       entrar: 'Bem-vindo de volta!',
       redefinir: 'Senha trocada! Você já está dentro.'
-    }[modo], 'bom');
-    setTimeout(() => irPara('treinar'), modo === 'criar' ? 1600 : 700);
+    }[modo]);
   } catch (e) {
     recadoConta(SEM_SERVIDOR, 'ruim');
   } finally {
     botao.disabled = false;
     botao.textContent = m.botao;
+  }
+}
+
+async function concluirEntrada(dados, mensagem) {
+  guardar(CHAVE_TOKEN, dados.token);
+  usuarioLogado = dados.usuario;
+  desenharPerfil();
+  await sincronizarProgresso();
+  recadoConta(mensagem, 'bom');
+  setTimeout(() => {
+    fecharEntrada();
+    irPara('treinar');
+    avisoTopo(mensagem + ' Seu progresso agora fica salvo na conta.', 'bom');
+  }, 700);
+}
+
+// ===================== GOOGLE =====================
+// O botão só aparece se o servidor tiver GOOGLE_CLIENT_ID. O script do Google
+// é carregado só nesse caso, para não chamar o Google à toa.
+let googleLigado = false;
+
+async function carregarGoogle() {
+  let clientId;
+  try {
+    const r = await fetch(`${API_URL}/api/config`);
+    clientId = (await r.json()).google_client_id;
+  } catch (e) { return; }
+  if (!clientId) return;
+
+  const script = document.createElement('script');
+  script.src = 'https://accounts.google.com/gsi/client';
+  script.async = true;
+  script.onload = () => {
+    google.accounts.id.initialize({ client_id: clientId, callback: entrarComGoogle, ux_mode: 'popup' });
+    google.accounts.id.renderButton(document.getElementById('botao-google'), {
+      theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with',
+      width: Math.min(360, document.getElementById('area-google').clientWidth || 320), locale: 'pt-BR'
+    });
+    googleLigado = true;
+    document.getElementById('area-google').classList.toggle('escondido', !['entrar', 'criar'].includes(modoConta));
+  };
+  document.head.appendChild(script);
+}
+
+async function entrarComGoogle(resposta) {
+  recadoConta('Entrando com o Google…', 'bom');
+  try {
+    const r = await fetch(`${API_URL}/api/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credencial: resposta.credential })
+    });
+    const dados = await r.json();
+    if (!r.ok) { recadoConta(dados.error || 'Não deu certo.', 'ruim'); return; }
+    await concluirEntrada(dados, dados.nova ? 'Conta criada com o Google!' : 'Bem-vindo de volta!');
+  } catch (e) {
+    recadoConta(SEM_SERVIDOR, 'ruim');
   }
 }
 
@@ -2114,6 +2377,7 @@ function esquecerConta() {
   desenharTudo();
   buscarNotasTri();
   irPara('treinar');
+  abrirConta('entrar');
 }
 
 async function sair() {
@@ -2126,7 +2390,13 @@ async function restaurarSessao() {
   try {
     const r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() });
     if (r.ok) usuarioLogado = (await r.json()).usuario;
-    else guardar(CHAVE_TOKEN, null);
+    else {
+      // Sessão vencida: a pessoa volta para a tela de entrada.
+      guardar(CHAVE_TOKEN, null);
+      let pulou = false;
+      try { pulou = sessionStorage.getItem('mm_sem_conta'); } catch (e) {}
+      if (!pulou) abrirConta('entrar');
+    }
   } catch (e) {}
   desenharPerfil();
   await sincronizarProgresso();
@@ -2256,8 +2526,10 @@ iniciarTema();
 aplicarImagemFundo();
 carregarProgresso();
 desenharTudo();
+// Prepara o formulário da tela de entrada (se ela estiver aparecendo, já fica pronta).
+abrirConta('entrar', false);
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
-window.addEventListener('load', () => { verificarAPI(); tratarLinkDoEmail(restaurarSessao()); });
+window.addEventListener('load', () => { verificarAPI(); carregarGoogle(); tratarLinkDoEmail(restaurarSessao()); });
 </script>
 </body>
 </html>

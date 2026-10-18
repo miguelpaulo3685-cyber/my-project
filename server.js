@@ -40,11 +40,12 @@ app.disable('x-powered-by'); // não anuncia que é Express
 // acesso por HTTP sem criptografia e recursos de fora que a página não usa.
 const POLITICA_DE_CONTEUDO = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style",
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data: https:",
-  "connect-src 'self'",
+  "connect-src 'self' https://accounts.google.com/gsi/",
+  "frame-src https://accounts.google.com/gsi/",
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",
@@ -59,7 +60,8 @@ app.use((req, res, next) => {
     'Referrer-Policy': 'strict-origin-when-cross-origin',
     'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), payment=()',
-    'Cross-Origin-Opener-Policy': 'same-origin'
+    // allow-popups: a janelinha do "Entrar com Google" precisa responder à página.
+    'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
   });
   // Respostas da API podem ter token de sessão ou dados da conta: nada de
   // guardar em cache do navegador ou de proxies no caminho.
@@ -98,6 +100,8 @@ function limitar(freio, mensagem, chaveDe = req => req.ip) {
 // mesmo IP.
 app.use('/api', limitar(auth.criarFreio(300, 60 * 1000), 'Muitos pedidos seguidos. Espere um minuto.'));
 const freioCadastro = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Muitas contas criadas daqui. Tente mais tarde.');
+// Entrar com Google também é login: uma sala inteira entra pelo mesmo IP.
+const freioGoogle = limitar(auth.criarFreio(100, 60 * 60 * 1000), 'Muitas tentativas daqui. Tente mais tarde.');
 const freioRespostas = limitar(auth.criarFreio(120, 60 * 1000), 'Calma! Respostas demais em pouco tempo.');
 const freioPosts = limitar(auth.criarFreio(10, 10 * 60 * 1000), 'Você publicou muito em pouco tempo. Espere uns minutos.',
   req => `u${req.usuario.id}`);
@@ -128,7 +132,8 @@ async function identificar(req, res, next) {
       const { rows } = await pool.query(
         `SELECT u.id, u.username, u.email, u.bio, u.avatar_url,
                 COALESCE(u.email_verificado, FALSE) AS email_verificado,
-                COALESCE(u.admin, FALSE) AS admin
+                COALESCE(u.admin, FALSE) AS admin,
+                (u.senha_hash IS NOT NULL) AS tem_senha
            FROM sessoes s
            JOIN usuarios u ON u.id = s.usuario_id
           WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
@@ -190,7 +195,7 @@ app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
     const { rows } = await pool.query(
       `INSERT INTO usuarios (username, email, senha_hash, termos_aceitos_em)
        VALUES ($1, $2, $3, NOW())
-       RETURNING id, username, email, FALSE AS email_verificado`,
+       RETURNING id, username, email, FALSE AS email_verificado, TRUE AS tem_senha`,
       [String(nome).trim().slice(0, 60), emailLimpo, await auth.criarHashDeSenha(senha)]
     );
 
@@ -241,11 +246,51 @@ app.post('/api/auth/login', async (req, res) => {
     const token = await abrirSessao(usuario.id);
     res.json({
       token,
-      usuario: { id: usuario.id, username: usuario.username, email: usuario.email, email_verificado: usuario.email_verificado },
+      usuario: { id: usuario.id, username: usuario.username, email: usuario.email, email_verificado: usuario.email_verificado, tem_senha: true },
       dias_de_sessao: auth.DIAS_DE_SESSAO
     });
   } catch (erro) {
     console.error('Erro no login:', erro.message);
+    res.status(500).json({ error: 'Não consegui entrar agora.' });
+  }
+});
+
+// Entrar com Google. Se o e-mail ainda não tem conta, ela é criada na hora,
+// sem senha (dá para criar uma depois em "Esqueci minha senha"). O e-mail já
+// vem verificado pelo Google. Fica desligado sem GOOGLE_CLIENT_ID.
+app.post('/api/auth/google', freioGoogle, async (req, res) => {
+  const clientId = process.env.GOOGLE_CLIENT_ID;
+  if (!clientId) return res.status(503).json({ error: 'O login com Google ainda não está ativado.' });
+
+  const google = await auth.conferirTokenGoogle(req.body?.credencial, clientId);
+  if (!google) return res.status(401).json({ error: 'Não consegui confirmar sua conta Google. Tente de novo.' });
+
+  try {
+    const existente = await pool.query('SELECT id FROM usuarios WHERE email = $1', [google.email]);
+    let id = existente.rows[0]?.id;
+    if (id) {
+      await pool.query('UPDATE usuarios SET email_verificado = TRUE WHERE id = $1', [id]);
+    } else {
+      // Quem cria a conta pelo botão vê, logo abaixo dele, que está aceitando
+      // os Termos e a Política de Privacidade.
+      const { rows } = await pool.query(
+        `INSERT INTO usuarios (username, email, email_verificado, termos_aceitos_em)
+         VALUES ($1, $2, TRUE, NOW()) RETURNING id`,
+        [google.nome, google.email]
+      );
+      id = rows[0].id;
+    }
+
+    const { rows } = await pool.query(
+      `SELECT id, username, email, TRUE AS email_verificado, (senha_hash IS NOT NULL) AS tem_senha
+         FROM usuarios WHERE id = $1`, [id]
+    );
+    const token = await abrirSessao(id);
+    res.status(existente.rowCount ? 200 : 201).json({
+      token, usuario: rows[0], nova: !existente.rowCount, dias_de_sessao: auth.DIAS_DE_SESSAO
+    });
+  } catch (erro) {
+    console.error('Erro no login com Google:', erro.message);
     res.status(500).json({ error: 'Não consegui entrar agora.' });
   }
 });
@@ -391,9 +436,14 @@ app.delete('/api/conta', exigirLogin, async (req, res) => {
 
   try {
     const { rows } = await pool.query('SELECT senha_hash FROM usuarios WHERE id = $1', [req.usuario.id]);
-    if (!rows[0] || !await auth.senhaConfere(String(req.body?.senha || ''), rows[0].senha_hash)) {
+    if (!rows[0]) return res.status(404).json({ error: 'Conta não encontrada.' });
+    // Conta criada pelo Google não tem senha: a confirmação é digitar o e-mail.
+    const confirmou = rows[0].senha_hash
+      ? await auth.senhaConfere(String(req.body?.senha || ''), rows[0].senha_hash)
+      : String(req.body?.senha || '').trim().toLowerCase() === req.usuario.email;
+    if (!confirmou) {
       auth.freioDeSenha.registrar(chaveDoFreio);
-      return res.status(401).json({ error: 'Senha incorreta.' });
+      return res.status(401).json({ error: rows[0].senha_hash ? 'Senha incorreta.' : 'O e-mail não confere.' });
     }
 
     // Sessões e posts vão junto pelo ON DELETE CASCADE.
@@ -403,6 +453,12 @@ app.delete('/api/conta', exigirLogin, async (req, res) => {
     console.error('Erro ao excluir conta:', erro.message);
     res.status(500).json({ error: 'Não consegui excluir a conta agora.' });
   }
+});
+
+// Configurações públicas que o site precisa saber ao abrir. O client ID do
+// Google não é segredo: ele aparece na página de qualquer site com o botão.
+app.get('/api/config', (req, res) => {
+  res.json({ google_client_id: process.env.GOOGLE_CLIENT_ID || null });
 });
 
 // ================== HEALTH CHECK ==================

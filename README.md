@@ -32,6 +32,7 @@ uma tabela ou coluna que o código espera.
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Alternativa ao Brevo: envio por SMTP (Gmail com senha de app, Resend etc.) |
 | `EMAIL_REMETENTE` | Opcional. Nome e endereço que aparecem como remetente |
 | `SITE_URL` | Endereço do site, usado nos links dos e-mails |
+| `GOOGLE_CLIENT_ID` | Opcional. Liga o botão "Continuar com o Google" na tela de entrada. Sem ela, o botão não aparece |
 | `ORIGENS_PERMITIDAS` | Sites que podem chamar a API pelo navegador, separados por vírgula. Padrão: GitHub Pages do projeto e localhost |
 
 ## Rotas da API
@@ -44,9 +45,11 @@ uma tabela ou coluna que o código espera.
 | `POST /api/responder` | livre (com login, conta no progresso) |
 | `POST /api/auth/registrar`, `POST /api/auth/login`, `POST /api/auth/sair`, `GET /api/auth/eu` | livre |
 | `POST /api/auth/esqueci`, `POST /api/auth/redefinir`, `POST /api/auth/confirmar` | livre |
+| `POST /api/auth/google` (cria a conta na primeira vez) | livre |
+| `GET /api/config` (client ID do Google, que é público) | livre |
 | `POST /api/auth/reenviar-confirmacao` | login |
 | `GET /api/meu-progresso` | login |
-| `DELETE /api/conta` (pede a senha) | login |
+| `DELETE /api/conta` (pede a senha; conta do Google sem senha pede o e-mail) | login |
 | `GET /api/posts` / `POST /api/posts` | livre / login |
 | `DELETE /api/posts/:id` | autor do post ou administrador |
 | `POST /api/posts/:id/denunciar` | login (com 3 pessoas diferentes, o post sai do ar) |
@@ -78,6 +81,19 @@ A nota do aluno (`POST /api/tri`) usa o modelo de 3 parâmetros e a estimativa E
 (nota = 500 + 100 × theta, referência normal(0,1)), com a primeira resposta de cada questão que
 tenha TRI. Aparece a partir de 5 questões na área. Com conta, lê as respostas do banco; sem conta,
 o navegador manda a lista que guardou.
+
+## Entrar com Google
+
+1. No [Google Cloud Console](https://console.cloud.google.com/), crie um projeto e configure a
+   "Tela de consentimento OAuth" (tipo Externo, nome M&M Estudos, e-mail de contato).
+2. Em Credenciais → Criar credenciais → ID do cliente OAuth → Aplicativo da Web, coloque em
+   "Origens JavaScript autorizadas": `https://miguelpaulo3685-cyber.github.io` (e
+   `http://localhost:3000` para testar).
+3. Copie o ID do cliente (termina em `.apps.googleusercontent.com`) para a variável
+   `GOOGLE_CLIENT_ID` no Render. Não é preciso a "chave secreta do cliente".
+
+O servidor confere cada login com o Google (assinatura, site de destino, validade e e-mail
+verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, usa "Esqueci minha senha".
 
 ## Moderação do feed
 
