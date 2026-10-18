@@ -260,6 +260,26 @@
       width: 44px; height: 44px; padding: 0; border: 2px solid var(--borda);
       border-radius: 10px; background: none; cursor: pointer;
     }
+    #fundo-imagem {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-size: cover; background-position: center;
+    }
+    /* Véu na cor do fundo por cima da foto: deixa o texto legível. */
+    #fundo-imagem::after { content: ''; position: absolute; inset: 0; background: var(--fundo); opacity: var(--veu, .7); }
+    body.com-imagem { background: transparent; }
+    .imagem-fundo { display: grid; gap: 10px; }
+    .botao-arquivo { margin-left: 0; text-align: center; cursor: pointer; }
+    .link-imagem { display: flex; gap: 8px; }
+    .link-imagem input {
+      flex: 1; min-width: 0; padding: 10px 12px; border-radius: 10px; border: 2px solid var(--borda);
+      background: var(--superficie-2); color: var(--texto); font: inherit; font-size: .85rem;
+    }
+    .link-imagem .acao { margin-left: 0; padding: 10px 16px; }
+    #controle-veu { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 6px 10px; }
+    #controle-veu label { font-weight: 600; font-size: .85rem; grid-column: 1 / -1; }
+    #controle-veu input[type=range] { accent-color: var(--marca); width: 100%; }
+    #recado-imagem.ruim { color: var(--errado); }
+    #recado-imagem.bom { color: var(--certo); }
     .cores-livres { display: grid; gap: 10px; }
     .cores-livres label { display: grid; grid-template-columns: 44px 1fr; align-items: center; column-gap: 12px; font-weight: 600; font-size: .9rem; }
     .cores-livres small { grid-column: 2; color: var(--texto-fraco); font-weight: 500; font-size: .78rem; }
@@ -617,6 +637,7 @@
   </style>
 </head>
 <body>
+  <div id="fundo-imagem" aria-hidden="true" hidden></div>
   <div id="confete"></div>
 
   <!-- ===================== APARÊNCIA ===================== -->
@@ -639,6 +660,24 @@
         <input type="color" id="cor-fundo" oninput="escolherFundo(this.value)">
         <span>Escolher outra cor de fundo<small id="aviso-fundo">o texto se ajusta sozinho para continuar legível</small></span>
       </label>
+
+      <div class="rotulo-modal">Imagem de fundo</div>
+      <div class="imagem-fundo">
+        <label class="acao secundaria botao-arquivo">📷 Enviar imagem
+          <input type="file" accept="image/*" onchange="enviarImagemFundo(this)" hidden>
+        </label>
+        <div class="link-imagem">
+          <input type="url" id="link-imagem" placeholder="ou cole o endereço da imagem (https://…)" maxlength="2000">
+          <button class="acao" onclick="usarLinkImagem()">Usar</button>
+        </div>
+        <div id="controle-veu" class="escondido">
+          <label for="veu-imagem">Visibilidade da imagem</label>
+          <input type="range" id="veu-imagem" min="10" max="70" step="5" oninput="ajustarVeu(this.value)">
+          <button class="acao discreta pequena" onclick="removerImagemFundo()">Remover imagem</button>
+        </div>
+        <div class="pista" id="recado-imagem">No Pinterest, clique com o botão direito na imagem → <b>Copiar endereço da imagem</b>.
+          Imagens enviadas ficam só neste aparelho.</div>
+      </div>
 
       <div class="rotulo-modal">Paletas prontas</div>
       <div class="paletas" id="lista-paletas"></div>
@@ -1113,7 +1152,127 @@ function desenharAparencia() {
     </button>`).join('');
 }
 
+// ===================== IMAGEM DE FUNDO =====================
+// Enviada: reduzida e guardada só no navegador (nunca vai ao servidor).
+// Link: só endereços https, testados antes de usar.
+const CHAVE_IMAGEM = 'mm_fundo_img';
+const CHAVE_VEU = 'mm_fundo_veu';
+
+function recadoImagem(texto, tipo) {
+  const el = document.getElementById('recado-imagem');
+  el.className = 'pista ' + (tipo || '');
+  el.innerHTML = texto;
+}
+
+function imagemValida(src) {
+  if (typeof src !== 'string') return false;
+  if (src.startsWith('data:image/jpeg;base64,')) return /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(src);
+  try {
+    const u = new URL(src);
+    return u.protocol === 'https:' && src.length <= 2000 && !/["'()\\\s]/.test(src);
+  } catch (e) { return false; }
+}
+
+function aplicarImagemFundo() {
+  const el = document.getElementById('fundo-imagem');
+  const src = ler(CHAVE_IMAGEM);
+  const ativa = imagemValida(src);
+  el.hidden = !ativa;
+  el.style.backgroundImage = ativa ? `url(${JSON.stringify(src)})` : '';
+  document.body.classList.toggle('com-imagem', ativa);
+  const veu = Number(ler(CHAVE_VEU)) || 70;
+  document.documentElement.style.setProperty('--veu', String(Math.min(Math.max(veu, 30), 90) / 100));
+  const controle = document.getElementById('controle-veu');
+  if (controle) {
+    controle.classList.toggle('escondido', !ativa);
+    document.getElementById('veu-imagem').value = 100 - veu;
+  }
+}
+
+function salvarImagem(src) {
+  // guardar() engole erros; aqui precisamos saber se coube no navegador.
+  try { localStorage.setItem(CHAVE_IMAGEM, src); return true; } catch (e) { return false; }
+}
+
+// O controle mostra a visibilidade da imagem (10 a 70%); o véu é o resto.
+function ajustarVeu(visibilidade) {
+  guardar(CHAVE_VEU, String(100 - Number(visibilidade)));
+  aplicarImagemFundo();
+}
+
+function testarImagem(src) {
+  return new Promise((ok, falha) => {
+    const img = new Image();
+    img.onload = () => ok(img);
+    img.onerror = falha;
+    img.src = src;
+  });
+}
+
+async function usarLinkImagem() {
+  const link = document.getElementById('link-imagem').value.trim();
+  if (!imagemValida(link) || link.startsWith('data:')) {
+    recadoImagem('Esse endereço não parece uma imagem. Use um link que comece com <b>https://</b>.', 'ruim');
+    return;
+  }
+  recadoImagem('Carregando a imagem…');
+  try {
+    await testarImagem(link);
+  } catch (e) {
+    recadoImagem('Não consegui abrir essa imagem. Se veio do Pinterest, use <b>Copiar endereço da imagem</b> ' +
+      '(o link da página não funciona). Ou baixe a imagem e use <b>Enviar imagem</b>.', 'ruim');
+    return;
+  }
+  if (!salvarImagem(link)) { recadoImagem('Não consegui guardar a imagem neste navegador.', 'ruim'); return; }
+  aplicarImagemFundo();
+  recadoImagem('Imagem aplicada! Ajuste a visibilidade se o texto ficar difícil de ler.', 'bom');
+}
+
+// Reduz para no máximo 1600px e converte em JPEG: uma foto de celular de
+// vários MB vira algumas centenas de KB e cabe no armazenamento do navegador.
+async function enviarImagemFundo(input) {
+  const arquivo = input.files && input.files[0];
+  input.value = '';
+  if (!arquivo) return;
+  if (!arquivo.type.startsWith('image/')) { recadoImagem('Esse arquivo não é uma imagem.', 'ruim'); return; }
+  if (arquivo.size > 25 * 1024 * 1024) { recadoImagem('Imagem grande demais (máximo 25 MB).', 'ruim'); return; }
+  recadoImagem('Preparando a imagem…');
+  try {
+    // Lido como data: (e não blob:), que a política de segurança da página já permite.
+    const original = await new Promise((ok, falha) => {
+      const leitor = new FileReader();
+      leitor.onload = () => ok(leitor.result);
+      leitor.onerror = falha;
+      leitor.readAsDataURL(arquivo);
+    });
+    const img = await testarImagem(original);
+    for (const [lado, qualidade] of [[1600, 0.82], [1280, 0.72], [960, 0.65]]) {
+      const escala = Math.min(1, lado / Math.max(img.naturalWidth, img.naturalHeight));
+      const tela = document.createElement('canvas');
+      tela.width = Math.round(img.naturalWidth * escala);
+      tela.height = Math.round(img.naturalHeight * escala);
+      tela.getContext('2d').drawImage(img, 0, 0, tela.width, tela.height);
+      const dados = tela.toDataURL('image/jpeg', qualidade);
+      if (dados.length < 1.8 * 1024 * 1024 && salvarImagem(dados)) {
+        aplicarImagemFundo();
+        recadoImagem('Imagem aplicada! Ajuste a visibilidade se o texto ficar difícil de ler.', 'bom');
+        return;
+      }
+    }
+    recadoImagem('Não coube no armazenamento do navegador. Tente uma imagem menor.', 'ruim');
+  } catch (e) {
+    recadoImagem('Não consegui ler essa imagem. Tente outra (JPG ou PNG).', 'ruim');
+  }
+}
+
+function removerImagemFundo() {
+  try { localStorage.removeItem(CHAVE_IMAGEM); } catch (e) {}
+  aplicarImagemFundo();
+  recadoImagem('Imagem removida.');
+}
+
 function abrirAparencia() {
+  aplicarImagemFundo();
   desenharAparencia();
   document.getElementById('painel-aparencia').classList.remove('escondido');
 }
@@ -2094,6 +2253,7 @@ function verificarAPI() {
 
 // ===================== INÍCIO =====================
 iniciarTema();
+aplicarImagemFundo();
 carregarProgresso();
 desenharTudo();
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
