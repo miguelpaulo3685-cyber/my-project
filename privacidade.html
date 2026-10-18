@@ -33,6 +33,9 @@
     try {
       const v = JSON.parse(localStorage.getItem('mm_cores_css'));
       if (v && /^#[0-9a-f]{6}$/i.test(v['--marca-texto'])) document.documentElement.style.setProperty('--marca', v['--marca-texto']);
+      for (const nome of ['--fundo', '--superficie', '--borda', '--texto', '--texto-fraco']) {
+        if (v && /^#[0-9a-f]{6}$/i.test(v[nome])) document.documentElement.style.setProperty(nome, v[nome]);
+      }
     } catch (e) {}
   </script>
 </head>

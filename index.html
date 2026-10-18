@@ -244,6 +244,22 @@
     .paletas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .paleta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: .78rem; }
     .paleta i { width: 30px; height: 30px; border-radius: 50%; display: block; }
+    .fundos { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+    .fundo-op {
+      aspect-ratio: 1; border-radius: 12px; border: 2px solid var(--borda); cursor: pointer;
+      display: flex; align-items: flex-end; justify-content: center; padding: 4px;
+      font: inherit; font-size: .62rem; font-weight: 700;
+    }
+    .fundo-op.ativa { border-color: var(--marca); box-shadow: 0 0 0 2px var(--marca-suave); }
+    .fundo-livre {
+      display: grid; grid-template-columns: 44px 1fr; align-items: center; column-gap: 12px;
+      margin-top: 10px; font-weight: 600; font-size: .9rem; cursor: pointer;
+    }
+    .fundo-livre small { display: block; color: var(--texto-fraco); font-weight: 500; font-size: .78rem; }
+    .fundo-livre input[type=color] {
+      width: 44px; height: 44px; padding: 0; border: 2px solid var(--borda);
+      border-radius: 10px; background: none; cursor: pointer;
+    }
     .cores-livres { display: grid; gap: 10px; }
     .cores-livres label { display: grid; grid-template-columns: 44px 1fr; align-items: center; column-gap: 12px; font-weight: 600; font-size: .9rem; }
     .cores-livres small { grid-column: 2; color: var(--texto-fraco); font-weight: 500; font-size: .78rem; }
@@ -613,9 +629,16 @@
 
       <div class="rotulo-modal">Tema</div>
       <div class="escolha-tema">
-        <button id="tema-escuro" onclick="aplicarTema('escuro')">🌙 Escuro</button>
-        <button id="tema-claro" onclick="aplicarTema('claro')">☀️ Claro</button>
+        <button id="tema-escuro" onclick="escolherTema('escuro')">🌙 Escuro</button>
+        <button id="tema-claro" onclick="escolherTema('claro')">☀️ Claro</button>
       </div>
+
+      <div class="rotulo-modal">Cor de fundo</div>
+      <div class="fundos" id="lista-fundos"></div>
+      <label class="fundo-livre">
+        <input type="color" id="cor-fundo" oninput="escolherFundo(this.value)">
+        <span>Escolher outra cor de fundo<small id="aviso-fundo">o texto se ajusta sozinho para continuar legível</small></span>
+      </label>
 
       <div class="rotulo-modal">Paletas prontas</div>
       <div class="paletas" id="lista-paletas"></div>
@@ -634,7 +657,7 @@
         <a>Link de exemplo</a>
       </div>
 
-      <button class="acao discreta" style="width:100%;margin-top:18px" onclick="restaurarCores()">Voltar ao padrão (Preto &amp; Bege)</button>
+      <button class="acao discreta" style="width:100%;margin-top:18px" onclick="restaurarCores()">Voltar ao padrão (Preto &amp; Bege, fundo do tema)</button>
     </div>
   </div>
 
@@ -895,7 +918,7 @@ function aplicarTema(tema) {
 }
 
 function trocarTema() {
-  aplicarTema(document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro');
+  escolherTema(document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro');
 }
 
 // ===================== CORES =====================
@@ -912,12 +935,26 @@ const PALETAS = [
   { nome: 'Laranja', principal: '#ea580c', secundaria: '#fbbf24' }
 ];
 const COR_VALIDA = /^#[0-9a-f]{6}$/i;
+// null = o fundo padrão do tema escolhido (preto ou bege).
+const FUNDOS = [
+  { nome: 'Tema', cor: null },
+  { nome: 'Marinho', cor: '#0f172a' },
+  { nome: 'Floresta', cor: '#0f1d17' },
+  { nome: 'Vinho', cor: '#1f0e14' },
+  { nome: 'Grafite', cor: '#1c1d21' },
+  { nome: 'Creme', cor: '#f6f0e4' },
+  { nome: 'Lavanda', cor: '#efecf8' },
+  { nome: 'Menta', cor: '#e9f4ee' },
+  { nome: 'Rosé', cor: '#f8ecef' },
+  { nome: 'Céu', cor: '#e8f1f9' }
+];
 
-let cores = { ...PALETAS[0] };
+let cores = { ...PALETAS[0], fundo: null };
 try {
   const salvas = JSON.parse(ler(CHAVE_CORES));
   if (salvas && COR_VALIDA.test(salvas.principal) && COR_VALIDA.test(salvas.secundaria)) {
-    cores = { principal: salvas.principal, secundaria: salvas.secundaria };
+    cores = { principal: salvas.principal, secundaria: salvas.secundaria,
+              fundo: COR_VALIDA.test(salvas.fundo) ? salvas.fundo : null };
   }
 } catch (e) {}
 
@@ -945,8 +982,55 @@ function legivelSobre(cor, fundo, texto) {
 }
 const comAlfa = (hex, a) => `rgba(${paraRgb(hex).join(', ')}, ${a})`;
 
+const VARS_DE_FUNDO = ['--fundo', '--superficie', '--superficie-2', '--borda', '--texto', '--texto-fraco', '--brilho-topo'];
+
+// A partir de uma só cor de fundo, monta o resto: cartões um pouco mais
+// claros (ou mais escuros), bordas, e texto claro ou escuro conforme o fundo.
+// Se a cor for "do meio" e o texto não ficar bem legível (7:1), o fundo é
+// puxado um pouco para o preto ou para o branco.
+function coresDoFundo(base) {
+  const escuro = contraste(base, '#ffffff') >= contraste(base, '#000000');
+  const ponta = escuro ? '#000000' : '#ffffff';
+  const texto = escuro ? misturar('#ffffff', base, 0.06) : misturar('#000000', base, 0.12);
+  let fundo = base;
+  let ajustado = false;
+  for (let t = 0.05; contraste(texto, fundo) < 7 && t <= 1; t += 0.05) { fundo = misturar(base, ponta, t); ajustado = true; }
+  const superficie = misturar(fundo, '#ffffff', escuro ? 0.05 : 0.6);
+  const superficie2 = misturar(fundo, '#ffffff', escuro ? 0.09 : 0.3);
+  const borda = escuro ? misturar(fundo, '#ffffff', 0.17) : misturar(fundo, '#000000', 0.12);
+  return {
+    tema: escuro ? 'escuro' : 'claro',
+    ajustado,
+    vars: {
+      '--fundo': fundo,
+      '--superficie': superficie,
+      '--superficie-2': superficie2,
+      '--borda': borda,
+      '--texto': texto,
+      '--texto-fraco': legivelSobre(misturar(texto, fundo, 0.42), superficie, texto),
+      '--brilho-topo': comAlfa(superficie, 0.86)
+    }
+  };
+}
+
 function aplicarCores() {
   const raiz = document.documentElement;
+  const extras = {};
+  if (cores.fundo) {
+    const f = coresDoFundo(cores.fundo);
+    // O tema acompanha o fundo: os detalhes feitos para fundo escuro ou claro
+    // (grifo, sombras) continuam certos.
+    raiz.dataset.tema = f.tema;
+    document.getElementById('btn-tema').textContent = f.tema === 'escuro' ? '🌙' : '☀️';
+    for (const [nome, valor] of Object.entries(f.vars)) raiz.style.setProperty(nome, valor);
+    Object.assign(extras, f.vars);
+    const aviso = document.getElementById('aviso-fundo');
+    if (aviso) aviso.textContent = f.ajustado
+      ? 'ajustamos um pouco o tom para o texto continuar legível'
+      : 'o texto se ajusta sozinho para continuar legível';
+  } else {
+    for (const nome of VARS_DE_FUNDO) raiz.style.removeProperty(nome);
+  }
   const estilo = getComputedStyle(raiz);
   const fundo = estilo.getPropertyValue('--fundo').trim();
   const texto = estilo.getPropertyValue('--texto').trim();
@@ -965,31 +1049,62 @@ function aplicarCores() {
   };
   for (const [nome, valor] of Object.entries(vars)) raiz.style.setProperty(nome, valor);
   // Privacidade e Termos leem isto para usar as mesmas cores.
-  guardar('mm_cores_css', JSON.stringify(vars));
+  guardar('mm_cores_css', JSON.stringify({ ...vars, ...extras }));
+}
+
+function salvarCores() {
+  guardar(CHAVE_CORES, JSON.stringify(cores));
+  aplicarCores();
+  desenharAparencia();
+}
+
+function escolherFundo(cor) {
+  if (cor !== null && !COR_VALIDA.test(cor)) return;
+  cores.fundo = cor;
+  salvarCores();
+}
+
+// Escolher Escuro ou Claro volta ao fundo padrão daquele tema.
+function escolherTema(tema) {
+  cores.fundo = null;
+  guardar(CHAVE_CORES, JSON.stringify(cores));
+  aplicarTema(tema);
 }
 
 function escolherCor(qual, valor) {
   if (!COR_VALIDA.test(valor)) return;
   cores[qual] = valor;
-  guardar(CHAVE_CORES, JSON.stringify(cores));
-  aplicarCores();
-  desenharAparencia();
+  salvarCores();
 }
 
 function escolherPaleta(i) {
-  cores = { principal: PALETAS[i].principal, secundaria: PALETAS[i].secundaria };
-  guardar(CHAVE_CORES, JSON.stringify(cores));
-  aplicarCores();
-  desenharAparencia();
+  cores.principal = PALETAS[i].principal;
+  cores.secundaria = PALETAS[i].secundaria;
+  salvarCores();
 }
 
-function restaurarCores() { escolherPaleta(0); }
+function restaurarCores() {
+  cores = { ...PALETAS[0], fundo: null };
+  salvarCores();
+}
 
 function desenharAparencia() {
   const tema = document.documentElement.dataset.tema;
-  document.getElementById('tema-escuro').classList.toggle('ativo', tema === 'escuro');
-  document.getElementById('tema-claro').classList.toggle('ativo', tema === 'claro');
+  document.getElementById('tema-escuro').classList.toggle('ativo', !cores.fundo && tema === 'escuro');
+  document.getElementById('tema-claro').classList.toggle('ativo', !cores.fundo && tema === 'claro');
   document.getElementById('cor-principal').value = cores.principal;
+  document.getElementById('cor-fundo').value = cores.fundo ||
+    getComputedStyle(document.documentElement).getPropertyValue('--fundo').trim();
+  document.getElementById('lista-fundos').innerHTML = FUNDOS.map(f => {
+    const ativo = (f.cor || null) === (cores.fundo || null) ? ' ativa' : '';
+    if (!f.cor) {
+      return `<button class="fundo-op${ativo}" onclick="escolherFundo(null)" title="Fundo padrão do tema"
+        style="background:linear-gradient(135deg, #0e0d0b 50%, #f3ece0 50%);color:#a79d8c">${f.nome}</button>`;
+    }
+    const v = coresDoFundo(f.cor).vars;
+    return `<button class="fundo-op${ativo}" onclick="escolherFundo('${f.cor}')" title="${f.nome}"
+      style="background:${v['--fundo']};color:${v['--texto-fraco']}">${f.nome}</button>`;
+  }).join('');
   document.getElementById('cor-secundaria').value = cores.secundaria;
   document.getElementById('lista-paletas').innerHTML = PALETAS.map((p, i) => `
     <button class="paleta${p.principal === cores.principal && p.secundaria === cores.secundaria ? ' ativa' : ''}"
