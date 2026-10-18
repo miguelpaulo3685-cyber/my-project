@@ -1766,7 +1766,7 @@ async function moderarPost(id, acao) {
 function verificarAPI() {
   const bolinha = document.getElementById('bolinha');
   const texto = document.getElementById('texto-status');
-  fetch(`${API_URL}/api/health`)
+  fetch(`${API_URL}/api/health?banco=1`)
     .then(r => r.json())
     .then(d => {
       const ok = d.banco === 'conectado';

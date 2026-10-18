@@ -408,7 +408,11 @@ app.delete('/api/conta', exigirLogin, async (req, res) => {
 // ================== HEALTH CHECK ==================
 // Responde 200 mesmo sem banco: o Render usa esta rota para saber se o
 // servico esta de pe, e derrubar o site inteiro por causa do banco e pior.
+// Só consulta o banco com ?banco=1 (o site pede isso ao abrir). O Render e o
+// UptimeRobot chamam sem o parâmetro: se consultassem, o Neon nunca hibernaria
+// e a cota mensal de computação do plano grátis acabaria.
 app.get('/api/health', async (req, res) => {
+  if (req.query.banco !== '1') return res.json({ status: 'ok' });
   try {
     const result = await pool.query('SELECT NOW()');
     res.json({ status: 'ok', banco: 'conectado', timestamp: result.rows[0].now });
@@ -955,8 +959,9 @@ app.post('/api/posts/:id/restaurar', exigirModerador, async (req, res) => {
 });
 
 // ================== CRON JOBS ==================
-// Atualizar cache a cada hora
-cron.schedule('0 * * * *', async () => {
+// Todas as provas de 2009 a 2023 já estão no banco; uma busca por dia basta
+// para pegar alguma questão que tenha faltado, sem acordar o Neon toda hora.
+cron.schedule('0 5 * * *', async () => {
   console.log('⏰ Cron: Atualizando cache automático...');
   try {
     await atualizarCache();
@@ -973,16 +978,6 @@ cron.schedule('0 4 * * *', async () => {
     await pool.query('DELETE FROM tokens_email WHERE expira_em < NOW() OR usado_em IS NOT NULL');
   } catch (erro) {
     console.error('❌ Erro ao limpar sessões:', erro.message);
-  }
-});
-
-// Keep-alive: ping a cada 5 minutos (evita que a API durma)
-cron.schedule('*/5 * * * *', async () => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    console.log('💓 Keep-alive ping OK -', result.rows[0].now);
-  } catch (error) {
-    console.error('❌ Keep-alive falhou:', error.message);
   }
 });
 
