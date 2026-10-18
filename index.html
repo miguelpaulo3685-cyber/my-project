@@ -253,6 +253,17 @@
       margin-bottom: 26px;
     }
     .enunciado img { max-width: 100%; height: auto; border-radius: 10px; margin: 14px 0; }
+    .enunciado mark.grifo { background: rgba(250,204,21,.55); color: inherit; border-radius: 3px; padding: 1px 0; cursor: pointer; }
+    html[data-tema="escuro"] .enunciado mark.grifo { background: rgba(250,204,21,.35); }
+    .enunciado.grifando { cursor: text; }
+    .enunciado.grifando::selection, .enunciado.grifando *::selection { background: rgba(250,204,21,.45); }
+    .barra-grifo { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px; }
+    .btn-grifo {
+      background: var(--superficie-2); border: 1px solid var(--borda); color: var(--texto-fraco);
+      font: inherit; font-size: .8rem; font-weight: 700; padding: 6px 12px; border-radius: 9px; cursor: pointer;
+    }
+    .btn-grifo:hover { color: var(--texto); border-color: var(--marca); }
+    .btn-grifo.ligado { background: rgba(250,204,21,.18); border-color: rgba(234,179,8,.7); color: var(--texto); }
 
     /* alternativas grandes, faceis de acertar no toque */
     .alt {
@@ -1114,7 +1125,13 @@ function desenharQuestao() {
     </div>
     ${desafio}
     ${dica}
-    <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
+    <div class="barra-grifo">
+      <button class="btn-grifo${modoGrifo ? ' ligado' : ''}" id="btn-grifo" onclick="alternarGrifo()"
+        title="Com o modo ligado, selecione um trecho do texto para grifar. Toque num grifo para apagar.">✏️ Grifar</button>
+      <button class="btn-grifo" onclick="limparGrifos()" title="Apagar todos os grifos desta questão">Limpar</button>
+    </div>
+    <div class="enunciado${modoGrifo ? ' grifando' : ''}" id="enunciado"
+      onmouseup="grifarSelecao()" ontouchend="setTimeout(grifarSelecao, 0)" onclick="apagarGrifo(event)">${formatarEnunciado(q.contexto)}</div>
     <div id="lista-alts">${alternativas.map((t, i) => `
       <button class="alt" id="alt-${i}"
         onmousedown="pressionar(event, ${i})" onmouseup="soltar(event, ${i})"
@@ -1127,6 +1144,63 @@ function desenharQuestao() {
     <div id="area-resultado"></div>`;
 
   bloco.inicioQuestao = Date.now();
+}
+
+// ---------- grifar o texto, como na prova de papel ----------
+let modoGrifo = false;
+try { modoGrifo = localStorage.getItem('mm_grifo') === '1'; } catch (e) {}
+
+function alternarGrifo() {
+  modoGrifo = !modoGrifo;
+  guardar('mm_grifo', modoGrifo ? '1' : null);
+  document.getElementById('btn-grifo').classList.toggle('ligado', modoGrifo);
+  document.getElementById('enunciado').classList.toggle('grifando', modoGrifo);
+}
+
+// Envolve em <mark> cada pedaço de texto dentro da seleção. Dá para grifar
+// trechos que atravessam negrito, quebras de linha etc., sem estragar o texto.
+function grifarSelecao() {
+  if (!modoGrifo) return;
+  const sel = window.getSelection();
+  const enunciado = document.getElementById('enunciado');
+  if (!sel || sel.isCollapsed || !enunciado) return;
+  const range = sel.getRangeAt(0);
+  if (!enunciado.contains(range.commonAncestorContainer)) return;
+
+  const textos = [];
+  const andar = document.createTreeWalker(enunciado, NodeFilter.SHOW_TEXT);
+  while (andar.nextNode()) {
+    const no = andar.currentNode;
+    if (range.intersectsNode(no) && !no.parentElement.closest('mark.grifo')) textos.push(no);
+  }
+  for (let no of textos) {
+    let inicio = no === range.startContainer ? range.startOffset : 0;
+    let fim = no === range.endContainer ? range.endOffset : no.length;
+    if (fim <= inicio || !no.data.slice(inicio, fim).trim()) continue;
+    if (inicio > 0) { no = no.splitText(inicio); fim -= inicio; }
+    if (fim < no.length) no.splitText(fim);
+    const marca = document.createElement('mark');
+    marca.className = 'grifo';
+    no.parentNode.insertBefore(marca, no);
+    marca.appendChild(no);
+  }
+  sel.removeAllRanges();
+}
+
+function desfazerGrifo(marca) {
+  const pai = marca.parentNode;
+  while (marca.firstChild) pai.insertBefore(marca.firstChild, marca);
+  pai.removeChild(marca);
+  pai.normalize();
+}
+
+function apagarGrifo(evento) {
+  const marca = evento.target.closest && evento.target.closest('mark.grifo');
+  if (marca && window.getSelection().isCollapsed) desfazerGrifo(marca);
+}
+
+function limparGrifos() {
+  document.querySelectorAll('#enunciado mark.grifo').forEach(desfazerGrifo);
 }
 
 function fecharDica() {
