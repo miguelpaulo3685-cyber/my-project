@@ -496,6 +496,24 @@
       font-weight: 800; font-size: .85rem; flex-shrink: 0;
     }
     .post-autor b { font-size: .94rem; }
+    .post.oculto { opacity: .6; border-style: dashed; border-color: var(--errado); }
+    .selo-oculto {
+      margin-left: auto; font-size: .72rem; font-weight: 700; color: var(--errado);
+      background: rgba(239,68,68,.12); padding: 3px 9px; border-radius: 20px;
+    }
+    .selo-oculto.leve { color: var(--aviso); background: rgba(245,158,11,.12); }
+    .post-acoes { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; }
+    .acao-post {
+      background: none; border: 1px solid var(--borda); color: var(--texto-fraco);
+      font: inherit; font-size: .78rem; font-weight: 600; padding: 5px 12px; border-radius: 8px; cursor: pointer;
+    }
+    .acao-post:hover { border-color: var(--marca); color: var(--texto); }
+    .acao-post.perigo:hover { border-color: var(--errado); color: var(--errado); }
+    .acao-post.feito { cursor: default; border-style: dashed; }
+    .aviso-moderador {
+      font-size: .85rem; color: var(--texto-fraco); background: var(--marca-suave);
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+    }
     .post p { line-height: 1.65; font-size: .96rem; white-space: pre-wrap; word-wrap: break-word; }
 
     .onde-salva {
@@ -1612,21 +1630,62 @@ async function abrirFeed() {
   alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
 
   try {
-    const posts = (await (await fetch(`${API_URL}/api/posts`)).json()).posts || [];
-    alvo.innerHTML = posts.length === 0
+    // Com o token, o servidor sabe quais posts são seus e se você modera.
+    const dados = await (await fetch(`${API_URL}/api/posts`, { headers: cabecalhoAuth() })).json();
+    const posts = dados.posts || [];
+    alvo.innerHTML = (dados.moderador
+      ? '<div class="aviso-moderador">🛡️ Você é administrador: vê também os posts escondidos por denúncia.</div>' : '') +
+      (posts.length === 0
       ? '<div class="vazio"><span class="cara">💬</span>Nenhum post ainda. Seja o primeiro!</div>'
-      : posts.map(p => `
-          <article class="post">
+      : posts.map(p => {
+          const acoes = [];
+          if (p.oculto) acoes.push(`<button class="acao-post" onclick="moderarPost(${p.id}, 'restaurar')">Restaurar</button>`);
+          if (p.pode_apagar) acoes.push(`<button class="acao-post perigo" onclick="moderarPost(${p.id}, 'apagar')">Apagar</button>`);
+          if (usuarioLogado && !p.meu && !dados.moderador) acoes.push(p.denunciei
+            ? '<span class="acao-post feito">Denunciado</span>'
+            : `<button class="acao-post" onclick="moderarPost(${p.id}, 'denunciar')">Denunciar</button>`);
+          return `
+          <article class="post${p.oculto ? ' oculto' : ''}">
             <div class="post-autor">
               <span class="bolha">${escapar((p.usuario_id || '?').charAt(0).toUpperCase())}</span>
               <b>${escapar(p.usuario_id)}</b>
+              ${p.oculto ? `<span class="selo-oculto">Escondido · ${p.denuncias} denúncias</span>`
+                : (p.denuncias ? `<span class="selo-oculto leve">${p.denuncias} ${p.denuncias === 1 ? 'denúncia' : 'denúncias'}</span>` : '')}
             </div>
             <p>${escapar(p.conteudo)}</p>
-          </article>`).join('');
+            ${acoes.length ? `<div class="post-acoes">${acoes.join('')}</div>` : ''}
+          </article>`;
+        }).join(''));
   } catch (e) {
     alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(SEM_SERVIDOR)}<br>
       <button class="acao" style="margin:18px auto 0" onclick="abrirFeed()">Tentar de novo</button></div>`;
   }
+}
+
+async function moderarPost(id, acao) {
+  const perguntas = {
+    apagar: 'Apagar este post para sempre?',
+    denunciar: 'Denunciar este post? Ele é revisado pelos administradores e, com 3 denúncias, sai do ar.',
+    restaurar: 'Restaurar este post? Ele volta para o feed e as denúncias são descartadas.'
+  };
+  if (!confirm(perguntas[acao])) return;
+  const pedido = {
+    apagar: { metodo: 'DELETE', rota: `/api/posts/${id}` },
+    denunciar: { metodo: 'POST', rota: `/api/posts/${id}/denunciar` },
+    restaurar: { metodo: 'POST', rota: `/api/posts/${id}/restaurar` }
+  }[acao];
+  try {
+    const r = await fetch(`${API_URL}${pedido.rota}`, {
+      method: pedido.metodo,
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: '{}'
+    });
+    const dados = await r.json();
+    if (!r.ok || acao === 'denunciar') alert(dados.error || dados.message);
+  } catch (e) {
+    alert(SEM_SERVIDOR);
+  }
+  abrirFeed();
 }
 
 // ===================== STATUS =====================

@@ -48,6 +48,9 @@ uma tabela ou coluna que o código espera.
 | `GET /api/meu-progresso` | login |
 | `DELETE /api/conta` (pede a senha) | login |
 | `GET /api/posts` / `POST /api/posts` | livre / login |
+| `DELETE /api/posts/:id` | autor do post ou administrador |
+| `POST /api/posts/:id/denunciar` | login (com 3 pessoas diferentes, o post sai do ar) |
+| `POST /api/posts/:id/restaurar` | administrador |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
 Exemplo de carga de um ano inteiro:
@@ -75,6 +78,15 @@ A nota do aluno (`POST /api/tri`) usa o modelo de 3 parâmetros e a estimativa E
 (nota = 500 + 100 × theta, referência normal(0,1)), com a primeira resposta de cada questão que
 tenha TRI. Aparece a partir de 5 questões na área. Com conta, lê as respostas do banco; sem conta,
 o navegador manda a lista que guardou.
+
+## Moderação do feed
+
+Administradores veem os posts escondidos por denúncia e podem apagar ou restaurar qualquer post.
+Para tornar alguém administrador, no SQL Editor do Neon:
+
+```sql
+UPDATE usuarios SET admin = TRUE WHERE email = 'email@da.pessoa';
+```
 
 ## Proteções
 

@@ -127,7 +127,8 @@ async function identificar(req, res, next) {
     try {
       const { rows } = await pool.query(
         `SELECT u.id, u.username, u.email, u.bio, u.avatar_url,
-                COALESCE(u.email_verificado, FALSE) AS email_verificado
+                COALESCE(u.email_verificado, FALSE) AS email_verificado,
+                COALESCE(u.admin, FALSE) AS admin
            FROM sessoes s
            JOIN usuarios u ON u.id = s.usuario_id
           WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
@@ -143,6 +144,12 @@ async function identificar(req, res, next) {
 
 function exigirLogin(req, res, next) {
   if (!req.usuario) return res.status(401).json({ error: 'Faça login para continuar.' });
+  next();
+}
+
+function exigirModerador(req, res, next) {
+  if (!req.usuario) return res.status(401).json({ error: 'Faça login para continuar.' });
+  if (!req.usuario.admin) return res.status(403).json({ error: 'Só administradores podem fazer isso.' });
   next();
 }
 
@@ -846,17 +853,104 @@ app.post('/api/posts', exigirLogin, freioPosts, async (req, res) => {
 });
 
 // ================== BUSCAR POSTS ==================
+// Quem lê não recebe autor_id: só fica sabendo se pode apagar ou denunciar.
+// Administradores veem também os posts escondidos por denúncia.
 app.get('/api/posts', async (req, res) => {
+  const eu = req.usuario;
   try {
     const result = await pool.query(
-      `SELECT id, usuario_id, conteudo, created_at FROM posts
-       ORDER BY created_at DESC
-       LIMIT 50`
+      `SELECT p.id, p.usuario_id, p.conteudo, p.created_at, p.autor_id,
+              COALESCE(p.oculto, FALSE) AS oculto,
+              (SELECT COUNT(*)::int FROM denuncias d WHERE d.post_id = p.id) AS denuncias,
+              EXISTS (SELECT 1 FROM denuncias d WHERE d.post_id = p.id AND d.usuario_id = $1) AS denunciei
+         FROM posts p
+        WHERE NOT COALESCE(p.oculto, FALSE) OR $2
+        ORDER BY p.created_at DESC
+        LIMIT 50`,
+      [eu ? eu.id : null, Boolean(eu && eu.admin)]
     );
-    res.json({ posts: result.rows });
+    res.json({
+      posts: result.rows.map(p => {
+        const meu = Boolean(eu && p.autor_id === eu.id);
+        const post = {
+          id: p.id, usuario_id: p.usuario_id, conteudo: p.conteudo, created_at: p.created_at,
+          meu, pode_apagar: meu || Boolean(eu && eu.admin), denunciei: p.denunciei
+        };
+        if (eu && eu.admin) Object.assign(post, { oculto: p.oculto, denuncias: p.denuncias });
+        return post;
+      }),
+      moderador: Boolean(eu && eu.admin)
+    });
   } catch (error) {
     console.error('Erro ao buscar posts:', error);
     res.status(500).json({ error: 'Erro ao buscar posts' });
+  }
+});
+
+// ================== MODERAÇÃO DO FEED ==================
+const DENUNCIAS_PARA_ESCONDER = 3;
+const freioDenuncias = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Você fez muitas denúncias. Espere um pouco.',
+  req => `u${req.usuario.id}`);
+
+// O autor apaga o próprio post; administradores apagam qualquer um.
+app.delete('/api/posts/:id', exigirLogin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Post inválido.' });
+  try {
+    const r = await pool.query(
+      'DELETE FROM posts WHERE id = $1 AND (autor_id = $2 OR $3) RETURNING id',
+      [id, req.usuario.id, Boolean(req.usuario.admin)]
+    );
+    if (r.rowCount === 0) return res.status(404).json({ error: 'Post não encontrado ou não é seu.' });
+    if (req.usuario.admin) console.log(`🛡️ Post ${id} apagado pelo administrador ${req.usuario.id}`);
+    res.json({ message: 'Post apagado.' });
+  } catch (erro) {
+    console.error('Erro ao apagar post:', erro.message);
+    res.status(500).json({ error: 'Não consegui apagar o post agora.' });
+  }
+});
+
+// Com DENUNCIAS_PARA_ESCONDER pessoas diferentes, o post sai do ar até um
+// administrador revisar. Não dá para denunciar o próprio post.
+app.post('/api/posts/:id/denunciar', exigirLogin, freioDenuncias, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Post inválido.' });
+  const motivo = String(req.body?.motivo || '').trim().slice(0, 200) || null;
+  try {
+    const post = await pool.query('SELECT autor_id FROM posts WHERE id = $1', [id]);
+    if (!post.rows[0]) return res.status(404).json({ error: 'Post não encontrado.' });
+    if (post.rows[0].autor_id === req.usuario.id) return res.status(400).json({ error: 'Você não pode denunciar o próprio post.' });
+
+    await pool.query(
+      'INSERT INTO denuncias (post_id, usuario_id, motivo) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+      [id, req.usuario.id, motivo]
+    );
+    const { rows } = await pool.query(
+      `UPDATE posts SET oculto = TRUE
+        WHERE id = $1 AND (SELECT COUNT(*) FROM denuncias WHERE post_id = $1) >= $2
+        RETURNING id`,
+      [id, DENUNCIAS_PARA_ESCONDER]
+    );
+    if (rows[0]) console.log(`🛡️ Post ${id} escondido por denúncias`);
+    res.json({ message: 'Obrigado! A denúncia foi registrada e vai ser revisada.' });
+  } catch (erro) {
+    console.error('Erro ao denunciar post:', erro.message);
+    res.status(500).json({ error: 'Não consegui registrar a denúncia agora.' });
+  }
+});
+
+// Administrador revisou e o post está ok: volta ao ar e as denúncias somem.
+app.post('/api/posts/:id/restaurar', exigirModerador, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Post inválido.' });
+  try {
+    await pool.query('DELETE FROM denuncias WHERE post_id = $1', [id]);
+    const r = await pool.query('UPDATE posts SET oculto = FALSE WHERE id = $1', [id]);
+    if (r.rowCount === 0) return res.status(404).json({ error: 'Post não encontrado.' });
+    res.json({ message: 'Post restaurado.' });
+  } catch (erro) {
+    console.error('Erro ao restaurar post:', erro.message);
+    res.status(500).json({ error: 'Não consegui restaurar o post agora.' });
   }
 });
 

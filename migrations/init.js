@@ -90,6 +90,12 @@ async function runMigrations() {
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS ultimo_acesso TIMESTAMP;
       -- Quando a pessoa aceitou os Termos e a Política de Privacidade.
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS termos_aceitos_em TIMESTAMP;
+      -- Administradores moderam o feed. Só dá para virar admin pelo banco:
+      -- UPDATE usuarios SET admin = TRUE WHERE email = '...';
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS admin BOOLEAN DEFAULT FALSE;
+
+      -- Post escondido por denúncias, esperando um administrador revisar.
+      ALTER TABLE posts ADD COLUMN IF NOT EXISTS oculto BOOLEAN DEFAULT FALSE;
 
       -- Liga cada post à conta de quem escreveu, para apagar junto com ela.
       ALTER TABLE posts ADD COLUMN IF NOT EXISTS autor_id INT REFERENCES usuarios(id) ON DELETE CASCADE;
@@ -144,6 +150,18 @@ async function runMigrations() {
       CREATE INDEX IF NOT EXISTS idx_respostas_usuario ON respostas(usuario_id);
     `);
     console.log('✅ Tabela respostas criada');
+
+    // Uma denúncia por pessoa por post: denunciar várias vezes não esconde o post.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS denuncias (
+        post_id INT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        motivo VARCHAR(200),
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (post_id, usuario_id)
+      );
+    `);
+    console.log('✅ Tabela denuncias criada');
 
     // Tabela de histórico de cache
     await pool.query(`
