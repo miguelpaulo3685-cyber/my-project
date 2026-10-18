@@ -11,8 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
   <style>
-    html[data-tema="escuro"] { --fundo: #0b0e15; --superficie: #141926; --borda: #252d3e; --texto: #e9ecf4; --texto-fraco: #959eb4; --marca: #8b7cff; }
-    html[data-tema="claro"]  { --fundo: #f2f4f9; --superficie: #ffffff; --borda: #e4e8f1; --texto: #141828; --texto-fraco: #697189; --marca: #6d5efc; }
+    html[data-tema="escuro"] { --fundo: #0e0d0b; --superficie: #171512; --borda: #312c25; --texto: #f2eadc; --texto-fraco: #a79d8c; --marca: #e4cfa3; }
+    html[data-tema="claro"]  { --fundo: #f3ece0; --superficie: #fffaf2; --borda: #e4d8c4; --texto: #1c1813; --texto-fraco: #74685a; --marca: #7a5a22; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', system-ui, sans-serif; background: var(--fundo); color: var(--texto); line-height: 1.7; -webkit-font-smoothing: antialiased; }
     main { max-width: 760px; margin: 0 auto; padding: 36px 20px 64px; }
@@ -29,6 +29,11 @@
   </style>
   <script>
     try { const t = localStorage.getItem('mm_tema'); if (t) document.documentElement.dataset.tema = t; } catch (e) {}
+    // Mesma cor de destaque escolhida no site (só valores de cor válidos).
+    try {
+      const v = JSON.parse(localStorage.getItem('mm_cores_css'));
+      if (v && /^#[0-9a-f]{6}$/i.test(v['--marca-texto'])) document.documentElement.style.setProperty('--marca', v['--marca-texto']);
+    } catch (e) {}
   </script>
 </head>
 <body>

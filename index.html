@@ -13,9 +13,15 @@
   <style>
     /* ===================== TEMAS ===================== */
     :root {
-      --marca: #6d5efc;
-      --marca-forte: #8b7cff;
-      --marca-suave: rgba(109, 94, 252, 0.13);
+      /* Cores escolhidas pelo aluno em Aparência; o JavaScript recalcula
+         --marca-suave, --marca-sombra, --marca-texto e --sobre-marca para
+         manter o contraste com qualquer combinação. */
+      --marca: #c8a96e;
+      --marca-forte: #e4cfa3;
+      --marca-suave: rgba(200, 169, 110, 0.14);
+      --marca-sombra: rgba(200, 169, 110, 0.32);
+      --marca-texto: #e4cfa3;
+      --sobre-marca: #17130d;
       --certo: #22c55e;
       --errado: #ef4444;
       --aviso: #f59e0b;
@@ -27,27 +33,27 @@
     }
 
     html[data-tema="escuro"] {
-      --fundo: #0b0e15;
-      --superficie: #141926;
-      --superficie-2: #1b2231;
-      --borda: #252d3e;
-      --texto: #e9ecf4;
-      --texto-fraco: #959eb4;
-      --sombra-leve: 0 1px 3px rgba(0,0,0,.4);
-      --sombra: 0 14px 38px rgba(0,0,0,.55);
-      --brilho-topo: rgba(20,25,38,.82);
+      --fundo: #0e0d0b;
+      --superficie: #171512;
+      --superficie-2: #201d19;
+      --borda: #312c25;
+      --texto: #f2eadc;
+      --texto-fraco: #a79d8c;
+      --sombra-leve: 0 1px 3px rgba(0,0,0,.45);
+      --sombra: 0 14px 38px rgba(0,0,0,.6);
+      --brilho-topo: rgba(23,21,18,.86);
     }
 
     html[data-tema="claro"] {
-      --fundo: #f2f4f9;
-      --superficie: #ffffff;
-      --superficie-2: #f7f8fc;
-      --borda: #e4e8f1;
-      --texto: #141828;
-      --texto-fraco: #697189;
-      --sombra-leve: 0 1px 2px rgba(20,24,40,.06);
-      --sombra: 0 14px 34px rgba(20,24,40,.12);
-      --brilho-topo: rgba(255,255,255,.82);
+      --fundo: #f3ece0;
+      --superficie: #fffaf2;
+      --superficie-2: #f8f1e5;
+      --borda: #e4d8c4;
+      --texto: #1c1813;
+      --texto-fraco: #74685a;
+      --sombra-leve: 0 1px 2px rgba(40,30,15,.07);
+      --sombra: 0 14px 34px rgba(40,30,15,.13);
+      --brilho-topo: rgba(255,250,242,.86);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -91,9 +97,9 @@
       width: 30px; height: 30px; border-radius: 9px;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte));
       display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: .95rem;
+      color: var(--sobre-marca); font-size: .95rem;
     }
-    .marca em { color: var(--marca-forte); font-style: normal; }
+    .marca em { color: var(--marca-texto); font-style: normal; }
 
     .abas { display: flex; gap: 4px; margin-right: auto; }
     .aba {
@@ -105,7 +111,7 @@
       transition: background .18s, color .18s;
     }
     .aba:hover { background: var(--superficie-2); color: var(--texto); }
-    .aba.ativa { background: var(--marca-suave); color: var(--marca-forte); }
+    .aba.ativa { background: var(--marca-suave); color: var(--marca-texto); }
 
     .indicadores { display: flex; align-items: center; gap: 14px; }
     .indicador {
@@ -130,7 +136,7 @@
     .avatar {
       width: 38px; height: 38px; border-radius: 50%;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte));
-      color: #fff; display: flex; align-items: center; justify-content: center;
+      color: var(--sobre-marca); display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: .95rem; cursor: pointer; border: none;
       font-family: inherit;
     }
@@ -214,6 +220,45 @@
     .tri-area b { font-family: var(--fonte-titulo); font-size: 1.35rem; color: var(--texto); }
     .tri-area .falta { color: var(--texto-fraco); }
 
+    /* ===================== APARÊNCIA ===================== */
+    .fundo-modal {
+      position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.55);
+      display: flex; align-items: center; justify-content: center; padding: 16px;
+    }
+    .modal {
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+      box-shadow: var(--sombra); width: 100%; max-width: 440px; max-height: 92vh; overflow-y: auto; padding: 22px;
+    }
+    .modal-topo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .modal-topo h2 { font-size: 1.4rem; }
+    .rotulo-modal {
+      text-transform: uppercase; letter-spacing: 1px; font-size: .72rem; font-weight: 700;
+      color: var(--texto-fraco); margin: 18px 0 9px;
+    }
+    .escolha-tema { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .escolha-tema button, .paleta {
+      background: var(--superficie-2); border: 2px solid var(--borda); color: var(--texto);
+      border-radius: 11px; padding: 10px; font: inherit; font-weight: 600; font-size: .88rem; cursor: pointer;
+    }
+    .escolha-tema button.ativo, .paleta.ativa { border-color: var(--marca); }
+    .paletas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .paleta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: .78rem; }
+    .paleta i { width: 30px; height: 30px; border-radius: 50%; display: block; }
+    .cores-livres { display: grid; gap: 10px; }
+    .cores-livres label { display: grid; grid-template-columns: 44px 1fr; align-items: center; column-gap: 12px; font-weight: 600; font-size: .9rem; }
+    .cores-livres small { grid-column: 2; color: var(--texto-fraco); font-weight: 500; font-size: .78rem; }
+    .cores-livres input[type=color] {
+      grid-row: span 2; width: 44px; height: 44px; padding: 0; border: 2px solid var(--borda);
+      border-radius: 10px; background: none; cursor: pointer;
+    }
+    .previa {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 18px;
+      padding: 14px; border-radius: 12px; background: var(--fundo); border: 1px dashed var(--borda);
+    }
+    .previa .acao { margin-left: 0; padding: 8px 16px; }
+    .previa .aba { padding: 6px 12px; border-radius: 9px; font-size: .85rem; font-weight: 700; }
+    .previa a { color: var(--marca-texto); font-weight: 700; font-size: .88rem; }
+
     .metrica { line-height: 1.2; }
     .metrica b { font-size: 1.22rem; font-weight: 800; display: block; }
     .metrica span { font-size: .74rem; color: var(--texto-fraco); text-transform: uppercase; letter-spacing: .5px; }
@@ -221,23 +266,23 @@
     button.acao {
       margin-left: auto;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte));
-      color: #fff;
+      color: var(--sobre-marca);
       border: none; border-radius: 11px; cursor: pointer;
       padding: 11px 24px; font-size: .92rem; font-weight: 700;
       font-family: inherit; letter-spacing: .01em;
-      box-shadow: 0 2px 10px rgba(109,94,252,.3);
+      box-shadow: 0 2px 10px var(--marca-sombra);
       transition: box-shadow .2s, transform .14s, filter .2s;
     }
-    button.acao:hover { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(109,94,252,.42); filter: brightness(1.06); }
+    button.acao:hover { transform: translateY(-2px); box-shadow: 0 7px 20px var(--marca-sombra); filter: brightness(1.06); }
     button.acao:active { transform: translateY(0); }
     button.acao:disabled { opacity: .55; cursor: default; transform: none; }
-    button.acao.secundaria { background: transparent; color: var(--marca-forte); border: 1px solid var(--marca); }
+    button.acao.secundaria { background: transparent; color: var(--marca-texto); border: 1px solid var(--marca); }
     button.acao.secundaria:hover { background: var(--marca-suave); }
     button.acao.discreta { background: var(--superficie-2); color: var(--texto); border: 1px solid var(--borda); }
     button.acao.pequena { padding: 8px 16px; font-size: .85rem; }
 
     /* ===================== QUESTÃO ===================== */
-      background: var(--marca-suave); color: var(--marca-forte);
+      background: var(--marca-suave); color: var(--marca-texto);
       padding: 6px 14px; border-radius: 20px;
       font-size: .8rem; font-weight: 700;
     }
@@ -279,14 +324,14 @@
     .alt:hover:not(:disabled) { border-color: var(--marca); transform: translateX(5px); }
     .alt .letra {
       flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
-      background: var(--marca); color: #fff;
+      background: var(--marca); color: var(--sobre-marca);
       display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: .95rem;
     }
     .alt.certa { border-color: var(--certo); background: rgba(34,197,94,.13); }
-    .alt.certa .letra { background: var(--certo); }
+    .alt.certa .letra { background: var(--certo); color: #fff; }
     .alt.errada { border-color: var(--errado); background: rgba(239,68,68,.13); }
-    .alt.errada .letra { background: var(--errado); }
+    .alt.errada .letra { background: var(--errado); color: #fff; }
 
     .resultado {
       text-align: center; padding: 28px 20px;
@@ -349,7 +394,7 @@
       display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;
     }
     .cabeca-questao .ano { font-size: 1.32rem; font-weight: 800; letter-spacing: -.4px; }
-    .cabeca-questao .materia { color: var(--marca-forte); font-weight: 700; font-size: .96rem; }
+    .cabeca-questao .materia { color: var(--marca-texto); font-weight: 700; font-size: .96rem; }
 
     .nivel {
       flex-shrink: 0; border-radius: 10px; padding: 7px 13px;
@@ -388,7 +433,7 @@
     /* alternativa eliminada pela pessoa */
     .alt.riscada { opacity: .42; }
     .alt.riscada > span:last-child { text-decoration: line-through; }
-    .alt.riscada .letra { background: var(--texto-fraco); }
+    .alt.riscada .letra { background: var(--texto-fraco); color: var(--fundo); }
     .alt.segurando { transform: scale(.985); border-color: var(--aviso); }
 
     /* ===================== RESULTADO DO BLOCO ===================== */
@@ -444,7 +489,7 @@
     .form-conta button[type=submit] { width: 100%; margin-top: 24px; padding: 14px; font-size: 1rem; }
     .pista { font-size: .79rem; color: var(--texto-fraco); margin-top: 6px; }
     .alternar { text-align: center; margin-top: 20px; font-size: .9rem; color: var(--texto-fraco); }
-    .alternar a { color: var(--marca-forte); cursor: pointer; font-weight: 700; }
+    .alternar a { color: var(--marca-texto); cursor: pointer; font-weight: 700; }
 
     .recado { padding: 13px 16px; border-radius: 10px; font-size: .9rem; margin-top: 18px; line-height: 1.5; }
     .recado.ruim { background: rgba(239,68,68,.13); color: var(--errado); }
@@ -455,13 +500,13 @@
       font-weight: 500; line-height: 1.5; color: var(--texto-fraco); margin-top: 20px;
     }
     .form-conta .aceite input { width: 18px; height: 18px; padding: 0; flex-shrink: 0; margin-top: 2px; accent-color: var(--marca); }
-    .form-conta .aceite a, .rodape a { color: var(--marca-forte); font-weight: 700; }
+    .form-conta .aceite a, .rodape a { color: var(--marca-texto); font-weight: 700; }
 
     .dados-conta { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
     .dados-conta .bolha {
       width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte));
-      color: #fff; display: flex; align-items: center; justify-content: center;
+      color: var(--sobre-marca); display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: 1.1rem;
     }
     .dados-conta b { display: block; font-size: 1.05rem; }
@@ -477,7 +522,7 @@
     .zona-perigo { margin-top: 30px; border-top: 1px solid var(--borda); padding-top: 18px; }
     .zona-perigo summary { cursor: pointer; color: var(--errado); font-weight: 700; font-size: .9rem; }
     .zona-perigo p { font-size: .86rem; color: var(--texto-fraco); line-height: 1.6; margin-top: 12px; }
-    button.acao.perigo { background: var(--errado); width: 100%; margin-top: 18px; padding: 13px; }
+    button.acao.perigo { background: var(--errado); color: #fff; width: 100%; margin-top: 18px; padding: 13px; }
 
     .rodape {
       max-width: 720px; margin: 0 auto; padding: 10px 20px 40px;
@@ -503,7 +548,7 @@
     .post-autor .bolha {
       width: 34px; height: 34px; border-radius: 50%;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte));
-      color: #fff; display: flex; align-items: center; justify-content: center;
+      color: var(--sobre-marca); display: flex; align-items: center; justify-content: center;
       font-weight: 800; font-size: .85rem; flex-shrink: 0;
     }
     .post-autor b { font-size: .94rem; }
@@ -531,7 +576,7 @@
       margin-top: 22px; text-align: center;
       font-size: .85rem; color: var(--texto-fraco); line-height: 1.6;
     }
-    .onde-salva a { color: var(--marca-forte); cursor: pointer; font-weight: 700; }
+    .onde-salva a { color: var(--marca-texto); cursor: pointer; font-weight: 700; }
 
     .vazio { text-align: center; padding: 56px 24px; color: var(--texto-fraco); }
     .vazio .cara { font-size: 2.8rem; display: block; margin-bottom: 14px; }
@@ -551,11 +596,47 @@
       .painel { padding: 20px 17px; }
       .alt { padding: 16px 17px; font-size: .96rem; gap: 13px; }
       .indicador span { display: none; }
+      #btn-tema { display: none; } /* no celular o tema fica dentro de 🎨 Aparência */
     }
   </style>
 </head>
 <body>
   <div id="confete"></div>
+
+  <!-- ===================== APARÊNCIA ===================== -->
+  <div class="fundo-modal escondido" id="painel-aparencia" onclick="if (event.target === this) fecharAparencia()">
+    <div class="modal" role="dialog" aria-labelledby="titulo-aparencia">
+      <div class="modal-topo">
+        <h2 id="titulo-aparencia">Aparência</h2>
+        <button class="btn-sair" onclick="fecharAparencia()" title="Fechar">✕</button>
+      </div>
+
+      <div class="rotulo-modal">Tema</div>
+      <div class="escolha-tema">
+        <button id="tema-escuro" onclick="aplicarTema('escuro')">🌙 Escuro</button>
+        <button id="tema-claro" onclick="aplicarTema('claro')">☀️ Claro</button>
+      </div>
+
+      <div class="rotulo-modal">Paletas prontas</div>
+      <div class="paletas" id="lista-paletas"></div>
+
+      <div class="rotulo-modal">Do seu jeito</div>
+      <div class="cores-livres">
+        <label><input type="color" id="cor-principal" oninput="escolherCor('principal', this.value)"> Cor principal
+          <small>botões, barras e destaques</small></label>
+        <label><input type="color" id="cor-secundaria" oninput="escolherCor('secundaria', this.value)"> Cor secundária
+          <small>degradês, links e detalhes</small></label>
+      </div>
+
+      <div class="previa">
+        <button class="acao" tabindex="-1">Botão</button>
+        <span class="aba ativa">Aba ativa</span>
+        <a>Link de exemplo</a>
+      </div>
+
+      <button class="acao discreta" style="width:100%;margin-top:18px" onclick="restaurarCores()">Voltar ao padrão (Preto &amp; Bege)</button>
+    </div>
+  </div>
 
   <!-- ===================== TOPO ===================== -->
   <header class="topo">
@@ -586,6 +667,7 @@
             <path d="m12 3.2 2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.7l6.1-.9z"/>
           </svg><b id="ind-acertos">0</b>
         </div>
+        <button class="btn-icone" onclick="abrirAparencia()" title="Aparência: tema e cores">🎨</button>
         <button class="btn-icone" id="btn-tema" onclick="trocarTema()" title="Alternar tema">🌙</button>
         <button class="avatar" id="btn-perfil" onclick="cliqueNoPerfil()" title="Conta">?</button>
       </div>
@@ -712,6 +794,7 @@
           <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
         </div>
         <div id="status-email"></div>
+        <button class="acao secundaria" style="width:100%;padding:13px;margin-bottom:10px" onclick="abrirAparencia()">🎨 Aparência e cores</button>
         <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
 
         <details class="zona-perigo">
@@ -807,11 +890,124 @@ function aplicarTema(tema) {
   document.documentElement.dataset.tema = tema;
   document.getElementById('btn-tema').textContent = tema === 'escuro' ? '🌙' : '☀️';
   guardar(CHAVE_TEMA, tema);
+  aplicarCores(); // o contraste dos links depende do fundo do tema
+  if (!document.getElementById('painel-aparencia').classList.contains('escondido')) desenharAparencia();
 }
 
 function trocarTema() {
   aplicarTema(document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro');
 }
+
+// ===================== CORES =====================
+// O aluno escolhe a cor principal e a secundária; o resto é calculado para
+// manter tudo legível: texto sobre os botões fica claro ou escuro conforme a
+// cor, e links/rótulos coloridos ganham contraste com o fundo do tema.
+const CHAVE_CORES = 'mm_cores';
+const PALETAS = [
+  { nome: 'Preto & Bege', principal: '#c8a96e', secundaria: '#e4cfa3' },
+  { nome: 'Roxo', principal: '#6d5efc', secundaria: '#8b7cff' },
+  { nome: 'Azul', principal: '#2563eb', secundaria: '#38bdf8' },
+  { nome: 'Verde', principal: '#059669', secundaria: '#34d399' },
+  { nome: 'Rosa', principal: '#db2777', secundaria: '#f472b6' },
+  { nome: 'Laranja', principal: '#ea580c', secundaria: '#fbbf24' }
+];
+const COR_VALIDA = /^#[0-9a-f]{6}$/i;
+
+let cores = { ...PALETAS[0] };
+try {
+  const salvas = JSON.parse(ler(CHAVE_CORES));
+  if (salvas && COR_VALIDA.test(salvas.principal) && COR_VALIDA.test(salvas.secundaria)) {
+    cores = { principal: salvas.principal, secundaria: salvas.secundaria };
+  }
+} catch (e) {}
+
+const paraRgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+const paraHex = rgb => '#' + rgb.map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+function luminancia(hex) {
+  const [r, g, b] = paraRgb(hex).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contraste(a, b) {
+  const [x, y] = [luminancia(a), luminancia(b)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
+}
+function misturar(a, b, t) {
+  const [ra, rb] = [paraRgb(a), paraRgb(b)];
+  return paraHex(ra.map((v, i) => v + (rb[i] - v) * t));
+}
+// Aproxima a cor do texto do tema até ficar legível sobre o fundo (4,5:1).
+function legivelSobre(cor, fundo, texto) {
+  for (let t = 0; t <= 1; t += 0.05) {
+    const c = misturar(cor, texto, t);
+    if (contraste(c, fundo) >= 4.5) return c;
+  }
+  return texto;
+}
+const comAlfa = (hex, a) => `rgba(${paraRgb(hex).join(', ')}, ${a})`;
+
+function aplicarCores() {
+  const raiz = document.documentElement;
+  const estilo = getComputedStyle(raiz);
+  const fundo = estilo.getPropertyValue('--fundo').trim();
+  const texto = estilo.getPropertyValue('--texto').trim();
+  const { principal, secundaria } = cores;
+  // Texto sobre o degradê: o que tiver mais contraste com as duas pontas.
+  const sobre = ['#ffffff', '#17130d'].sort((a, b) =>
+    Math.min(contraste(b, principal), contraste(b, secundaria)) -
+    Math.min(contraste(a, principal), contraste(a, secundaria)))[0];
+  const vars = {
+    '--marca': principal,
+    '--marca-forte': secundaria,
+    '--marca-suave': comAlfa(principal, 0.15),
+    '--marca-sombra': comAlfa(principal, 0.32),
+    '--marca-texto': COR_VALIDA.test(fundo) && COR_VALIDA.test(texto) ? legivelSobre(secundaria, fundo, texto) : secundaria,
+    '--sobre-marca': sobre
+  };
+  for (const [nome, valor] of Object.entries(vars)) raiz.style.setProperty(nome, valor);
+  // Privacidade e Termos leem isto para usar as mesmas cores.
+  guardar('mm_cores_css', JSON.stringify(vars));
+}
+
+function escolherCor(qual, valor) {
+  if (!COR_VALIDA.test(valor)) return;
+  cores[qual] = valor;
+  guardar(CHAVE_CORES, JSON.stringify(cores));
+  aplicarCores();
+  desenharAparencia();
+}
+
+function escolherPaleta(i) {
+  cores = { principal: PALETAS[i].principal, secundaria: PALETAS[i].secundaria };
+  guardar(CHAVE_CORES, JSON.stringify(cores));
+  aplicarCores();
+  desenharAparencia();
+}
+
+function restaurarCores() { escolherPaleta(0); }
+
+function desenharAparencia() {
+  const tema = document.documentElement.dataset.tema;
+  document.getElementById('tema-escuro').classList.toggle('ativo', tema === 'escuro');
+  document.getElementById('tema-claro').classList.toggle('ativo', tema === 'claro');
+  document.getElementById('cor-principal').value = cores.principal;
+  document.getElementById('cor-secundaria').value = cores.secundaria;
+  document.getElementById('lista-paletas').innerHTML = PALETAS.map((p, i) => `
+    <button class="paleta${p.principal === cores.principal && p.secundaria === cores.secundaria ? ' ativa' : ''}"
+      onclick="escolherPaleta(${i})">
+      <i style="background:linear-gradient(135deg, ${p.principal}, ${p.secundaria})"></i>${escapar(p.nome)}
+    </button>`).join('');
+}
+
+function abrirAparencia() {
+  desenharAparencia();
+  document.getElementById('painel-aparencia').classList.remove('escondido');
+}
+
+function fecharAparencia() {
+  document.getElementById('painel-aparencia').classList.add('escondido');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharAparencia(); });
 
 function iniciarTema() {
   const salvo = ler(CHAVE_TEMA);
