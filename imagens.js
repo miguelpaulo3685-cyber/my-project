@@ -5,7 +5,38 @@
 // tamanho e tira os metadados. Foto de celular costuma levar a localização
 // GPS de onde foi tirada, e muita gente aqui é menor de idade.
 
+const crypto = require('crypto');
+
 const TAMANHO_MAXIMO = 450 * 1024; // depois de decodificar o base64
+
+// ---------- links assinados ----------
+// Perfis e fotos são só para quem tem conta, mas o navegador carrega uma
+// <img> sem mandar o login. Então o servidor só entrega a foto se o link
+// tiver uma assinatura dele, que vence em algumas horas: quem está logado
+// recebe links válidos, e um link copiado para fora para de funcionar.
+// Sem SEGREDO_IMAGENS, o segredo muda a cada reinício e os links antigos
+// vencem junto; o site pede links novos ao abrir o perfil.
+const SEGREDO = process.env.SEGREDO_IMAGENS || crypto.randomBytes(32).toString('hex');
+const HORA = 3600;
+const VALIDADE_HORAS = 6;
+
+function assinatura(id, ate) {
+  return crypto.createHmac('sha256', SEGREDO).update(`${id}.${ate}`).digest('hex').slice(0, 32);
+}
+
+// O vencimento é arredondado para a hora cheia: o mesmo link vale por um
+// tempo e o navegador aproveita o cache em vez de baixar a foto de novo.
+function urlAssinada(id, agora = Date.now()) {
+  if (!id) return null;
+  const ate = (Math.floor(agora / 1000 / HORA) + VALIDADE_HORAS) * HORA;
+  return `/api/imagens/${id}?ate=${ate}&ass=${assinatura(id, ate)}`;
+}
+
+function assinaturaValida(id, ate, ass, agora = Date.now()) {
+  const vence = Number(ate);
+  if (!Number.isInteger(vence) || vence * 1000 < agora || typeof ass !== 'string' || ass.length !== 32) return false;
+  return crypto.timingSafeEqual(Buffer.from(ass), Buffer.from(assinatura(id, vence)));
+}
 
 // Recebe "data:image/jpeg;base64,..." e devolve { dados: Buffer } ou { erro }.
 function lerImagem(dataUrl) {
@@ -47,4 +78,4 @@ function tirarMetadados(dados) {
   return Buffer.concat(partes);
 }
 
-module.exports = { lerImagem, tirarMetadados, TAMANHO_MAXIMO };
+module.exports = { lerImagem, tirarMetadados, urlAssinada, assinaturaValida, TAMANHO_MAXIMO };

@@ -2617,8 +2617,8 @@ function cabecalhoAuth() {
 
 function desenharPerfil() {
   const botao = document.getElementById('btn-perfil');
-  if (usuarioLogado && usuarioLogado.foto_id) {
-    botao.innerHTML = `<img src="${escapar(urlImagem('/api/imagens/' + Number(usuarioLogado.foto_id)))}" alt="">`;
+  if (usuarioLogado && usuarioLogado.foto) {
+    botao.innerHTML = `<img src="${escapar(urlImagem(usuarioLogado.foto))}" alt="">`;
     botao.title = usuarioLogado.username + ' — minha conta';
   } else if (usuarioLogado) {
     botao.textContent = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
@@ -3234,13 +3234,16 @@ function abrirMeuPerfil() {
   irPara('perfil');
   document.getElementById('conteudo-perfil').innerHTML = `
     <div class="painel vazio"><span class="cara">🪪</span>
-      Seu perfil mostra sua foto, sua bio, seus números de estudo e suas publicações.<br>
+      Perfis, fotos e publicações aparecem só para quem tem conta.<br>
+      Crie a sua para ter um perfil e ver o dos colegas.<br>
       <button class="acao" style="margin:18px auto 0" onclick="abrirConta('criar')">Criar conta</button>
       <p style="margin-top:12px;font-size:.88rem">Já tem? <a class="autor-link" onclick="abrirConta('entrar')">Entrar</a></p>
     </div>`;
 }
 
+// Perfis são só para quem tem conta: muita gente aqui é menor de idade.
 async function abrirPerfil(id) {
+  if (!usuarioLogado) return abrirMeuPerfil();
   irPara('perfil');
   const alvo = document.getElementById('conteudo-perfil');
   alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando perfil…</div>';
@@ -3511,7 +3514,7 @@ async function salvarPerfil() {
     });
     const dados = await r.json();
     if (!r.ok) throw { daApi: dados.error };
-    usuarioLogado.foto_id = dados.foto ? Number(dados.foto.split('/').pop()) : null;
+    usuarioLogado.foto = dados.foto;
     desenharPerfil();
     fecharModal('modal-editar-perfil');
     abrirPerfil(perfilAberto.perfil.id);

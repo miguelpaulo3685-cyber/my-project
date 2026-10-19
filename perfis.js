@@ -1,8 +1,9 @@
 // Perfil do aluno: foto, bio, números de estudo e publicações em galeria
 // (cartões com capa opcional, como a galeria do Notion).
 //
-// Perfis e publicações são públicos, como o feed. Por isso valem as mesmas
-// regras: denúncias escondem a publicação e administradores revisam.
+// Perfis, publicações e fotos aparecem só para quem tem conta e está logado:
+// muita gente aqui é menor de idade. Valem as regras do feed: denúncias
+// escondem a publicação e administradores revisam.
 
 const imagens = require('./imagens');
 
@@ -17,7 +18,7 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
   const freioDenuncias = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Você fez muitas denúncias. Espere um pouco.', porConta);
 
   const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
-  const urlDaImagem = id => (id ? `/api/imagens/${id}` : null);
+  const urlDaImagem = id => imagens.urlAssinada(id);
 
   async function guardarImagem(donoId, dataUrl) {
     const { dados, erro } = imagens.lerImagem(dataUrl);
@@ -30,17 +31,19 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
   const apagarImagem = id => (id ? pool.query('DELETE FROM imagens WHERE id = $1', [id]) : null);
 
   // ---------- imagens ----------
-  // O id muda a cada foto nova, então a resposta pode ficar em cache para
-  // sempre. Fica fora do "no-store" que as outras rotas da API usam.
+  // Só com link assinado (veja imagens.urlAssinada). O id muda a cada foto
+  // nova, então dá para guardar em cache até o link vencer; "private" evita
+  // que proxies no caminho guardem a foto.
   app.get('/api/imagens/:id', async (req, res) => {
     const id = idValido(req.params.id);
     if (!id) return res.status(404).end();
+    if (!imagens.assinaturaValida(id, req.query.ate, req.query.ass)) return res.status(403).end();
     try {
       const { rows } = await pool.query('SELECT dados FROM imagens WHERE id = $1', [id]);
       if (!rows[0]) return res.status(404).end();
       res.set({
         'Content-Type': 'image/jpeg',
-        'Cache-Control': 'public, max-age=31536000, immutable',
+        'Cache-Control': `private, max-age=${Math.max(0, Number(req.query.ate) - Math.floor(Date.now() / 1000))}`,
         'Cross-Origin-Resource-Policy': 'cross-origin', // o site (GitHub Pages) está em outro endereço
         'Content-Security-Policy': "default-src 'none'"
       });
@@ -52,7 +55,7 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
   });
 
   // ---------- perfil ----------
-  app.get('/api/perfil/:id', async (req, res) => {
+  app.get('/api/perfil/:id', exigirLogin, async (req, res) => {
     const id = idValido(req.params.id);
     if (!id) return res.status(404).json({ error: 'Perfil não encontrado.' });
     const eu = req.usuario;

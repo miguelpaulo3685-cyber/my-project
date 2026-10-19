@@ -33,6 +33,7 @@ uma tabela ou coluna que o código espera.
 | `EMAIL_REMETENTE` | Opcional. Nome e endereço que aparecem como remetente |
 | `SITE_URL` | Endereço do site, usado nos links dos e-mails |
 | `GOOGLE_CLIENT_ID` | Opcional. Liga o botão "Continuar com o Google" na tela de entrada. Sem ela, o botão não aparece |
+| `SEGREDO_IMAGENS` | Opcional. Segredo dos links assinados das fotos; sem ele, um segredo novo é sorteado a cada reinício |
 | `ORIGENS_PERMITIDAS` | Sites que podem chamar a API pelo navegador, separados por vírgula. Padrão: GitHub Pages do projeto e localhost |
 
 ## Rotas da API
@@ -54,11 +55,11 @@ uma tabela ou coluna que o código espera.
 | `DELETE /api/posts/:id` | autor do post ou administrador |
 | `POST /api/posts/:id/denunciar` | login (com 3 pessoas diferentes, o post sai do ar) |
 | `POST /api/posts/:id/restaurar` | administrador |
-| `GET /api/perfil/:id` | livre (perfil, números e publicações) |
+| `GET /api/perfil/:id` | login (perfil, números e publicações) |
 | `PUT /api/perfil` (bio e foto) | login |
 | `POST /api/publicacoes`, `PUT` e `DELETE /api/publicacoes/:id` | login (só o autor edita; autor ou administrador apaga) |
 | `POST /api/publicacoes/:id/denunciar` / `restaurar` | login / administrador |
-| `GET /api/imagens/:id` | livre (fotos do perfil e capas) |
+| `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
 Exemplo de carga de um ano inteiro:
@@ -115,7 +116,8 @@ Cada aluno tem um perfil com foto, bio, números de estudo e publicações em ga
 capa opcional, que dá para arrastar para escolher a parte que aparece, como no Notion). As fotos
 ficam na tabela `imagens` (até 450 KB cada, só JPEG): o navegador reduz a foto antes de enviar e o
 servidor (`imagens.js`) confere o formato e tira os metadados EXIF, que podem ter a localização.
-Cada pessoa pode ter até 60 publicações, para caber no plano grátis do Neon. Publicações seguem as
+Perfis e fotos aparecem só para quem está logado (muita gente aqui é menor de idade): as fotos
+saem por links assinados que vencem em algumas horas. Cada pessoa pode ter até 60 publicações, para caber no plano grátis do Neon. Publicações seguem as
 mesmas regras de denúncia do feed.
 
 ## Proteções

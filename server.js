@@ -10,6 +10,7 @@ const crypto = require('crypto');
 const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
+const imagens = require('./imagens');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
 const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
@@ -233,7 +234,7 @@ app.post('/api/auth/login', async (req, res) => {
 
   try {
     const { rows } = await pool.query(
-      'SELECT id, username, email, senha_hash, COALESCE(email_verificado, FALSE) AS email_verificado FROM usuarios WHERE email = $1',
+      'SELECT id, username, email, senha_hash, foto_id, COALESCE(email_verificado, FALSE) AS email_verificado FROM usuarios WHERE email = $1',
       [emailLimpo]
     );
     const usuario = rows[0];
@@ -252,7 +253,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = await abrirSessao(usuario.id);
     res.json({
       token,
-      usuario: { id: usuario.id, username: usuario.username, email: usuario.email, email_verificado: usuario.email_verificado, tem_senha: true },
+      usuario: { id: usuario.id, username: usuario.username, email: usuario.email, email_verificado: usuario.email_verificado, tem_senha: true, foto: imagens.urlAssinada(usuario.foto_id) },
       dias_de_sessao: auth.DIAS_DE_SESSAO
     });
   } catch (erro) {
@@ -288,12 +289,13 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
     }
 
     const { rows } = await pool.query(
-      `SELECT id, username, email, TRUE AS email_verificado, (senha_hash IS NOT NULL) AS tem_senha
+      `SELECT id, username, email, TRUE AS email_verificado, (senha_hash IS NOT NULL) AS tem_senha, foto_id
          FROM usuarios WHERE id = $1`, [id]
     );
+    const { foto_id, ...dadosDoUsuario } = rows[0];
     const token = await abrirSessao(id);
     res.status(existente.rowCount ? 200 : 201).json({
-      token, usuario: rows[0], nova: !existente.rowCount, dias_de_sessao: auth.DIAS_DE_SESSAO
+      token, usuario: { ...dadosDoUsuario, foto: imagens.urlAssinada(foto_id) }, nova: !existente.rowCount, dias_de_sessao: auth.DIAS_DE_SESSAO
     });
   } catch (erro) {
     console.error('Erro no login com Google:', erro.message);
@@ -305,7 +307,8 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
 // volta já logada.
 app.get('/api/auth/eu', (req, res) => {
   if (!req.usuario) return res.status(401).json({ error: 'Sessão expirada ou inexistente.' });
-  res.json({ usuario: req.usuario });
+  const { foto_id, ...usuario } = req.usuario;
+  res.json({ usuario: { ...usuario, foto: imagens.urlAssinada(foto_id) } });
 });
 
 app.post('/api/auth/sair', async (req, res) => {

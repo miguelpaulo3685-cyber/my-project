@@ -38,3 +38,18 @@ test('imagem: recusa o que não é JPEG, base64 quebrado e arquivo grande', () =
   // bloco com tamanho que passa do fim do arquivo
   assert.ok(lerImagem(dataUrl(Buffer.from([0xFF, 0xD8, 0xFF, 0xE1, 0x10, 0x00, 1]))).erro);
 });
+
+test('link assinado: vale até vencer e não serve para outra foto', () => {
+  const { urlAssinada, assinaturaValida } = require('../imagens');
+  const agora = Date.UTC(2026, 9, 19, 12, 30);
+  const url = new URL('http://x' + urlAssinada(7, agora));
+  const ate = url.searchParams.get('ate'), ass = url.searchParams.get('ass');
+  assert.strictEqual(url.pathname, '/api/imagens/7');
+  assert.strictEqual(assinaturaValida(7, ate, ass, agora), true);
+  assert.strictEqual(assinaturaValida(8, ate, ass, agora), false, 'a assinatura é só desta foto');
+  assert.strictEqual(assinaturaValida(7, String(Number(ate) + 3600), ass, agora), false, 'não dá para esticar o prazo');
+  assert.strictEqual(assinaturaValida(7, ate, ass, agora + 7 * 3600e3), false, 'vence');
+  assert.strictEqual(assinaturaValida(7, ate, 'x'.repeat(32), agora), false);
+  assert.strictEqual(assinaturaValida(7, undefined, undefined, agora), false);
+  assert.strictEqual(urlAssinada(7, agora), urlAssinada(7, agora + 10 * 60e3), 'o mesmo link dentro da hora, para o cache funcionar');
+});
