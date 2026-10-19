@@ -217,21 +217,20 @@
       opacity: 0; transform: scale(1.08);
       transition: opacity .6s ease, transform 6s ease-out;
     }
-    .area:hover .figuras img:first-child, .area:focus-within .figuras img:first-child { opacity: .5; transform: scale(1); }
-    /* Área com duas figuras: elas se revezam enquanto o mouse está em cima. */
-    .area:hover .figuras img:nth-child(2), .area:focus-within .figuras img:nth-child(2) { animation: revezar 7s ease-in-out 1.6s infinite; transform: scale(1); }
-    @keyframes revezar { 0%, 100% { opacity: 0; } 15%, 50% { opacity: .5; } 65% { opacity: 0; } }
+    /* Cada área tem várias figuras: a da vez tem a classe .ativa e, com o
+       mouse em cima, elas se revezam (girarFiguras). */
+    .area:hover .figuras img.ativa, .area:focus-within .figuras img.ativa { opacity: .5; transform: scale(1); }
     /* o emblema sai da frente da figura */
     .area .emblema { transition: transform .25s, opacity .4s; }
     .area:hover .emblema { opacity: 0; }
-    html[data-tema="claro"] .area:hover .figuras img:first-child { opacity: .38; }
+    html[data-tema="claro"] .area:hover .figuras img.ativa { opacity: .38; }
     /* as faixas de baixo ficam translúcidas para a figura passar inteira */
     .area .area-rodape, .area .tri-area { transition: background-color .4s; }
     .area:hover .area-rodape, .area:hover .tri-area { background-color: transparent; }
     .area:hover .barra-area { background: color-mix(in srgb, var(--superficie-2) 45%, transparent); }
     /* Celular não tem "passar o mouse": a figura fica sempre, mais clara. */
     @media (hover: none) {
-      .area .figuras img:first-child { opacity: .3; transform: scale(1); }
+      .area .figuras img.ativa { opacity: .3; transform: scale(1); }
       .area .area-rodape, .area .tri-area { background-color: transparent; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -1118,19 +1117,19 @@ const svg = (miolo) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColo
   stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${miolo}</svg>`;
 
 const AREAS = [
-  { id: 'linguagens', nome: 'Linguagens', cor: '#e8893a', figuras: [['pessoa', 'center 38%']],
+  { id: 'linguagens', nome: 'Linguagens', cor: '#e8893a', figuras: [['pessoa', 'center 38%'], ['machado', 'center 30%'], ['shakespeare', 'center 32%']],
     sobre: 'Língua Portuguesa, Literatura, Estrangeira e Artes.',
     icone: svg('<path d="M12 6.5C12 5 10.5 3.5 7 3.5S2 4.5 2 4.5v13s1.5-1 5-1 5 1.5 5 1.5"/><path d="M12 6.5C12 5 13.5 3.5 17 3.5s5 1 5 1v13s-1.5-1-5-1-5 1.5-5 1.5z"/><path d="M12 6.5v12"/>') },
 
-  { id: 'humanas', nome: 'Ciências Humanas', cor: '#d9568c', figuras: [['pegaso', '15% 42%'], ['globo', 'center 35%']],
+  { id: 'humanas', nome: 'Ciências Humanas', cor: '#d9568c', figuras: [['pegaso', '15% 42%'], ['globo', 'center 35%'], ['estatua.webp', 'center 40%']],
     sobre: 'História, Geografia, Filosofia e Sociologia.',
     icone: svg('<path d="M2.5 9.5 12 3.5l9.5 6"/><path d="M4.5 9.5v9M9.5 9.5v9M14.5 9.5v9M19.5 9.5v9"/><path d="M2.5 18.5h19M3.5 21.5h17"/>') },
 
-  { id: 'natureza', nome: 'Ciências da Natureza', cor: '#17a97a', figuras: [['einstein', 'center 52%']],
+  { id: 'natureza', nome: 'Ciências da Natureza', cor: '#17a97a', figuras: [['einstein', 'center 52%'], ['newton', 'center 30%'], ['darwin', 'center 30%']],
     sobre: 'Biologia, Física e Química.',
     icone: svg('<circle cx="12" cy="12" r="2.2"/><ellipse cx="12" cy="12" rx="10" ry="4.4"/><ellipse cx="12" cy="12" rx="10" ry="4.4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.4" transform="rotate(120 12 12)"/>') },
 
-  { id: 'matematica', nome: 'Matemática', cor: '#4a7fe0', figuras: [['pitagoras', 'center 20%']],
+  { id: 'matematica', nome: 'Matemática', cor: '#4a7fe0', figuras: [['pitagoras', 'center 20%'], ['arquimedes', 'center 35%'], ['euclides', 'center 35%']],
     sobre: 'Matemática e suas tecnologias.',
     icone: svg('<path d="M4 2.8v16.4a1 1 0 0 0 1 1h16.2"/><path d="M7.6 16.2 11 10.8l3.1 2.9 4.6-7.3"/>') }
 ];
@@ -1625,12 +1624,15 @@ function desenharIndicadores() {
 // ===================== ÁREAS =====================
 function desenharAreas() {
   document.getElementById('grade-areas').innerHTML = AREAS.map(a => {
+    // Começa numa figura sorteada: cada visita mostra um rosto diferente.
+    const inicio = Math.floor(Math.random() * a.figuras.length);
     const p = progresso[a.id] || { feitas: 0, acertos: 0 };
     const taxa = p.feitas ? Math.round((p.acertos / p.feitas) * 100) : 0;
     return `
       <article class="area">
-        <div class="figuras" aria-hidden="true">${a.figuras.map(([img, foco]) =>
-          `<img src="img/areas/${img}.jpg" alt="" loading="lazy" decoding="async" style="--foco:${foco}">`).join('')}</div>
+        <div class="figuras" aria-hidden="true">${a.figuras.map(([img, foco], i) =>
+          `<img src="img/areas/${img.includes('.') ? img : img + '.jpg'}" alt="" loading="lazy" decoding="async"
+                ${i === inicio ? 'class="ativa"' : ''} style="--foco:${foco}">`).join('')}</div>
         <div class="area-topo">
           <div>
             <h2>${a.nome}</h2>
@@ -1651,6 +1653,22 @@ function desenharAreas() {
         </div>
       </article>`;
   }).join('');
+  document.querySelectorAll('#grade-areas .area').forEach(girarFiguras);
+}
+
+// Com o mouse em cima, troca a figura a cada 3 segundos. Ao sair, já deixa
+// a próxima engatilhada para a próxima passada.
+function girarFiguras(card) {
+  const figuras = [...card.querySelectorAll('.figuras img')];
+  if (figuras.length < 2) return;
+  let relogio = null;
+  const proxima = () => {
+    const i = figuras.findIndex(f => f.classList.contains('ativa'));
+    figuras[i].classList.remove('ativa');
+    figuras[(i + 1) % figuras.length].classList.add('ativa');
+  };
+  card.addEventListener('mouseenter', () => { relogio = setInterval(proxima, 3000); });
+  card.addEventListener('mouseleave', () => { clearInterval(relogio); proxima(); });
 }
 
 function linhaTri(n) {
