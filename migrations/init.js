@@ -199,6 +199,25 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas do perfil criadas');
 
+    // Simulados entregues, para o aluno ver o histórico em qualquer aparelho.
+    // A redação fica junto: some quando a conta é excluída.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS simulados (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        dia SMALLINT NOT NULL,
+        ano VARCHAR(10) NOT NULL,
+        acertos SMALLINT NOT NULL,
+        total SMALLINT NOT NULL,
+        areas JSONB NOT NULL,
+        tempo_ms INT,
+        redacao TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_simulados_usuario ON simulados(usuario_id, created_at DESC);
+    `);
+    console.log('✅ Tabela simulados criada');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

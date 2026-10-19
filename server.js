@@ -1046,6 +1046,7 @@ app.get('/api/posts', async (req, res) => {
 
 // ================== PERFIL E GALERIA ==================
 require('./perfis')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./simulados')(app, { pool, auth, limitar, exigirLogin });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;

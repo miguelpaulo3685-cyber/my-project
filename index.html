@@ -664,6 +664,52 @@
     .linha-hist small { color: var(--texto-fraco); }
     .linha-hist b.total { font-size: 1.05rem; text-align: right; }
 
+    .lista-enems { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+    .cartao-enem {
+      text-align: left; cursor: pointer; font: inherit; color: var(--texto); display: flex; flex-direction: column; gap: 8px;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 18px;
+      box-shadow: var(--sombra-leve); transition: transform .2s, border-color .2s; min-width: 0;
+    }
+    .cartao-enem:hover { transform: translateY(-3px); border-color: var(--marca); }
+    .cartao-enem:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .ano-enem { font-family: var(--fonte-titulo); font-weight: 700; font-size: 1.35rem; }
+    .tema-enem { color: var(--texto-fraco); font-size: .84rem; line-height: 1.45; }
+    .dias-enem { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+    .dias-enem span {
+      font-size: .74rem; font-weight: 700; padding: 4px 9px; border-radius: 999px;
+      background: var(--superficie-2); color: var(--texto-fraco); border: 1px solid var(--borda);
+    }
+    .dias-enem span.feito { background: rgba(34,197,94,.13); color: var(--certo); border-color: rgba(34,197,94,.35); }
+    .cartao-enem small { color: var(--aviso); font-size: .76rem; font-weight: 600; }
+    .cartao-enem.misto { border-style: dashed; }
+    .voltar-sim { background: none; border: none; color: var(--marca-texto); font: inherit; font-weight: 700; cursor: pointer; padding: 0; margin-bottom: 14px; }
+    .dia-sim { cursor: default; display: flex; flex-direction: column; gap: 4px; }
+    .dia-sim:hover { transform: none; }
+    .dia-sim .ultimo { color: var(--texto); font-size: .82rem; margin-top: 6px; }
+    .dia-sim .ultimo b { display: inline; font-size: inherit; margin: 0; }
+    .dia-sim button.acao { margin: 12px 0 0; align-self: flex-start; }
+    .boletim { margin-bottom: 18px; border-color: var(--marca); }
+    .boletim-notas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .boletim-notas div { background: var(--superficie-2); border-radius: 12px; padding: 12px; min-width: 0; }
+    .boletim-notas small { display: block; color: var(--texto-fraco); font-size: .74rem; }
+    .boletim-notas b { display: block; font-family: var(--fonte-titulo); font-size: 1.5rem; margin: 2px 0; }
+    .boletim-notas .media { background: var(--marca-suave); }
+    .proposta { background: var(--superficie-2); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; line-height: 1.65; }
+    .proposta p + p { margin-top: 8px; }
+    .proposta a { color: var(--marca-texto); font-weight: 700; }
+    .folha-redacao {
+      width: 100%; min-height: 520px; resize: vertical; padding: 14px 18px;
+      font: 1rem/2rem var(--fonte); color: var(--texto); border: 2px solid var(--borda); border-radius: 12px;
+      background-color: var(--superficie-2);
+      background-image: repeating-linear-gradient(transparent 0 calc(2rem - 1px), var(--borda) calc(2rem - 1px) 2rem);
+      background-attachment: local; background-position: 0 14px;
+    }
+    .folha-redacao:focus { outline: none; border-color: var(--marca); }
+    @media (max-width: 640px) {
+      .boletim-notas { grid-template-columns: 1fr 1fr; }
+      .boletim-notas .media { grid-column: 1 / -1; }
+    }
+
     /* prova */
     .barra-prova {
       position: sticky; top: 62px; z-index: 40; background: var(--superficie); border-bottom: 1px solid var(--borda);
@@ -684,6 +730,7 @@
     .rodape-prova { display: flex; gap: 10px; align-items: center; margin-top: 18px; flex-wrap: wrap; }
     .rodape-prova button.acao { margin: 0; }
     .rodape-prova .marcar { margin: 0 auto; }
+    #botao-redacao[aria-pressed="true"] { border-color: var(--marca); background: var(--marca-suave); color: var(--marca-texto); }
     .marcar[aria-pressed="true"] { border-color: var(--aviso) !important; color: var(--aviso) !important; }
     .grade-questoes { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; margin-bottom: 14px; }
     .grade-questoes button {
@@ -1575,6 +1622,7 @@
       <span class="relogio-prova" id="relogio-prova" role="timer" aria-live="off">0:00:00</span>
       <span class="contagem-prova" id="contagem-prova"></span>
       <button class="acao discreta" id="botao-pausar" onclick="pausarSimulado()" title="Pausar"><svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true" style="vertical-align:-2px"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><span class="so-largo"> Pausar</span></button>
+      <button class="acao discreta escondido" id="botao-redacao">Redação</button>
       <button class="acao discreta" onclick="abrirGrade()">Questões</button>
       <button class="acao" id="botao-entregar" onclick="entregarSimulado()">Entregar</button>
     </div>
@@ -3079,6 +3127,7 @@ async function enviarConta(evento) {
 }
 
 async function concluirEntrada(dados, mensagem) {
+  historicoSim = null; // o histórico de simulados passa a vir da conta
   guardar(CHAVE_TOKEN, dados.token);
   usuarioLogado = dados.usuario;
   desenharPerfil();
@@ -3220,6 +3269,7 @@ async function excluirConta(evento) {
 }
 
 function esquecerConta() {
+  historicoSim = null;
   guardar(CHAVE_TOKEN, null);
   usuarioLogado = null;
   desenharPerfil();
@@ -3357,22 +3407,45 @@ async function moderarPost(id, acao) {
 
 // ===================== STATUS =====================
 // ===================== SIMULADO =====================
-// A prova inteira, no formato do ENEM desde 2017: dia 1 com Linguagens e
-// Humanas, dia 2 com Natureza e Matemática, 90 questões cada, cronômetro e
-// gabarito só depois de entregar. Tudo fica salvo no navegador a cada
-// resposta: fechar a página sem querer não perde horas de prova.
+// O ENEM inteiro, no formato desde 2017: dia 1 com Linguagens, Humanas e a
+// redação do ano; dia 2 com Natureza e Matemática; 90 questões por dia, com
+// o tempo oficial. O aluno escolhe o ano e faz os dois dias. Tudo fica salvo
+// no navegador a cada resposta: fechar a página sem querer não perde a prova.
 const CHAVE_SIMULADO = 'mm_simulado';
 const CHAVE_SIMULADOS_FEITOS = 'mm_simulados_feitos';
 const DIAS_SIM = {
-  1: { nome: 'Dia 1', areas: ['linguagens', 'humanas'], minutos: 390, sobre: 'Linguagens e Ciências Humanas' },
-  2: { nome: 'Dia 2', areas: ['natureza', 'matematica'], minutos: 360, sobre: 'Ciências da Natureza e Matemática' }
+  1: { nome: 'Dia 1', areas: ['linguagens', 'humanas'], minutos: 330, sobre: 'Linguagens, Ciências Humanas e Redação' },
+  2: { nome: 'Dia 2', areas: ['natureza', 'matematica'], minutos: 300, sobre: 'Ciências da Natureza e Matemática' }
 };
 const AREA_DA_DISCIPLINA = { 'linguagens': 'linguagens', 'ciencias-humanas': 'humanas', 'ciencias-natureza': 'natureza', 'matematica': 'matematica' };
 const AVISOS_SIM = [60, 30, 15, 5]; // minutos restantes em que o fiscal avisa
 
+// Temas da redação de cada ENEM (aplicação regular, prova impressa).
+const TEMAS_REDACAO = {
+  2023: 'Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil',
+  2022: 'Desafios para a valorização de comunidades e povos tradicionais no Brasil',
+  2021: 'Invisibilidade e registro civil: garantia de acesso à cidadania no Brasil',
+  2020: 'O estigma associado às doenças mentais na sociedade brasileira',
+  2019: 'Democratização do acesso ao cinema no Brasil',
+  2018: 'Manipulação do comportamento do usuário pelo controle de dados na internet',
+  2017: 'Desafios para a formação educacional de surdos no Brasil',
+  2016: 'Caminhos para combater a intolerância religiosa no Brasil',
+  2015: 'A persistência da violência contra a mulher na sociedade brasileira',
+  2014: 'Publicidade infantil em questão no Brasil',
+  2013: 'Efeitos da implantação da Lei Seca no Brasil',
+  2012: 'Movimento imigratório para o Brasil no século XXI',
+  2011: 'Viver em rede no século XXI: os limites entre o público e o privado',
+  2010: 'O trabalho na construção da dignidade humana',
+  2009: 'O indivíduo frente à ética nacional'
+};
+const PROVAS_DO_INEP = 'https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos';
+const CARACTERES_POR_LINHA = 72; // média de uma linha da folha de redação
+const LINHAS_REDACAO = { minimo: 7, maximo: 30 };
+
 let sim = null;          // simulado em andamento (ou em correção)
-let escolhaSim = { dia: 1, ano: null, lingua: 'ingles' };
+let escolhaSim = { ano: null, lingua: 'ingles' }; // ano null: lista de ENEMs
 let anosSim = null;      // de /api/simulado/anos
+let historicoSim = null; // simulados entregues (conta ou navegador)
 let relogioProva = null;
 
 function salvarSim() {
@@ -3382,8 +3455,35 @@ function salvarSim() {
 function carregarSim() {
   try { sim = JSON.parse(localStorage.getItem(CHAVE_SIMULADO)); } catch (e) { sim = null; }
 }
-function simuladosFeitos() {
+function historicoLocal() {
   try { return JSON.parse(localStorage.getItem(CHAVE_SIMULADOS_FEITOS)) || []; } catch (e) { return []; }
+}
+
+// Com conta, o histórico vem do servidor (vale em qualquer aparelho).
+async function carregarHistoricoSim() {
+  if (!usuarioLogado) { historicoSim = historicoLocal(); return; }
+  try {
+    const r = await fetch(`${API_URL}/api/simulados`, { headers: cabecalhoAuth() });
+    if (!r.ok) throw new Error();
+    historicoSim = (await r.json()).simulados;
+  } catch (e) {
+    historicoSim = historicoLocal();
+  }
+}
+
+async function guardarNoHistorico(registro) {
+  if (usuarioLogado) {
+    try {
+      const r = await fetch(`${API_URL}/api/simulados`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() }, body: JSON.stringify(registro)
+      });
+      if (r.ok) { historicoSim = null; return; }
+    } catch (e) { /* sem rede: guarda no navegador */ }
+  }
+  const lista = historicoLocal();
+  lista.unshift({ ...registro, data: Date.now() });
+  try { localStorage.setItem(CHAVE_SIMULADOS_FEITOS, JSON.stringify(lista.slice(0, 40))); } catch (e) {}
+  historicoSim = null;
 }
 
 const restanteSim = () => sim.duracaoMs - sim.gastoMs - (sim.retomadoEm ? Date.now() - sim.retomadoEm : 0);
@@ -3391,117 +3491,171 @@ function formatarTempo(ms) {
   const t = Math.max(0, Math.ceil(ms / 1000));
   return `${Math.floor(t / 3600)}:${String(Math.floor(t / 60) % 60).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
 }
-const nomeDaProva = s => (s.ano === 'misto' ? 'Misto' : `ENEM ${s.ano}`);
+const duracaoTexto = min => `${Math.floor(min / 60)}h${min % 60 ? String(min % 60).padStart(2, '0') : ''}`;
+const nomeDaProva = s => (s.ano === 'misto' ? 'Simulado misto' : `ENEM ${s.ano}`);
 const respondidasSim = () => Object.keys(sim.respostas).length;
+const ultimoDoDia = (ano, dia) => (historicoSim || []).find(h => String(h.ano) === String(ano) && h.dia === dia);
 
-// ---------- tela inicial ----------
+function contarLinhas(texto) {
+  return texto.split('\n').reduce((t, p) => t + (p.trim() ? Math.ceil(p.length / CARACTERES_POR_LINHA) : 0), 0);
+}
+
+// ---------- telas de escolha ----------
 async function abrirSimulado() {
   carregarSim();
   if (sim && sim.entregue && sim.resultado) return desenharResultadoSim();
-  desenharInicioSim();
-  if (!anosSim) {
-    try {
-      anosSim = (await (await fetch(`${API_URL}/api/simulado/anos`)).json()).anos || [];
-      const completo = anosSim.find(a => a.dia1 === 90 && a.dia2 === 90);
-      if (!escolhaSim.ano) escolhaSim.ano = completo ? completo.ano : 'misto';
-    } catch (e) {
-      anosSim = [];
-      escolhaSim.ano = escolhaSim.ano || 'misto';
-    }
-    if (!document.getElementById('tela-simulado').classList.contains('escondido')) desenharInicioSim();
+  desenharTelaSim();
+  const pedidos = [];
+  if (!anosSim) pedidos.push(fetch(`${API_URL}/api/simulado/anos`).then(r => r.json()).then(d => { anosSim = d.anos || []; }).catch(() => { anosSim = []; }));
+  if (!historicoSim) pedidos.push(carregarHistoricoSim());
+  if (pedidos.length) {
+    await Promise.all(pedidos);
+    if (!document.getElementById('tela-simulado').classList.contains('escondido') && !(sim && sim.entregue)) desenharTelaSim();
   }
 }
 
-function desenharInicioSim() {
-  const d = DIAS_SIM[escolhaSim.dia];
-  const opcoesAno = (anosSim || []).map(a => {
-    const n = a['dia' + escolhaSim.dia];
-    if (!n) return '';
-    return `<option value="${a.ano}" ${String(escolhaSim.ano) === String(a.ano) ? 'selected' : ''}>
-      ENEM ${a.ano}${n >= 90 ? '' : ` (${n} de 90 questões)`}</option>`;
-  }).join('');
+function desenharTelaSim() {
   const andamento = sim && !sim.entregue ? `
     <div class="painel em-andamento" style="margin-bottom:22px">
-      <div><b>Simulado em andamento: ${DIAS_SIM[sim.dia].nome} · ${escapar(nomeDaProva(sim))}</b>
+      <div><b>Em andamento: ${escapar(nomeDaProva(sim))} · ${DIAS_SIM[sim.dia].nome}</b>
         <small>${respondidasSim()} de ${sim.questoes.length} respondidas · ${formatarTempo(restanteSim())} restantes${sim.retomadoEm ? '' : ' (pausado)'}</small></div>
       <button class="acao" onclick="continuarSimulado()">Continuar</button>
       <button class="acao discreta" onclick="descartarSimulado()">Descartar</button>
     </div>` : '';
-  const feitos = simuladosFeitos();
-  document.getElementById('conteudo-simulado').innerHTML = `
+  document.getElementById('conteudo-simulado').innerHTML = andamento +
+    (escolhaSim.ano === null ? listaDeEnems() : paginaDoEnem(escolhaSim.ano));
+}
+
+function listaDeEnems() {
+  const anos = anosSim === null ? null : anosSim.filter(a => a.dia1 || a.dia2);
+  const cartao = a => {
+    const feito = [1, 2].map(d => ultimoDoDia(a.ano, d));
+    const incompleta = a.dia1 < 90 || a.dia2 < 90;
+    return `<button class="cartao-enem" onclick="abrirEnem(${a.ano})">
+      <span class="ano-enem">ENEM ${a.ano}</span>
+      <span class="tema-enem">Redação: ${escapar(TEMAS_REDACAO[a.ano] || '—')}</span>
+      <span class="dias-enem">
+        ${[1, 2].map(d => `<span class="${feito[d - 1] ? 'feito' : ''}">${feito[d - 1] ? `✓ Dia ${d} · ${feito[d - 1].acertos}/${feito[d - 1].total}` : `Dia ${d}`}</span>`).join('')}
+      </span>
+      ${incompleta ? `<small>${a.dia1 + a.dia2} de 180 questões no banco</small>` : ''}
+    </button>`;
+  };
+  return `
     <div class="cabecalho-secao">
       <h1>Simulado</h1>
-      <p>A prova inteira, do jeito do ENEM: 90 questões por dia, com cronômetro.</p>
+      <p>Escolha um ENEM e faça a prova inteira: os dois dias, com a redação daquele ano e o tempo oficial.</p>
     </div>
-    ${andamento}
-    <div class="dias-sim" role="group" aria-label="Dia da prova">
-      ${[1, 2].map(n => `
-        <button class="dia-sim" aria-pressed="${escolhaSim.dia === n}" onclick="escolherDiaSim(${n})">
-          <b>${DIAS_SIM[n].nome}</b>
-          <span>${DIAS_SIM[n].sobre}<br>90 questões${n === 1 ? ' · 5 de língua estrangeira' : ''}</span>
-          <span class="tempo">⏱ ${Math.floor(DIAS_SIM[n].minutos / 60)}h${DIAS_SIM[n].minutos % 60 ? String(DIAS_SIM[n].minutos % 60).padStart(2, '0') : ''}</span>
-        </button>`).join('')}
+    <div class="lista-enems">
+      ${anos === null ? '<div class="vazio">Carregando as provas…</div>' : anos.map(cartao).join('')}
+      <button class="cartao-enem misto" onclick="abrirEnem('misto')">
+        <span class="ano-enem">Simulado misto</span>
+        <span class="tema-enem">Questões sorteadas de vários anos e uma proposta de redação sorteada.</span>
+      </button>
     </div>
-    <div class="opcoes-sim">
+    ${historicoHtml()}`;
+}
+
+function paginaDoEnem(ano) {
+  const info = ano === 'misto' ? { dia1: 90, dia2: 90 } : (anosSim || []).find(a => a.ano === ano) || { dia1: 0, dia2: 0 };
+  const ocupado = sim && !sim.entregue;
+  const feitos = [1, 2].map(d => ultimoDoDia(ano, d));
+  const diaCartao = dia => {
+    const d = DIAS_SIM[dia];
+    const f = feitos[dia - 1];
+    const emAndamento = ocupado && String(sim.ano) === String(ano) && sim.dia === dia;
+    const botao = emAndamento
+      ? `<button class="acao" onclick="continuarSimulado()">Continuar</button>`
+      : `<button class="acao${f ? ' discreta' : ''}" onclick="comecarSimulado(${dia}, this)" ${ocupado || !info['dia' + dia] ? 'disabled' : ''}>${f ? 'Refazer' : 'Começar'} ${d.nome}</button>`;
+    return `<div class="dia-sim">
+      <b>${d.nome}</b>
+      <span>${d.sobre}<br>${info['dia' + dia] >= 90 ? '90 questões' : `${info['dia' + dia]} de 90 questões no banco`}${dia === 1 ? ' · 5 de língua estrangeira' : ''}</span>
+      <span class="tempo">⏱ ${duracaoTexto(d.minutos)}</span>
+      ${f ? `<span class="ultimo">Último resultado: <b>${f.acertos}/${f.total}</b> · ${f.areas.map(a => `${escapar(nomeDaArea(a.area))} ${a.nota ? 'TRI ' + a.nota : a.acertos + '/' + a.total}`).join(' · ')}</span>` : ''}
+      ${botao}
+    </div>`;
+  };
+  const tema = ano === 'misto' ? null : TEMAS_REDACAO[ano];
+  const completo = feitos[0] && feitos[1] && ano !== 'misto';
+  return `
+    <button class="voltar-sim" onclick="abrirEnem(null)">← Todos os ENEMs</button>
+    <div class="cabecalho-secao">
+      <h1>${ano === 'misto' ? 'Simulado misto' : `ENEM ${ano}`}</h1>
+      <p>${tema ? `Tema da redação: <b>${escapar(tema)}</b>` : 'Questões sorteadas de vários anos e uma proposta de redação sorteada.'}</p>
+    </div>
+    ${completo ? resultadoDoEnem(feitos) : ''}
+    <div class="dias-sim">${diaCartao(1)}${diaCartao(2)}</div>
+    <div class="opcoes-sim" style="grid-template-columns:1fr">
       <div>
-        <label for="ano-sim">Prova</label>
-        <select id="ano-sim" onchange="escolhaSim.ano = this.value === 'misto' ? 'misto' : Number(this.value)">
-          ${anosSim ? opcoesAno : '<option>Carregando provas…</option>'}
-          <option value="misto" ${escolhaSim.ano === 'misto' ? 'selected' : ''}>Misto: questões sorteadas de vários anos</option>
-        </select>
-      </div>
-      <div>
-        <label>Língua estrangeira</label>
-        <div class="chaves">
-          ${['ingles', 'espanhol'].map(l => `<button aria-pressed="${escolhaSim.lingua === l}" ${escolhaSim.dia === 2 ? 'disabled' : ''}
-            onclick="escolhaSim.lingua = '${l}'; desenharInicioSim()">${l === 'ingles' ? 'Inglês' : 'Espanhol'}</button>`).join('')}
+        <label>Língua estrangeira (dia 1)</label>
+        <div class="chaves" style="max-width:360px">
+          ${['ingles', 'espanhol'].map(l => `<button aria-pressed="${escolhaSim.lingua === l}" onclick="escolhaSim.lingua = '${l}'; desenharTelaSim()">${l === 'ingles' ? 'Inglês' : 'Espanhol'}</button>`).join('')}
         </div>
       </div>
     </div>
-    <p class="aviso-sim">O tempo corre como na prova, mas dá para pausar se precisar de um intervalo.
-      O gabarito e a sua nota TRI aparecem quando você entregar. Seu progresso fica salvo neste navegador.</p>
-    <button class="acao" id="comecar-sim" style="padding:14px 28px;font-size:1rem;margin:0" onclick="comecarSimulado()"
-      ${sim && !sim.entregue ? 'disabled title="Termine ou descarte o simulado em andamento"' : ''}>Começar ${d.nome}</button>
-    ${feitos.length ? `
-      <div class="rotulo-galeria" style="margin-top:34px">Seus simulados</div>
-      <div class="historico-sim">${feitos.map(f => `
-        <div class="linha-hist">
-          <span><b>${DIAS_SIM[f.dia].nome} · ${escapar(nomeDaProva(f))}</b><br>
-            <small>${new Date(f.data).toLocaleDateString('pt-BR')} · ${f.areas.map(a => `${escapar(nomeDaArea(a.area))}: ${a.acertos}/${a.total}${a.nota ? ` (TRI ${a.nota})` : ''}`).join(' · ')}</small></span>
-          <b class="total">${f.acertos}/${f.total}</b>
-        </div>`).join('')}</div>` : ''}`;
+    <p class="aviso-sim">O tempo é o oficial: 5h30 no dia 1 (já com a redação) e 5h no dia 2. Dá para pausar se precisar de um intervalo.
+      O gabarito e a nota TRI aparecem quando você entregar. ${usuarioLogado ? 'O resultado fica salvo na sua conta.' : 'Sem conta, o resultado fica só neste navegador.'}</p>`;
 }
 
-function escolherDiaSim(dia) { escolhaSim.dia = dia; desenharInicioSim(); }
+// Os dois dias feitos: as quatro notas e a média, como no boletim do ENEM.
+function resultadoDoEnem(feitos) {
+  const areas = feitos.flatMap(f => f.areas);
+  const notas = areas.map(a => a.nota).filter(Boolean);
+  const media = notas.length === 4 ? Math.round(notas.reduce((t, n) => t + n, 0) / 4) : null;
+  return `<div class="painel boletim">
+    <div class="rotulo-modal" style="margin-top:0">Seu ENEM completo</div>
+    <div class="boletim-notas">${areas.map(a => `<div><small>${escapar(nomeDaArea(a.area))}</small><b>${a.nota || '—'}</b><small>${a.acertos}/${a.total}</small></div>`).join('')}
+      <div class="media"><small>Média das 4 áreas</small><b>${media || '—'}</b><small>${feitos[0].acertos + feitos[1].acertos}/180 acertos</small></div>
+    </div>
+    <p class="aviso-sim" style="margin:10px 0 0">A nota da redação não entra na média: ela precisa de correção humana.</p>
+  </div>`;
+}
 
-async function comecarSimulado() {
-  const botao = document.getElementById('comecar-sim');
-  botao.disabled = true;
-  botao.textContent = 'Montando a prova…';
-  const ano = escolhaSim.ano || 'misto';
+function historicoHtml() {
+  const lista = historicoSim || [];
+  if (!lista.length) return '';
+  return `<div class="rotulo-galeria" style="margin-top:34px">Seus simulados${usuarioLogado ? '' : ' (neste navegador)'}</div>
+    <div class="historico-sim">${lista.slice(0, 20).map(f => `
+      <div class="linha-hist">
+        <span><b>${escapar(nomeDaProva(f))} · ${DIAS_SIM[f.dia].nome}</b><br>
+          <small>${new Date(f.data).toLocaleDateString('pt-BR')} · ${f.areas.map(a => `${escapar(nomeDaArea(a.area))}: ${a.acertos}/${a.total}${a.nota ? ` (TRI ${a.nota})` : ''}`).join(' · ')}${f.redacao ? ' · com redação' : ''}</small></span>
+        <b class="total">${f.acertos}/${f.total}</b>
+      </div>`).join('')}</div>`;
+}
+
+function abrirEnem(ano) {
+  escolhaSim.ano = ano;
+  desenharTelaSim();
+  window.scrollTo(0, 0);
+}
+
+async function comecarSimulado(dia, botao) {
+  const ano = escolhaSim.ano;
+  if (botao) { botao.disabled = true; botao.textContent = 'Montando a prova…'; }
   try {
-    const r = await fetch(`${API_URL}/api/simulado?dia=${escolhaSim.dia}&ano=${ano}&lingua=${escolhaSim.lingua}`);
+    const r = await fetch(`${API_URL}/api/simulado?dia=${dia}&ano=${ano}&lingua=${escolhaSim.lingua}`);
     const dados = await r.json();
     if (!r.ok) throw { daApi: dados.error };
+    const anosComTema = Object.keys(TEMAS_REDACAO);
+    const anoDoTema = ano === 'misto' ? anosComTema[Math.floor(Math.random() * anosComTema.length)] : ano;
     sim = {
-      dia: escolhaSim.dia, ano, lingua: escolhaSim.lingua, questoes: dados.questoes,
-      respostas: {}, marcadas: [], atual: 0, avisos: [],
-      duracaoMs: DIAS_SIM[escolhaSim.dia].minutos * 60000, gastoMs: 0, retomadoEm: Date.now(), entregue: false
+      dia, ano, lingua: escolhaSim.lingua, questoes: dados.questoes,
+      respostas: {}, marcadas: [], atual: 0, avisos: [], vendoRedacao: false,
+      redacao: dia === 1 && TEMAS_REDACAO[anoDoTema] ? { ano: Number(anoDoTema), tema: TEMAS_REDACAO[anoDoTema], texto: '' } : null,
+      duracaoMs: DIAS_SIM[dia].minutos * 60000, gastoMs: 0, retomadoEm: Date.now(), entregue: false
     };
     salvarSim();
     continuarSimulado();
   } catch (e) {
-    botao.disabled = false;
-    botao.textContent = `Começar ${DIAS_SIM[escolhaSim.dia].nome}`;
     avisoSim(e.daApi || SEM_SERVIDOR);
+    desenharTelaSim();
   }
 }
 
 function descartarSimulado() {
-  if (!confirm('Descartar este simulado? As respostas dele se perdem.')) return;
+  if (!confirm('Descartar este simulado? As respostas e a redação dele se perdem.')) return;
   sim = null;
   salvarSim();
-  desenharInicioSim();
+  desenharTelaSim();
 }
 
 // ---------- prova ----------
@@ -3549,6 +3703,7 @@ function avisoSim(texto) {
 }
 
 function desenharProva() {
+  if (sim.vendoRedacao && sim.redacao) return desenharRedacao();
   const q = sim.questoes[sim.atual];
   const total = sim.questoes.length;
   const area = AREA_DA_DISCIPLINA[q.disciplina];
@@ -3557,15 +3712,7 @@ function desenharProva() {
   const marcada = sim.marcadas.includes(sim.atual);
   const corrigindo = sim.entregue;
 
-  document.getElementById('qual-prova').textContent = `${DIAS_SIM[sim.dia].nome} · ${nomeDaProva(sim)}`;
-  document.getElementById('contagem-prova').textContent = corrigindo
-    ? `${sim.resultado.acertos}/${total} acertos` : `${respondidasSim()}/${total}`;
-  document.getElementById('botao-pausar').classList.toggle('escondido', corrigindo);
-  const entregar = document.getElementById('botao-entregar');
-  entregar.textContent = corrigindo ? 'Voltar ao resultado' : 'Entregar';
-  entregar.onclick = corrigindo ? () => irPara('simulado') : () => entregarSimulado();
-  if (corrigindo) document.getElementById('relogio-prova').textContent = 'Correção';
-
+  desenharBarraProva();
   document.getElementById('painel-prova').innerHTML = `
     <div class="cabeca-prova">
       <b>Questão ${sim.atual + 1} <small>de ${total}</small></b>
@@ -3589,6 +3736,65 @@ function desenharProva() {
     <p class="dica-teclado">Atalhos: <kbd>A</kbd>–<kbd>E</kbd> marcam · <kbd>←</kbd> <kbd>→</kbd> mudam de questão</p>`;
 }
 
+function desenharBarraProva() {
+  const corrigindo = sim.entregue;
+  document.getElementById('qual-prova').textContent = `${nomeDaProva(sim)} · ${DIAS_SIM[sim.dia].nome}`;
+  document.getElementById('contagem-prova').textContent = corrigindo
+    ? `${sim.resultado.acertos}/${sim.questoes.length} acertos` : `${respondidasSim()}/${sim.questoes.length}`;
+  document.getElementById('botao-pausar').classList.toggle('escondido', corrigindo);
+  const red = document.getElementById('botao-redacao');
+  red.classList.toggle('escondido', !sim.redacao);
+  red.setAttribute('aria-pressed', Boolean(sim.vendoRedacao));
+  red.onclick = () => { sim.vendoRedacao = !sim.vendoRedacao; salvarSim(); desenharProva(); window.scrollTo(0, 0); };
+  const entregar = document.getElementById('botao-entregar');
+  entregar.textContent = corrigindo ? 'Voltar ao resultado' : 'Entregar';
+  entregar.onclick = corrigindo ? () => irPara('simulado') : () => entregarSimulado();
+  if (corrigindo) document.getElementById('relogio-prova').textContent = 'Correção';
+}
+
+// ---------- redação ----------
+function desenharRedacao() {
+  desenharBarraProva();
+  const r = sim.redacao;
+  const corrigindo = sim.entregue;
+  document.getElementById('painel-prova').innerHTML = `
+    <div class="cabeca-prova"><b>Redação</b><small>ENEM ${r.ano} · texto dissertativo-argumentativo</small></div>
+    <div class="proposta">
+      <p>A partir da leitura dos textos motivadores e com base nos conhecimentos construídos ao longo de sua
+      formação, redija texto dissertativo-argumentativo em modalidade escrita formal da língua portuguesa sobre o tema
+      <b>“${escapar(r.tema)}”</b>, apresentando proposta de intervenção que respeite os direitos humanos. Selecione,
+      organize e relacione, de forma coerente e coesa, argumentos e fatos para defesa de seu ponto de vista.</p>
+      <p class="pista">Os textos motivadores estão no caderno oficial, no
+        <a href="${PROVAS_DO_INEP}" target="_blank" rel="noopener">site do INEP (provas e gabaritos de ${r.ano})</a>.
+        A redação tem de ${LINHAS_REDACAO.minimo} a ${LINHAS_REDACAO.maximo} linhas e deve ter um título só se você quiser.</p>
+    </div>
+    <textarea class="folha-redacao" id="folha-redacao" maxlength="6000" ${corrigindo ? 'readonly' : ''}
+      placeholder="Escreva sua redação aqui…" oninput="escreverRedacao(this.value)">${escapar(r.texto)}</textarea>
+    <div class="contador" id="linhas-redacao"></div>
+    <div class="rodape-prova">
+      <button class="acao discreta" onclick="sim.vendoRedacao = false; salvarSim(); desenharProva()">← Voltar às questões</button>
+    </div>`;
+  atualizarLinhas();
+}
+
+let salvarRedacaoDepois = null;
+function escreverRedacao(texto) {
+  sim.redacao.texto = texto;
+  atualizarLinhas();
+  // Salva meio segundo depois da última tecla, para não gravar a cada letra.
+  clearTimeout(salvarRedacaoDepois);
+  salvarRedacaoDepois = setTimeout(salvarSim, 500);
+}
+
+function atualizarLinhas() {
+  const alvo = document.getElementById('linhas-redacao');
+  if (!alvo) return;
+  const n = contarLinhas(sim.redacao.texto);
+  const { minimo, maximo } = LINHAS_REDACAO;
+  alvo.textContent = `${n} de ${maximo} linhas (aprox.)${n > maximo ? ' · passou do limite' : n > 0 && n < minimo ? ` · mínimo de ${minimo}` : ''}`;
+  alvo.style.color = n > maximo || (n > 0 && n < minimo) ? 'var(--errado)' : '';
+}
+
 function escolherSim(i) {
   if (!sim || sim.entregue) return;
   if (sim.respostas[sim.atual] === i) delete sim.respostas[sim.atual]; // clicar de novo desmarca
@@ -3607,6 +3813,15 @@ function marcarSim() {
 function irParaQuestaoSim(i) {
   if (i < 0 || i >= sim.questoes.length) return;
   sim.atual = i;
+  sim.vendoRedacao = false;
+  salvarSim();
+  fecharModal('modal-grade');
+  desenharProva();
+  window.scrollTo(0, 0);
+}
+
+function abrirRedacaoSim() {
+  sim.vendoRedacao = true;
   salvarSim();
   fecharModal('modal-grade');
   desenharProva();
@@ -3624,16 +3839,19 @@ function abrirGrade() {
         if (sim.entregue) classe = sim.respostas[i] === q.correta ? 'certo' : 'errado';
         else if (sim.respostas[i] !== undefined) classe = 'feita';
         if (!sim.entregue && sim.marcadas.includes(i)) classe += ' marcada';
-        if (i === sim.atual) classe += ' atual';
+        if (i === sim.atual && !sim.vendoRedacao) classe += ' atual';
         return `<button class="${classe}" onclick="irParaQuestaoSim(${i})" aria-label="Questão ${i + 1}">${i + 1}</button>`;
       }).join('')}</div>`;
   }).join('');
+  const redacao = sim.redacao ? `<div class="rotulo-modal">Redação</div>
+    <button class="acao ${sim.redacao.texto.trim() ? '' : 'discreta'}" style="width:100%;margin:0 0 6px" onclick="abrirRedacaoSim()">
+      ${sim.redacao.texto.trim() ? `✓ Redação · ${contarLinhas(sim.redacao.texto)} linhas` : 'Redação (ainda em branco)'}</button>` : '';
   const legenda = sim.entregue
     ? '<i style="background:rgba(34,197,94,.18);border-color:var(--certo)"></i>acertou <i style="background:rgba(239,68,68,.16);border-color:var(--errado)"></i>errou ou deixou em branco'
     : `<span><i style="background:var(--marca-suave);border-color:var(--marca)"></i>respondida</span>
        <span><i style="background:var(--aviso);border-color:var(--aviso);border-radius:50%"></i>marcada para revisar</span>
        <span><i></i>sem resposta</span>`;
-  document.getElementById('conteudo-grade').innerHTML = blocos + `<div class="legenda-grade">${legenda}</div>`;
+  document.getElementById('conteudo-grade').innerHTML = redacao + blocos + `<div class="legenda-grade">${legenda}</div>`;
   abrirModal('modal-grade');
 }
 
@@ -3667,14 +3885,20 @@ function retomarSimulado() {
 async function entregarSimulado(acabouOTempo) {
   if (!sim || sim.entregue) return;
   const brancas = sim.questoes.length - respondidasSim();
-  if (!acabouOTempo && !confirm(brancas
-    ? `Entregar a prova? ${brancas} ${brancas === 1 ? 'questão está' : 'questões estão'} sem resposta e ${brancas === 1 ? 'conta' : 'contam'} como erro.`
+  const semRedacao = sim.redacao && !sim.redacao.texto.trim();
+  const avisos = [];
+  if (brancas) avisos.push(`${brancas} ${brancas === 1 ? 'questão está' : 'questões estão'} sem resposta e ${brancas === 1 ? 'conta' : 'contam'} como erro`);
+  if (semRedacao) avisos.push('a redação está em branco');
+  if (!acabouOTempo && !confirm(avisos.length
+    ? `Entregar a prova? Atenção: ${avisos.join(' e ')}.`
     : 'Entregar a prova? Depois não dá para mudar as respostas.')) return;
 
   pararRelogioProva();
+  clearTimeout(salvarRedacaoDepois);
   if (sim.retomadoEm) { sim.gastoMs += Date.now() - sim.retomadoEm; sim.retomadoEm = null; }
   sim.gastoMs = Math.min(sim.gastoMs, sim.duracaoMs);
   sim.entregue = true;
+  sim.vendoRedacao = false;
   document.querySelector('.pausa-sim')?.remove();
 
   // Acertos por área. Questão em branco conta como erro, como no ENEM.
@@ -3714,21 +3938,22 @@ async function entregarSimulado(acabouOTempo) {
   desenharTudo();
   buscarNotasTri();
 
-  const feitos = simuladosFeitos();
-  feitos.unshift({ data: Date.now(), dia: sim.dia, ano: sim.ano, acertos: sim.resultado.acertos, total: sim.questoes.length, areas: sim.resultado.areas });
-  try { localStorage.setItem(CHAVE_SIMULADOS_FEITOS, JSON.stringify(feitos.slice(0, 20))); } catch (e) {}
-
+  await guardarNoHistorico({
+    dia: sim.dia, ano: sim.ano, acertos: sim.resultado.acertos, total: sim.questoes.length,
+    areas: sim.resultado.areas, tempo_ms: Math.round(sim.gastoMs), redacao: sim.redacao ? sim.redacao.texto : null
+  });
   irPara('simulado');
 }
 
 function desenharResultadoSim() {
   const r = sim.resultado;
   const total = sim.questoes.length;
+  const red = sim.redacao;
   document.getElementById('conteudo-simulado').innerHTML = `
     <div class="resultado-sim">
       <div class="cabecalho-secao">
-        <h1>Resultado · ${DIAS_SIM[sim.dia].nome}</h1>
-        <p>${escapar(nomeDaProva(sim))} · tempo usado: ${formatarTempo(sim.gastoMs)} de ${formatarTempo(sim.duracaoMs)}</p>
+        <h1>Resultado · ${escapar(nomeDaProva(sim))} · ${DIAS_SIM[sim.dia].nome}</h1>
+        <p>Tempo usado: ${formatarTempo(sim.gastoMs)} de ${formatarTempo(sim.duracaoMs)}</p>
       </div>
       <div class="painel">
         <div class="total">${r.acertos}<small> de ${total} acertos</small></div>
@@ -3739,9 +3964,15 @@ function desenharResultadoSim() {
             <small>${a.nota ? 'nota TRI estimada' : 'nota TRI indisponível para estas questões'}</small>
             <small>${a.acertos} de ${a.total} acertos${a.brancas ? ` · ${a.brancas} em branco` : ''}</small>
           </div>`).join('')}</div>
+        ${red ? `<div class="area-res" style="margin-bottom:18px">
+            <b>Redação · ${escapar(red.tema)}</b>
+            ${red.texto.trim() ? `<small>${contarLinhas(red.texto)} linhas (aprox.). A correção da redação precisa de uma pessoa:
+              mostre a um professor ou compare com os critérios da cartilha do participante do INEP.</small>`
+              : '<small>Você entregou a redação em branco.</small>'}
+          </div>` : ''}
         <div class="botoes-final" style="max-width:none;grid-template-columns:1fr 1fr">
           <button class="acao" onclick="corrigirSimulado()">Ver correção</button>
-          <button class="acao discreta" onclick="novoSimulado()">Novo simulado</button>
+          <button class="acao discreta" onclick="novoSimulado()">${sim.ano !== 'misto' && sim.dia === 1 ? `Fazer o Dia 2 do ${escapar(nomeDaProva(sim))}` : 'Voltar aos simulados'}</button>
         </div>
       </div>
     </div>`;
@@ -3749,20 +3980,22 @@ function desenharResultadoSim() {
 
 function corrigirSimulado() {
   sim.atual = 0;
+  sim.vendoRedacao = false;
   irPara('prova');
   desenharProva();
 }
 
 function novoSimulado() {
+  escolhaSim.ano = sim.ano;
   sim = null;
   salvarSim();
-  desenharInicioSim();
+  abrirSimulado();
 }
 
 // Atalhos na prova: A a E marcam, setas mudam de questão.
 document.addEventListener('keydown', e => {
   if (document.getElementById('tela-prova').classList.contains('escondido') || !sim) return;
-  if (document.querySelector('.pausa-sim') || !document.getElementById('modal-grade').classList.contains('escondido')) return;
+  if (document.querySelector('.pausa-sim') || sim.vendoRedacao || !document.getElementById('modal-grade').classList.contains('escondido')) return;
   if (e.ctrlKey || e.metaKey || e.altKey || e.target.closest('input, textarea, select, [contenteditable]')) return;
   if (e.key === 'ArrowRight') { e.preventDefault(); irParaQuestaoSim(sim.atual + 1); return; }
   if (e.key === 'ArrowLeft') { e.preventDefault(); irParaQuestaoSim(sim.atual - 1); return; }

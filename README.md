@@ -59,6 +59,9 @@ uma tabela ou coluna que o código espera.
 | `PUT /api/perfil` (bio e foto) | login |
 | `POST /api/publicacoes`, `PUT` e `DELETE /api/publicacoes/:id` | login (só o autor edita; autor ou administrador apaga) |
 | `POST /api/publicacoes/:id/denunciar` / `restaurar` | login / administrador |
+| `GET /api/simulado?dia=1\|2&ano=2009..2023\|misto&lingua=ingles\|espanhol` | livre (90 questões na ordem da prova) |
+| `GET /api/simulado/anos` | livre (quantas questões cada ENEM tem no banco) |
+| `GET /api/simulados` / `POST /api/simulados` | login (histórico de simulados, com a redação) |
 | `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
@@ -109,6 +112,14 @@ Para tornar alguém administrador, no SQL Editor do Neon:
 ```sql
 UPDATE usuarios SET admin = TRUE WHERE email = 'email@da.pessoa';
 ```
+
+## Simulado
+
+O aluno escolhe um ENEM (2009 a 2023) e faz os dois dias no formato atual: dia 1 com Linguagens
+(5 de inglês ou espanhol), Humanas e a redação daquele ano, em 5h30; dia 2 com Natureza e
+Matemática, em 5h. Há também o simulado misto, com questões sorteadas. O andamento fica salvo no
+navegador a cada resposta; ao entregar, sai a nota TRI de cada área (`POST /api/tri` com
+`so_estas`) e, com conta, o resultado e a redação vão para a tabela `simulados`.
 
 ## Perfil e galeria
 
