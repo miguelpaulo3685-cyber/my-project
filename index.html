@@ -355,6 +355,7 @@
     button.acao.pequena { padding: 8px 16px; font-size: .85rem; }
 
     /* ===================== QUESTÃO ===================== */
+    .tag {
       background: var(--marca-suave); color: var(--marca-texto);
       padding: 6px 14px; border-radius: 20px;
       font-size: .8rem; font-weight: 700;
@@ -836,6 +837,65 @@
       .indicador span { display: none; }
       #btn-tema { display: none; } /* no celular o tema fica dentro de 🎨 Aparência */
     }
+
+    /* ===================== ESTILO SERRA ===================== */
+    /* Escolha em Aparência: o site inteiro no visual da tela de entrada,
+       com a serra cinza ao fundo, cartões de vidro e botões pretos. Os
+       valores levam !important para valer por cima das cores escolhidas
+       no painel, que o JavaScript grava direto no <html>. */
+    html[data-estilo="serra"] {
+      --fundo: #6f6f6f !important;
+      --superficie: rgba(18,18,18,.62) !important;
+      --superficie-2: rgba(255,255,255,.07) !important;
+      --borda: rgba(255,255,255,.16) !important;
+      --texto: #f6f6f6 !important;
+      --texto-fraco: #d2d2d2 !important;
+      --marca: #ececec !important; --marca-forte: #ffffff !important; --marca-texto: #ffffff !important;
+      --marca-suave: rgba(255,255,255,.12) !important; --marca-sombra: rgba(0,0,0,.45) !important;
+      --sobre-marca: #111111 !important;
+      --brilho-topo: rgba(18,18,18,.55) !important;
+      --sombra-leve: 0 10px 30px rgba(0,0,0,.28) !important;
+      --sombra: 0 24px 60px rgba(0,0,0,.45) !important;
+      color-scheme: dark;
+    }
+    html[data-estilo="serra"] body { background: #6f6f6f; }
+    html[data-estilo="serra"] #fundo-imagem { display: none; }
+    #fundo-serra { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+    #fundo-serra svg { width: 100%; height: 100%; display: block; }
+    html[data-estilo="serra"] :is(.area, .painel, .guia, .faixa-status, .post, .modal, .alt, .cartao-final, .barra-bloco) {
+      backdrop-filter: blur(14px) saturate(110%); -webkit-backdrop-filter: blur(14px) saturate(110%);
+    }
+    html[data-estilo="serra"] :is(.area, .painel, .guia, .post, .modal) { border-radius: 20px; }
+    html[data-estilo="serra"] :is(.marca, h1, h2, .cabeca-questao .ano, .resultado .manchete,
+      .cartao-final .valor, .metrica b, .cronometro, .passo) {
+      font-family: var(--fonte); letter-spacing: -.02em;
+    }
+    html[data-estilo="serra"] button.acao {
+      background: #0c0c0c; color: #fff; border: 1px solid rgba(255,255,255,.16); border-radius: 999px;
+    }
+    html[data-estilo="serra"] button.acao:hover { background: #000; box-shadow: 0 10px 26px rgba(0,0,0,.5); filter: none; }
+    html[data-estilo="serra"] button.acao.secundaria { background: transparent; color: #fff; border-color: rgba(255,255,255,.45); }
+    html[data-estilo="serra"] button.acao.secundaria:hover { background: rgba(255,255,255,.1); }
+    html[data-estilo="serra"] button.acao.discreta { background: rgba(255,255,255,.08); }
+    html[data-estilo="serra"] .aba { border-radius: 999px; }
+    html[data-estilo="serra"] .aba.ativa { background: rgba(255,255,255,.14); color: #fff; }
+    html[data-estilo="serra"] .marca .selo {
+      background: #0b0a09; border: 1.5px solid #c8a96e; color: #e4cfa3; border-radius: 50%;
+      font-family: var(--fonte-titulo);
+    }
+    html[data-estilo="serra"] .marca em { color: #fff; }
+    html[data-estilo="serra"] :is(input, textarea):not([type=checkbox]):not([type=range]):not([type=color]) { border-radius: 14px; }
+    html[data-estilo="serra"] #btn-tema { display: none; } /* claro/escuro não muda este estilo */
+    .estilos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .estilo-op {
+      border: 2px solid var(--borda); border-radius: 12px; padding: 0; overflow: hidden; cursor: pointer;
+      background: var(--superficie-2); color: var(--texto); font: inherit; font-size: .82rem; font-weight: 600; text-align: left;
+    }
+    .estilo-op.ativo { border-color: var(--marca); }
+    .estilo-op i { display: block; height: 46px; }
+    .aviso-estilo { display: none; font-size: .78rem; color: var(--texto-fraco); margin-top: 8px; line-height: 1.5; }
+    html[data-estilo="serra"] .aviso-estilo { display: block; }
+    .estilo-op span { display: block; padding: 7px 10px; }
   </style>
   <script>
     // Decide antes de desenhar a página se a tela de entrada aparece. Depois
@@ -847,6 +907,8 @@
         document.documentElement.classList.add('com-entrada');
       }
     } catch (e) {}
+    // Estilo escolhido em Aparência, aplicado já aqui para a página não piscar.
+    try { if (localStorage.getItem('mm_estilo') === 'serra') document.documentElement.dataset.estilo = 'serra'; } catch (e) {}
   </script>
 </head>
 <body>
@@ -981,6 +1043,18 @@
         <h2 id="titulo-aparencia">Aparência</h2>
         <button class="btn-sair" onclick="fecharAparencia()" title="Fechar">✕</button>
       </div>
+
+      <div class="rotulo-modal">Estilo</div>
+      <div class="estilos">
+        <button class="estilo-op" id="estilo-classico" onclick="escolherEstilo('classico')">
+          <i style="background:linear-gradient(135deg,#0e0d0b 55%,#c8a96e 55% 70%,#e4cfa3 70%)"></i><span>Preto &amp; Bege</span>
+        </button>
+        <button class="estilo-op" id="estilo-serra" onclick="escolherEstilo('serra')">
+          <i style="background:linear-gradient(180deg,#5c5c5c,#9a9a9a 45%,#3f3f3f 46%,#222 100%)"></i><span>Serra (vidro)</span>
+        </button>
+      </div>
+      <p class="aviso-estilo" id="aviso-estilo">No estilo Serra, o tema, as cores e a imagem de fundo abaixo ficam guardados
+        e voltam quando você escolher Preto &amp; Bege.</p>
 
       <div class="rotulo-modal">Tema</div>
       <div class="escolha-tema">
@@ -1446,6 +1520,9 @@ function restaurarCores() {
 }
 
 function desenharAparencia() {
+  const estilo = document.documentElement.dataset.estilo || 'classico';
+  document.getElementById('estilo-classico').classList.toggle('ativo', estilo === 'classico');
+  document.getElementById('estilo-serra').classList.toggle('ativo', estilo === 'serra');
   const tema = document.documentElement.dataset.tema;
   document.getElementById('tema-escuro').classList.toggle('ativo', !cores.fundo && tema === 'escuro');
   document.getElementById('tema-claro').classList.toggle('ativo', !cores.fundo && tema === 'claro');
@@ -1587,6 +1664,32 @@ function removerImagemFundo() {
   try { localStorage.removeItem(CHAVE_IMAGEM); } catch (e) {}
   aplicarImagemFundo();
   recadoImagem('Imagem removida.');
+}
+
+// ===================== ESTILO =====================
+// "Serra" deixa o site com o visual da tela de entrada. A serra é a mesma
+// desenhada lá: copiamos o desenho para uma camada fixa atrás do site.
+const CHAVE_ESTILO = 'mm_estilo';
+
+function aplicarEstilo(estilo) {
+  const serra = estilo === 'serra';
+  if (serra) document.documentElement.dataset.estilo = 'serra';
+  else delete document.documentElement.dataset.estilo;
+  let camada = document.getElementById('fundo-serra');
+  if (serra && !camada) {
+    camada = document.createElement('div');
+    camada.id = 'fundo-serra';
+    camada.setAttribute('aria-hidden', 'true');
+    camada.appendChild(document.querySelector('.entrada-serra').cloneNode(true)).removeAttribute('class');
+    document.body.prepend(camada);
+  }
+  if (camada) camada.hidden = !serra;
+}
+
+function escolherEstilo(estilo) {
+  guardar(CHAVE_ESTILO, estilo === 'serra' ? 'serra' : null);
+  aplicarEstilo(estilo);
+  desenharAparencia();
 }
 
 function abrirAparencia() {
@@ -2872,6 +2975,7 @@ function verificarAPI() {
 // ===================== INÍCIO =====================
 iniciarTema();
 aplicarImagemFundo();
+aplicarEstilo(ler(CHAVE_ESTILO));
 carregarProgresso();
 desenharTudo();
 // Prepara o formulário da tela de entrada (se ela estiver aparecendo, já fica pronta).
