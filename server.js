@@ -77,6 +77,9 @@ const ORIGENS_PERMITIDAS = (process.env.ORIGENS_PERMITIDAS ||
 // e CORS não se aplica a eles.
 app.use(cors({ origin: (origem, ok) => ok(null, !origem || ORIGENS_PERMITIDAS.includes(origem)) }));
 app.use(morgan('combined'));
+// Perfil e publicações levam uma foto (até ~450 KB, em base64); o resto da
+// API continua com o limite pequeno.
+app.use(['/api/perfil', '/api/publicacoes'], express.json({ limit: '700kb' }));
 app.use(express.json({ limit: '20kb' }));
 
 // Só as páginas do site. Servir a pasta inteira entregava o código do
@@ -136,7 +139,7 @@ async function identificar(req, res, next) {
         `SELECT u.id, u.username, u.email, u.bio, u.avatar_url,
                 COALESCE(u.email_verificado, FALSE) AS email_verificado,
                 COALESCE(u.admin, FALSE) AS admin,
-                (u.senha_hash IS NOT NULL) AS tem_senha
+                (u.senha_hash IS NOT NULL) AS tem_senha, u.foto_id
            FROM sessoes s
            JOIN usuarios u ON u.id = s.usuario_id
           WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
@@ -936,7 +939,7 @@ app.get('/api/posts', async (req, res) => {
       posts: result.rows.map(p => {
         const meu = Boolean(eu && p.autor_id === eu.id);
         const post = {
-          id: p.id, usuario_id: p.usuario_id, conteudo: p.conteudo, created_at: p.created_at,
+          id: p.id, usuario_id: p.usuario_id, autor_id: p.autor_id, conteudo: p.conteudo, created_at: p.created_at,
           meu, pode_apagar: meu || Boolean(eu && eu.admin), denunciei: p.denunciei
         };
         if (eu && eu.admin) Object.assign(post, { oculto: p.oculto, denuncias: p.denuncias });
@@ -949,6 +952,9 @@ app.get('/api/posts', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar posts' });
   }
 });
+
+// ================== PERFIL E GALERIA ==================
+require('./perfis')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;

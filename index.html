@@ -533,6 +533,97 @@
     }
     .faixa-desafio span:last-child { font-weight: 600; opacity: .9; }
 
+    /* ===================== PERFIL ===================== */
+    /* Cabeçalho como o do Instagram e publicações em galeria, como no Notion:
+       cartões com capa opcional; sem capa, o cartão mostra o começo do texto. */
+    .perfil-topo { display: flex; gap: 26px; align-items: center; margin-bottom: 18px; }
+    .perfil-foto {
+      position: relative; width: 104px; height: 104px; border-radius: 50%; flex-shrink: 0; overflow: hidden;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca);
+      display: flex; align-items: center; justify-content: center; font-size: 2.4rem; font-weight: 800;
+      box-shadow: 0 0 0 3px var(--fundo), 0 0 0 5px var(--marca);
+    }
+    .perfil-foto img { width: 100%; height: 100%; object-fit: cover; }
+    .perfil-info { min-width: 0; flex: 1; }
+    .perfil-info h1 { font-size: 1.5rem; margin-bottom: 10px; overflow-wrap: anywhere; }
+    .perfil-numeros { display: flex; gap: 22px; flex-wrap: wrap; font-size: .9rem; color: var(--texto-fraco); }
+    .perfil-numeros b { color: var(--texto); font-size: 1.05rem; margin-right: 4px; }
+    .perfil-bio { white-space: pre-wrap; line-height: 1.55; font-size: .95rem; margin-bottom: 16px; overflow-wrap: anywhere; }
+    .perfil-bio:empty { display: none; }
+    .perfil-botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
+    .perfil-botoes button.acao { margin: 0; }
+    .rotulo-galeria {
+      display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--borda); padding-top: 16px; margin-bottom: 16px;
+      text-transform: uppercase; letter-spacing: 1px; font-size: .74rem; font-weight: 700; color: var(--texto-fraco);
+    }
+    .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .cartao-pub {
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; overflow: hidden;
+      cursor: pointer; text-align: left; padding: 0; font: inherit; color: var(--texto); min-width: 0;
+      display: flex; flex-direction: column; box-shadow: var(--sombra-leve);
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .cartao-pub:hover { transform: translateY(-3px); border-color: var(--marca); box-shadow: var(--sombra); }
+    .cartao-pub:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .cartao-pub .capa { aspect-ratio: 16 / 9; width: 100%; background: var(--superficie-2); overflow: hidden; }
+    .cartao-pub .capa img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cartao-pub .previa-texto {
+      aspect-ratio: 16 / 9; padding: 14px 16px; background: var(--superficie-2); overflow: hidden;
+      font-size: .78rem; line-height: 1.5; color: var(--texto-fraco); white-space: pre-wrap; overflow-wrap: anywhere;
+      -webkit-mask-image: linear-gradient(#000 65%, transparent); mask-image: linear-gradient(#000 65%, transparent);
+    }
+    .cartao-pub .corpo { padding: 12px 14px 14px; }
+    .cartao-pub b { display: block; font-size: .95rem; overflow-wrap: anywhere; }
+    .cartao-pub small { color: var(--texto-fraco); font-size: .76rem; }
+    .cartao-pub.oculta { opacity: .55; border-style: dashed; }
+    .galeria-vazia { grid-column: 1 / -1; }
+
+    .modal.larga { max-width: 560px; }
+    .editor-capa {
+      position: relative; aspect-ratio: 16 / 9; border-radius: 12px; overflow: hidden; margin-bottom: 10px;
+      background: var(--superficie-2); cursor: grab; touch-action: none; user-select: none;
+    }
+    .editor-capa.arrastando { cursor: grabbing; }
+    .editor-capa img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; display: block; }
+    .editor-capa span {
+      position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); white-space: nowrap;
+      background: rgba(0,0,0,.6); color: #fff; font-size: .75rem; font-weight: 600; padding: 5px 11px; border-radius: 999px;
+    }
+    .botoes-capa { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+    .botoes-capa .acao { margin: 0; }
+    label.acao.botao-foto {
+      display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 10px; cursor: pointer;
+      font-weight: 700; font-size: .86rem; border: 1px dashed var(--borda); color: var(--texto); background: var(--superficie-2);
+    }
+    label.acao.botao-foto:hover { border-color: var(--marca); }
+    label.acao.botao-foto:focus-within { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .campo-modal { display: block; font-size: .84rem; font-weight: 700; margin: 16px 0 7px; }
+    .entrada-modal {
+      width: 100%; padding: 12px 14px; border-radius: 11px; border: 2px solid var(--borda);
+      background: var(--superficie-2); color: var(--texto); font: inherit; font-size: .95rem; resize: vertical;
+    }
+    .entrada-modal:focus { outline: none; border-color: var(--marca); }
+    .contador { text-align: right; font-size: .74rem; color: var(--texto-fraco); margin-top: 4px; }
+    .ver-pub .capa-grande { margin: -22px -22px 18px; aspect-ratio: 16 / 9; overflow: hidden; background: var(--superficie-2); }
+    .ver-pub .capa-grande img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ver-pub h2 { font-size: 1.35rem; margin-bottom: 4px; overflow-wrap: anywhere; }
+    .ver-pub .data { color: var(--texto-fraco); font-size: .8rem; margin-bottom: 14px; }
+    .ver-pub .texto { white-space: pre-wrap; line-height: 1.65; overflow-wrap: anywhere; }
+    .ver-pub .acoes-pub { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; border-top: 1px solid var(--borda); padding-top: 14px; }
+    .ver-pub .acoes-pub .acao-post { margin: 0; }
+    .autor-link { color: inherit; font-weight: 700; cursor: pointer; background: none; border: none; font: inherit; padding: 0; }
+    .autor-link:hover { text-decoration: underline; }
+    .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    @media (max-width: 560px) {
+      .perfil-topo { gap: 16px; }
+      .perfil-foto { width: 78px; height: 78px; font-size: 1.8rem; }
+      .perfil-info h1 { font-size: 1.2rem; }
+      .perfil-numeros { gap: 14px; font-size: .82rem; }
+      .galeria { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .cartao-pub .corpo { padding: 9px 10px 11px; }
+      .cartao-pub b { font-size: .86rem; }
+    }
+
     /* ===================== COMECE POR AQUI ===================== */
     /* Guia de 3 passos para quem chega e atalhos para começar sem pensar. */
     .guia {
@@ -1162,6 +1253,59 @@
     </div>
   </div>
 
+  <!-- Nova publicação / editar publicação -->
+  <div class="fundo-modal escondido" id="modal-pub" onclick="if (event.target === this) fecharModal('modal-pub')">
+    <div class="modal larga" role="dialog" aria-labelledby="titulo-modal-pub">
+      <div class="modal-topo">
+        <h2 id="titulo-modal-pub">Nova publicação</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-pub')" title="Fechar">✕</button>
+      </div>
+      <div class="rotulo-modal">Capa (opcional)</div>
+      <div class="editor-capa escondido" id="editor-capa"><img id="img-capa" alt=""><span>Arraste para posicionar</span></div>
+      <div class="botoes-capa">
+        <label class="acao botao-foto" id="botao-capa">🖼️ <span id="texto-botao-capa">Adicionar capa</span>
+          <input type="file" accept="image/*" hidden onchange="escolherCapa(this)">
+        </label>
+        <button class="acao discreta pequena escondido" id="remover-capa" onclick="removerCapaEditor()">Remover capa</button>
+      </div>
+      <label class="campo-modal" for="pub-titulo">Título</label>
+      <input class="entrada-modal" id="pub-titulo" maxlength="80" placeholder="Ex.: Resumo de Biologia">
+      <label class="campo-modal" for="pub-texto">Texto</label>
+      <textarea class="entrada-modal" id="pub-texto" rows="6" maxlength="2000"
+        placeholder="Conte o que estudou, uma dica, um resumo…" oninput="contarTexto()"></textarea>
+      <div class="contador" id="contador-pub">0/2000</div>
+      <p class="pista">Publicações aparecem no seu perfil para todos. Não poste fotos de outras pessoas nem dados pessoais.</p>
+      <button class="acao" id="salvar-pub" style="width:100%;margin-top:16px;padding:13px" onclick="salvarPublicacao()">Publicar</button>
+      <div id="recado-pub"></div>
+    </div>
+  </div>
+
+  <!-- Ver publicação -->
+  <div class="fundo-modal escondido" id="modal-ver" onclick="if (event.target === this) fecharModal('modal-ver')">
+    <div class="modal larga ver-pub" role="dialog" aria-label="Publicação" id="conteudo-ver"></div>
+  </div>
+
+  <!-- Editar perfil -->
+  <div class="fundo-modal escondido" id="modal-editar-perfil" onclick="if (event.target === this) fecharModal('modal-editar-perfil')">
+    <div class="modal" role="dialog" aria-labelledby="titulo-editar-perfil">
+      <div class="modal-topo">
+        <h2 id="titulo-editar-perfil">Editar perfil</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-editar-perfil')" title="Fechar">✕</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin:10px 0 4px">
+        <div class="perfil-foto" id="foto-edicao" style="width:78px;height:78px;font-size:1.8rem"></div>
+        <div class="botoes-capa" style="flex-direction:column;align-items:flex-start">
+          <label class="acao botao-foto">📷 Trocar foto<input type="file" accept="image/*" hidden onchange="escolherFotoPerfil(this)"></label>
+          <button class="acao discreta pequena" onclick="removerFotoPerfil()">Remover foto</button>
+        </div>
+      </div>
+      <label class="campo-modal" for="perfil-bio">Bio</label>
+      <textarea class="entrada-modal" id="perfil-bio" rows="4" maxlength="300" placeholder="Ex.: Rumo à federal 🎯 Foco em Matemática."></textarea>
+      <button class="acao" id="salvar-perfil" style="width:100%;margin-top:16px;padding:13px" onclick="salvarPerfil()">Salvar</button>
+      <div id="recado-perfil"></div>
+    </div>
+  </div>
+
   <!-- ===================== TOPO ===================== -->
   <header class="topo">
     <div class="topo-interno">
@@ -1177,6 +1321,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 20.5l1.6-4.8A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/>
           </svg>Feed
+        </button>
+        <button class="aba" id="aba-perfil" onclick="abrirMeuPerfil()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20.5c1.4-3.6 4.4-5.5 8-5.5s6.6 1.9 8 5.5"/>
+          </svg>Perfil
         </button>
       </nav>
 
@@ -1286,6 +1435,11 @@
     </div>
     <div id="area-publicar"></div>
     <div id="lista-posts"></div>
+  </main>
+
+  <!-- ===================== PERFIL ===================== -->
+  <main class="pagina escondido" id="tela-perfil">
+    <div id="conteudo-perfil"></div>
   </main>
 
   <!-- ===================== CONTA ===================== -->
@@ -1809,12 +1963,13 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'feed', 'conta'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'feed', 'perfil', 'conta'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'questao', 'resultado'].includes(tela);
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed');
+  document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
   if (tela === 'treinar') { desenharAreas(); desenharGuia(); }
@@ -2462,7 +2617,10 @@ function cabecalhoAuth() {
 
 function desenharPerfil() {
   const botao = document.getElementById('btn-perfil');
-  if (usuarioLogado) {
+  if (usuarioLogado && usuarioLogado.foto_id) {
+    botao.innerHTML = `<img src="${escapar(urlImagem('/api/imagens/' + Number(usuarioLogado.foto_id)))}" alt="">`;
+    botao.title = usuarioLogado.username + ' — minha conta';
+  } else if (usuarioLogado) {
     botao.textContent = (usuarioLogado.username || '?').trim().charAt(0).toUpperCase();
     botao.title = usuarioLogado.username + ' — minha conta';
   } else {
@@ -3008,7 +3166,9 @@ async function abrirFeed() {
           <article class="post${p.oculto ? ' oculto' : ''}">
             <div class="post-autor">
               <span class="bolha">${escapar((p.usuario_id || '?').charAt(0).toUpperCase())}</span>
-              <b>${escapar(p.usuario_id)}</b>
+              ${p.autor_id
+                ? `<button class="autor-link" onclick="abrirPerfil(${Number(p.autor_id)})">${escapar(p.usuario_id)}</button>`
+                : `<b>${escapar(p.usuario_id)}</b>`}
               ${p.oculto ? `<span class="selo-oculto">Escondido · ${p.denuncias} denúncias</span>`
                 : (p.denuncias ? `<span class="selo-oculto leve">${p.denuncias} ${p.denuncias === 1 ? 'denúncia' : 'denúncias'}</span>` : '')}
             </div>
@@ -3049,6 +3209,320 @@ async function moderarPost(id, acao) {
 }
 
 // ===================== STATUS =====================
+// ===================== PERFIL =====================
+// Cabeçalho como o do Instagram (foto, nome, números, bio) e as publicações
+// em galeria, como no Notion: cartões com capa opcional.
+let perfilAberto = null; // resposta de /api/perfil/:id que está na tela
+let editorPub = null;    // { id, capa, capaMudou, posicao } enquanto o editor está aberto
+let fotoPerfilNova;      // undefined: não mexeu; null: remover; data URL: trocar
+
+const urlImagem = caminho => (caminho ? API_URL + caminho : null);
+const dataCurta = d => new Date(d).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short', year: 'numeric' });
+const inicial = nome => escapar((nome || '?').trim().charAt(0).toUpperCase());
+
+function abrirModal(id) { document.getElementById(id).classList.remove('escondido'); }
+function fecharModal(id) { document.getElementById(id).classList.add('escondido'); }
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  for (const id of ['modal-ver', 'modal-pub', 'modal-editar-perfil']) {
+    if (!document.getElementById(id).classList.contains('escondido')) { fecharModal(id); break; }
+  }
+});
+
+function abrirMeuPerfil() {
+  if (usuarioLogado) return abrirPerfil(usuarioLogado.id);
+  irPara('perfil');
+  document.getElementById('conteudo-perfil').innerHTML = `
+    <div class="painel vazio"><span class="cara">🪪</span>
+      Seu perfil mostra sua foto, sua bio, seus números de estudo e suas publicações.<br>
+      <button class="acao" style="margin:18px auto 0" onclick="abrirConta('criar')">Criar conta</button>
+      <p style="margin-top:12px;font-size:.88rem">Já tem? <a class="autor-link" onclick="abrirConta('entrar')">Entrar</a></p>
+    </div>`;
+}
+
+async function abrirPerfil(id) {
+  irPara('perfil');
+  const alvo = document.getElementById('conteudo-perfil');
+  alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando perfil…</div>';
+  try {
+    const r = await fetch(`${API_URL}/api/perfil/${Number(id)}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    perfilAberto = dados;
+    desenharPaginaPerfil();
+  } catch (e) {
+    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}<br>
+      <button class="acao" style="margin:18px auto 0" onclick="abrirPerfil(${Number(id)})">Tentar de novo</button></div>`;
+  }
+}
+
+function desenharPaginaPerfil() {
+  const { perfil: u, publicacoes } = perfilAberto;
+  const foto = u.foto ? `<img src="${escapar(urlImagem(u.foto))}" alt="Foto de ${escapar(u.nome)}">` : inicial(u.nome);
+  const cartoes = publicacoes.map(p => `
+    <button class="cartao-pub${p.oculto ? ' oculta' : ''}" onclick="verPublicacao(${p.id})">
+      ${p.capa
+        ? `<div class="capa"><img src="${escapar(urlImagem(p.capa))}" alt="" loading="lazy" style="object-position:50% ${Number(p.capa_posicao)}%"></div>`
+        : `<div class="previa-texto">${escapar(p.texto || p.titulo)}</div>`}
+      <div class="corpo"><b>${escapar(p.titulo)}</b><small>${dataCurta(p.created_at)}${p.oculto ? ' · escondida por denúncias' : ''}</small></div>
+    </button>`).join('');
+
+  document.getElementById('conteudo-perfil').innerHTML = `
+    <div class="perfil-topo">
+      <div class="perfil-foto">${foto}</div>
+      <div class="perfil-info">
+        <h1>${escapar(u.nome)}</h1>
+        <div class="perfil-numeros">
+          <span><b>${u.publicacoes}</b>${u.publicacoes === 1 ? 'publicação' : 'publicações'}</span>
+          <span><b>${u.questoes}</b>questões</span>
+          <span><b>${u.acerto === null ? '—' : u.acerto + '%'}</b>de acerto</span>
+        </div>
+      </div>
+    </div>
+    <p class="perfil-bio">${escapar(u.bio)}</p>
+    ${u.meu ? `<div class="perfil-botoes">
+        <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
+        <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
+      </div>` : ''}
+    <div class="rotulo-galeria">▦ Publicações</div>
+    <div class="galeria">${cartoes || `<div class="vazio galeria-vazia"><span class="cara">🖼️</span>
+      ${u.meu ? 'Sua galeria está vazia. Publique um resumo, uma foto do caderno ou uma conquista!' : 'Nenhuma publicação ainda.'}</div>`}</div>`;
+}
+
+// ---------- ver publicação ----------
+function verPublicacao(id) {
+  const p = perfilAberto.publicacoes.find(x => x.id === id);
+  if (!p) return;
+  const acoes = [];
+  if (p.meu) acoes.push(`<button class="acao-post" onclick="abrirEditorPublicacao(${p.id})">Editar</button>`);
+  if (p.oculto && perfilAberto.moderador) acoes.push(`<button class="acao-post" onclick="acaoPublicacao(${p.id}, 'restaurar')">Restaurar</button>`);
+  if (p.pode_apagar) acoes.push(`<button class="acao-post perigo" onclick="acaoPublicacao(${p.id}, 'apagar')">Apagar</button>`);
+  if (usuarioLogado && !p.meu) acoes.push(p.denunciei
+    ? '<span class="acao-post feito">Denunciada</span>'
+    : `<button class="acao-post" onclick="acaoPublicacao(${p.id}, 'denunciar')">Denunciar</button>`);
+  document.getElementById('conteudo-ver').innerHTML = `
+    ${p.capa ? `<div class="capa-grande"><img src="${escapar(urlImagem(p.capa))}" alt="" style="object-position:50% ${Number(p.capa_posicao)}%"></div>` : ''}
+    <div class="modal-topo" style="align-items:flex-start;gap:12px">
+      <h2>${escapar(p.titulo)}</h2>
+      <button class="btn-sair" onclick="fecharModal('modal-ver')" title="Fechar">✕</button>
+    </div>
+    <div class="data">${escapar(perfilAberto.perfil.nome)} · ${dataCurta(p.created_at)}</div>
+    <div class="texto">${escapar(p.texto)}</div>
+    ${acoes.length ? `<div class="acoes-pub">${acoes.join('')}</div>` : ''}
+    <div id="recado-ver"></div>`;
+  abrirModal('modal-ver');
+}
+
+async function acaoPublicacao(id, acao) {
+  if (acao === 'apagar' && !confirm('Apagar esta publicação? Não dá para desfazer.')) return;
+  const pedido = {
+    apagar: { metodo: 'DELETE', rota: `/api/publicacoes/${id}` },
+    denunciar: { metodo: 'POST', rota: `/api/publicacoes/${id}/denunciar` },
+    restaurar: { metodo: 'POST', rota: `/api/publicacoes/${id}/restaurar` }
+  }[acao];
+  try {
+    const r = await fetch(`${API_URL}${pedido.rota}`, { method: pedido.metodo, headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() } });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    fecharModal('modal-ver');
+    if (acao === 'denunciar') avisoTopo(dados.message, 'bom');
+    abrirPerfil(perfilAberto.perfil.id);
+  } catch (e) {
+    document.getElementById('recado-ver').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+// ---------- fotos ----------
+// Reduz a foto e converte em JPEG antes de enviar (o servidor aceita até
+// 450 KB). De quebra, o canvas descarta a localização GPS da foto.
+async function fotoParaEnviar(arquivo, { lado = 1280, quadrado = false } = {}) {
+  if (!arquivo.type.startsWith('image/')) throw new Error('Esse arquivo não é uma imagem.');
+  if (arquivo.size > 25 * 1024 * 1024) throw new Error('Imagem grande demais (máximo 25 MB).');
+  const original = await new Promise((ok, falha) => {
+    const leitor = new FileReader();
+    leitor.onload = () => ok(leitor.result);
+    leitor.onerror = falha;
+    leitor.readAsDataURL(arquivo);
+  });
+  const img = await testarImagem(original);
+  let sx = 0, sy = 0, sw = img.naturalWidth, sh = img.naturalHeight;
+  if (quadrado) { const m = Math.min(sw, sh); sx = (sw - m) / 2; sy = (sh - m) / 2; sw = sh = m; }
+  for (const [maximo, qualidade] of [[lado, .82], [lado * .8, .74], [lado * .6, .68], [lado * .45, .6]]) {
+    const escala = Math.min(1, maximo / Math.max(sw, sh));
+    const tela = document.createElement('canvas');
+    tela.width = Math.round(sw * escala); tela.height = Math.round(sh * escala);
+    tela.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, tela.width, tela.height);
+    const dados = tela.toDataURL('image/jpeg', qualidade);
+    if ((dados.length - 23) * 3 / 4 < 440 * 1024) return dados;
+  }
+  throw new Error('Não consegui deixar essa imagem pequena o bastante. Tente outra.');
+}
+
+// ---------- editor de publicação ----------
+function abrirEditorPublicacao(id) {
+  const p = id ? perfilAberto.publicacoes.find(x => x.id === id) : null;
+  editorPub = { id: p ? p.id : null, capa: p && p.capa ? urlImagem(p.capa) : null, capaMudou: false, posicao: p ? p.capa_posicao : 50 };
+  document.getElementById('titulo-modal-pub').textContent = p ? 'Editar publicação' : 'Nova publicação';
+  document.getElementById('salvar-pub').textContent = p ? 'Salvar' : 'Publicar';
+  document.getElementById('pub-titulo').value = p ? p.titulo : '';
+  document.getElementById('pub-texto').value = p ? p.texto : '';
+  document.getElementById('recado-pub').innerHTML = '';
+  contarTexto();
+  desenharEditorCapa();
+  fecharModal('modal-ver');
+  abrirModal('modal-pub');
+  document.getElementById('pub-titulo').focus();
+}
+
+function contarTexto() {
+  document.getElementById('contador-pub').textContent = `${document.getElementById('pub-texto').value.length}/2000`;
+}
+
+function desenharEditorCapa() {
+  const tem = Boolean(editorPub.capa);
+  document.getElementById('editor-capa').classList.toggle('escondido', !tem);
+  document.getElementById('remover-capa').classList.toggle('escondido', !tem);
+  document.getElementById('texto-botao-capa').textContent = tem ? 'Trocar capa' : 'Adicionar capa';
+  const img = document.getElementById('img-capa');
+  if (tem && img.getAttribute('src') !== editorPub.capa) img.src = editorPub.capa;
+  img.style.objectPosition = `50% ${editorPub.posicao}%`;
+}
+
+async function escolherCapa(input) {
+  const arquivo = input.files && input.files[0];
+  input.value = '';
+  if (!arquivo) return;
+  try {
+    document.getElementById('recado-pub').innerHTML = '<div class="recado">Preparando a imagem…</div>';
+    editorPub.capa = await fotoParaEnviar(arquivo);
+    editorPub.capaMudou = true;
+    editorPub.posicao = 50;
+    document.getElementById('recado-pub').innerHTML = '';
+    desenharEditorCapa();
+  } catch (e) {
+    document.getElementById('recado-pub').innerHTML = `<div class="recado ruim">${escapar(e.message || 'Não consegui ler essa imagem.')}</div>`;
+  }
+}
+
+function removerCapaEditor() {
+  editorPub.capa = null;
+  editorPub.capaMudou = true;
+  desenharEditorCapa();
+}
+
+// Arrastar a capa para cima ou para baixo escolhe a parte que aparece,
+// como no Notion. Funciona com mouse e com o dedo.
+(() => {
+  const area = document.getElementById('editor-capa');
+  let inicio = null;
+  area.addEventListener('pointerdown', e => {
+    inicio = { y: e.clientY, posicao: editorPub.posicao };
+    area.setPointerCapture(e.pointerId);
+    area.classList.add('arrastando');
+  });
+  area.addEventListener('pointermove', e => {
+    if (!inicio) return;
+    const delta = (e.clientY - inicio.y) / area.clientHeight * 100 * 1.6;
+    editorPub.posicao = Math.round(Math.min(100, Math.max(0, inicio.posicao - delta)));
+    document.getElementById('img-capa').style.objectPosition = `50% ${editorPub.posicao}%`;
+  });
+  const soltar = () => { inicio = null; area.classList.remove('arrastando'); };
+  area.addEventListener('pointerup', soltar);
+  area.addEventListener('pointercancel', soltar);
+})();
+
+async function salvarPublicacao() {
+  const botao = document.getElementById('salvar-pub');
+  const corpo = {
+    titulo: document.getElementById('pub-titulo').value.trim(),
+    texto: document.getElementById('pub-texto').value.trim(),
+    capa_posicao: editorPub.posicao
+  };
+  if (!corpo.titulo) {
+    document.getElementById('recado-pub').innerHTML = '<div class="recado ruim">Dê um título para a publicação.</div>';
+    return;
+  }
+  if (editorPub.capaMudou) corpo.capa = editorPub.capa; // data URL nova ou null para remover
+  else if (!editorPub.id && editorPub.capa) corpo.capa = editorPub.capa;
+  const textoBotao = botao.textContent;
+  botao.disabled = true;
+  botao.textContent = 'Salvando…';
+  try {
+    const r = await fetch(`${API_URL}/api/publicacoes${editorPub.id ? '/' + editorPub.id : ''}`, {
+      method: editorPub.id ? 'PUT' : 'POST',
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify(corpo)
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    fecharModal('modal-pub');
+    abrirPerfil(perfilAberto.perfil.id);
+  } catch (e) {
+    document.getElementById('recado-pub').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  } finally {
+    botao.disabled = false;
+    botao.textContent = textoBotao;
+  }
+}
+
+// ---------- editar perfil ----------
+function desenharFotoEdicao() {
+  const u = perfilAberto.perfil;
+  const src = fotoPerfilNova === undefined ? urlImagem(u.foto) : fotoPerfilNova;
+  document.getElementById('foto-edicao').innerHTML = src ? `<img src="${escapar(src)}" alt="">` : inicial(u.nome);
+}
+
+function abrirEdicaoPerfil() {
+  fotoPerfilNova = undefined;
+  document.getElementById('perfil-bio').value = perfilAberto.perfil.bio;
+  document.getElementById('recado-perfil').innerHTML = '';
+  desenharFotoEdicao();
+  abrirModal('modal-editar-perfil');
+}
+
+async function escolherFotoPerfil(input) {
+  const arquivo = input.files && input.files[0];
+  input.value = '';
+  if (!arquivo) return;
+  try {
+    fotoPerfilNova = await fotoParaEnviar(arquivo, { lado: 480, quadrado: true });
+    desenharFotoEdicao();
+  } catch (e) {
+    document.getElementById('recado-perfil').innerHTML = `<div class="recado ruim">${escapar(e.message || 'Não consegui ler essa imagem.')}</div>`;
+  }
+}
+
+function removerFotoPerfil() {
+  fotoPerfilNova = null;
+  desenharFotoEdicao();
+}
+
+async function salvarPerfil() {
+  const botao = document.getElementById('salvar-perfil');
+  const corpo = { bio: document.getElementById('perfil-bio').value.trim() };
+  if (fotoPerfilNova !== undefined) corpo.foto = fotoPerfilNova;
+  botao.disabled = true;
+  botao.textContent = 'Salvando…';
+  try {
+    const r = await fetch(`${API_URL}/api/perfil`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify(corpo)
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    usuarioLogado.foto_id = dados.foto ? Number(dados.foto.split('/').pop()) : null;
+    desenharPerfil();
+    fecharModal('modal-editar-perfil');
+    abrirPerfil(perfilAberto.perfil.id);
+  } catch (e) {
+    document.getElementById('recado-perfil').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  } finally {
+    botao.disabled = false;
+    botao.textContent = 'Salvar';
+  }
+}
+
 function verificarAPI() {
   const bolinha = document.getElementById('bolinha');
   const texto = document.getElementById('texto-status');

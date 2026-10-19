@@ -54,6 +54,11 @@ uma tabela ou coluna que o código espera.
 | `DELETE /api/posts/:id` | autor do post ou administrador |
 | `POST /api/posts/:id/denunciar` | login (com 3 pessoas diferentes, o post sai do ar) |
 | `POST /api/posts/:id/restaurar` | administrador |
+| `GET /api/perfil/:id` | livre (perfil, números e publicações) |
+| `PUT /api/perfil` (bio e foto) | login |
+| `POST /api/publicacoes`, `PUT` e `DELETE /api/publicacoes/:id` | login (só o autor edita; autor ou administrador apaga) |
+| `POST /api/publicacoes/:id/denunciar` / `restaurar` | login / administrador |
+| `GET /api/imagens/:id` | livre (fotos do perfil e capas) |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
 Exemplo de carga de um ano inteiro:
@@ -104,6 +109,15 @@ Para tornar alguém administrador, no SQL Editor do Neon:
 UPDATE usuarios SET admin = TRUE WHERE email = 'email@da.pessoa';
 ```
 
+## Perfil e galeria
+
+Cada aluno tem um perfil com foto, bio, números de estudo e publicações em galeria (cartões com
+capa opcional, que dá para arrastar para escolher a parte que aparece, como no Notion). As fotos
+ficam na tabela `imagens` (até 450 KB cada, só JPEG): o navegador reduz a foto antes de enviar e o
+servidor (`imagens.js`) confere o formato e tira os metadados EXIF, que podem ter a localização.
+Cada pessoa pode ter até 60 publicações, para caber no plano grátis do Neon. Publicações seguem as
+mesmas regras de denúncia do feed.
+
 ## Proteções
 
 - Senhas guardadas só como hash scrypt com sal; tokens de sessão e de e-mail guardados só como hash
@@ -122,6 +136,6 @@ UPDATE usuarios SET admin = TRUE WHERE email = 'email@da.pessoa';
 npm test
 ```
 
-Testam senhas, limites, validação de e-mail, casamento com o INEP e a nota TRI. Rodam também no
+Testam senhas, limites, validação de e-mail, casamento com o INEP, a nota TRI e a limpeza das fotos. Rodam também no
 GitHub a cada push (`.github/workflows/testes.yml`), junto com `npm audit` nas dependências.
 O `package-lock.json` fica no repositório para o Render instalar sempre as mesmas versões.

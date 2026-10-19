@@ -163,6 +163,42 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela denuncias criada');
 
+    // Perfil: fotos enviadas pelos alunos e publicações em galeria. A foto
+    // fica no banco (bytea), já reduzida e sem metadados; some junto com a conta.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS imagens (
+        id SERIAL PRIMARY KEY,
+        dono_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        dados BYTEA NOT NULL,
+        criada_em TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_imagens_dono ON imagens(dono_id);
+
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS foto_id INT REFERENCES imagens(id) ON DELETE SET NULL;
+
+      CREATE TABLE IF NOT EXISTS publicacoes (
+        id SERIAL PRIMARY KEY,
+        autor_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        titulo VARCHAR(80) NOT NULL,
+        texto VARCHAR(2000) NOT NULL DEFAULT '',
+        capa_id INT REFERENCES imagens(id) ON DELETE SET NULL,
+        capa_posicao SMALLINT NOT NULL DEFAULT 50,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_publicacoes_autor ON publicacoes(autor_id, created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS denuncias_publicacoes (
+        publicacao_id INT NOT NULL REFERENCES publicacoes(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        motivo VARCHAR(200),
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (publicacao_id, usuario_id)
+      );
+    `);
+    console.log('✅ Tabelas do perfil criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
