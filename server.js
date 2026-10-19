@@ -591,7 +591,8 @@ app.get('/api/meu-progresso', exigirLogin, async (req, res) => {
 app.post('/api/tri', async (req, res) => {
   try {
     let linhas;
-    if (req.usuario) {
+    // O simulado pede a nota só das questões dele, mesmo com login.
+    if (req.usuario && !req.body?.so_estas) {
       ({ rows: linhas } = await pool.query(
         `SELECT DISTINCT ON (r.questao_id) q.disciplina, q.tri_a AS a, q.tri_b AS b, q.tri_c AS c, r.acertou
            FROM respostas r JOIN questoes q ON q.id = r.questao_id
@@ -617,6 +618,93 @@ app.post('/api/tri', async (req, res) => {
   } catch (erro) {
     console.error('Erro ao calcular nota TRI:', erro.message);
     res.status(500).json({ error: 'Não consegui calcular a nota TRI agora.' });
+  }
+});
+
+// ================== SIMULADO ==================
+// Prova completa no formato do ENEM desde 2017: dia 1 com Linguagens e
+// Humanas, dia 2 com Natureza e Matemática, 45 questões de cada área.
+// Linguagens começa pelas 5 de língua estrangeira escolhida.
+const DIAS_DO_SIMULADO = {
+  1: ['linguagens', 'ciencias-humanas'],
+  2: ['ciencias-natureza', 'matematica']
+};
+const POR_AREA = 45;
+const QUESTOES_DE_LINGUA = 5;
+
+// Questões de uma área na ordem da prova (número da questão). Questão de
+// inglês ou espanhol só entra se for da língua escolhida.
+function montarArea(linhas, disciplina, lingua) {
+  const daArea = linhas.filter(q => q.disciplina === disciplina && (!q.lingua || q.lingua === lingua));
+  const ordem = (a, b) => (a.numero ?? 9999) - (b.numero ?? 9999) || a.id - b.id;
+  if (disciplina !== 'linguagens') return daArea.sort(ordem).slice(0, POR_AREA);
+  const deLingua = daArea.filter(q => q.lingua).sort(ordem).slice(0, QUESTOES_DE_LINGUA);
+  const resto = daArea.filter(q => !q.lingua).sort(ordem).slice(0, POR_AREA - deLingua.length);
+  return [...deLingua, ...resto];
+}
+
+const limparQuestao = q => {
+  for (const campo of ['tri_item', 'tri_a', 'tri_b', 'tri_c', 'disciplina_api', 'created_at', 'updated_at', 'dificuldade']) delete q[campo];
+  return q;
+};
+
+app.get('/api/simulado', async (req, res) => {
+  const dia = Number(req.query.dia);
+  const disciplinas = DIAS_DO_SIMULADO[dia];
+  if (!disciplinas) return res.status(400).json({ error: 'Escolha o dia 1 ou o dia 2.' });
+  const lingua = req.query.lingua === 'espanhol' ? 'espanhol' : 'ingles';
+  const ano = req.query.ano === 'misto' ? 'misto' : Number(req.query.ano);
+  if (ano !== 'misto' && !ANOS_DISPONIVEIS.includes(ano)) return res.status(400).json({ error: 'Ano inválido.' });
+
+  try {
+    let linhas;
+    if (ano === 'misto') {
+      // Questões sorteadas de todos os anos: 45 por área (5 da língua escolhida).
+      ({ rows: linhas } = await pool.query(
+        `(SELECT * FROM questoes WHERE disciplina = $1 AND lingua = $3 ORDER BY RANDOM() LIMIT ${QUESTOES_DE_LINGUA})
+         UNION ALL
+         (SELECT * FROM questoes WHERE disciplina = $1 AND lingua IS NULL ORDER BY RANDOM() LIMIT ${POR_AREA})
+         UNION ALL
+         (SELECT * FROM questoes WHERE disciplina = $2 ORDER BY RANDOM() LIMIT ${POR_AREA})`,
+        [disciplinas[0], disciplinas[1], lingua]
+      ));
+      // No sorteio a ordem não existe: numera na sequência para a prova ficar organizada.
+      linhas.forEach((q, i) => { q.numero = i; });
+    } else {
+      ({ rows: linhas } = await pool.query(
+        'SELECT * FROM questoes WHERE ano = $1 AND disciplina = ANY($2::text[])', [ano, disciplinas]
+      ));
+    }
+    const questoes = disciplinas.flatMap(d => montarArea(linhas, d, lingua)).map(limparQuestao);
+    if (questoes.length === 0) return res.status(404).json({ error: 'Não há questões para esse simulado ainda.' });
+    res.json({ dia, ano, lingua, questoes });
+  } catch (erro) {
+    console.error('Erro ao montar simulado:', erro.message);
+    res.status(500).json({ error: 'Não consegui montar o simulado agora.' });
+  }
+});
+
+// Quantas questões cada ano tem em cada dia, para o site mostrar quais
+// provas estão completas.
+app.get('/api/simulado/anos', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT ano, disciplina, lingua, COUNT(*)::int AS n FROM questoes
+        WHERE ano IS NOT NULL GROUP BY ano, disciplina, lingua`
+    );
+    const anos = ANOS_DISPONIVEIS.map(ano => {
+      const conta = (disciplina, lingua) => rows
+        .filter(r => r.ano === ano && r.disciplina === disciplina && (lingua === undefined ? true : r.lingua === lingua))
+        .reduce((t, r) => t + r.n, 0);
+      const area = d => Math.min(POR_AREA, d === 'linguagens'
+        ? Math.min(QUESTOES_DE_LINGUA, conta(d, 'ingles')) + Math.min(POR_AREA - QUESTOES_DE_LINGUA, conta(d, null))
+        : conta(d));
+      return { ano, dia1: area('linguagens') + area('ciencias-humanas'), dia2: area('ciencias-natureza') + area('matematica') };
+    }).reverse();
+    res.json({ anos, por_dia: POR_AREA * 2 });
+  } catch (erro) {
+    console.error('Erro ao contar provas:', erro.message);
+    res.status(500).json({ error: 'Não consegui ver as provas agora.' });
   }
 });
 
