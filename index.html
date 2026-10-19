@@ -763,6 +763,17 @@
     .area-res { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 18px; }
     .area-res b { display: block; margin-bottom: 8px; }
     .area-res .nota { font-family: var(--fonte-titulo); font-size: 1.9rem; font-weight: 700; }
+    .numeros-res { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .numero-res { background: var(--superficie-2); border-radius: 14px; padding: 16px; min-width: 0; }
+    .numero-res b { display: block; font-family: var(--fonte-titulo); font-size: 2.1rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .numero-res span { display: block; font-weight: 700; font-size: .88rem; margin-top: 2px; }
+    .numero-res small { display: block; color: var(--texto-fraco); font-size: .78rem; margin-top: 2px; }
+    .numeros-res .numero-res:nth-child(1) b { color: var(--certo); }
+    .numeros-res .numero-res:nth-child(2) b { color: var(--errado); }
+    .linha-area-res { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .linha-area-res span { font-size: .76rem; color: var(--texto-fraco); }
+    .linha-area-res b { display: block; font-size: 1.25rem; color: var(--texto); margin: 0; font-variant-numeric: tabular-nums; }
+    @media (max-width: 640px) { .numeros-res { grid-template-columns: 1fr 1fr; } }
     .area-res small { display: block; color: var(--texto-fraco); font-size: .82rem; margin-top: 4px; }
     @media (max-width: 640px) {
       .dias-sim, .opcoes-sim, .areas-res { grid-template-columns: 1fr; }
@@ -1407,6 +1418,17 @@
           <div class="pista" id="recado-imagem">No Pinterest, clique com o botão direito na imagem → <b>Copiar endereço da imagem</b>.
             Imagens enviadas ficam só neste aparelho.</div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmação desenhada no site (a janelinha padrão do navegador nem sempre aparece) -->
+  <div class="fundo-modal escondido" id="modal-confirmar">
+    <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="texto-confirmar">
+      <p id="texto-confirmar" style="font-size:1rem;line-height:1.6;margin:4px 0 20px"></p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">
+        <button class="acao discreta" id="nao-confirmar" style="margin:0">Voltar</button>
+        <button class="acao" id="sim-confirmar" style="margin:0">Confirmar</button>
       </div>
     </div>
   </div>
@@ -2457,9 +2479,9 @@ async function abrirMateria(area) {
   desenharQuestao();
 }
 
-function encerrarBloco() {
+async function encerrarBloco() {
   if (bloco && bloco.respostas.length > 0 && bloco.respostas.length < bloco.questoes.length) {
-    if (!confirm('Sair agora encerra o bloco. Tem certeza?')) return;
+    if (!await confirmar('Sair agora encerra o bloco. Tem certeza?', { sim: 'Sair do bloco' })) return;
   }
   pararCronometro();
   bloco = null;
@@ -3240,7 +3262,7 @@ async function tratarLinkDoEmail(sessaoRestaurada) {
 
 async function excluirConta(evento) {
   evento.preventDefault();
-  if (!confirm('Tem certeza? Sua conta e seus posts serão apagados para sempre.')) return;
+  if (!await confirmar('Tem certeza? Sua conta e tudo o que está nela serão apagados para sempre.', { sim: 'Excluir conta', perigo: true })) return;
 
   const botao = document.getElementById('botao-excluir');
   const recado = texto => {
@@ -3385,7 +3407,7 @@ async function moderarPost(id, acao) {
     denunciar: 'Denunciar este post? Ele é revisado pelos administradores e, com 3 denúncias, sai do ar.',
     restaurar: 'Restaurar este post? Ele volta para o feed e as denúncias são descartadas.'
   };
-  if (!confirm(perguntas[acao])) return;
+  if (!await confirmar(perguntas[acao], { sim: { apagar: 'Apagar', denunciar: 'Denunciar', restaurar: 'Restaurar' }[acao], perigo: acao === 'apagar' })) return;
   const pedido = {
     apagar: { metodo: 'DELETE', rota: `/api/posts/${id}` },
     denunciar: { metodo: 'POST', rota: `/api/posts/${id}/denunciar` },
@@ -3406,6 +3428,33 @@ async function moderarPost(id, acao) {
 }
 
 // ===================== STATUS =====================
+// ===================== CONFIRMAÇÃO =====================
+// Substitui o confirm() do navegador: combina com o site e funciona também
+// onde a janelinha padrão é bloqueada. Devolve uma Promise com true/false.
+function confirmar(texto, { sim = 'Confirmar', nao = 'Voltar', perigo = false } = {}) {
+  return new Promise(resolver => {
+    const modal = document.getElementById('modal-confirmar');
+    const botaoSim = document.getElementById('sim-confirmar');
+    const botaoNao = document.getElementById('nao-confirmar');
+    document.getElementById('texto-confirmar').textContent = texto;
+    botaoSim.textContent = sim;
+    botaoNao.textContent = nao;
+    botaoSim.classList.toggle('perigo', perigo);
+    const fechar = resposta => {
+      modal.classList.add('escondido');
+      document.removeEventListener('keydown', teclas, true);
+      resolver(resposta);
+    };
+    const teclas = e => { if (e.key === 'Escape') { e.stopPropagation(); fechar(false); } };
+    botaoSim.onclick = () => fechar(true);
+    botaoNao.onclick = () => fechar(false);
+    modal.onclick = e => { if (e.target === modal) fechar(false); };
+    document.addEventListener('keydown', teclas, true);
+    modal.classList.remove('escondido');
+    botaoNao.focus();
+  });
+}
+
 // ===================== SIMULADO =====================
 // O ENEM inteiro, no formato desde 2017: dia 1 com Linguagens, Humanas e a
 // redação do ano; dia 2 com Natureza e Matemática; 90 questões por dia, com
@@ -3651,8 +3700,8 @@ async function comecarSimulado(dia, botao) {
   }
 }
 
-function descartarSimulado() {
-  if (!confirm('Descartar este simulado? As respostas e a redação dele se perdem.')) return;
+async function descartarSimulado() {
+  if (!await confirmar('Descartar este simulado? As respostas e a redação dele se perdem.', { sim: 'Descartar', perigo: true })) return;
   sim = null;
   salvarSim();
   desenharTelaSim();
@@ -3889,9 +3938,10 @@ async function entregarSimulado(acabouOTempo) {
   const avisos = [];
   if (brancas) avisos.push(`${brancas} ${brancas === 1 ? 'questão está' : 'questões estão'} sem resposta e ${brancas === 1 ? 'conta' : 'contam'} como erro`);
   if (semRedacao) avisos.push('a redação está em branco');
-  if (!acabouOTempo && !confirm(avisos.length
+  if (!acabouOTempo && !await confirmar(avisos.length
     ? `Entregar a prova? Atenção: ${avisos.join(' e ')}.`
-    : 'Entregar a prova? Depois não dá para mudar as respostas.')) return;
+    : 'Entregar a prova? Depois não dá para mudar as respostas.', { sim: 'Entregar' })) return;
+  if (sim.entregue) return; // o tempo pode ter acabado enquanto a pergunta estava aberta
 
   pararRelogioProva();
   clearTimeout(salvarRedacaoDepois);
@@ -3949,6 +3999,11 @@ function desenharResultadoSim() {
   const r = sim.resultado;
   const total = sim.questoes.length;
   const red = sim.redacao;
+  const pct = (acertos, de) => (de ? Math.round(100 * acertos / de) : 0);
+  const notas = r.areas.map(a => a.nota).filter(Boolean);
+  const triMedia = notas.length ? Math.round(notas.reduce((t, n) => t + n, 0) / notas.length) : null;
+  const brancas = r.areas.reduce((t, a) => t + a.brancas, 0);
+  const numero = (valor, rotulo, detalhe = '') => `<div class="numero-res"><b>${valor}</b><span>${rotulo}</span>${detalhe ? `<small>${detalhe}</small>` : ''}</div>`;
   document.getElementById('conteudo-simulado').innerHTML = `
     <div class="resultado-sim">
       <div class="cabecalho-secao">
@@ -3956,13 +4011,22 @@ function desenharResultadoSim() {
         <p>Tempo usado: ${formatarTempo(sim.gastoMs)} de ${formatarTempo(sim.duracaoMs)}</p>
       </div>
       <div class="painel">
-        <div class="total">${r.acertos}<small> de ${total} acertos</small></div>
+        <div class="numeros-res">
+          ${numero(r.acertos, 'acertos', `de ${total} questões`)}
+          ${numero(total - r.acertos, 'erros', brancas ? `${brancas} em branco` : '')}
+          ${numero(pct(r.acertos, total) + '%', 'aproveitamento')}
+          ${numero(triMedia || '—', 'nota TRI', triMedia ? (notas.length > 1 ? 'média das áreas' : 'estimada') : 'indisponível')}
+        </div>
         <div class="areas-res">${r.areas.map(a => `
           <div class="area-res">
             <b>${escapar(nomeDaArea(a.area))}</b>
-            <div class="nota">${a.nota ? a.nota : '—'}</div>
-            <small>${a.nota ? 'nota TRI estimada' : 'nota TRI indisponível para estas questões'}</small>
-            <small>${a.acertos} de ${a.total} acertos${a.brancas ? ` · ${a.brancas} em branco` : ''}</small>
+            <div class="linha-area-res">
+              <span><b>${a.acertos}</b>acertos</span>
+              <span><b>${a.total - a.acertos}</b>erros</span>
+              <span><b>${pct(a.acertos, a.total)}%</b>aproveitamento</span>
+              <span><b>${a.nota || '—'}</b>TRI</span>
+            </div>
+            ${a.brancas ? `<small>${a.brancas} em branco (contam como erro)</small>` : ''}
           </div>`).join('')}</div>
         ${red ? `<div class="area-res" style="margin-bottom:18px">
             <b>Redação · ${escapar(red.tema)}</b>
@@ -4113,7 +4177,7 @@ function verPublicacao(id) {
 }
 
 async function acaoPublicacao(id, acao) {
-  if (acao === 'apagar' && !confirm('Apagar esta publicação? Não dá para desfazer.')) return;
+  if (acao === 'apagar' && !await confirmar('Apagar esta publicação? Não dá para desfazer.', { sim: 'Apagar', perigo: true })) return;
   const pedido = {
     apagar: { metodo: 'DELETE', rota: `/api/publicacoes/${id}` },
     denunciar: { metodo: 'POST', rota: `/api/publicacoes/${id}/denunciar` },
