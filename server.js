@@ -87,6 +87,9 @@ for (const pagina of ['index.html', 'privacidade.html', 'termos.html']) {
   });
 }
 
+// Imagens do site (só a pasta img/, sem listar o conteúdo).
+app.use('/img', express.static(path.join(__dirname, 'img'), { index: false, dotfiles: 'ignore', maxAge: '7d' }));
+
 function limitar(freio, mensagem, chaveDe = req => req.ip) {
   return (req, res, next) => {
     const chave = chaveDe(req);
