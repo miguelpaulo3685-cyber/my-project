@@ -55,7 +55,8 @@ function montar({ nome, titulo, texto, botao, link, rodape }) {
   <span style="word-break:break-all">${link}</span></p>
   <p style="font-size:13px;color:#697189;line-height:1.6">${rodape}</p>
 </div>`;
-  const textoPuro = `Oi, ${nome}!\n\n${texto.replace(/<[^>]+>/g, '')}\n\n${link}\n\n${rodape}`;
+  const semTags = t => t.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]+>/g, '');
+  const textoPuro = `Oi, ${nome}!\n\n${semTags(texto)}\n\n${link}\n\n${semTags(rodape)}`;
   return { subject: titulo, html, text: textoPuro };
 }
 
@@ -111,4 +112,4 @@ function enviarConfirmacao(para, nome, token) {
   }));
 }
 
-module.exports = { configurado, emProducao, enviarRedefinicao, enviarConfirmacao };
+module.exports = { configurado, emProducao, SITE_URL, enviar, montar, escaparHtml, enviarRedefinicao, enviarConfirmacao };

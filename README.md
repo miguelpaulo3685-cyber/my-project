@@ -138,6 +138,14 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
   - Sequência de dias, XP, nível e selos (`GET /api/comunidade/eu`), calculados a partir do treino,
     pomodoros, desafio e ajuda dada. Ajudar vale mais XP que treinar sozinho.
 
+- **App e avisos** (`avisos.js`, `sw.js`, `manifest.webmanifest`): o site pode ser instalado na tela
+  inicial (Android e computador pelo botão do navegador; iPhone por "Adicionar à Tela de Início") e abre
+  sem internet a casca da página. Avisos por Web Push: cada notificação do sino importante também vai para
+  o aparelho (no máximo 8 por hora por pessoa), lembrete às 19h para quem vai perder a sequência e, para
+  quem pediu, aviso da sessão das 20h. Resumo semanal por e-mail na segunda de manhã (até 250 por semana,
+  por causa do limite do Brevo), com link de descadastro assinado com `SEGREDO_IMAGENS`. As chaves VAPID
+  vêm de `VAPID_PUBLICO`/`VAPID_PRIVADO` ou são criadas e guardadas no banco (`configuracoes`) na primeira vez.
+
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.
 

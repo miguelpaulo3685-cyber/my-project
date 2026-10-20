@@ -1,0 +1,23 @@
+{
+  "name": "M&M Estudos",
+  "short_name": "M&M Estudos",
+  "description": "Questões reais do ENEM, nota TRI, simulados e uma comunidade estudando junto.",
+  "lang": "pt-BR",
+  "start_url": "./?app=1",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e0d0b",
+  "theme_color": "#0e0d0b",
+  "categories": ["education"],
+  "icons": [
+    { "src": "img/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "img/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "img/icone-mascaravel-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Treino rápido", "url": "./?abrir=treinar", "icons": [{ "src": "img/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Comunidade", "url": "./?abrir=comunidade", "icons": [{ "src": "img/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Salas de estudo", "url": "./?abrir=salas", "icons": [{ "src": "img/icone-192.png", "sizes": "192x192" }] }
+  ]
+}

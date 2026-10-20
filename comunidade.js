@@ -60,6 +60,16 @@ function contarSequencia(dias, hoje = hojeEmBrasilia()) {
   return { dias: atual, hoje: tem.has(hoje), maior: Math.max(maior, atual) };
 }
 
+// Dias (de Brasília) em que a pessoa estudou: treino, pomodoro, desafio ou simulado.
+async function sequenciaDe(pool, usuarioId) {
+  const { rows } = await pool.query(
+    `SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') AS d FROM respostas WHERE usuario_id = $1 AND created_at > NOW() - INTERVAL '400 days'
+     UNION SELECT to_char(dia, 'YYYY-MM-DD') FROM pomodoros WHERE usuario_id = $1 AND n > 0
+     UNION SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') FROM desafio_resultados WHERE usuario_id = $1
+     UNION SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') FROM simulados WHERE usuario_id = $1`, [usuarioId]);
+  return contarSequencia(rows.map(r => r.d));
+}
+
 // XP de cada coisa que a pessoa faz. Ajudar os outros vale mais que treinar sozinho.
 const XP = { questao: 1, acerto: 1, pomodoro: 10, desafio: 20, ajuda: 5, melhor: 25, util: 3 };
 const TITULOS = [[1, 'Calouro'], [3, 'Estudante'], [5, 'Focado'], [8, 'Dedicado'], [12, 'Veterano'], [16, 'Mestre'], [22, 'Lenda']];
@@ -303,13 +313,7 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
   app.get('/api/comunidade/eu', exigirLogin, async (req, res) => {
     const eu = req.usuario.id;
     try {
-      const dias = (await pool.query(
-        `SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') AS d FROM respostas WHERE usuario_id = $1 AND created_at > NOW() - INTERVAL '400 days'
-         UNION SELECT to_char(dia, 'YYYY-MM-DD') FROM pomodoros WHERE usuario_id = $1 AND n > 0
-         UNION SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') FROM desafio_resultados WHERE usuario_id = $1
-         UNION SELECT to_char((created_at - INTERVAL '3 hours')::date, 'YYYY-MM-DD') FROM simulados WHERE usuario_id = $1`, [eu]
-      )).rows.map(r => r.d);
-      const sequencia = contarSequencia(dias);
+      const sequencia = await sequenciaDe(pool, eu);
       const c = (await pool.query(
         `SELECT (SELECT COUNT(*) FROM respostas WHERE usuario_id = $1)::int AS questoes,
                 (SELECT COUNT(*) FROM respostas WHERE usuario_id = $1 AND acertou)::int AS acertos,
@@ -500,5 +504,5 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
 
 module.exports = registrarComunidade;
 Object.assign(module.exports, {
-  registrarAtividade, faseDoPomodoro, contarSequencia, nivelDoXp, hojeEmBrasilia, SALAS, XP
+  registrarAtividade, faseDoPomodoro, contarSequencia, sequenciaDe, nivelDoXp, hojeEmBrasilia, SALAS, XP
 });

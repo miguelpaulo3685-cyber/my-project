@@ -475,6 +475,30 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas da comunidade criadas');
 
+    // ---------- App e avisos ----------
+    await pool.query(`
+      -- Configurações que o próprio servidor cria e guarda (as chaves dos avisos).
+      CREATE TABLE IF NOT EXISTS configuracoes (
+        chave VARCHAR(40) PRIMARY KEY,
+        valor TEXT NOT NULL
+      );
+      -- Cada navegador ou celular que aceitou receber avisos.
+      CREATE TABLE IF NOT EXISTS push_inscricoes (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        endpoint TEXT NOT NULL UNIQUE,
+        p256dh TEXT NOT NULL,
+        auth TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_push_usuario ON push_inscricoes(usuario_id);
+      -- O que cada pessoa quer receber.
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS aviso_sequencia BOOLEAN NOT NULL DEFAULT TRUE;
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS aviso_sessao BOOLEAN NOT NULL DEFAULT FALSE;
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS email_semanal BOOLEAN NOT NULL DEFAULT TRUE;
+    `);
+    console.log('✅ Tabelas dos avisos criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

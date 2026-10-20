@@ -13,7 +13,7 @@ const DIAS_GUARDADAS = 60;
 async function notificar(pool, { usuarioId, atorId = null, tipo, alvoTipo = null, alvoId = null, texto = null }) {
   if (!usuarioId || usuarioId === atorId) return;
   try {
-    await pool.query(
+    const r = await pool.query(
       // Tipos explícitos: no INSERT ... SELECT o Postgres não deduz sozinho.
       `INSERT INTO notificacoes (usuario_id, ator_id, tipo, alvo_tipo, alvo_id, texto)
        SELECT $1::int, $2::int, $3::varchar, $4::varchar, $5::int, $6::varchar
@@ -21,6 +21,8 @@ async function notificar(pool, { usuarioId, atorId = null, tipo, alvoTipo = null
                             AND tipo = $3 AND alvo_tipo IS NOT DISTINCT FROM $4 AND alvo_id IS NOT DISTINCT FROM $5 AND NOT lida)`,
       [usuarioId, atorId, tipo, alvoTipo, alvoId, texto ? String(texto).slice(0, 200) : null]
     );
+    // Também no celular, para quem ativou os avisos (sem esperar o envio).
+    if (r.rowCount) require('./avisos').avisarNotificacao(pool, { usuarioId, atorId, tipo, alvoTipo, alvoId, texto });
   } catch (erro) {
     // Notificação nunca pode atrapalhar a ação principal.
     console.error('Erro ao notificar:', erro.message);

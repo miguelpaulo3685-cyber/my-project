@@ -85,7 +85,7 @@ app.use(express.json({ limit: '20kb' }));
 
 // Só as páginas do site. Servir a pasta inteira entregava o código do
 // servidor (e o .env, se existisse) para quem pedisse.
-for (const pagina of ['index.html', 'privacidade.html', 'termos.html']) {
+for (const pagina of ['index.html', 'privacidade.html', 'termos.html', 'sw.js', 'manifest.webmanifest']) {
   app.get(pagina === 'index.html' ? ['/', '/index.html'] : `/${pagina}`, (req, res) => {
     res.sendFile(path.join(__dirname, pagina));
   });
@@ -1067,6 +1067,7 @@ require('./desafio')(app, { pool, auth, limitar, exigirLogin });
 require('./grupos')(app, { pool, auth, limitar, exigirLogin });
 require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
 require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;
