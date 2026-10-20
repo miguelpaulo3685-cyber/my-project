@@ -127,8 +127,9 @@ navegador a cada resposta; ao entregar, sai a nota TRI de cada área (`POST /api
 ## Reels
 
 Vídeos curtos de resolução de questões e dicas, num feed vertical como o do TikTok. Os vídeos ficam
-no YouTube (Shorts) e só os administradores publicam, colando o link (`reels.js` aceita shorts,
-youtu.be, watch e embed). O site guarda só o código do vídeo, e o player (youtube-nocookie.com) só
+no YouTube ou no TikTok e só os administradores publicam, colando o link (`reels.js` aceita shorts,
+youtu.be, watch e embed do YouTube, e os links completos e curtos do TikTok, que o oEmbed do TikTok
+resolve). O site guarda só o código do vídeo, e o player (youtube-nocookie.com) só
 carrega no reel que está na tela. Alunos com conta curtem e salvam.
 
 Ao colar o link, o servidor pega o título e o canal pelo oEmbed do YouTube (o canal aparece como

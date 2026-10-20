@@ -46,7 +46,7 @@ const POLITICA_DE_CONTEUDO = [
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data: https:",
   "connect-src 'self' https://accounts.google.com/gsi/",
-  "frame-src https://accounts.google.com/gsi/ https://www.youtube-nocookie.com",
+  "frame-src https://accounts.google.com/gsi/ https://www.youtube-nocookie.com https://www.tiktok.com",
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",

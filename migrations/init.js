@@ -234,10 +234,15 @@ async function runMigrations() {
       CREATE INDEX IF NOT EXISTS idx_reels_data ON reels(created_at DESC);
       -- Canal do YouTube dono do vídeo: aparece como crédito no reel.
       ALTER TABLE reels ADD COLUMN IF NOT EXISTS canal VARCHAR(100);
+      -- TikTok: o código do vídeo tem até 22 dígitos e a plataforma muda o player.
+      ALTER TABLE reels ALTER COLUMN youtube_id TYPE VARCHAR(32);
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS plataforma VARCHAR(10) NOT NULL DEFAULT 'youtube';
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS link VARCHAR(300);
 
       CREATE TABLE IF NOT EXISTS reels_ignorados (
-        youtube_id VARCHAR(11) PRIMARY KEY
+        youtube_id VARCHAR(32) PRIMARY KEY
       );
+      ALTER TABLE reels_ignorados ALTER COLUMN youtube_id TYPE VARCHAR(32);
       CREATE TABLE IF NOT EXISTS reels_curtidas (
         reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
         usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,

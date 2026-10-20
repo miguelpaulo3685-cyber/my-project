@@ -1,7 +1,10 @@
 // Reels: vídeos curtos de resolução de questões e dicas, no estilo TikTok.
-// O vídeo fica no YouTube (de qualquer canal); o site guarda só o código
-// dele e mostra tudo num feed vertical, com o nome do canal como crédito.
-// Só administradores publicam; alunos curtem e salvam.
+// O vídeo fica no YouTube ou no TikTok (de qualquer canal); o site guarda só
+// o código dele e mostra tudo num feed vertical, com o nome do canal como
+// crédito. Só administradores publicam; alunos curtem e salvam.
+//
+// A coluna youtube_id guarda o código do vídeo nas duas plataformas (o nome
+// ficou da primeira versão); a coluna plataforma diz de onde ele é.
 
 const fs = require('fs');
 const path = require('path');
@@ -25,6 +28,57 @@ function idDoYoutube(link) {
     id = m ? m[2] : url.searchParams.get('v');
   }
   return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+}
+
+// Link do TikTok: tiktok.com/@perfil/video/ID (ID com 15 a 22 dígitos) ou
+// os links curtos vt.tiktok.com/..., vm.tiktok.com/... e tiktok.com/t/...,
+// que só o próprio TikTok sabe a que vídeo levam.
+function lerLinkTiktok(link) {
+  if (typeof link !== 'string' || link.length > 300) return null;
+  let url;
+  try { url = new URL(link.trim()); } catch (e) { return null; }
+  if (url.protocol !== 'https:' && url.protocol !== 'http:') return null;
+  const host = url.hostname.replace(/^(www\.|m\.)/, '');
+  if (host === 'vt.tiktok.com' || host === 'vm.tiktok.com' || (host === 'tiktok.com' && url.pathname.startsWith('/t/'))) {
+    return /^\/(t\/)?[A-Za-z0-9]{5,20}\/?$/.test(url.pathname) ? { curto: true, url: `https://${url.hostname}${url.pathname}` } : null;
+  }
+  if (host !== 'tiktok.com') return null;
+  const m = url.pathname.match(/^\/(?:@[\w.-]+\/video|embed\/v2|player\/v1)\/(\d{15,22})/);
+  return m ? { id: m[1], url: `https://www.tiktok.com${url.pathname}` } : null;
+}
+
+// Pelo oEmbed do TikTok (público, sem chave): código do vídeo (resolve os
+// links curtos), legenda e criador. Vídeo apagado ou privado responde erro.
+async function infoDoTiktok(link, buscar = fetch) {
+  const lido = lerLinkTiktok(link);
+  if (!lido) return null;
+  try {
+    const r = await buscar(`https://www.tiktok.com/oembed?url=${encodeURIComponent(lido.url)}`, { signal: AbortSignal.timeout(8000) });
+    if (r.status === 400 || r.status === 403 || r.status === 404) return { indisponivel: true };
+    if (!r.ok) throw new Error('oEmbed ' + r.status);
+    const d = await r.json();
+    const id = /^\d{15,22}$/.test(String(d.embed_product_id)) ? String(d.embed_product_id) : lido.id;
+    if (!id) return { indisponivel: true };
+    const perfil = typeof d.author_url === 'string' && /^https:\/\/www\.tiktok\.com\/@[\w.-]+$/.test(d.author_url) ? d.author_url : null;
+    return {
+      plataforma: 'tiktok', id,
+      titulo: typeof d.title === 'string' && d.title.trim() ? d.title.trim().slice(0, 100) : undefined,
+      canal: typeof d.author_name === 'string' ? d.author_name.trim().slice(0, 100) : undefined,
+      link: perfil ? `${perfil}/video/${id}` : lido.url
+    };
+  } catch (e) {
+    // Sem rede agora: com o link completo dá para publicar sem os dados
+    // automáticos; o link curto precisa do TikTok para saber o vídeo.
+    return lido.id ? { plataforma: 'tiktok', id: lido.id, link: lido.url } : {};
+  }
+}
+
+// Qualquer link aceito (YouTube ou TikTok): { plataforma, id, titulo, canal,
+// link }, { indisponivel: true } ou null se o link não é de nenhum dos dois.
+async function infoDoVideo(link, buscar = fetch) {
+  const youtube = idDoYoutube(link);
+  if (youtube) return { plataforma: 'youtube', id: youtube, link: `https://youtube.com/shorts/${youtube}`, ...await infoDoYoutube(youtube, buscar) };
+  return infoDoTiktok(link, buscar);
 }
 
 // Título e canal do vídeo, pelo oEmbed do YouTube (público, sem chave).
@@ -54,23 +108,28 @@ async function publicarReelsIniciais(pool, arquivo = path.join(__dirname, 'reels
   try { lista = JSON.parse(fs.readFileSync(arquivo, 'utf8')); } catch (e) { return 0; }
   let novos = 0;
   for (const item of Array.isArray(lista) ? lista : []) {
-    const id = idDoYoutube(item.link);
-    if (!id) { console.warn('🎬 Link inválido em reels-iniciais.json:', item.link); continue; }
-    const ja = await pool.query(
-      'SELECT 1 FROM reels WHERE youtube_id = $1 UNION ALL SELECT 1 FROM reels_ignorados WHERE youtube_id = $1', [id]
-    );
-    if (ja.rowCount) continue;
-    const info = await infoDoYoutube(id);
-    if (info.indisponivel) { console.warn('🎬 Vídeo indisponível fora do YouTube, pulei:', item.link); continue; }
+    // Link completo já diz o código: dá para pular sem perguntar à plataforma.
+    const direto = idDoYoutube(item.link) || lerLinkTiktok(item.link)?.id;
+    if (direto && await jaConhecido(pool, direto)) continue;
+    const info = await infoDoVideo(item.link);
+    if (!info) { console.warn('🎬 Link inválido em reels-iniciais.json:', item.link); continue; }
+    if (info.indisponivel) { console.warn('🎬 Vídeo indisponível fora da plataforma, pulei:', item.link); continue; }
+    if (!info.id) { console.warn('🎬 Não consegui ler o link agora, tento na próxima vez:', item.link); continue; }
+    if (await jaConhecido(pool, info.id)) continue;
     await pool.query(
-      `INSERT INTO reels (youtube_id, titulo, descricao, tipo, area, canal) VALUES ($1, $2, $3, $4, $5, $6)`,
-      [id, String(item.titulo || info.titulo || 'Vídeo').slice(0, 100), String(item.descricao || '').slice(0, 500),
+      `INSERT INTO reels (youtube_id, plataforma, link, titulo, descricao, tipo, area, canal) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [info.id, info.plataforma, info.link, String(item.titulo || info.titulo || 'Vídeo').slice(0, 100), String(item.descricao || '').slice(0, 500),
        TIPOS.includes(item.tipo) ? item.tipo : 'dica', AREAS.includes(item.area) ? item.area : null, info.canal || null]
     );
     novos++;
   }
   if (novos) console.log(`🎬 ${novos} reels publicados a partir de reels-iniciais.json`);
   return novos;
+}
+
+async function jaConhecido(pool, id) {
+  const r = await pool.query('SELECT 1 FROM reels WHERE youtube_id = $1 UNION ALL SELECT 1 FROM reels_ignorados WHERE youtube_id = $1', [id]);
+  return r.rowCount > 0;
 }
 
 function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador }) {
@@ -84,7 +143,7 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     const antesDe = idValido(req.query.antes); // paginação: reels mais antigos que este id
     try {
       const { rows } = await pool.query(
-        `SELECT r.id, r.youtube_id, r.titulo, r.descricao, r.tipo, r.area, r.canal, r.created_at,
+        `SELECT r.id, r.youtube_id, COALESCE(r.plataforma, 'youtube') AS plataforma, r.link, r.titulo, r.descricao, r.tipo, r.area, r.canal, r.created_at,
                 (SELECT COUNT(*)::int FROM reels_curtidas c WHERE c.reel_id = r.id) AS curtidas,
                 EXISTS (SELECT 1 FROM reels_curtidas c WHERE c.reel_id = r.id AND c.usuario_id = $1) AS curti,
                 EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei
@@ -107,20 +166,22 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
   app.get('/api/reels/salvos', exigirLogin, (req, res) => listar(req, res, { salvos: true }));
 
   // Para o formulário preencher título e canal sozinho ao colar o link.
+  const INDISPONIVEL = 'Esse vídeo não pode ser mostrado fora da plataforma (é privado, foi apagado ou o dono não deixa).';
+  const LINK_INVALIDO = 'Cole o link de um vídeo do YouTube ou do TikTok.';
+
   app.get('/api/reels/info', exigirModerador, async (req, res) => {
-    const id = idDoYoutube(req.query.link);
-    if (!id) return res.status(400).json({ error: 'Link inválido.' });
-    const info = await infoDoYoutube(id);
-    if (info.indisponivel) return res.status(422).json({ error: 'Esse vídeo não pode ser mostrado fora do YouTube (é privado ou o dono não deixa).' });
-    res.json({ youtube_id: id, ...info });
+    const info = await infoDoVideo(req.query.link);
+    if (!info) return res.status(400).json({ error: LINK_INVALIDO });
+    if (info.indisponivel) return res.status(422).json({ error: INDISPONIVEL });
+    res.json(info);
   });
 
   app.post('/api/reels', exigirModerador, async (req, res) => {
     const c = req.body || {};
-    const youtubeId = idDoYoutube(c.link);
-    if (!youtubeId) return res.status(400).json({ error: 'Cole o link de um vídeo do YouTube (Shorts ou normal).' });
-    const info = await infoDoYoutube(youtubeId);
-    if (info.indisponivel) return res.status(422).json({ error: 'Esse vídeo não pode ser mostrado fora do YouTube (é privado ou o dono não deixa).' });
+    const info = await infoDoVideo(c.link);
+    if (!info) return res.status(400).json({ error: LINK_INVALIDO });
+    if (info.indisponivel) return res.status(422).json({ error: INDISPONIVEL });
+    if (!info.id) return res.status(502).json({ error: 'Não consegui falar com o TikTok para ler esse link. Tente de novo ou use o link completo do vídeo.' });
     const titulo = (typeof c.titulo === 'string' && c.titulo.trim()) || info.titulo || '';
     const descricao = typeof c.descricao === 'string' ? c.descricao.trim() : '';
     if (!titulo || titulo.length > 100) return res.status(400).json({ error: 'Escreva um título (até 100 caracteres).' });
@@ -129,9 +190,9 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     if (c.area && !AREAS.includes(c.area)) return res.status(400).json({ error: 'Área inválida.' });
     try {
       const { rows } = await pool.query(
-        `INSERT INTO reels (autor_id, youtube_id, titulo, descricao, tipo, area, canal)
-         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
-        [req.usuario.id, youtubeId, titulo, descricao, c.tipo, c.area || null, info.canal || null]
+        `INSERT INTO reels (autor_id, youtube_id, plataforma, link, titulo, descricao, tipo, area, canal)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
+        [req.usuario.id, info.id, info.plataforma, info.link, titulo, descricao, c.tipo, c.area || null, info.canal || null]
       );
       res.status(201).json({ id: rows[0].id, message: 'Reel publicado!' });
     } catch (erro) {
@@ -184,4 +245,7 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
 module.exports = registrarReels;
 module.exports.idDoYoutube = idDoYoutube;
 module.exports.infoDoYoutube = infoDoYoutube;
+module.exports.lerLinkTiktok = lerLinkTiktok;
+module.exports.infoDoTiktok = infoDoTiktok;
+module.exports.infoDoVideo = infoDoVideo;
 module.exports.publicarReelsIniciais = publicarReelsIniciais;
