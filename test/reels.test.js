@@ -17,3 +17,11 @@ test('reels: recusa link que não é do YouTube ou código inválido', () => {
     assert.strictEqual(idDoYoutube(link), null, String(link));
   }
 });
+
+test('reels: título e canal pelo oEmbed; vídeo bloqueado fica de fora', async () => {
+  const { infoDoYoutube } = require('../reels');
+  const ok = async () => ({ ok: true, status: 200, json: async () => ({ title: ' Resolução ENEM 2019 Q.136 ', author_name: 'Prof. Fulano' }) });
+  assert.deepStrictEqual(await infoDoYoutube('dQw4w9WgXcQ', ok), { titulo: 'Resolução ENEM 2019 Q.136', canal: 'Prof. Fulano' });
+  assert.deepStrictEqual(await infoDoYoutube('dQw4w9WgXcQ', async () => ({ ok: false, status: 401 })), { indisponivel: true });
+  assert.deepStrictEqual(await infoDoYoutube('dQw4w9WgXcQ', async () => { throw new Error('sem rede'); }), {});
+});

@@ -232,7 +232,12 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW()
       );
       CREATE INDEX IF NOT EXISTS idx_reels_data ON reels(created_at DESC);
+      -- Canal do YouTube dono do vídeo: aparece como crédito no reel.
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS canal VARCHAR(100);
 
+      CREATE TABLE IF NOT EXISTS reels_ignorados (
+        youtube_id VARCHAR(11) PRIMARY KEY
+      );
       CREATE TABLE IF NOT EXISTS reels_curtidas (
         reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
         usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,

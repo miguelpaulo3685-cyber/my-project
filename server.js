@@ -1152,7 +1152,9 @@ const server = app.listen(PORT, () => {
   setTimeout(() => {
     atualizarCache()
       .catch(err => console.error('❌ Erro ao atualizar cache:', err.message))
-      .then(prepararTri);
+      .then(prepararTri)
+      .then(() => require('./reels').publicarReelsIniciais(pool))
+      .catch(err => console.error('❌ Erro ao publicar reels iniciais:', err.message));
   }, 2000);
 });
 

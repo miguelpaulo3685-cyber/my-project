@@ -1,6 +1,10 @@
 // Reels: vídeos curtos de resolução de questões e dicas, no estilo TikTok.
-// O vídeo fica no YouTube (Shorts); o site guarda só o código dele e mostra
-// tudo num feed vertical. Só administradores publicam; alunos curtem e salvam.
+// O vídeo fica no YouTube (de qualquer canal); o site guarda só o código
+// dele e mostra tudo num feed vertical, com o nome do canal como crédito.
+// Só administradores publicam; alunos curtem e salvam.
+
+const fs = require('fs');
+const path = require('path');
 
 const TIPOS = ['resolucao', 'dica'];
 const AREAS = ['linguagens', 'humanas', 'natureza', 'matematica', 'redacao'];
@@ -23,6 +27,52 @@ function idDoYoutube(link) {
   return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
 }
 
+// Título e canal do vídeo, pelo oEmbed do YouTube (público, sem chave).
+// Vídeo privado, apagado ou com a incorporação desligada responde 401/404:
+// esses não tocariam no site, então nem entram.
+async function infoDoYoutube(id, buscar = fetch) {
+  const url = `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent('https://www.youtube.com/watch?v=' + id)}`;
+  try {
+    const r = await buscar(url, { signal: AbortSignal.timeout(6000) });
+    if (r.status === 401 || r.status === 403 || r.status === 404) return { indisponivel: true };
+    if (!r.ok) return {};
+    const d = await r.json();
+    return {
+      titulo: typeof d.title === 'string' ? d.title.trim().slice(0, 100) : undefined,
+      canal: typeof d.author_name === 'string' ? d.author_name.trim().slice(0, 100) : undefined
+    };
+  } catch (e) {
+    return {}; // sem rede agora: publica mesmo assim, sem os dados automáticos
+  }
+}
+
+// reels-iniciais.json: lista de links que a equipe manda. Ao subir, o servidor
+// publica os que ainda não estão no site; apagar um reel no site não o traz
+// de volta porque o código fica em reels_ignorados.
+async function publicarReelsIniciais(pool, arquivo = path.join(__dirname, 'reels-iniciais.json')) {
+  let lista;
+  try { lista = JSON.parse(fs.readFileSync(arquivo, 'utf8')); } catch (e) { return 0; }
+  let novos = 0;
+  for (const item of Array.isArray(lista) ? lista : []) {
+    const id = idDoYoutube(item.link);
+    if (!id) { console.warn('🎬 Link inválido em reels-iniciais.json:', item.link); continue; }
+    const ja = await pool.query(
+      'SELECT 1 FROM reels WHERE youtube_id = $1 UNION ALL SELECT 1 FROM reels_ignorados WHERE youtube_id = $1', [id]
+    );
+    if (ja.rowCount) continue;
+    const info = await infoDoYoutube(id);
+    if (info.indisponivel) { console.warn('🎬 Vídeo indisponível fora do YouTube, pulei:', item.link); continue; }
+    await pool.query(
+      `INSERT INTO reels (youtube_id, titulo, descricao, tipo, area, canal) VALUES ($1, $2, $3, $4, $5, $6)`,
+      [id, String(item.titulo || info.titulo || 'Vídeo').slice(0, 100), String(item.descricao || '').slice(0, 500),
+       TIPOS.includes(item.tipo) ? item.tipo : 'dica', AREAS.includes(item.area) ? item.area : null, info.canal || null]
+    );
+    novos++;
+  }
+  if (novos) console.log(`🎬 ${novos} reels publicados a partir de reels-iniciais.json`);
+  return novos;
+}
+
 function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador }) {
   const freioCurtir = limitar(auth.criarFreio(300, 60 * 60 * 1000), 'Calma! Muitas curtidas em pouco tempo.', req => `u${req.usuario.id}`);
   const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
@@ -34,7 +84,7 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     const antesDe = idValido(req.query.antes); // paginação: reels mais antigos que este id
     try {
       const { rows } = await pool.query(
-        `SELECT r.id, r.youtube_id, r.titulo, r.descricao, r.tipo, r.area, r.created_at,
+        `SELECT r.id, r.youtube_id, r.titulo, r.descricao, r.tipo, r.area, r.canal, r.created_at,
                 (SELECT COUNT(*)::int FROM reels_curtidas c WHERE c.reel_id = r.id) AS curtidas,
                 EXISTS (SELECT 1 FROM reels_curtidas c WHERE c.reel_id = r.id AND c.usuario_id = $1) AS curti,
                 EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei
@@ -56,21 +106,32 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
   app.get('/api/reels', (req, res) => listar(req, res, { salvos: false }));
   app.get('/api/reels/salvos', exigirLogin, (req, res) => listar(req, res, { salvos: true }));
 
+  // Para o formulário preencher título e canal sozinho ao colar o link.
+  app.get('/api/reels/info', exigirModerador, async (req, res) => {
+    const id = idDoYoutube(req.query.link);
+    if (!id) return res.status(400).json({ error: 'Link inválido.' });
+    const info = await infoDoYoutube(id);
+    if (info.indisponivel) return res.status(422).json({ error: 'Esse vídeo não pode ser mostrado fora do YouTube (é privado ou o dono não deixa).' });
+    res.json({ youtube_id: id, ...info });
+  });
+
   app.post('/api/reels', exigirModerador, async (req, res) => {
     const c = req.body || {};
     const youtubeId = idDoYoutube(c.link);
     if (!youtubeId) return res.status(400).json({ error: 'Cole o link de um vídeo do YouTube (Shorts ou normal).' });
-    const titulo = typeof c.titulo === 'string' ? c.titulo.trim() : '';
+    const info = await infoDoYoutube(youtubeId);
+    if (info.indisponivel) return res.status(422).json({ error: 'Esse vídeo não pode ser mostrado fora do YouTube (é privado ou o dono não deixa).' });
+    const titulo = (typeof c.titulo === 'string' && c.titulo.trim()) || info.titulo || '';
     const descricao = typeof c.descricao === 'string' ? c.descricao.trim() : '';
-    if (!titulo || titulo.length > 100) return res.status(400).json({ error: 'O título precisa ter de 1 a 100 caracteres.' });
+    if (!titulo || titulo.length > 100) return res.status(400).json({ error: 'Escreva um título (até 100 caracteres).' });
     if (descricao.length > 500) return res.status(400).json({ error: 'A descrição pode ter até 500 caracteres.' });
     if (!TIPOS.includes(c.tipo)) return res.status(400).json({ error: 'Escolha se é resolução ou dica.' });
     if (c.area && !AREAS.includes(c.area)) return res.status(400).json({ error: 'Área inválida.' });
     try {
       const { rows } = await pool.query(
-        `INSERT INTO reels (autor_id, youtube_id, titulo, descricao, tipo, area)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [req.usuario.id, youtubeId, titulo, descricao, c.tipo, c.area || null]
+        `INSERT INTO reels (autor_id, youtube_id, titulo, descricao, tipo, area, canal)
+         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id`,
+        [req.usuario.id, youtubeId, titulo, descricao, c.tipo, c.area || null, info.canal || null]
       );
       res.status(201).json({ id: rows[0].id, message: 'Reel publicado!' });
     } catch (erro) {
@@ -83,8 +144,10 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     const id = idValido(req.params.id);
     if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
     try {
-      const r = await pool.query('DELETE FROM reels WHERE id = $1', [id]);
+      const r = await pool.query('DELETE FROM reels WHERE id = $1 RETURNING youtube_id', [id]);
       if (r.rowCount === 0) return res.status(404).json({ error: 'Reel não encontrado.' });
+      // Não volta pela lista de reels iniciais na próxima vez que o servidor subir.
+      await pool.query('INSERT INTO reels_ignorados (youtube_id) VALUES ($1) ON CONFLICT DO NOTHING', [r.rows[0].youtube_id]);
       res.json({ message: 'Reel apagado.' });
     } catch (erro) {
       console.error('Erro ao apagar reel:', erro.message);
@@ -120,3 +183,5 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
 
 module.exports = registrarReels;
 module.exports.idDoYoutube = idDoYoutube;
+module.exports.infoDoYoutube = infoDoYoutube;
+module.exports.publicarReelsIniciais = publicarReelsIniciais;

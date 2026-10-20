@@ -131,6 +131,12 @@ no YouTube (Shorts) e só os administradores publicam, colando o link (`reels.js
 youtu.be, watch e embed). O site guarda só o código do vídeo, e o player (youtube-nocookie.com) só
 carrega no reel que está na tela. Alunos com conta curtem e salvam.
 
+Ao colar o link, o servidor pega o título e o canal pelo oEmbed do YouTube (o canal aparece como
+crédito no reel); vídeo privado ou com a incorporação desligada é recusado. Para publicar vários de
+uma vez, ponha os links em `reels-iniciais.json` (`[{ "link": "...", "tipo": "resolucao", "area":
+"matematica" }]`): ao subir, o servidor publica os que ainda não estão no site. Reel apagado no site
+vai para `reels_ignorados` e não volta pela lista.
+
 ## Perfil e galeria
 
 Cada aluno tem um perfil com foto, bio, números de estudo e publicações em galeria (cartões com

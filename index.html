@@ -827,6 +827,7 @@
     .reel.tocando .reel-legenda { padding-bottom: 54px; } /* não cobre a barra do player */
     .reel-legenda b { display: block; font-size: 1rem; line-height: 1.35; margin: 6px 0 4px; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
     .reel-legenda p { font-size: .84rem; line-height: 1.45; opacity: .9; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .canal-reel { display: block; margin-top: 6px; font-size: .78rem; font-weight: 700; opacity: .85; }
     .selo-reel { display: inline-block; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.2); margin-right: 4px; text-transform: uppercase; letter-spacing: .04em; }
     .reel-lado { position: absolute; right: 8px; bottom: 90px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
     .reel.tocando .reel-lado { bottom: 120px; }
@@ -1507,7 +1508,7 @@
       <input class="entrada-modal" id="reel-link" placeholder="https://youtube.com/shorts/…" oninput="previaDoReel()" maxlength="300">
       <div class="previa-reel" id="previa-reel"></div>
       <label class="campo-modal" for="reel-titulo">Título</label>
-      <input class="entrada-modal" id="reel-titulo" maxlength="100" placeholder="Ex.: ENEM 2019 Q.136 em 60 segundos">
+      <input class="entrada-modal" id="reel-titulo" maxlength="100" placeholder="Em branco, usa o título do vídeo">
       <label class="campo-modal" for="reel-descricao">Descrição (opcional)</label>
       <textarea class="entrada-modal" id="reel-descricao" rows="3" maxlength="500"></textarea>
       <label class="campo-modal">Tipo</label>
@@ -4273,6 +4274,7 @@ function htmlDoReel(r) {
         <span class="selo-reel">${r.tipo === 'resolucao' ? 'Resolução' : 'Dica'}</span>${r.area ? `<span class="selo-reel">${escapar(NOME_AREA_REEL[r.area] || '')}</span>` : ''}
         <b>${escapar(r.titulo)}</b>
         ${r.descricao ? `<p>${escapar(r.descricao)}</p>` : ''}
+        ${r.canal ? `<small class="canal-reel">▶ ${escapar(r.canal)} · YouTube</small>` : ''}
       </div>
       <div class="reel-lado">
         <button class="${r.curti ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'curtir', this)" aria-pressed="${r.curti}" aria-label="Curtir">${preenchido(r.curti, ICONES_REEL.curtir)}</button>
@@ -4392,6 +4394,7 @@ function idDoYoutube(link) {
 }
 
 function abrirNovoReel() {
+  infoPedida = null;
   for (const id of ['reel-link', 'reel-titulo', 'reel-descricao']) document.getElementById(id).value = '';
   document.getElementById('reel-area').value = '';
   document.getElementById('recado-reel').innerHTML = '';
@@ -4400,12 +4403,30 @@ function abrirNovoReel() {
   document.getElementById('reel-link').focus();
 }
 
-function previaDoReel() {
+let infoPedida = null;
+async function previaDoReel() {
   const link = document.getElementById('reel-link').value;
   const id = idDoYoutube(link);
-  document.getElementById('previa-reel').innerHTML = !link.trim() ? ''
-    : id ? `<img src="${escapar(capaDoReel(id))}" alt="Capa do vídeo">`
+  const previa = document.getElementById('previa-reel');
+  previa.innerHTML = !link.trim() ? ''
+    : id ? `<img src="${escapar(capaDoReel(id))}" alt="Capa do vídeo"><small id="canal-previa">Buscando título e canal…</small>`
     : '<small style="color:var(--errado)">Esse link não parece ser de um vídeo do YouTube.</small>';
+  if (!id || id === infoPedida) return;
+  infoPedida = id;
+  // O servidor pergunta ao YouTube o título e o canal: o crédito sai certo.
+  try {
+    const r = await fetch(`${API_URL}/api/reels/info?link=${encodeURIComponent(link)}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    const aviso = document.getElementById('canal-previa');
+    if (!aviso || infoPedida !== id) return;
+    if (!r.ok) { aviso.textContent = dados.error; aviso.style.color = 'var(--errado)'; return; }
+    const titulo = document.getElementById('reel-titulo');
+    if (!titulo.value.trim() && dados.titulo) titulo.value = dados.titulo;
+    aviso.textContent = dados.canal ? `Crédito: ▶ ${dados.canal}` : '';
+  } catch (e) {
+    const aviso = document.getElementById('canal-previa');
+    if (aviso) aviso.textContent = '';
+  }
 }
 
 function escolherTipoReel(botao) {
