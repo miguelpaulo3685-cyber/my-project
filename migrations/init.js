@@ -271,6 +271,111 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas dos reels criadas');
 
+    // ---------- Rede social de estudos ----------
+    await pool.query(`
+      -- Discussão de cada questão: aparece depois que o aluno responde.
+      CREATE TABLE IF NOT EXISTS questoes_comentarios (
+        id SERIAL PRIMARY KEY,
+        questao_id INT NOT NULL REFERENCES questoes(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        resposta_a INT REFERENCES questoes_comentarios(id) ON DELETE CASCADE,
+        texto VARCHAR(1000) NOT NULL,
+        fixado BOOLEAN NOT NULL DEFAULT FALSE,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_qcom_questao ON questoes_comentarios(questao_id, id);
+      CREATE TABLE IF NOT EXISTS questoes_comentarios_uteis (
+        comentario_id INT NOT NULL REFERENCES questoes_comentarios(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (comentario_id, usuario_id)
+      );
+      CREATE TABLE IF NOT EXISTS questoes_comentarios_denuncias (
+        comentario_id INT NOT NULL REFERENCES questoes_comentarios(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (comentario_id, usuario_id)
+      );
+
+      -- Seguir pessoas e notificações.
+      CREATE TABLE IF NOT EXISTS seguidores (
+        seguidor_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        seguido_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (seguidor_id, seguido_id),
+        CHECK (seguidor_id <> seguido_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_seguidores_seguido ON seguidores(seguido_id);
+      CREATE TABLE IF NOT EXISTS notificacoes (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        ator_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        tipo VARCHAR(20) NOT NULL,
+        alvo_tipo VARCHAR(20),
+        alvo_id INT,
+        texto VARCHAR(200),
+        lida BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_notificacoes_usuario ON notificacoes(usuario_id, id DESC);
+
+      -- Desafio da semana: as mesmas 10 questões para todo mundo.
+      CREATE TABLE IF NOT EXISTS desafios (
+        semana VARCHAR(10) PRIMARY KEY,
+        questoes INT[] NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS desafio_resultados (
+        semana VARCHAR(10) NOT NULL REFERENCES desafios(semana) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        acertos SMALLINT NOT NULL,
+        nota SMALLINT,
+        segundos INT NOT NULL,
+        respostas JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (semana, usuario_id)
+      );
+
+      -- Turmas e grupos.
+      CREATE TABLE IF NOT EXISTS grupos (
+        id SERIAL PRIMARY KEY,
+        nome VARCHAR(60) NOT NULL,
+        descricao VARCHAR(300) NOT NULL DEFAULT '',
+        tipo VARCHAR(10) NOT NULL DEFAULT 'turma',
+        codigo VARCHAR(12) UNIQUE,
+        criador_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS grupo_membros (
+        grupo_id INT NOT NULL REFERENCES grupos(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        papel VARCHAR(10) NOT NULL DEFAULT 'membro',
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (grupo_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_grupo_membros_usuario ON grupo_membros(usuario_id);
+      ALTER TABLE posts ADD COLUMN IF NOT EXISTS grupo_id INT REFERENCES grupos(id) ON DELETE CASCADE;
+      CREATE INDEX IF NOT EXISTS idx_posts_grupo ON posts(grupo_id, created_at DESC);
+
+      -- Reels enviados por alunos esperam a aprovação de um administrador.
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS status VARCHAR(10) NOT NULL DEFAULT 'aprovado';
+      CREATE INDEX IF NOT EXISTS idx_reels_status ON reels(status);
+    `);
+    // Grupos por objetivo, abertos para qualquer um entrar.
+    await pool.query(`
+      INSERT INTO grupos (nome, descricao, tipo)
+      SELECT v.nome, v.descricao, 'objetivo' FROM (VALUES
+        ('Medicina', 'Para quem sonha com o jaleco: Natureza pesada e redação afiada.'),
+        ('Direito', 'Humanas, Linguagens e muita argumentação.'),
+        ('Engenharias', 'Matemática e Física no centro de tudo.'),
+        ('Computação e TI', 'Lógica, Matemática e tecnologia.'),
+        ('Licenciaturas', 'Quem quer ensinar também precisa passar.'),
+        ('Saúde (outros cursos)', 'Enfermagem, Odonto, Fisio, Nutrição, Farmácia e mais.'),
+        ('Primeiro ENEM', 'Fazendo o ENEM pela primeira vez? Bora junto.')
+      ) AS v(nome, descricao)
+      WHERE NOT EXISTS (SELECT 1 FROM grupos g WHERE g.tipo = 'objetivo' AND g.nome = v.nome);
+    `);
+    console.log('✅ Tabelas da rede social criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

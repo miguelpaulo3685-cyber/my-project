@@ -6,6 +6,7 @@
 // escondem a publicação e administradores revisam.
 
 const imagens = require('./imagens');
+const { notificarSeguidores } = require('./social');
 
 const DENUNCIAS_PARA_ESCONDER = 3;
 const MAXIMO_DE_PUBLICACOES = 60; // por pessoa: o banco grátis tem pouco espaço
@@ -65,8 +66,11 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
       const perfil = await pool.query(
         `SELECT u.id, u.username, COALESCE(u.bio, '') AS bio, u.foto_id, u.created_at,
                 (SELECT COUNT(*)::int FROM respostas r WHERE r.usuario_id = u.id) AS questoes,
-                (SELECT COUNT(*)::int FROM respostas r WHERE r.usuario_id = u.id AND r.acertou) AS acertos
-           FROM usuarios u WHERE u.id = $1`, [id]
+                (SELECT COUNT(*)::int FROM respostas r WHERE r.usuario_id = u.id AND r.acertou) AS acertos,
+                (SELECT COUNT(*)::int FROM seguidores s WHERE s.seguido_id = u.id) AS seguidores,
+                (SELECT COUNT(*)::int FROM seguidores s WHERE s.seguidor_id = u.id) AS seguindo,
+                EXISTS (SELECT 1 FROM seguidores s WHERE s.seguido_id = u.id AND s.seguidor_id = $2) AS sigo
+           FROM usuarios u WHERE u.id = $1`, [id, eu ? eu.id : null]
       );
       const u = perfil.rows[0];
       if (!u) return res.status(404).json({ error: 'Perfil não encontrado.' });
@@ -85,7 +89,8 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
         perfil: {
           id: u.id, nome: u.username, bio: u.bio, foto: urlDaImagem(u.foto_id), desde: u.created_at,
           questoes: u.questoes, acerto: u.questoes ? Math.round(100 * u.acertos / u.questoes) : null,
-          publicacoes: pubs.rowCount, meu: dono
+          publicacoes: pubs.rowCount, meu: dono,
+          seguidores: u.seguidores, seguindo: u.seguindo, sigo: u.sigo
         },
         publicacoes: pubs.rows.map(p => {
           const pub = {
@@ -169,6 +174,7 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
          VALUES ($1, $2, $3, $4, $5) RETURNING id`,
         [req.usuario.id, campos.titulo, campos.texto || '', capaId, campos.posicao ?? 50]
       );
+      await notificarSeguidores(pool, { atorId: req.usuario.id, tipo: 'publicacao', alvoTipo: 'perfil', alvoId: req.usuario.id, texto: campos.titulo });
       res.status(201).json({ id: nova.rows[0].id, message: 'Publicado!' });
     } catch (erro) {
       console.error('Erro ao publicar:', erro.message);

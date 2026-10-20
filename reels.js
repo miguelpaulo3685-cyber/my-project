@@ -1,7 +1,8 @@
 // Reels: vídeos curtos de resolução de questões e dicas, no estilo TikTok.
 // O vídeo fica no YouTube ou no TikTok (de qualquer canal); o site guarda só
 // o código dele e mostra tudo num feed vertical, com o nome do canal como
-// crédito. Só administradores publicam; alunos curtem e salvam.
+// crédito. Administradores publicam direto; alunos enviam e o reel só
+// aparece depois que um administrador aprovar.
 //
 // A coluna youtube_id guarda o código do vídeo nas duas plataformas (o nome
 // ficou da primeira versão); a coluna plataforma diz de onde ele é.
@@ -9,6 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const imagens = require('./imagens');
+const { notificar } = require('./social');
 
 const TIPOS = ['resolucao', 'dica'];
 const AREAS = ['linguagens', 'humanas', 'natureza', 'matematica', 'redacao'];
@@ -137,7 +139,11 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
   const freioCurtir = limitar(auth.criarFreio(300, 60 * 60 * 1000), 'Calma! Muitas curtidas em pouco tempo.', req => `u${req.usuario.id}`);
   const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
 
-  async function listar(req, res, { salvos }) {
+  const ENVIADOS_POR_DIA = 5;
+  const freioEnviar = limitar(auth.criarFreio(ENVIADOS_POR_DIA, 24 * 60 * 60 * 1000), `Você pode enviar até ${ENVIADOS_POR_DIA} reels por dia.`, req => `u${req.usuario.id}`);
+  const soAdminSemFreio = (req, res, next) => (req.usuario && req.usuario.admin ? next() : freioEnviar(req, res, next));
+
+  async function listar(req, res, { salvos, pendentes = false }) {
     const eu = req.usuario;
     const tipo = TIPOS.includes(req.query.tipo) ? req.query.tipo : null;
     const area = AREAS.includes(req.query.area) ? req.query.area : null;
@@ -148,16 +154,20 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
                 (SELECT COUNT(*)::int FROM reels_curtidas c WHERE c.reel_id = r.id) AS curtidas,
                 EXISTS (SELECT 1 FROM reels_curtidas c WHERE c.reel_id = r.id AND c.usuario_id = $1) AS curti,
                 EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei,
-                (SELECT COUNT(*)::int FROM reels_comentarios m WHERE m.reel_id = r.id AND NOT m.oculto) AS comentarios
-           FROM reels r
-          WHERE ($2::text IS NULL OR r.tipo = $2) AND ($3::text IS NULL OR r.area = $3)
+                (SELECT COUNT(*)::int FROM reels_comentarios m WHERE m.reel_id = r.id AND NOT m.oculto) AS comentarios,
+                r.status, a.username AS enviado_por
+           FROM reels r LEFT JOIN usuarios a ON a.id = r.autor_id
+          WHERE r.status = $6 AND ($2::text IS NULL OR r.tipo = $2) AND ($3::text IS NULL OR r.area = $3)
             AND ($4::int IS NULL OR r.id < $4)
             AND (NOT $5 OR EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1))
           ORDER BY r.id DESC
           LIMIT ${POR_PAGINA}`,
-        [eu ? eu.id : null, tipo, area, antesDe, salvos]
+        [eu ? eu.id : null, tipo, area, antesDe, salvos, pendentes ? 'pendente' : 'aprovado']
       );
-      res.json({ reels: rows, mais: rows.length === POR_PAGINA, moderador: Boolean(eu && eu.admin) });
+      const admin = Boolean(eu && eu.admin);
+      const naFila = admin ? (await pool.query(`SELECT COUNT(*)::int AS n FROM reels WHERE status = 'pendente'`)).rows[0].n : 0;
+      // Quem enviou só aparece para administradores (na fila de aprovação).
+      res.json({ reels: rows.map(r => (admin ? r : { ...r, enviado_por: undefined })), mais: rows.length === POR_PAGINA, moderador: admin, pendentes: naFila });
     } catch (erro) {
       console.error('Erro ao listar reels:', erro.message);
       res.status(500).json({ error: 'Não consegui carregar os reels agora.' });
@@ -166,19 +176,40 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
 
   app.get('/api/reels', (req, res) => listar(req, res, { salvos: false }));
   app.get('/api/reels/salvos', exigirLogin, (req, res) => listar(req, res, { salvos: true }));
+  app.get('/api/reels/pendentes', exigirModerador, (req, res) => listar(req, res, { salvos: false, pendentes: true }));
+
+  // Aprovar põe o reel no ar; recusar apaga. Nos dois casos, quem enviou é avisado.
+  for (const acao of ['aprovar', 'recusar']) {
+    app.post(`/api/reels/:id/${acao}`, exigirModerador, async (req, res) => {
+      const id = idValido(req.params.id);
+      if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
+      try {
+        const r = acao === 'aprovar'
+          ? await pool.query(`UPDATE reels SET status = 'aprovado', created_at = NOW() WHERE id = $1 AND status = 'pendente' RETURNING autor_id, titulo`, [id])
+          : await pool.query(`DELETE FROM reels WHERE id = $1 AND status = 'pendente' RETURNING autor_id, titulo`, [id]);
+        if (!r.rowCount) return res.status(404).json({ error: 'Esse reel não está esperando aprovação.' });
+        await notificar(pool, { usuarioId: r.rows[0].autor_id, atorId: req.usuario.id, tipo: acao === 'aprovar' ? 'reel_aprovado' : 'reel_recusado',
+          alvoTipo: 'reel', alvoId: acao === 'aprovar' ? id : null, texto: r.rows[0].titulo });
+        res.json({ message: acao === 'aprovar' ? 'Reel aprovado e no ar!' : 'Reel recusado.' });
+      } catch (erro) {
+        console.error(`Erro ao ${acao} reel:`, erro.message);
+        res.status(500).json({ error: 'Não deu certo agora.' });
+      }
+    });
+  }
 
   // Para o formulário preencher título e canal sozinho ao colar o link.
   const INDISPONIVEL = 'Esse vídeo não pode ser mostrado fora da plataforma (é privado, foi apagado ou o dono não deixa).';
   const LINK_INVALIDO = 'Cole o link de um vídeo do YouTube ou do TikTok.';
 
-  app.get('/api/reels/info', exigirModerador, async (req, res) => {
+  app.get('/api/reels/info', exigirLogin, async (req, res) => {
     const info = await infoDoVideo(req.query.link);
     if (!info) return res.status(400).json({ error: LINK_INVALIDO });
     if (info.indisponivel) return res.status(422).json({ error: INDISPONIVEL });
     res.json(info);
   });
 
-  app.post('/api/reels', exigirModerador, async (req, res) => {
+  app.post('/api/reels', exigirLogin, soAdminSemFreio, async (req, res) => {
     const c = req.body || {};
     const info = await infoDoVideo(c.link);
     if (!info) return res.status(400).json({ error: LINK_INVALIDO });
@@ -192,11 +223,13 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     if (c.area && !AREAS.includes(c.area)) return res.status(400).json({ error: 'Área inválida.' });
     try {
       const { rows } = await pool.query(
-        `INSERT INTO reels (autor_id, youtube_id, plataforma, link, titulo, descricao, tipo, area, canal)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id`,
-        [req.usuario.id, info.id, info.plataforma, info.link, titulo, descricao, c.tipo, c.area || null, info.canal || null]
+        `INSERT INTO reels (autor_id, youtube_id, plataforma, link, titulo, descricao, tipo, area, canal, status)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+        [req.usuario.id, info.id, info.plataforma, info.link, titulo, descricao, c.tipo, c.area || null, info.canal || null,
+         req.usuario.admin ? 'aprovado' : 'pendente']
       );
-      res.status(201).json({ id: rows[0].id, message: 'Reel publicado!' });
+      res.status(201).json({ id: rows[0].id, pendente: !req.usuario.admin,
+        message: req.usuario.admin ? 'Reel publicado!' : 'Enviado! O reel aparece assim que um administrador aprovar.' });
     } catch (erro) {
       console.error('Erro ao publicar reel:', erro.message);
       res.status(500).json({ error: 'Não consegui publicar o reel agora.' });

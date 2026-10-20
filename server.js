@@ -991,16 +991,22 @@ app.post('/api/posts', exigirLogin, freioPosts, async (req, res) => {
   if (!conteudo || !String(conteudo).trim()) {
     return res.status(400).json({ error: 'Escreva alguma coisa antes de publicar.' });
   }
+  // Post de grupo: só quem é membro publica no feed do grupo.
+  const grupoId = req.body.grupo_id ? Number(req.body.grupo_id) : null;
 
   try {
+    if (grupoId) {
+      const acesso = await require('./grupos').acessoAoGrupo(pool, grupoId, req.usuario);
+      if (!acesso.postar) return res.status(403).json({ error: 'Entre no grupo para publicar nele.' });
+    }
     // O autor vem da sessão, nunca do que o navegador mandou: senão qualquer
     // um poderia publicar no nome de outra pessoa. usuario_id guarda o nome
     // exibido; autor_id liga o post à conta, para ele sumir junto com ela.
     const result = await pool.query(
-      `INSERT INTO posts (usuario_id, autor_id, conteudo, created_at)
-       VALUES ($1, $2, $3, NOW())
+      `INSERT INTO posts (usuario_id, autor_id, conteudo, grupo_id, created_at)
+       VALUES ($1, $2, $3, $4, NOW())
        RETURNING id, usuario_id, conteudo, created_at`,
-      [req.usuario.username, req.usuario.id, String(conteudo).trim().slice(0, 2000)]
+      [req.usuario.username, req.usuario.id, String(conteudo).trim().slice(0, 2000), grupoId]
     );
     res.json({ post: result.rows[0] });
   } catch (error) {
@@ -1014,17 +1020,24 @@ app.post('/api/posts', exigirLogin, freioPosts, async (req, res) => {
 // Administradores veem também os posts escondidos por denúncia.
 app.get('/api/posts', async (req, res) => {
   const eu = req.usuario;
+  // Sem ?grupo= é o feed geral; com ele, o feed daquele grupo.
+  const grupoId = req.query.grupo ? Number(req.query.grupo) : null;
   try {
+    if (grupoId) {
+      const acesso = await require('./grupos').acessoAoGrupo(pool, grupoId, eu);
+      if (!acesso.existe) return res.status(404).json({ error: 'Grupo não encontrado.' });
+      if (!acesso.ler) return res.status(403).json({ error: eu ? 'Essa turma é só para quem tem o convite.' : 'Entre na sua conta para ver os grupos.' });
+    }
     const result = await pool.query(
       `SELECT p.id, p.usuario_id, p.conteudo, p.created_at, p.autor_id,
               COALESCE(p.oculto, FALSE) AS oculto,
               (SELECT COUNT(*)::int FROM denuncias d WHERE d.post_id = p.id) AS denuncias,
               EXISTS (SELECT 1 FROM denuncias d WHERE d.post_id = p.id AND d.usuario_id = $1) AS denunciei
          FROM posts p
-        WHERE NOT COALESCE(p.oculto, FALSE) OR $2
+        WHERE (NOT COALESCE(p.oculto, FALSE) OR $2) AND p.grupo_id IS NOT DISTINCT FROM $3
         ORDER BY p.created_at DESC
         LIMIT 50`,
-      [eu ? eu.id : null, Boolean(eu && eu.admin)]
+      [eu ? eu.id : null, Boolean(eu && eu.admin), grupoId]
     );
     res.json({
       posts: result.rows.map(p => {
@@ -1048,6 +1061,10 @@ app.get('/api/posts', async (req, res) => {
 require('./perfis')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./simulados')(app, { pool, auth, limitar, exigirLogin });
 require('./reels')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./social')(app, { pool, auth, limitar, exigirLogin });
+require('./discussao')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./desafio')(app, { pool, auth, limitar, exigirLogin });
+require('./grupos')(app, { pool, auth, limitar, exigirLogin });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;
@@ -1134,6 +1151,8 @@ cron.schedule('0 4 * * *', async () => {
     const r = await pool.query('DELETE FROM sessoes WHERE expira_em < NOW()');
     if (r.rowCount > 0) console.log(`🧹 ${r.rowCount} sessões expiradas removidas`);
     await pool.query('DELETE FROM tokens_email WHERE expira_em < NOW() OR usado_em IS NOT NULL');
+    // Notificação lida e velha não serve para ninguém.
+    await pool.query(`DELETE FROM notificacoes WHERE created_at < NOW() - INTERVAL '60 days'`);
   } catch (erro) {
     console.error('❌ Erro ao limpar sessões:', erro.message);
   }

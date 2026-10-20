@@ -911,6 +911,120 @@
       .reel-quadro { border-radius: 14px; width: 100%; aspect-ratio: auto; }
     }
 
+    /* ===================== REDE SOCIAL ===================== */
+    /* sino de notificações */
+    .btn-icone.sino { position: relative; display: flex; align-items: center; justify-content: center; }
+    .btn-icone.sino svg { width: 19px; height: 19px; }
+    .selo-sino {
+      position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px;
+      background: var(--errado); color: #fff; font-size: .68rem; font-weight: 800; display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--fundo);
+    }
+    .notificacao, .pessoa {
+      width: 100%; display: grid; grid-template-columns: 38px 1fr; gap: 12px; align-items: center; text-align: left;
+      background: none; border: none; border-radius: 12px; padding: 10px; cursor: pointer; font: inherit; color: var(--texto);
+    }
+    .notificacao:hover, .pessoa:hover { background: var(--superficie-2); }
+    .notificacao.nova { background: var(--marca-suave); }
+    .notificacao .bolha-autor, .pessoa .bolha-autor, .linha-ranking .bolha-autor {
+      width: 38px; height: 38px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800;
+    }
+    .notificacao img, .pessoa img, .linha-ranking .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .texto-notificacao { display: block; font-size: .9rem; line-height: 1.45; overflow-wrap: anywhere; }
+    .notificacao small, .pessoa small { display: block; color: var(--texto-fraco); font-size: .76rem; margin-top: 2px; }
+
+    /* discussão das questões */
+    .modal.discussao { display: flex; flex-direction: column; max-height: 90vh; }
+    #lista-discussao { flex: 1; overflow-y: auto; margin: 6px -4px 0; padding: 0 4px; min-height: 120px; }
+    #escrever-discussao { margin: 10px -22px -22px; flex-wrap: wrap; }
+    #escrever-discussao textarea { min-height: 54px; }
+    .respondendo { width: 100%; font-size: .8rem; color: var(--texto-fraco); }
+    .respondendo button { background: none; border: none; color: var(--marca-texto); font: inherit; font-weight: 700; cursor: pointer; }
+    .comentario.fixado { background: var(--marca-suave); border-radius: 12px; padding: 10px; margin: 4px -6px; }
+    .comentario.resposta { margin-top: 8px; padding-bottom: 0; grid-template-columns: 28px 1fr; }
+    .comentario.resposta .bolha-autor { width: 28px; height: 28px; font-size: .75rem; }
+    .selo-fixado { display: inline-block; font-size: .72rem; font-weight: 800; color: var(--marca-texto); margin-bottom: 2px; }
+    .selo-equipe { font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px; background: var(--marca); color: var(--sobre-marca); }
+    .comentario .acoes button.ligado { color: var(--marca-texto); }
+    .comentario .acoes span { font-size: .74rem; color: var(--texto-fraco); }
+    .botoes-pos-resposta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .botoes-pos-resposta button.acao { margin: 0; }
+    button.acao.botao-discussao { margin: 0; }
+
+    /* desafio da semana */
+    .cartao-desafio { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; border-color: var(--marca); flex-wrap: wrap; }
+    .cartao-desafio .trofeu { font-size: 2rem; }
+    .info-desafio { flex: 1; min-width: 180px; }
+    .info-desafio b { display: block; font-size: 1.05rem; }
+    .info-desafio small { display: block; color: var(--texto-fraco); font-size: .84rem; margin-top: 2px; }
+    .info-desafio small.feito { color: var(--texto); }
+    .cartao-desafio button.acao { margin: 0; }
+    #tela-desafio .barra-prova { top: 62px; }
+    .ranking { display: grid; gap: 6px; }
+    .linha-ranking {
+      display: grid; grid-template-columns: 42px 38px 1fr auto auto; gap: 12px; align-items: center;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: 8px 14px;
+    }
+    .linha-ranking.eu { border-color: var(--marca); background: var(--marca-suave); }
+    .linha-ranking .pos { font-weight: 800; text-align: center; font-size: 1.05rem; }
+    .linha-ranking .nome { text-align: left; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .linha-ranking .pontos { font-variant-numeric: tabular-nums; }
+    .linha-ranking small { color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+    .correcao-desafio { display: grid; gap: 8px; }
+    .linha-correcao {
+      display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center;
+      background: var(--superficie); border: 1px solid var(--borda); border-left-width: 4px; border-radius: 12px; padding: 10px 14px;
+    }
+    .linha-correcao.certo { border-left-color: var(--certo); }
+    .linha-correcao.errado { border-left-color: var(--errado); }
+    .linha-correcao .num { font-weight: 800; color: var(--texto-fraco); text-align: center; }
+    .linha-correcao small { display: block; color: var(--texto-fraco); font-size: .8rem; }
+
+    /* feed com grupos */
+    .abas-feed { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 16px; padding-bottom: 2px; scrollbar-width: none; }
+    .abas-feed::-webkit-scrollbar { display: none; }
+    .abas-feed button {
+      flex-shrink: 0; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--borda); cursor: pointer;
+      background: var(--superficie-2); color: var(--texto-fraco); font: inherit; font-size: .84rem; font-weight: 700; white-space: nowrap;
+    }
+    .abas-feed button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .cabecalho-grupo { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; }
+    .cabecalho-grupo b { display: block; font-size: 1.1rem; }
+    .cabecalho-grupo small { display: block; color: var(--texto-fraco); font-size: .84rem; margin-top: 3px; }
+    .codigo-turma b { display: inline; font-size: .95rem; letter-spacing: .12em; color: var(--marca-texto); }
+    .codigo-turma button { background: none; border: none; color: var(--marca-texto); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; }
+    .botoes-grupo { display: flex; gap: 8px; flex-wrap: wrap; }
+    .botoes-grupo button.acao { margin: 0; }
+    .grade-grupos-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+    .grade-grupos-acoes .painel { padding: 18px; }
+    .grade-grupos-acoes b { display: block; }
+    .grade-grupos-acoes small { display: block; color: var(--texto-fraco); font-size: .82rem; margin: 3px 0 10px; }
+    .linha-form { display: flex; gap: 8px; }
+    .linha-form input { flex: 1; min-width: 0; }
+    .linha-form button.acao { margin: 0; }
+    .lista-grupos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 22px; }
+    .cartao-grupo {
+      display: flex; gap: 12px; align-items: center; justify-content: space-between;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; padding: 14px 16px;
+    }
+    .cartao-grupo b { display: block; }
+    .cartao-grupo small { display: block; color: var(--texto-fraco); font-size: .8rem; margin-top: 2px; }
+    .cartao-grupo button.acao { margin: 0; flex-shrink: 0; }
+
+    /* reels: aprovar e recusar */
+    .reel-lado button.aprovar { background: rgba(34,197,94,.85); }
+    .reel-lado button.recusar { background: rgba(239,68,68,.85); }
+    @media (max-width: 640px) {
+      .grade-grupos-acoes { grid-template-columns: 1fr; }
+      .linha-ranking { grid-template-columns: 34px 32px 1fr auto; padding: 8px 10px; gap: 8px; }
+      .linha-ranking small { display: none; }
+      .linha-ranking .bolha-autor { width: 32px; height: 32px; }
+      .linha-correcao { grid-template-columns: 26px 1fr; }
+      .linha-correcao .botao-discussao { grid-column: 2; justify-self: start; }
+      .numeros-res { grid-template-columns: 1fr 1fr; }
+    }
+
     /* ===================== COMECE POR AQUI ===================== */
     /* Guia de 3 passos para quem chega e atalhos para começar sem pensar. */
     .guia {
@@ -1555,6 +1669,41 @@
     </div>
   </div>
 
+  <!-- Discussão de uma questão -->
+  <div class="fundo-modal escondido" id="modal-discussao" onclick="if (event.target === this) fecharModal('modal-discussao')">
+    <div class="modal larga discussao" role="dialog" aria-labelledby="titulo-discussao">
+      <div class="modal-topo">
+        <h2 id="titulo-discussao">Discussão</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-discussao')" title="Fechar">✕</button>
+      </div>
+      <p class="pista" id="sobre-discussao">Explique como resolveu, tire dúvidas e marque as explicações que te ajudaram.</p>
+      <div id="lista-discussao"></div>
+      <form class="escrever-comentario" id="escrever-discussao" onsubmit="enviarDiscussao(event)"></form>
+    </div>
+  </div>
+
+  <!-- Notificações -->
+  <div class="fundo-modal escondido" id="modal-notificacoes" onclick="if (event.target === this) fecharModal('modal-notificacoes')">
+    <div class="modal" role="dialog" aria-labelledby="titulo-notificacoes">
+      <div class="modal-topo">
+        <h2 id="titulo-notificacoes">Notificações</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-notificacoes')" title="Fechar">✕</button>
+      </div>
+      <div id="lista-notificacoes"></div>
+    </div>
+  </div>
+
+  <!-- Lista de pessoas (seguidores, seguindo, membros) -->
+  <div class="fundo-modal escondido" id="modal-pessoas" onclick="if (event.target === this) fecharModal('modal-pessoas')">
+    <div class="modal" role="dialog" aria-labelledby="titulo-pessoas">
+      <div class="modal-topo">
+        <h2 id="titulo-pessoas">Pessoas</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-pessoas')" title="Fechar">✕</button>
+      </div>
+      <div id="lista-pessoas"></div>
+    </div>
+  </div>
+
   <!-- Novo reel (só administradores) -->
   <div class="fundo-modal escondido" id="modal-reel" onclick="if (event.target === this) fecharModal('modal-reel')">
     <div class="modal" role="dialog" aria-labelledby="titulo-modal-reel">
@@ -1692,6 +1841,10 @@
             <path d="m12 3.2 2.7 5.6 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.7l6.1-.9z"/>
           </svg><b id="ind-acertos">0</b>
         </div>
+        <button class="btn-icone sino escondido" id="btn-sino" onclick="abrirNotificacoes()" title="Notificações" aria-label="Notificações">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15.5 6 9.5"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg>
+          <span class="selo-sino escondido" id="selo-sino"></span>
+        </button>
         <button class="btn-icone" onclick="abrirAparencia()" title="Aparência: tema e cores">🎨</button>
         <button class="btn-icone" id="btn-tema" onclick="trocarTema()" title="Alternar tema">🌙</button>
         <button class="avatar" id="btn-perfil" onclick="cliqueNoPerfil()" title="Conta">?</button>
@@ -1705,6 +1858,8 @@
       <h1>Treinar</h1>
       <p>Questões reais do ENEM, de 2009 a 2023, sorteadas do nosso banco.</p>
     </div>
+
+    <div id="cartao-desafio"></div>
 
     <section class="guia" id="guia" aria-label="Comece por aqui">
       <div class="guia-topo">
@@ -1785,6 +1940,8 @@
       <h1>Feed de Estudos</h1>
       <p>Dicas, dúvidas e explicações entre vocês.</p>
     </div>
+    <div class="abas-feed" id="abas-feed" role="group" aria-label="Feeds"></div>
+    <div id="cabecalho-grupo"></div>
     <div id="area-publicar"></div>
     <div id="lista-posts"></div>
   </main>
@@ -1825,6 +1982,11 @@
         <form class="escrever-comentario" id="escrever-comentario" onsubmit="enviarComentario(event)"></form>
       </aside>
     </div>
+  </main>
+
+  <!-- ===================== DESAFIO DA SEMANA ===================== -->
+  <main class="pagina escondido" id="tela-desafio">
+    <div id="conteudo-desafio"></div>
   </main>
 
   <!-- ===================== PERFIL ===================== -->
@@ -2353,10 +2515,10 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'reels', 'feed', 'perfil', 'conta'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'feed', 'perfil', 'conta'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
-  const treinando = ['treinar', 'questao', 'resultado'].includes(tela);
+  const treinando = ['treinar', 'questao', 'resultado', 'desafio'].includes(tela);
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed');
   document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
@@ -2369,7 +2531,8 @@ function irPara(tela) {
   if (tela === 'simulado') abrirSimulado();
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
-  if (tela === 'treinar') { desenharAreas(); desenharGuia(); }
+  if (tela === 'treinar') { desenharAreas(); desenharGuia(); desenharCartaoDesafio(); }
+  if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') abrirFeed();
 }
 
@@ -2652,6 +2815,7 @@ async function abrirMateria(area) {
     return;
   }
 
+  buscarContagemDiscussao(questoes.map(q => q.id));
   bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(),
             notaAntes: notasTri[area] ? notasTri[area].nota : null };
   atualizarTrilho();
@@ -2897,9 +3061,12 @@ function responder(escolhida) {
       A explicação de cada alternativa ainda não está disponível: a fonte das questões
       fornece o gabarito, mas não a justificativa.
     </div>
-    <button class="acao" onclick="proximaQuestao()">
-      ${ultima ? 'Ver resultado →' : 'Próxima questão →'}
-    </button>`;
+    <div class="botoes-pos-resposta">
+      ${botaoDiscussao(q.id, '💬 Ver discussão')}
+      <button class="acao" onclick="proximaQuestao()">
+        ${ultima ? 'Ver resultado →' : 'Próxima questão →'}
+      </button>
+    </div>`;
 
   document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -3013,6 +3180,7 @@ function cabecalhoAuth() {
 }
 
 function desenharPerfil() {
+  iniciarSino();
   const botao = document.getElementById('btn-perfil');
   if (usuarioLogado && usuarioLogado.foto) {
     botao.innerHTML = `<img src="${escapar(urlImagem(usuarioLogado.foto))}" alt="">`;
@@ -3519,23 +3687,34 @@ async function publicar() {
     const r = await fetch(`${API_URL}/api/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
-      body: JSON.stringify({ conteudo })
+      body: JSON.stringify({ conteudo, grupo_id: feedAtual === 'geral' ? null : feedAtual })
     });
     if (r.ok) { caixa.value = ''; await abrirFeed(); return; }
-    alert((await r.json()).error || 'Não consegui publicar.');
+    avisoSim((await r.json()).error || 'Não consegui publicar.');
   } catch (e) {
-    alert(SEM_SERVIDOR);
+    avisoSim(SEM_SERVIDOR);
   } finally {
     botao.disabled = false;
     botao.textContent = 'Publicar';
   }
 }
 
+// Feed: "Geral" é o de sempre; cada grupo tem o seu; "Grupos" mostra a
+// página para entrar, criar turma e usar código de convite.
+let feedAtual = 'geral';
+let meusGrupos = [];
+
 async function abrirFeed() {
+  await carregarGrupos();
+  desenharAbasFeed();
+  if (feedAtual === 'grupos') return desenharPaginaGrupos();
+  if (feedAtual !== 'geral' && !meusGrupos.some(g => g.id === feedAtual)) feedAtual = 'geral';
+  const grupo = meusGrupos.find(g => g.id === feedAtual);
+  document.getElementById('cabecalho-grupo').innerHTML = grupo ? cabecalhoDoGrupo(grupo) : '';
   document.getElementById('area-publicar').innerHTML = usuarioLogado
     ? `<div class="painel" style="margin-bottom:22px">
          <textarea class="caixa-texto" id="texto-post" maxlength="2000"
-           placeholder="Compartilhe uma dica, tire uma dúvida, explique uma questão…"></textarea>
+           placeholder="${grupo ? `Escreva para ${escapar(grupo.nome)}…` : 'Compartilhe uma dica, tire uma dúvida, explique uma questão…'}"></textarea>
          <button class="acao" id="botao-publicar" onclick="publicar()" style="margin-top:14px">Publicar</button>
        </div>`
     : `<div class="painel" style="margin-bottom:22px;text-align:center">
@@ -3548,12 +3727,12 @@ async function abrirFeed() {
 
   try {
     // Com o token, o servidor sabe quais posts são seus e se você modera.
-    const dados = await (await fetch(`${API_URL}/api/posts`, { headers: cabecalhoAuth() })).json();
+    const dados = await (await fetch(`${API_URL}/api/posts${grupo ? '?grupo=' + grupo.id : ''}`, { headers: cabecalhoAuth() })).json();
     const posts = dados.posts || [];
     alvo.innerHTML = (dados.moderador
       ? '<div class="aviso-moderador">🛡️ Você é administrador: vê também os posts escondidos por denúncia.</div>' : '') +
       (posts.length === 0
-      ? '<div class="vazio"><span class="cara">💬</span>Nenhum post ainda. Seja o primeiro!</div>'
+      ? `<div class="vazio"><span class="cara">💬</span>${grupo ? 'Nenhum post no grupo ainda. Puxe o assunto!' : 'Nenhum post ainda. Seja o primeiro!'}</div>`
       : posts.map(p => {
           const acoes = [];
           if (p.oculto) acoes.push(`<button class="acao-post" onclick="moderarPost(${p.id}, 'restaurar')">Restaurar</button>`);
@@ -3579,6 +3758,112 @@ async function abrirFeed() {
     alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(SEM_SERVIDOR)}<br>
       <button class="acao" style="margin:18px auto 0" onclick="abrirFeed()">Tentar de novo</button></div>`;
   }
+}
+
+// ---------- grupos ----------
+async function carregarGrupos() {
+  try {
+    const r = await fetch(`${API_URL}/api/grupos`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    meusGrupos = (dados.grupos || []).filter(g => g.sou_membro);
+    window.todosGrupos = dados.grupos || [];
+  } catch (e) { meusGrupos = []; window.todosGrupos = []; }
+}
+
+function desenharAbasFeed() {
+  const abas = [['geral', 'Geral'], ...meusGrupos.map(g => [g.id, (g.tipo === 'turma' ? '🏫 ' : '🎯 ') + g.nome]), ['grupos', '＋ Grupos']];
+  document.getElementById('abas-feed').innerHTML = abas.map(([id, nome]) =>
+    `<button aria-pressed="${id === feedAtual}" onclick="trocarFeed(${typeof id === 'number' ? id : `'${id}'`})">${escapar(nome)}</button>`).join('');
+}
+
+function trocarFeed(id) { feedAtual = id; abrirFeed(); }
+
+function cabecalhoDoGrupo(g) {
+  return `<div class="painel cabecalho-grupo">
+    <div>
+      <b>${g.tipo === 'turma' ? '🏫' : '🎯'} ${escapar(g.nome)}</b>
+      <small>${escapar(g.descricao || '')}${g.descricao ? ' · ' : ''}${g.membros} ${g.membros === 1 ? 'membro' : 'membros'}</small>
+      ${g.codigo ? `<small class="codigo-turma">Código de convite: <b>${escapar(g.codigo)}</b> <button onclick="copiarCodigo('${escapar(g.codigo)}')">copiar</button></small>` : ''}
+    </div>
+    <div class="botoes-grupo">
+      <button class="acao discreta pequena" onclick="verMembros(${g.id}, '${escapar(g.nome).replace(/'/g, '&#39;')}')">Membros</button>
+      <button class="acao discreta pequena" onclick="abrirDesafio('grupo:${g.id}')">🏆 Ranking</button>
+      <button class="acao discreta pequena" onclick="sairDoGrupo(${g.id})">Sair</button>
+    </div>
+  </div>`;
+}
+
+async function copiarCodigo(codigo) {
+  try { await navigator.clipboard.writeText(codigo); avisoSim('Código copiado! Mande para a turma.'); }
+  catch (e) { avisoSim(`Código: ${codigo}`); }
+}
+
+function desenharPaginaGrupos() {
+  document.getElementById('cabecalho-grupo').innerHTML = '';
+  document.getElementById('area-publicar').innerHTML = '';
+  const objetivos = (window.todosGrupos || []).filter(g => g.tipo === 'objetivo');
+  const turmas = meusGrupos.filter(g => g.tipo === 'turma');
+  document.getElementById('lista-posts').innerHTML = `
+    ${usuarioLogado ? `<div class="grade-grupos-acoes">
+      <form class="painel" onsubmit="entrarComCodigo(event)">
+        <b>Entrar numa turma</b><small>Peça o código para quem criou a turma.</small>
+        <div class="linha-form"><input class="entrada-modal" id="codigo-turma" maxlength="8" placeholder="Ex.: K7QX2M" autocomplete="off">
+        <button class="acao">Entrar</button></div>
+      </form>
+      <form class="painel" onsubmit="criarTurma(event)">
+        <b>Criar uma turma</b><small>A sala da escola, o grupo do cursinho… Só entra quem tiver o código.</small>
+        <div class="linha-form"><input class="entrada-modal" id="nome-turma" maxlength="60" placeholder="Ex.: 3º B · E.E. Machado de Assis">
+        <button class="acao">Criar</button></div>
+      </form>
+    </div>` : `<div class="painel vazio" style="margin-bottom:18px">Entre na sua conta para participar dos grupos.<br>
+      <button class="acao" style="margin:14px auto 0" onclick="abrirConta('entrar')">Entrar</button></div>`}
+    ${turmas.length ? `<div class="rotulo-galeria">Suas turmas</div><div class="lista-grupos">${turmas.map(cartaoGrupo).join('')}</div>` : ''}
+    <div class="rotulo-galeria">Grupos por objetivo</div>
+    <div class="lista-grupos">${objetivos.map(cartaoGrupo).join('')}</div>`;
+}
+
+function cartaoGrupo(g) {
+  return `<div class="cartao-grupo">
+    <div><b>${g.tipo === 'turma' ? '🏫' : '🎯'} ${escapar(g.nome)}</b><small>${escapar(g.descricao || '')}</small>
+      <small>${g.membros} ${g.membros === 1 ? 'membro' : 'membros'}</small></div>
+    ${g.sou_membro ? `<button class="acao discreta pequena" onclick="trocarFeed(${g.id})">Abrir</button>`
+      : `<button class="acao pequena" onclick="entrarNoGrupo(${g.id})">Entrar</button>`}
+  </div>`;
+}
+
+async function acaoGrupo(rota, corpo, depois) {
+  if (!usuarioLogado) return abrirConta('entrar');
+  try {
+    const r = await fetch(`${API_URL}${rota}`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() }, body: JSON.stringify(corpo || {}) });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    await depois(dados);
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+const entrarNoGrupo = id => acaoGrupo(`/api/grupos/${id}/entrar`, {}, () => trocarFeed(id));
+function entrarComCodigo(evento) {
+  evento.preventDefault();
+  acaoGrupo('/api/grupos/entrar', { codigo: document.getElementById('codigo-turma').value }, d => trocarFeed(d.id));
+}
+function criarTurma(evento) {
+  evento.preventDefault();
+  acaoGrupo('/api/grupos', { nome: document.getElementById('nome-turma').value }, d => {
+    avisoSim(`Turma criada! Código de convite: ${d.codigo}`);
+    trocarFeed(d.id);
+  });
+}
+async function sairDoGrupo(id) {
+  if (!await confirmar('Sair deste grupo? Se você for o dono de uma turma, ela passa para o membro mais antigo.', { sim: 'Sair' })) return;
+  acaoGrupo(`/api/grupos/${id}/sair`, {}, () => trocarFeed('geral'));
+}
+
+async function verMembros(id, nome) {
+  abrirListaPessoas(`Membros · ${nome}`, async () => {
+    const r = await fetch(`${API_URL}/api/grupos/${id}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    return dados.membros.map(m => ({ ...m, detalhe: m.papel === 'dono' ? 'criou a turma' : '' }));
+  });
 }
 
 async function moderarPost(id, acao) {
@@ -3956,7 +4241,8 @@ function desenharProva() {
         <span class="letra">${LETRAS[i] || i + 1}</span><span>${escapar(t)}</span></button>`;
     }).join('')}</div>
     ${corrigindo ? `<div class="nota-gabarito" style="margin-top:6px"><strong>Gabarito: ${LETRAS[q.correta]}</strong> ·
-      ${minha === undefined ? 'você deixou em branco' : minha === q.correta ? 'você acertou' : `você marcou ${LETRAS[minha]}`}</div>` : ''}
+      ${minha === undefined ? 'você deixou em branco' : minha === q.correta ? 'você acertou' : `você marcou ${LETRAS[minha]}`}
+      <div style="margin-top:10px">${botaoDiscussao(q.id)}</div></div>` : ''}
     <div class="rodape-prova">
       <button class="acao discreta" onclick="irParaQuestaoSim(${sim.atual - 1})" ${sim.atual === 0 ? 'disabled' : ''}>← Anterior</button>
       ${corrigindo ? '<span class="marcar"></span>' : `<button class="acao discreta marcar" aria-pressed="${marcada}" onclick="marcarSim()">${marcada ? '⚑ Marcada para revisar' : '⚐ Marcar para revisar'}</button>`}
@@ -4222,7 +4508,8 @@ function desenharResultadoSim() {
     </div>`;
 }
 
-function corrigirSimulado() {
+async function corrigirSimulado() {
+  await buscarContagemDiscussao(sim.questoes.map(q => q.id));
   sim.atual = 0;
   sim.vendoRedacao = false;
   irPara('prova');
@@ -4268,6 +4555,8 @@ let carregandoReels = false;
 let somReels = false;     // depois que a pessoa liga o som, os próximos já tocam com som
 let observadorReels = null;
 let reelAtivo = null;
+let moderadorReels = false;
+let pendentesReels = 0;
 
 const capaDoReel = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 // O player do TikTok tem o próprio botão de volume; o do YouTube começa mudo
@@ -4284,9 +4573,15 @@ addEventListener('resize', medirTopo);
 
 function abrirReels() {
   medirTopo();
-  document.getElementById('filtros-reels').innerHTML = FILTROS_REELS.map(f =>
-    `<button aria-pressed="${f.id === filtroReels}" onclick="filtrarReels('${f.id}')">${f.nome}</button>`).join('');
+  desenharFiltrosReels();
   carregarReels(true);
+}
+
+// Administradores ganham o filtro "Para aprovar" quando há reels na fila.
+function desenharFiltrosReels() {
+  const filtros = [...FILTROS_REELS, ...(moderadorReels && (pendentesReels || filtroReels === 'pendentes') ? [{ id: 'pendentes', nome: `⏳ Para aprovar (${pendentesReels})` }] : [])];
+  document.getElementById('filtros-reels').innerHTML = filtros.map(f =>
+    `<button aria-pressed="${f.id === filtroReels}" onclick="filtrarReels('${f.id}')">${f.nome}</button>`).join('');
 }
 
 function filtrarReels(id) {
@@ -4300,22 +4595,31 @@ async function carregarReels(doComeco) {
   carregandoReels = true;
   const lista = document.getElementById('reels-lista');
   if (doComeco) { reels = []; pararReels(); lista.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando reels…</div>'; }
-  const f = FILTROS_REELS.find(x => x.id === filtroReels);
+  const f = FILTROS_REELS.find(x => x.id === filtroReels) || {}; // "pendentes" não está na lista fixa
   const busca = new URLSearchParams();
   if (f.tipo) busca.set('tipo', f.tipo);
   if (f.area) busca.set('area', f.area);
   if (!doComeco && reels.length) busca.set('antes', reels[reels.length - 1].id);
   try {
-    const r = await fetch(`${API_URL}/api/reels${filtroReels === 'salvos' ? '/salvos' : ''}?${busca}`, { headers: cabecalhoAuth() });
+    const rota = { salvos: '/salvos', pendentes: '/pendentes' }[filtroReels] || '';
+    const r = await fetch(`${API_URL}/api/reels${rota}?${busca}`, { headers: cabecalhoAuth() });
     const dados = await r.json();
     if (!r.ok) throw { daApi: dados.error };
-    document.getElementById('novo-reel').classList.toggle('escondido', !dados.moderador);
+    // Todo mundo com conta pode enviar; o de vocês entra direto, o dos alunos vai para aprovação.
+    moderadorReels = dados.moderador;
+    const mudouFila = pendentesReels !== dados.pendentes;
+    pendentesReels = dados.pendentes || 0;
+    if (mudouFila) desenharFiltrosReels();
+    const novo = document.getElementById('novo-reel');
+    novo.classList.toggle('escondido', !usuarioLogado);
+    novo.textContent = dados.moderador ? '＋ Novo reel' : '＋ Enviar reel';
     maisReels = dados.mais;
     const novos = dados.reels;
     reels.push(...novos);
     if (doComeco) lista.innerHTML = '';
     if (!reels.length) {
-      lista.innerHTML = `<div class="vazio"><span class="cara">🎬</span>${filtroReels === 'salvos'
+      lista.innerHTML = `<div class="vazio"><span class="cara">🎬</span>${filtroReels === 'pendentes' ? 'Nenhum reel esperando aprovação. 🎉'
+        : filtroReels === 'salvos'
         ? 'Você ainda não salvou nenhum reel. Toque em 🔖 para guardar os que quiser rever.'
         : 'Nenhum reel aqui ainda. Em breve tem resolução de questão e dica rápida!'}</div>`;
       return;
@@ -4350,6 +4654,7 @@ function htmlDoReel(r) {
         <b>${escapar(r.titulo)}</b>
         ${r.descricao ? `<p>${escapar(r.descricao)}</p>` : ''}
         ${r.canal ? `<small class="canal-reel">▶ ${escapar(r.canal)} · ${nomeDaPlataforma(r)}</small>` : ''}
+        ${r.status === 'pendente' && r.enviado_por ? `<small class="canal-reel">⏳ Enviado por ${escapar(r.enviado_por)} · esperando aprovação</small>` : ''}
       </div>
       <div class="reel-lado">
         <button class="${r.curti ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'curtir', this)" aria-pressed="${r.curti}" aria-label="Curtir">${preenchido(r.curti, ICONES_REEL.curtir)}</button>
@@ -4358,7 +4663,10 @@ function htmlDoReel(r) {
         <button class="so-celular" onclick="abrirComentarios(${r.id})" aria-label="Comentários">${icone(ICONES_REEL.comentar)}</button>
         <small class="so-celular" data-comentarios="${r.id}">${r.comentarios || 0}</small>
         <button onclick="compartilharReel(${r.id})" aria-label="Compartilhar">${icone(ICONES_REEL.compartilhar)}</button>
-        ${document.getElementById('novo-reel').classList.contains('escondido') ? '' : `<button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>`}
+        ${r.status === 'pendente' && moderadorReels ? `
+          <button class="aprovar" onclick="decidirReel(${r.id}, 'aprovar')" aria-label="Aprovar">${icone('<path d="m5 12.5 4.5 4.5L19 7.5"/>')}</button>
+          <button class="recusar" onclick="decidirReel(${r.id}, 'recusar')" aria-label="Recusar">${icone('<path d="M6 6l12 12M18 6 6 18"/>')}</button>`
+          : moderadorReels ? `<button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>` : ''}
       </div>
     </div>
   </section>`;
@@ -4476,8 +4784,23 @@ function idDoYoutube(link) {
   } catch (e) { return null; }
 }
 
+async function decidirReel(id, acao) {
+  if (acao === 'recusar' && !await confirmar('Recusar este reel? Ele some da fila e quem enviou é avisado.', { sim: 'Recusar', perigo: true })) return;
+  try {
+    const r = await fetch(`${API_URL}/api/reels/${id}/${acao}`, { method: 'POST', headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    avisoSim(dados.message);
+    carregarReels(true);
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
 function abrirNovoReel() {
   infoPedida = null;
+  document.getElementById('titulo-modal-reel').textContent = moderadorReels ? 'Novo reel' : 'Enviar reel';
+  document.getElementById('publicar-reel').textContent = moderadorReels ? 'Publicar' : 'Enviar para aprovação';
   for (const id of ['reel-link', 'reel-titulo', 'reel-descricao']) document.getElementById(id).value = '';
   document.getElementById('reel-area').value = '';
   document.getElementById('recado-reel').innerHTML = '';
@@ -4532,9 +4855,8 @@ async function publicarReel() {
     const dados = await r.json();
     if (!r.ok) throw { daApi: dados.error };
     fecharModal('modal-reel');
-    filtroReels = 'todos';
-    abrirReels();
-    avisoSim('🎬 Reel publicado!');
+    if (!dados.pendente) { filtroReels = 'todos'; abrirReels(); }
+    avisoSim(dados.pendente ? '📨 ' + dados.message : '🎬 Reel publicado!');
   } catch (e) {
     document.getElementById('recado-reel').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
   } finally {
@@ -4749,9 +5071,14 @@ function desenharPaginaPerfil() {
           <span><b>${u.questoes}</b>questões</span>
           <span><b>${u.acerto === null ? '—' : u.acerto + '%'}</b>de acerto</span>
         </div>
+        <div class="perfil-numeros" style="margin-top:6px">
+          <button class="autor-link" onclick="verSeguidores(${u.id}, 'seguidores')"><b>${u.seguidores || 0}</b> ${u.seguidores === 1 ? 'seguidor' : 'seguidores'}</button>
+          <button class="autor-link" onclick="verSeguidores(${u.id}, 'seguindo')"><b>${u.seguindo || 0}</b> seguindo</button>
+        </div>
       </div>
     </div>
     <p class="perfil-bio">${escapar(u.bio)}</p>
+    ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button></div>` : ''}
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
@@ -4992,6 +5319,436 @@ async function salvarPerfil() {
   } finally {
     botao.disabled = false;
     botao.textContent = 'Salvar';
+  }
+}
+
+// ===================== DISCUSSÃO DAS QUESTÕES =====================
+// Abre depois de responder (no treino, na correção do simulado e no
+// desafio): ver a discussão antes entregaria o gabarito.
+let discussaoDe = null;
+let respondendoA = null;
+const contagemDiscussao = {};
+
+async function buscarContagemDiscussao(ids) {
+  const faltam = ids.filter(id => Number.isInteger(id) && !(id in contagemDiscussao));
+  if (!faltam.length) return;
+  try {
+    const r = await fetch(`${API_URL}/api/discussao/contagem?questoes=${faltam.join(',')}`);
+    const { contagem } = await r.json();
+    for (const id of faltam) contagemDiscussao[id] = contagem[id] || 0;
+  } catch (e) { /* sem rede: o botão aparece sem número */ }
+}
+
+const botaoDiscussao = (id, texto = '💬 Discussão') =>
+  `<button class="acao discreta botao-discussao" onclick="abrirDiscussao(${Number(id)})">${texto}${contagemDiscussao[id] ? ` (${contagemDiscussao[id]})` : ''}</button>`;
+
+function abrirDiscussao(questaoId) {
+  discussaoDe = questaoId;
+  respondendoA = null;
+  abrirModal('modal-discussao');
+  carregarDiscussao();
+}
+
+async function carregarDiscussao() {
+  const id = discussaoDe;
+  const lista = document.getElementById('lista-discussao');
+  desenharFormDiscussao();
+  lista.innerHTML = '<div class="vazio">Carregando…</div>';
+  try {
+    const r = await fetch(`${API_URL}/api/questoes/${id}/discussao`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    if (discussaoDe !== id) return;
+    contagemDiscussao[id] = dados.total;
+    document.getElementById('titulo-discussao').textContent = `Discussão · ${dados.total}`;
+    lista.innerHTML = dados.comentarios.length
+      ? dados.comentarios.map(c => htmlDoComentarioQuestao(c, dados.moderador)).join('')
+      : '<div class="vazio"><span class="cara">💡</span>Ninguém explicou esta questão ainda.<br>Seja a primeira pessoa a mostrar como resolveu!</div>';
+  } catch (e) {
+    lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+function htmlDoComentarioQuestao(c, moderador, resposta = false) {
+  const nome = escapar(c.autor || '?');
+  const bolha = c.foto ? `<img src="${escapar(urlImagem(c.foto))}" alt="">` : escapar((c.autor || '?').trim().charAt(0).toUpperCase());
+  const acoes = [];
+  if (usuarioLogado && !c.meu) acoes.push(`<button class="${c.achei_util ? 'ligado' : ''}" onclick="acaoDiscussao(${c.id}, 'util')">👍 Útil${c.uteis ? ` · ${c.uteis}` : ''}</button>`);
+  else if (c.uteis) acoes.push(`<span>👍 ${c.uteis}</span>`);
+  if (usuarioLogado && !resposta) acoes.push(`<button onclick="responderDiscussao(${c.id}, '${nome.replace(/'/g, '&#39;')}')">Responder</button>`);
+  if (moderador && !resposta) acoes.push(`<button onclick="acaoDiscussao(${c.id}, 'fixar')">${c.fixado ? 'Desafixar' : '📌 Fixar'}</button>`);
+  if (moderador && c.oculto) acoes.push(`<button onclick="acaoDiscussao(${c.id}, 'restaurar')">Restaurar</button>`);
+  if (c.pode_apagar) acoes.push(`<button onclick="acaoDiscussao(${c.id}, 'apagar')">Apagar</button>`);
+  if (usuarioLogado && !c.meu) acoes.push(c.denunciei ? '<button disabled>Denunciado</button>' : `<button onclick="acaoDiscussao(${c.id}, 'denunciar')">Denunciar</button>`);
+  return `<div class="comentario${c.oculto ? ' oculto' : ''}${c.fixado ? ' fixado' : ''}${resposta ? ' resposta' : ''}">
+    <span class="bolha-autor">${bolha}</span>
+    <div>
+      ${c.fixado ? '<span class="selo-fixado">📌 Explicação fixada pela equipe</span>' : ''}
+      <div class="cabeca">${usuarioLogado ? `<button class="autor-link" onclick="fecharModal('modal-discussao'); abrirPerfil(${Number(c.autor_id)})">${nome}</button>` : `<b>${nome}</b>`}
+        ${c.autor_admin ? '<span class="selo-equipe">equipe</span>' : ''}
+        <small>${tempoAtras(c.created_at)}${c.oculto ? ' · escondido por denúncias' : ''}</small></div>
+      <p>${escapar(c.texto)}</p>
+      ${acoes.length ? `<div class="acoes">${acoes.join('')}</div>` : ''}
+      ${(c.respostas || []).map(r => htmlDoComentarioQuestao(r, moderador, true)).join('')}
+    </div>
+  </div>`;
+}
+
+function desenharFormDiscussao() {
+  const form = document.getElementById('escrever-discussao');
+  form.innerHTML = usuarioLogado
+    ? `${respondendoA ? `<div class="respondendo">Respondendo a ${respondendoA.nome} <button type="button" onclick="responderDiscussao(null)">cancelar</button></div>` : ''}
+       <textarea id="texto-discussao" maxlength="1000" rows="2" placeholder="${respondendoA ? 'Escreva sua resposta…' : 'Como você resolveu? Qual foi a sua dúvida?'}" aria-label="Escrever na discussão"
+         onkeydown="if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); this.form.requestSubmit(); }"></textarea>
+       <button class="acao" id="enviar-discussao">Publicar</button>`
+    : `<p class="entrar-para"><button type="button" onclick="fecharModal('modal-discussao'); abrirConta('entrar')">Entre</button> para participar da discussão.</p>`;
+}
+
+function responderDiscussao(id, nome) {
+  respondendoA = id ? { id, nome } : null;
+  desenharFormDiscussao();
+  document.getElementById('texto-discussao')?.focus();
+}
+
+async function enviarDiscussao(evento) {
+  evento.preventDefault();
+  const campo = document.getElementById('texto-discussao');
+  const texto = campo.value.trim();
+  if (!texto) return;
+  const botao = document.getElementById('enviar-discussao');
+  botao.disabled = true;
+  try {
+    const r = await fetch(`${API_URL}/api/questoes/${discussaoDe}/discussao`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify({ texto, resposta_a: respondendoA ? respondendoA.id : null })
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    respondendoA = null;
+    await carregarDiscussao();
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+    botao.disabled = false;
+  }
+}
+
+async function acaoDiscussao(id, acao) {
+  if (acao === 'apagar' && !await confirmar('Apagar este comentário?', { sim: 'Apagar', perigo: true })) return;
+  if (acao === 'denunciar' && !await confirmar('Denunciar este comentário? Com 3 denúncias ele sai do ar até a equipe revisar.', { sim: 'Denunciar' })) return;
+  try {
+    const r = await fetch(`${API_URL}/api/discussao/${id}${acao === 'apagar' ? '' : '/' + acao}`, {
+      method: acao === 'apagar' ? 'DELETE' : 'POST', headers: cabecalhoAuth()
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    if (acao === 'denunciar') avisoSim(dados.message);
+    carregarDiscussao();
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
+// ===================== NOTIFICAÇÕES =====================
+// O sino consulta só a contagem (consulta leve), a cada 2 minutos e só com
+// a aba aberta na tela: aba esquecida não fica acordando o banco à toa.
+let relogioSino = null;
+const TEXTO_DA_NOTIFICACAO = {
+  seguidor: n => `<b>${escapar(n.ator)}</b> começou a seguir você.`,
+  resposta: n => `<b>${escapar(n.ator)}</b> respondeu seu comentário: “${escapar(n.texto || '')}”`,
+  util: n => `<b>${escapar(n.ator)}</b> achou sua explicação útil 👍`,
+  fixado: () => 'A equipe fixou a sua explicação como a melhor da questão 📌',
+  publicacao: n => `<b>${escapar(n.ator)}</b> publicou: “${escapar(n.texto || '')}”`,
+  reel_aprovado: n => `Seu reel “${escapar(n.texto || '')}” foi aprovado e está no ar 🎬`,
+  reel_recusado: n => `Seu reel “${escapar(n.texto || '')}” não foi aprovado desta vez.`
+};
+
+function iniciarSino() {
+  document.getElementById('btn-sino').classList.toggle('escondido', !usuarioLogado);
+  clearInterval(relogioSino);
+  if (!usuarioLogado) return;
+  atualizarSino();
+  relogioSino = setInterval(() => { if (document.visibilityState === 'visible') atualizarSino(); }, 120000);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && usuarioLogado) atualizarSino(); });
+
+async function atualizarSino() {
+  try {
+    const r = await fetch(`${API_URL}/api/notificacoes/contagem`, { headers: cabecalhoAuth() });
+    if (!r.ok) return;
+    mostrarSeloSino((await r.json()).nao_lidas);
+  } catch (e) { /* tenta de novo no próximo ciclo */ }
+}
+
+function mostrarSeloSino(n) {
+  const selo = document.getElementById('selo-sino');
+  selo.textContent = n > 9 ? '9+' : n;
+  selo.classList.toggle('escondido', !n);
+}
+
+async function abrirNotificacoes() {
+  abrirModal('modal-notificacoes');
+  const lista = document.getElementById('lista-notificacoes');
+  lista.innerHTML = '<div class="vazio">Carregando…</div>';
+  try {
+    const r = await fetch(`${API_URL}/api/notificacoes`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    lista.innerHTML = dados.notificacoes.length ? dados.notificacoes.map(n => `
+      <button class="notificacao${n.lida ? '' : ' nova'}" onclick='abrirNotificacao(${JSON.stringify({ tipo: n.tipo, alvo_tipo: n.alvo_tipo, alvo_id: n.alvo_id, ator_id: n.ator_id })})'>
+        <span class="bolha-autor">${n.foto ? `<img src="${escapar(urlImagem(n.foto))}" alt="">` : (n.ator ? escapar(n.ator.charAt(0).toUpperCase()) : '⭐')}</span>
+        <span><span class="texto-notificacao">${(TEXTO_DA_NOTIFICACAO[n.tipo] || (() => 'Novidade para você.'))(n)}</span>
+        <small>${tempoAtras(n.created_at)}</small></span>
+      </button>`).join('')
+      : '<div class="vazio"><span class="cara">🔔</span>Nada por aqui ainda.<br>Comente nas questões e siga colegas para começar a conversa!</div>';
+    if (dados.nao_lidas) {
+      mostrarSeloSino(0);
+      fetch(`${API_URL}/api/notificacoes/lidas`, { method: 'POST', headers: cabecalhoAuth() }).catch(() => {});
+    }
+  } catch (e) {
+    lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+function abrirNotificacao(n) {
+  fecharModal('modal-notificacoes');
+  if (n.alvo_tipo === 'questao' && n.alvo_id) return abrirDiscussao(n.alvo_id);
+  if (n.alvo_tipo === 'reel') return irPara('reels');
+  if (n.alvo_tipo === 'perfil' && n.alvo_id) return abrirPerfil(n.alvo_id);
+  if (n.ator_id) return abrirPerfil(n.ator_id);
+}
+
+// ===================== SEGUIR =====================
+async function seguirPerfil(id) {
+  if (!usuarioLogado) return abrirConta('entrar');
+  try {
+    const r = await fetch(`${API_URL}/api/perfil/${id}/seguir`, { method: 'POST', headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    perfilAberto.perfil.sigo = dados.sigo;
+    perfilAberto.perfil.seguidores = dados.seguidores;
+    desenharPaginaPerfil();
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
+function verSeguidores(id, lista) {
+  abrirListaPessoas(lista === 'seguidores' ? 'Seguidores' : 'Seguindo', async () => {
+    const r = await fetch(`${API_URL}/api/perfil/${id}/${lista}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    return dados.pessoas;
+  });
+}
+
+async function abrirListaPessoas(titulo, buscar) {
+  document.getElementById('titulo-pessoas').textContent = titulo;
+  const lista = document.getElementById('lista-pessoas');
+  lista.innerHTML = '<div class="vazio">Carregando…</div>';
+  abrirModal('modal-pessoas');
+  try {
+    const pessoas = await buscar();
+    lista.innerHTML = pessoas.length ? pessoas.map(p => `
+      <button class="pessoa" onclick="fecharModal('modal-pessoas'); abrirPerfil(${Number(p.id)})">
+        <span class="bolha-autor">${p.foto ? `<img src="${escapar(urlImagem(p.foto))}" alt="">` : escapar((p.nome || '?').charAt(0).toUpperCase())}</span>
+        <span><b>${escapar(p.nome)}</b>${p.detalhe ? `<small>${escapar(p.detalhe)}</small>` : ''}</span>
+      </button>`).join('') : '<div class="vazio">Ninguém por aqui ainda.</div>';
+  } catch (e) {
+    lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+// ===================== DESAFIO DA SEMANA =====================
+// As mesmas 10 questões para todo mundo, uma tentativa por semana. O
+// gabarito só chega depois de entregar; o andamento fica salvo no navegador.
+let desafio = null;        // resposta de GET /api/desafio
+let andamentoDesafio = null;
+let rankingDesafio = 'geral';
+let relogioDesafio = null;
+const chaveDesafio = semana => `mm_desafio_${semana}`;
+
+async function buscarDesafio() {
+  const r = await fetch(`${API_URL}/api/desafio`, { headers: cabecalhoAuth() });
+  const dados = await r.json();
+  if (!r.ok) throw { daApi: dados.error };
+  desafio = dados;
+  return dados;
+}
+
+const diasAte = data => Math.max(0, Math.ceil((new Date(data) - Date.now()) / 86400000));
+
+async function desenharCartaoDesafio() {
+  const alvo = document.getElementById('cartao-desafio');
+  try { await buscarDesafio(); } catch (e) { alvo.innerHTML = ''; return; }
+  const d = desafio;
+  const faltam = diasAte(d.termina_em);
+  const prazo = faltam <= 1 ? 'termina hoje' : `termina em ${faltam} dias`;
+  alvo.innerHTML = `<section class="cartao-desafio painel">
+    <div class="trofeu">🏆</div>
+    <div class="info-desafio">
+      <b>Desafio da semana</b>
+      <small>${d.questoes.length} questões · ${prazo} · ${d.participantes} ${d.participantes === 1 ? 'participante' : 'participantes'}</small>
+      ${d.meu ? `<small class="feito">Você fez: <b>${d.meu.acertos}/${d.questoes.length}</b>${d.meu.nota ? ` · nota ${d.meu.nota}` : ''}</small>` : ''}
+    </div>
+    ${!usuarioLogado ? `<button class="acao" onclick="abrirConta('criar')">Entrar para participar</button>`
+      : d.meu ? `<button class="acao discreta" onclick="abrirDesafio()">Ver ranking</button>`
+      : `<button class="acao" onclick="abrirDesafio()">${carregarAndamentoDesafio() ? 'Continuar' : 'Participar'}</button>`}
+  </section>`;
+}
+
+function carregarAndamentoDesafio() {
+  try { andamentoDesafio = JSON.parse(localStorage.getItem(chaveDesafio(desafio.semana))); } catch (e) { andamentoDesafio = null; }
+  return andamentoDesafio;
+}
+function salvarAndamentoDesafio() {
+  try { localStorage.setItem(chaveDesafio(desafio.semana), JSON.stringify(andamentoDesafio)); } catch (e) {}
+}
+
+async function abrirDesafio(filtro) {
+  if (filtro) rankingDesafio = filtro;
+  irPara('desafio');
+  const alvo = document.getElementById('conteudo-desafio');
+  alvo.innerHTML = '<div class="vazio">Carregando o desafio…</div>';
+  try { await buscarDesafio(); } catch (e) { alvo.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (desafio.meu || !usuarioLogado || filtro) return desenharResultadoDesafio();
+  if (!carregarAndamentoDesafio()) andamentoDesafio = { atual: 0, respostas: {}, inicio: Date.now() };
+  salvarAndamentoDesafio();
+  desenharQuestaoDesafio();
+  pararRelogioDesafio();
+  relogioDesafio = setInterval(() => {
+    const el = document.getElementById('tempo-desafio');
+    if (el) el.textContent = formatarTempo(Date.now() - andamentoDesafio.inicio).replace(/^0:/, '');
+  }, 1000);
+}
+function pararRelogioDesafio() { clearInterval(relogioDesafio); relogioDesafio = null; }
+
+function desenharQuestaoDesafio() {
+  const total = desafio.questoes.length;
+  const i = andamentoDesafio.atual;
+  const q = desafio.questoes[i];
+  const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
+  const minha = andamentoDesafio.respostas[q.id];
+  const respondidas = Object.keys(andamentoDesafio.respostas).length;
+  document.getElementById('conteudo-desafio').innerHTML = `
+    <div class="barra-prova">
+      <span class="qual">🏆 Desafio da semana</span>
+      <span class="relogio-prova" id="tempo-desafio">${formatarTempo(Date.now() - andamentoDesafio.inicio).replace(/^0:/, '')}</span>
+      <span class="contagem-prova">${respondidas}/${total}</span>
+      <button class="acao" onclick="entregarDesafio()">Entregar</button>
+    </div>
+    <div class="painel">
+      <div class="cabeca-prova"><b>Questão ${i + 1} <small>de ${total}</small></b>
+        <small>${escapar(nomeDaArea(AREA_DA_DISCIPLINA[q.disciplina] || ''))} · ENEM ${escapar(q.ano)}</small></div>
+      <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
+      <div id="alts-desafio">${alternativas.map((t, k) => `<button class="alt${k === minha ? ' escolhida' : ''}" onclick="escolherDesafio(${k})" aria-pressed="${k === minha}">
+        <span class="letra">${LETRAS[k]}</span><span>${escapar(t)}</span></button>`).join('')}</div>
+      <div class="rodape-prova">
+        <button class="acao discreta" onclick="irQuestaoDesafio(${i - 1})" ${i === 0 ? 'disabled' : ''}>← Anterior</button>
+        <span class="marcar"></span>
+        ${i === total - 1 ? '<button class="acao" onclick="entregarDesafio()">Entregar</button>' : `<button class="acao" onclick="irQuestaoDesafio(${i + 1})">Próxima →</button>`}
+      </div>
+      <p class="dica-teclado">Uma tentativa por semana: o gabarito e a discussão aparecem quando você entregar.</p>
+    </div>`;
+}
+
+function escolherDesafio(k) {
+  const q = desafio.questoes[andamentoDesafio.atual];
+  if (andamentoDesafio.respostas[q.id] === k) delete andamentoDesafio.respostas[q.id];
+  else andamentoDesafio.respostas[q.id] = k;
+  salvarAndamentoDesafio();
+  desenharQuestaoDesafio();
+}
+
+function irQuestaoDesafio(i) {
+  if (i < 0 || i >= desafio.questoes.length) return;
+  andamentoDesafio.atual = i;
+  salvarAndamentoDesafio();
+  desenharQuestaoDesafio();
+  window.scrollTo(0, 0);
+}
+
+async function entregarDesafio() {
+  const brancas = desafio.questoes.length - Object.keys(andamentoDesafio.respostas).length;
+  if (!await confirmar(brancas
+    ? `Entregar o desafio? ${brancas} ${brancas === 1 ? 'questão está' : 'questões estão'} sem resposta. Você só tem uma tentativa nesta semana.`
+    : 'Entregar o desafio? Você só tem uma tentativa nesta semana.', { sim: 'Entregar' })) return;
+  pararRelogioDesafio();
+  try {
+    const r = await fetch(`${API_URL}/api/desafio`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+      body: JSON.stringify({ respostas: andamentoDesafio.respostas, segundos: Math.round((Date.now() - andamentoDesafio.inicio) / 1000) })
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    try { localStorage.removeItem(chaveDesafio(desafio.semana)); } catch (e) {}
+    avisoSim(`🏆 ${dados.acertos} de ${dados.total}! Veja sua posição no ranking.`);
+    abrirDesafio();
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+    abrirDesafio();
+  }
+}
+
+async function desenharResultadoDesafio() {
+  const d = desafio;
+  const meu = d.meu;
+  if (meu) await buscarContagemDiscussao(d.questoes.map(q => q.id));
+  if (usuarioLogado && !meusGrupos.length) await carregarGrupos();
+  const abas = [['geral', 'Geral'], ...(usuarioLogado ? [['seguindo', 'Quem eu sigo']] : []),
+    ...meusGrupos.map(g => [`grupo:${g.id}`, g.nome])];
+  document.getElementById('conteudo-desafio').innerHTML = `
+    <div class="cabecalho-secao">
+      <h1>🏆 Desafio da semana</h1>
+      <p>As mesmas 10 questões para todo mundo · ${d.participantes} ${d.participantes === 1 ? 'participante' : 'participantes'} · termina ${diasAte(d.termina_em) <= 1 ? 'hoje' : `em ${diasAte(d.termina_em)} dias`}</p>
+    </div>
+    ${meu ? `<div class="numeros-res" style="margin-bottom:18px">
+        <div class="numero-res"><b>${meu.acertos}</b><span>acertos</span><small>de ${d.questoes.length}</small></div>
+        <div class="numero-res"><b>${meu.nota || '—'}</b><span>nota TRI</span><small>${meu.nota ? 'estimada' : 'indisponível'}</small></div>
+        <div class="numero-res"><b>${formatarTempo(meu.segundos * 1000).replace(/^0:/, '')}</b><span>tempo</span></div>
+        <div class="numero-res"><b id="minha-posicao">…</b><span>posição</span><small id="total-ranking"></small></div>
+      </div>` : !usuarioLogado ? `<div class="painel" style="margin-bottom:18px;text-align:center">Crie uma conta para participar e aparecer no ranking.
+        <br><button class="acao" style="margin:14px auto 0" onclick="abrirConta('criar')">Criar conta</button></div>`
+      : `<div class="painel" style="margin-bottom:18px;text-align:center">Você ainda não fez o desafio desta semana.
+        <br><button class="acao" style="margin:14px auto 0" onclick="rankingDesafio = 'geral'; desafio.meu = null; abrirDesafio()">Participar agora</button></div>`}
+    <div class="rotulo-galeria">Ranking</div>
+    <div class="abas-feed" style="margin-bottom:12px">${abas.map(([id, nome]) => `<button data-filtro="${id}" aria-pressed="${id === rankingDesafio}" onclick="rankingDesafio = this.dataset.filtro; desenharRankingDesafio()">${escapar(nome)}</button>`).join('')}</div>
+    <div id="lista-ranking"><div class="vazio">Carregando…</div></div>
+    ${meu ? `<div class="rotulo-galeria" style="margin-top:28px">Correção</div>
+      <div class="correcao-desafio">${d.questoes.map((q, i) => {
+        const minha = meu.respostas[q.id];
+        const certo = minha === q.correta;
+        return `<div class="linha-correcao ${certo ? 'certo' : 'errado'}">
+          <span class="num">${i + 1}</span>
+          <span><b>${certo ? '✓ Acertou' : minha === undefined ? '— Em branco' : '✕ Errou'}</b>
+            <small>${escapar(nomeDaArea(AREA_DA_DISCIPLINA[q.disciplina] || ''))} · ENEM ${escapar(q.ano)} · gabarito ${LETRAS[q.correta]}${minha !== undefined && !certo ? ` · você marcou ${LETRAS[minha]}` : ''}</small></span>
+          ${botaoDiscussao(q.id)}
+        </div>`;
+      }).join('')}</div>` : ''}`;
+  desenharRankingDesafio();
+}
+
+async function desenharRankingDesafio() {
+  document.querySelectorAll('#conteudo-desafio .abas-feed button').forEach(b => b.setAttribute('aria-pressed', b.dataset.filtro === rankingDesafio));
+  const lista = document.getElementById('lista-ranking');
+  if (!lista) return;
+  try {
+    const r = await fetch(`${API_URL}/api/desafio/ranking?filtro=${encodeURIComponent(rankingDesafio)}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    const pos = document.getElementById('minha-posicao');
+    if (pos) { pos.textContent = dados.minha ? `${dados.minha.posicao}º` : '—'; document.getElementById('total-ranking').textContent = `de ${dados.total}`; }
+    const medalha = p => ({ 1: '🥇', 2: '🥈', 3: '🥉' }[p] || `${p}º`);
+    lista.innerHTML = dados.ranking.length ? `<div class="ranking">${dados.ranking.map(l => `
+      <div class="linha-ranking${l.eu ? ' eu' : ''}">
+        <span class="pos">${medalha(l.posicao)}</span>
+        <span class="bolha-autor">${l.foto ? `<img src="${escapar(urlImagem(l.foto))}" alt="">` : escapar((l.nome || '?').charAt(0).toUpperCase())}</span>
+        ${usuarioLogado ? `<button class="autor-link nome" onclick="abrirPerfil(${Number(l.id)})">${escapar(l.nome)}${l.eu ? ' (você)' : ''}</button>` : `<b class="nome">${escapar(l.nome)}</b>`}
+        <span class="pontos"><b>${l.acertos}</b>/10${l.nota ? ` · ${l.nota}` : ''}</span>
+        <small>${formatarTempo(l.segundos * 1000).replace(/^0:/, '')}</small>
+      </div>`).join('')}</div>`
+      : '<div class="vazio">Ninguém deste ranking fez o desafio ainda. Chame a galera!</div>';
+  } catch (e) {
+    lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
   }
 }
 

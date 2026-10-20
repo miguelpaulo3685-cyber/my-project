@@ -109,6 +109,25 @@ o navegador manda a lista que guardou.
 O servidor confere cada login com o Google (assinatura, site de destino, validade e e-mail
 verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, usa "Esqueci minha senha".
 
+## Rede social de estudos
+
+- **Discussão das questões** (`discussao.js`): comentários por questão, com respostas (um nível),
+  "útil", explicação fixada por administrador e denúncias. O site só mostra a discussão depois que a
+  pessoa responde, para não entregar o gabarito.
+- **Seguir e notificações** (`social.js`): seguidores, sino com a contagem (consultado a cada 2 minutos
+  e só com a aba visível, para não acordar o banco à toa) e notificações de resposta, útil, explicação
+  fixada, novo seguidor, publicação de quem você segue e reel aprovado ou recusado. Apagadas após 60 dias.
+- **Desafio da semana** (`desafio.js`): 10 questões sorteadas na primeira visita de cada semana ISO
+  (horário de Brasília), iguais para todos; uma tentativa por pessoa, correção no servidor (o gabarito
+  não vai para o navegador antes da entrega), nota TRI e ranking geral, de quem você segue ou do grupo.
+- **Turmas e grupos** (`grupos.js`): grupos por objetivo, abertos, e turmas com código de convite.
+  Cada grupo tem o próprio feed (`posts.grupo_id`) e ranking do desafio.
+- **Reels de alunos**: qualquer pessoa com conta envia (5 por dia); o reel fica `pendente` até um
+  administrador aprovar no filtro "Para aprovar".
+
+Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
+público ou em grupo, sempre com denúncia.
+
 ## Servidor acordado
 
 O plano grátis do Render desliga o servidor depois de 15 minutos sem visitas. O workflow
