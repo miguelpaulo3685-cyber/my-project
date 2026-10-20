@@ -71,7 +71,7 @@ async function sequenciaDe(pool, usuarioId) {
 }
 
 // XP de cada coisa que a pessoa faz. Ajudar os outros vale mais que treinar sozinho.
-const XP = { questao: 1, acerto: 1, pomodoro: 10, desafio: 20, ajuda: 5, melhor: 25, util: 3 };
+const XP = { questao: 1, acerto: 1, pomodoro: 10, desafio: 20, ajuda: 5, melhor: 25, util: 3, correcao: 15, correcao_util: 5 };
 const TITULOS = [[1, 'Calouro'], [3, 'Estudante'], [5, 'Focado'], [8, 'Dedicado'], [12, 'Veterano'], [16, 'Mestre'], [22, 'Lenda']];
 
 // Nível n começa em 25·n·(n-1) XP: 0, 50, 150, 300, 500...
@@ -90,6 +90,7 @@ const SELOS = [
   { id: 'melhor', emoji: '🏅', nome: 'Melhor resposta', vale: c => c.melhores >= 1 },
   { id: 'melhor10', emoji: '🎓', nome: '10 melhores respostas', vale: c => c.melhores >= 10 },
   { id: 'pomodoro25', emoji: '⏱️', nome: '25 pomodoros', vale: c => c.pomodoros >= 25 },
+  { id: 'corretor10', emoji: '✍️', nome: '10 redações corrigidas', vale: c => c.correcoes >= 10 },
   { id: 'desafio4', emoji: '🏆', nome: '4 desafios da semana', vale: c => c.desafios >= 4 }
 ];
 
@@ -326,6 +327,8 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
                   WHERE r.usuario_id = $1 AND p.usuario_id <> $1)::int AS melhores,
                 ((SELECT COUNT(*) FROM perguntas_respostas_uteis v JOIN perguntas_respostas r ON r.id = v.resposta_id WHERE r.usuario_id = $1)
                  + (SELECT COUNT(*) FROM questoes_comentarios_uteis v JOIN questoes_comentarios q ON q.id = v.comentario_id WHERE q.usuario_id = $1))::int AS uteis,
+                (SELECT COUNT(*) FROM redacoes_correcoes WHERE usuario_id = $1 AND NOT oculto)::int AS correcoes,
+                (SELECT COUNT(*) FROM redacoes_correcoes WHERE usuario_id = $1 AND util AND NOT oculto)::int AS correcoes_uteis,
                 EXISTS (SELECT 1 FROM grupo_membros WHERE usuario_id = $1) AS tem_grupo,
                 (SELECT COUNT(*) FROM seguidores WHERE seguidor_id = $1)::int AS seguindo,
                 EXISTS (SELECT 1 FROM atividades WHERE usuario_id = $1 AND tipo = 'meta') AS fez_meta,
@@ -334,7 +337,8 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
         [eu]
       )).rows[0];
       const xp = c.questoes * XP.questao + c.acertos * XP.acerto + c.pomodoros * XP.pomodoro + c.desafios * XP.desafio
-        + c.ajudas * XP.ajuda + c.melhores * XP.melhor + c.uteis * XP.util;
+        + c.ajudas * XP.ajuda + c.melhores * XP.melhor + c.uteis * XP.util
+        + c.correcoes * XP.correcao + c.correcoes_uteis * XP.correcao_util;
       const contagem = { ...c, maior: sequencia.maior };
 
       // Marco de sequência vira atividade (uma vez por marco).
@@ -355,7 +359,7 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
       res.json({
         sequencia,
         ...nivelDoXp(xp),
-        numeros: { questoes: c.questoes, acertos: c.acertos, pomodoros: c.pomodoros, pomodoros_hoje: c.pomodoros_hoje, desafios: c.desafios, ajudas: c.ajudas, melhores: c.melhores, uteis: c.uteis },
+        numeros: { correcoes: c.correcoes, questoes: c.questoes, acertos: c.acertos, pomodoros: c.pomodoros, pomodoros_hoje: c.pomodoros_hoje, desafios: c.desafios, ajudas: c.ajudas, melhores: c.melhores, uteis: c.uteis },
         selos: SELOS.map(s => ({ id: s.id, emoji: s.emoji, nome: s.nome, tem: s.vale(contagem) })),
         meta_hoje: c.meta_hoje ? { texto: c.meta_hoje, feito: c.meta_feita } : null,
         boas_vindas: { passos, completo: passos.every(p => p.feito) }

@@ -1068,6 +1068,7 @@ require('./grupos')(app, { pool, auth, limitar, exigirLogin });
 require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
 require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./avisos')(app, { pool, auth, limitar, exigirLogin });
+require('./redacoes')(app, { pool, auth, limitar, exigirLogin });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;

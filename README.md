@@ -146,6 +146,14 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
   por causa do limite do Brevo), com link de descadastro assinado com `SEGREDO_IMAGENS`. As chaves VAPID
   vêm de `VAPID_PUBLICO`/`VAPID_PRIVADO` ou são criadas e guardadas no banco (`configuracoes`) na primeira vez.
 
+- **Redação corrigida pela comunidade** (`redacoes.js`, aba Comunidade → Redações): o aluno manda a
+  redação (ou a do simulado); colegas corrigem às cegas nas 5 competências (0 a 200, de 40 em 40), com
+  descrição de cada nível, comentário por competência e comentário geral obrigatório. Como no ENEM:
+  2 correções; se discreparem (mais de 100 no total ou mais de 80 numa competência), uma 3ª, e a nota final
+  é a média da 3ª com a mais próxima. Cada correção vale 15 XP e libera mais um envio (a 1ª é livre, e se
+  a fila estiver vazia também pode); no máximo 3 por semana. Quem escreveu marca a correção útil (+5 XP
+  para quem corrigiu) ou denuncia (sai na hora e a redação volta para a fila).
+
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.
 

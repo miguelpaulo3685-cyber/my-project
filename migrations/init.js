@@ -499,6 +499,43 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas dos avisos criadas');
 
+    // ---------- Correção de redação pela comunidade ----------
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS redacoes (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        tema VARCHAR(200) NOT NULL,
+        texto TEXT NOT NULL,
+        origem VARCHAR(10) NOT NULL DEFAULT 'livre',
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_redacoes_usuario ON redacoes(usuario_id, id DESC);
+      -- Uma correção por pessoa por redação, nas 5 competências do ENEM (0 a 200, de 40 em 40).
+      CREATE TABLE IF NOT EXISTS redacoes_correcoes (
+        id SERIAL PRIMARY KEY,
+        redacao_id INT NOT NULL REFERENCES redacoes(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        notas SMALLINT[] NOT NULL,
+        comentarios JSONB NOT NULL DEFAULT '[]',
+        geral VARCHAR(2000) NOT NULL,
+        anulada VARCHAR(30),
+        util BOOLEAN NOT NULL DEFAULT FALSE,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE (redacao_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_correcoes_usuario ON redacoes_correcoes(usuario_id);
+      -- alvo_tipo: 'redacao' ou 'correcao'.
+      CREATE TABLE IF NOT EXISTS redacoes_denuncias (
+        alvo_tipo VARCHAR(10) NOT NULL,
+        alvo_id INT NOT NULL,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (alvo_tipo, alvo_id, usuario_id)
+      );
+    `);
+    console.log('✅ Tabelas das redações criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

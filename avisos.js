@@ -85,6 +85,9 @@ const AVISO_DA_NOTIFICACAO = {
   apoio: (ator, n) => ({ titulo: `${ator} apoiou a sua meta de hoje ${n.texto || ''}`.trim(), corpo: 'Agora é cumprir! 💪', abrir: 'comunidade' }),
   meta_cumprida: (ator, n) => ({ titulo: `${ator} cumpriu a meta que você apoiou 🎉`, corpo: n.texto, abrir: 'comunidade' }),
   resposta_pergunta: (ator, n) => ({ titulo: `${ator} respondeu a sua pergunta`, corpo: n.texto, abrir: `pergunta:${n.alvoId}` }),
+  correcao: (ator, n) => ({ titulo: 'Sua redação recebeu uma correção ✍️', corpo: `${n.texto} pontos nesta correção. Veja os comentários!`, abrir: `redacao:${n.alvoId}` }),
+  redacao_corrigida: (ator, n) => ({ titulo: `Sua redação foi corrigida: nota ${n.texto} ✍️`, corpo: 'Veja o que melhorar em cada competência.', abrir: `redacao:${n.alvoId}` }),
+  correcao_util: (ator, n) => ({ titulo: `${ator} achou sua correção útil ✍️ +5 XP`, abrir: 'redacoes' }),
   melhor_resposta: (ator, n) => ({ titulo: 'Sua resposta foi escolhida a melhor 🏅 +25 XP', corpo: n.texto, abrir: `pergunta:${n.alvoId}` })
 };
 
