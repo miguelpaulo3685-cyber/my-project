@@ -65,6 +65,8 @@ uma tabela ou coluna que o código espera.
 | `GET /api/reels?tipo=&area=&antes=` / `GET /api/reels/salvos` | livre / login |
 | `POST /api/reels` (link do YouTube), `DELETE /api/reels/:id` | administrador |
 | `POST /api/reels/:id/curtir`, `POST /api/reels/:id/salvar` | login (liga e desliga) |
+| `GET /api/reels/:id/comentarios` / `POST` | livre / login |
+| `DELETE /api/reels/comentarios/:id`, `POST /api/reels/comentarios/:id/denunciar` | autor ou administrador / login |
 | `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
@@ -106,6 +108,13 @@ o navegador manda a lista que guardou.
 
 O servidor confere cada login com o Google (assinatura, site de destino, validade e e-mail
 verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, usa "Esqueci minha senha".
+
+## Servidor acordado
+
+O plano grátis do Render desliga o servidor depois de 15 minutos sem visitas. O workflow
+`.github/workflows/manter-acordado.yml` chama `/api/health` a cada 10 minutos; essa rota não consulta
+o banco, então não gasta a cota do Neon. O GitHub pausa workflows agendados depois de 60 dias sem
+nenhum commit no repositório: se o site voltar a demorar, veja a aba Actions.
 
 ## Moderação do feed
 

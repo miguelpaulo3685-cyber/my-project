@@ -248,6 +248,20 @@ async function runMigrations() {
         usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
         PRIMARY KEY (reel_id, usuario_id)
       );
+      CREATE TABLE IF NOT EXISTS reels_comentarios (
+        id SERIAL PRIMARY KEY,
+        reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        texto VARCHAR(500) NOT NULL,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_reels_comentarios ON reels_comentarios(reel_id, id);
+      CREATE TABLE IF NOT EXISTS reels_comentarios_denuncias (
+        comentario_id INT NOT NULL REFERENCES reels_comentarios(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (comentario_id, usuario_id)
+      );
       CREATE TABLE IF NOT EXISTS reels_salvos (
         reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
         usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,

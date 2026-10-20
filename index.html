@@ -9,6 +9,10 @@
   <title>M&M Estudos — ENEM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Reels: abre a conexão com as plataformas de vídeo antes de precisar -->
+  <link rel="preconnect" href="https://www.youtube-nocookie.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="dns-prefetch" href="https://www.tiktok.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap">
   <style>
     /* ===================== TEMAS ===================== */
@@ -792,7 +796,55 @@
     /* ===================== REELS ===================== */
     /* Feed vertical como o TikTok: um vídeo por tela, encaixando ao rolar. */
     body.vendo-reels .rodape { display: none; }
-    #tela-reels { max-width: 760px; padding-top: 14px; padding-bottom: 0; }
+    #tela-reels { max-width: 1120px; padding-top: 14px; padding-bottom: 0; }
+    .reels-corpo { display: grid; grid-template-columns: 1fr 360px; gap: 18px; }
+    .painel-comentarios {
+      height: calc(100dvh - var(--altura-topo, 62px) - 74px); display: flex; flex-direction: column;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; overflow: hidden;
+    }
+    .topo-comentarios { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 0; }
+    .topo-comentarios b { font-size: 1rem; }
+    .fechar-comentarios { display: none; }
+    .sobre-comentarios { padding: 2px 16px 10px; color: var(--texto-fraco); font-size: .8rem; border-bottom: 1px solid var(--borda);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lista-comentarios { flex: 1; overflow-y: auto; padding: 8px 16px; overscroll-behavior: contain; }
+    .lista-comentarios .vazio { padding: 40px 10px; font-size: .9rem; }
+    .comentario { display: grid; grid-template-columns: 34px 1fr; gap: 10px; padding: 10px 0; }
+    .comentario.oculto { opacity: .5; }
+    .comentario .bolha-autor {
+      width: 34px; height: 34px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; font-size: .85rem;
+    }
+    .comentario .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .comentario .cabeca { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+    .comentario .cabeca b, .comentario .cabeca .autor-link { font-size: .84rem; }
+    .comentario .cabeca small { color: var(--texto-fraco); font-size: .74rem; }
+    .comentario p { font-size: .9rem; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 2px; }
+    .comentario .acoes { display: flex; gap: 12px; margin-top: 4px; }
+    .comentario .acoes button { background: none; border: none; padding: 0; cursor: pointer; font: inherit; font-size: .74rem; color: var(--texto-fraco); font-weight: 600; }
+    .comentario .acoes button:hover { color: var(--texto); }
+    .escrever-comentario { display: flex; gap: 8px; align-items: flex-end; padding: 12px 14px; border-top: 1px solid var(--borda); }
+    .escrever-comentario textarea {
+      flex: 1; resize: none; min-height: 42px; max-height: 120px; padding: 10px 12px; border-radius: 12px;
+      border: 1.5px solid var(--borda); background: var(--superficie-2); color: var(--texto); font: inherit; font-size: .9rem;
+    }
+    .escrever-comentario textarea:focus { outline: none; border-color: var(--marca); }
+    .escrever-comentario button.acao { margin: 0; padding: 10px 14px; }
+    .escrever-comentario .entrar-para { flex: 1; text-align: center; font-size: .88rem; color: var(--texto-fraco); }
+    .escrever-comentario .entrar-para button { background: none; border: none; color: var(--marca-texto); font: inherit; font-weight: 700; cursor: pointer; }
+    .reel-lado .so-celular { display: none; }
+    @media (max-width: 1000px) {
+      .reels-corpo { grid-template-columns: 1fr; }
+      .reel-lado .so-celular { display: flex; }
+      /* no celular os comentários sobem de baixo, por cima do vídeo */
+      .painel-comentarios {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 120; height: 68dvh; border-radius: 18px 18px 0 0;
+        transform: translateY(105%); transition: transform .28s ease; box-shadow: 0 -10px 40px rgba(0,0,0,.45);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      .painel-comentarios.aberto { transform: none; }
+      .fechar-comentarios { display: flex; }
+    }
     .reels-topo { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
     .filtros-reels { display: flex; gap: 6px; overflow-x: auto; flex: 1; scrollbar-width: none; padding-bottom: 2px; }
     .filtros-reels::-webkit-scrollbar { display: none; }
@@ -838,9 +890,9 @@
     .reel-lado { position: absolute; right: 8px; bottom: 90px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
     .reel.tocando .reel-lado { bottom: 120px; }
     .reel-lado button {
-      background: rgba(0,0,0,.45); border: none; color: #fff; cursor: pointer; width: 46px; height: 46px; border-radius: 50%;
+      background: rgba(0,0,0,.5); border: none; color: #fff; cursor: pointer; width: 46px; height: 46px; border-radius: 50%;
       display: flex; flex-direction: column; align-items: center; justify-content: center; font: inherit; font-size: .66rem; font-weight: 700;
-      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: transform .15s;
+      transition: transform .15s; /* sem desfoque: pesa na rolagem do celular */
     }
     .reel-lado button:active { transform: scale(.9); }
     .reel-lado button svg { width: 22px; height: 22px; }
@@ -1761,7 +1813,18 @@
       <div class="filtros-reels" id="filtros-reels" role="group" aria-label="Filtrar reels"></div>
       <button class="acao escondido" id="novo-reel" onclick="abrirNovoReel()">＋ Novo reel</button>
     </div>
-    <div class="reels-lista" id="reels-lista" tabindex="-1"></div>
+    <div class="reels-corpo">
+      <div class="reels-lista" id="reels-lista" tabindex="-1"></div>
+      <aside class="painel-comentarios" id="painel-comentarios" aria-label="Comentários">
+        <div class="topo-comentarios">
+          <b id="titulo-comentarios">Comentários</b>
+          <button class="btn-sair fechar-comentarios" onclick="fecharComentarios()" title="Fechar">✕</button>
+        </div>
+        <small class="sobre-comentarios" id="sobre-comentarios"></small>
+        <div class="lista-comentarios" id="lista-comentarios"></div>
+        <form class="escrever-comentario" id="escrever-comentario" onsubmit="enviarComentario(event)"></form>
+      </aside>
+    </div>
   </main>
 
   <!-- ===================== PERFIL ===================== -->
@@ -4206,7 +4269,7 @@ let somReels = false;     // depois que a pessoa liga o som, os próximos já to
 let observadorReels = null;
 let reelAtivo = null;
 
-const capaDoReel = id => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+const capaDoReel = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 // O player do TikTok tem o próprio botão de volume; o do YouTube começa mudo
 // até a pessoa ligar o som (os navegadores só deixam tocar sozinho assim).
 const playerDoReel = r => r.plataforma === 'tiktok'
@@ -4272,6 +4335,7 @@ const ICONES_REEL = {
   curtir: '<path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.8a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10-7.5 10z"/>',
   salvar: '<path d="M6.5 3.5h11v17l-5.5-4-5.5 4z"/>',
   compartilhar: '<path d="M4 12v7.5h16V12M12 3.5v12M7.5 8 12 3.5 16.5 8"/>',
+  comentar: '<path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L3.5 20l1.4-4.9A8 8 0 1 1 20.5 11.5z"/>',
   apagar: '<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/>'
 };
 
@@ -4279,7 +4343,7 @@ function htmlDoReel(r) {
   const preenchido = (ligado, d) => icone(d).replace('fill="none"', `fill="${ligado ? 'currentColor' : 'none'}"`);
   return `<section class="reel" data-id="${r.id}" aria-label="${escapar(r.titulo)}">
     <div class="reel-quadro">
-      ${r.plataforma === 'tiktok' ? '<div class="capa-tiktok" aria-hidden="true">TikTok</div>' : `<img src="${escapar(capaDoReel(r.youtube_id))}" alt="" loading="lazy">`}
+      ${r.plataforma === 'tiktok' ? '<div class="capa-tiktok" aria-hidden="true">TikTok</div>' : `<img src="${escapar(capaDoReel(r.youtube_id))}" alt="" ${reels.indexOf(r) < 2 ? 'fetchpriority="high"' : 'loading="lazy"'}>`}
       <button class="reel-play" onclick="tocarReel(${r.id})" aria-label="Assistir">${icone('<path d="m8 5 11 7-11 7z" fill="currentColor"/>')}</button>
       <div class="reel-legenda">
         <span class="selo-reel">${r.tipo === 'resolucao' ? 'Resolução' : 'Dica'}</span>${r.area ? `<span class="selo-reel">${escapar(NOME_AREA_REEL[r.area] || '')}</span>` : ''}
@@ -4291,6 +4355,8 @@ function htmlDoReel(r) {
         <button class="${r.curti ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'curtir', this)" aria-pressed="${r.curti}" aria-label="Curtir">${preenchido(r.curti, ICONES_REEL.curtir)}</button>
         <small data-curtidas="${r.id}">${r.curtidas}</small>
         <button class="salvo ${r.salvei ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'salvar', this)" aria-pressed="${r.salvei}" aria-label="Salvar">${preenchido(r.salvei, ICONES_REEL.salvar)}</button>
+        <button class="so-celular" onclick="abrirComentarios(${r.id})" aria-label="Comentários">${icone(ICONES_REEL.comentar)}</button>
+        <small class="so-celular" data-comentarios="${r.id}">${r.comentarios || 0}</small>
         <button onclick="compartilharReel(${r.id})" aria-label="Compartilhar">${icone(ICONES_REEL.compartilhar)}</button>
         ${document.getElementById('novo-reel').classList.contains('escondido') ? '' : `<button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>`}
       </div>
@@ -4302,15 +4368,17 @@ function htmlDoReel(r) {
 function observarReels() {
   if (observadorReels) observadorReels.disconnect();
   const lista = document.getElementById('reels-lista');
+  // Começa a carregar quando 30% do próximo reel já entrou na tela, ainda no
+  // meio da rolagem: quando ele termina de encaixar, o player já está pronto.
   observadorReels = new IntersectionObserver(entradas => {
     for (const e of entradas) {
       const id = Number(e.target.dataset.id);
-      if (e.isIntersecting) {
+      if (e.intersectionRatio >= 0.3) {
         tocarReel(id);
         if (maisReels && id === reels[reels.length - 1].id) carregarReels(false);
-      } else if (reelAtivo === id) pararReels();
+      } else if (reelAtivo === id && e.intersectionRatio === 0) pararReels();
     }
-  }, { root: lista, threshold: 0.6 });
+  }, { root: lista, threshold: [0, 0.3] });
   lista.querySelectorAll('.reel').forEach(el => observadorReels.observe(el));
 }
 
@@ -4322,6 +4390,7 @@ function tocarReel(id) {
   if (!el || !r) return;
   reelAtivo = id;
   el.classList.add('tocando');
+  agendarComentarios(id);
   el.querySelector('.reel-play').remove();
   const quadro = el.querySelector('.reel-quadro');
   quadro.insertAdjacentHTML('afterbegin', `<iframe src="${escapar(playerDoReel(r))}" title="${escapar(r.titulo)}"
@@ -4473,10 +4542,136 @@ async function publicarReel() {
   }
 }
 
+// ---------- comentários ----------
+// No computador o painel ao lado acompanha o reel que está tocando; no
+// celular ele sobe de baixo quando a pessoa toca no 💬.
+let comentariosDe = null;
+let comentariosDepois = null;
+const tempoAtras = d => {
+  const s = Math.max(1, Math.round((Date.now() - new Date(d)) / 1000));
+  if (s < 60) return 'agora';
+  if (s < 3600) return `${Math.floor(s / 60)} min`;
+  if (s < 86400) return `${Math.floor(s / 3600)} h`;
+  if (s < 7 * 86400) return `${Math.floor(s / 86400)} d`;
+  return new Date(d).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+};
+const celularReels = () => matchMedia('(max-width: 1000px)').matches;
+
+// Rolando rápido, espera o reel parar antes de buscar os comentários dele.
+function agendarComentarios(id) {
+  clearTimeout(comentariosDepois);
+  if (celularReels() && !document.getElementById('painel-comentarios').classList.contains('aberto')) return;
+  comentariosDepois = setTimeout(() => carregarComentarios(id), 350);
+}
+
+function abrirComentarios(id) {
+  document.getElementById('painel-comentarios').classList.add('aberto');
+  carregarComentarios(id);
+}
+function fecharComentarios() {
+  document.getElementById('painel-comentarios').classList.remove('aberto');
+}
+
+async function carregarComentarios(id) {
+  const r = reels.find(x => x.id === id);
+  if (!r) return;
+  comentariosDe = id;
+  document.getElementById('titulo-comentarios').textContent = `Comentários · ${r.comentarios || 0}`;
+  document.getElementById('sobre-comentarios').textContent = r.titulo;
+  desenharFormComentario();
+  const lista = document.getElementById('lista-comentarios');
+  lista.innerHTML = '<div class="vazio">Carregando…</div>';
+  try {
+    const resp = await fetch(`${API_URL}/api/reels/${id}/comentarios`, { headers: cabecalhoAuth() });
+    const dados = await resp.json();
+    if (!resp.ok) throw { daApi: dados.error };
+    if (comentariosDe !== id) return; // a pessoa já passou para outro reel
+    r.comentarios = dados.comentarios.filter(c => !c.oculto).length;
+    atualizarContagemComentarios(r);
+    lista.innerHTML = dados.comentarios.length ? dados.comentarios.map(htmlDoComentario).join('')
+      : '<div class="vazio"><span class="cara">💬</span>Ninguém comentou ainda.<br>Tire uma dúvida ou conte como você resolveu!</div>';
+  } catch (e) {
+    if (comentariosDe === id) lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+function atualizarContagemComentarios(r) {
+  document.getElementById('titulo-comentarios').textContent = `Comentários · ${r.comentarios}`;
+  const n = document.querySelector(`[data-comentarios="${r.id}"]`);
+  if (n) n.textContent = r.comentarios;
+}
+
+function htmlDoComentario(c) {
+  const nome = escapar(c.autor || '?');
+  const bolha = c.foto ? `<img src="${escapar(urlImagem(c.foto))}" alt="">` : escapar((c.autor || '?').trim().charAt(0).toUpperCase());
+  const acoes = [];
+  if (c.pode_apagar) acoes.push(`<button onclick="acaoComentario(${c.id}, 'apagar')">Apagar</button>`);
+  if (usuarioLogado && !c.meu) acoes.push(c.denunciei ? '<button disabled>Denunciado</button>' : `<button onclick="acaoComentario(${c.id}, 'denunciar')">Denunciar</button>`);
+  return `<div class="comentario${c.oculto ? ' oculto' : ''}">
+    <span class="bolha-autor">${bolha}</span>
+    <div>
+      <div class="cabeca">${usuarioLogado ? `<button class="autor-link" onclick="abrirPerfil(${Number(c.autor_id)})">${nome}</button>` : `<b>${nome}</b>`}
+        <small>${tempoAtras(c.created_at)}${c.oculto ? ' · escondido por denúncias' : ''}</small></div>
+      <p>${escapar(c.texto)}</p>
+      ${acoes.length ? `<div class="acoes">${acoes.join('')}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function desenharFormComentario() {
+  const form = document.getElementById('escrever-comentario');
+  form.innerHTML = usuarioLogado
+    ? `<textarea id="texto-comentario" maxlength="500" rows="1" placeholder="Comente sobre o vídeo…" aria-label="Escrever comentário"
+         oninput="this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px'"
+         onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); this.form.requestSubmit(); }"></textarea>
+       <button class="acao" id="enviar-comentario">Enviar</button>`
+    : `<p class="entrar-para"><button type="button" onclick="abrirConta('entrar')">Entre</button> para comentar.</p>`;
+}
+
+async function enviarComentario(evento) {
+  evento.preventDefault();
+  const campo = document.getElementById('texto-comentario');
+  const texto = campo.value.trim();
+  if (!texto || !comentariosDe) return;
+  const botao = document.getElementById('enviar-comentario');
+  botao.disabled = true;
+  try {
+    const r = await fetch(`${API_URL}/api/reels/${comentariosDe}/comentarios`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() }, body: JSON.stringify({ texto })
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    campo.value = '';
+    campo.style.height = 'auto';
+    await carregarComentarios(comentariosDe);
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  } finally {
+    botao.disabled = false;
+  }
+}
+
+async function acaoComentario(id, acao) {
+  const pergunta = acao === 'apagar' ? 'Apagar este comentário?' : 'Denunciar este comentário? Com 3 denúncias ele sai do ar até um administrador revisar.';
+  if (!await confirmar(pergunta, { sim: acao === 'apagar' ? 'Apagar' : 'Denunciar', perigo: acao === 'apagar' })) return;
+  try {
+    const r = await fetch(`${API_URL}/api/reels/comentarios/${id}${acao === 'denunciar' ? '/denunciar' : ''}`, {
+      method: acao === 'apagar' ? 'DELETE' : 'POST', headers: cabecalhoAuth()
+    });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    if (acao === 'denunciar') avisoSim(dados.message);
+    carregarComentarios(comentariosDe);
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
 // Setas para cima e para baixo trocam de reel, como no TikTok do computador.
 document.addEventListener('keydown', e => {
   if (document.getElementById('tela-reels').classList.contains('escondido')) return;
   if (e.target.closest('input, textarea, select') || document.querySelector('.fundo-modal:not(.escondido)')) return;
+  if (e.key === 'Escape') { fecharComentarios(); return; }
   if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
   e.preventDefault();
   const lista = document.getElementById('reels-lista');

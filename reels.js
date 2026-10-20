@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const imagens = require('./imagens');
 
 const TIPOS = ['resolucao', 'dica'];
 const AREAS = ['linguagens', 'humanas', 'natureza', 'matematica', 'redacao'];
@@ -146,7 +147,8 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
         `SELECT r.id, r.youtube_id, COALESCE(r.plataforma, 'youtube') AS plataforma, r.link, r.titulo, r.descricao, r.tipo, r.area, r.canal, r.created_at,
                 (SELECT COUNT(*)::int FROM reels_curtidas c WHERE c.reel_id = r.id) AS curtidas,
                 EXISTS (SELECT 1 FROM reels_curtidas c WHERE c.reel_id = r.id AND c.usuario_id = $1) AS curti,
-                EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei
+                EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei,
+                (SELECT COUNT(*)::int FROM reels_comentarios m WHERE m.reel_id = r.id AND NOT m.oculto) AS comentarios
            FROM reels r
           WHERE ($2::text IS NULL OR r.tipo = $2) AND ($3::text IS NULL OR r.area = $3)
             AND ($4::int IS NULL OR r.id < $4)
@@ -213,6 +215,97 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     } catch (erro) {
       console.error('Erro ao apagar reel:', erro.message);
       res.status(500).json({ error: 'Não consegui apagar o reel agora.' });
+    }
+  });
+
+  // ---------- comentários ----------
+  // Conversa dos alunos sobre o vídeo. Ler é livre, como no feed; escrever
+  // exige conta. Com 3 denúncias o comentário some até um administrador ver.
+  const DENUNCIAS_PARA_ESCONDER = 3;
+  const freioComentar = limitar(auth.criarFreio(15, 10 * 60 * 1000), 'Você comentou muito em pouco tempo. Espere uns minutos.', req => `u${req.usuario.id}`);
+  const freioDenunciar = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Você fez muitas denúncias. Espere um pouco.', req => `u${req.usuario.id}`);
+
+  app.get('/api/reels/:id/comentarios', async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
+    const eu = req.usuario;
+    const admin = Boolean(eu && eu.admin);
+    try {
+      const { rows } = await pool.query(
+        `SELECT m.id, m.texto, m.created_at, m.oculto, u.id AS autor_id, u.username AS autor, u.foto_id,
+                EXISTS (SELECT 1 FROM reels_comentarios_denuncias d WHERE d.comentario_id = m.id AND d.usuario_id = $2) AS denunciei
+           FROM reels_comentarios m JOIN usuarios u ON u.id = m.usuario_id
+          WHERE m.reel_id = $1 AND (NOT m.oculto OR $3)
+          ORDER BY m.id DESC LIMIT 200`,
+        [id, eu ? eu.id : null, admin]
+      );
+      res.json({
+        comentarios: rows.map(m => ({
+          id: m.id, texto: m.texto, created_at: m.created_at, autor_id: m.autor_id, autor: m.autor,
+          // A foto do perfil só vai para quem está logado, como no perfil.
+          foto: eu ? imagens.urlAssinada(m.foto_id) : null,
+          meu: Boolean(eu && eu.id === m.autor_id), pode_apagar: Boolean(eu && (eu.id === m.autor_id || admin)),
+          denunciei: m.denunciei, ...(admin ? { oculto: m.oculto } : {})
+        })),
+        moderador: admin
+      });
+    } catch (erro) {
+      console.error('Erro ao listar comentários:', erro.message);
+      res.status(500).json({ error: 'Não consegui carregar os comentários agora.' });
+    }
+  });
+
+  app.post('/api/reels/:id/comentarios', exigirLogin, freioComentar, async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
+    const texto = typeof req.body?.texto === 'string' ? req.body.texto.trim() : '';
+    if (!texto) return res.status(400).json({ error: 'Escreva alguma coisa.' });
+    if (texto.length > 500) return res.status(400).json({ error: 'O comentário pode ter até 500 caracteres.' });
+    try {
+      const r = await pool.query(
+        `INSERT INTO reels_comentarios (reel_id, usuario_id, texto)
+         SELECT $1, $2, $3 WHERE EXISTS (SELECT 1 FROM reels WHERE id = $1) RETURNING id`,
+        [id, req.usuario.id, texto]
+      );
+      if (r.rowCount === 0) return res.status(404).json({ error: 'Reel não encontrado.' });
+      res.status(201).json({ id: r.rows[0].id });
+    } catch (erro) {
+      console.error('Erro ao comentar:', erro.message);
+      res.status(500).json({ error: 'Não consegui publicar o comentário agora.' });
+    }
+  });
+
+  app.delete('/api/reels/comentarios/:id', exigirLogin, async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Comentário não encontrado.' });
+    try {
+      const r = await pool.query('DELETE FROM reels_comentarios WHERE id = $1 AND (usuario_id = $2 OR $3)',
+        [id, req.usuario.id, Boolean(req.usuario.admin)]);
+      if (r.rowCount === 0) return res.status(404).json({ error: 'Comentário não encontrado ou não é seu.' });
+      res.json({ message: 'Comentário apagado.' });
+    } catch (erro) {
+      console.error('Erro ao apagar comentário:', erro.message);
+      res.status(500).json({ error: 'Não consegui apagar agora.' });
+    }
+  });
+
+  app.post('/api/reels/comentarios/:id/denunciar', exigirLogin, freioDenunciar, async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Comentário não encontrado.' });
+    try {
+      const c = await pool.query('SELECT usuario_id FROM reels_comentarios WHERE id = $1', [id]);
+      if (!c.rows[0]) return res.status(404).json({ error: 'Comentário não encontrado.' });
+      if (c.rows[0].usuario_id === req.usuario.id) return res.status(400).json({ error: 'Você não pode denunciar o próprio comentário.' });
+      await pool.query('INSERT INTO reels_comentarios_denuncias (comentario_id, usuario_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [id, req.usuario.id]);
+      await pool.query(
+        `UPDATE reels_comentarios SET oculto = TRUE
+          WHERE id = $1 AND (SELECT COUNT(*) FROM reels_comentarios_denuncias WHERE comentario_id = $1) >= $2`,
+        [id, DENUNCIAS_PARA_ESCONDER]
+      );
+      res.json({ message: 'Obrigado! A denúncia foi registrada.' });
+    } catch (erro) {
+      console.error('Erro ao denunciar comentário:', erro.message);
+      res.status(500).json({ error: 'Não consegui registrar a denúncia agora.' });
     }
   });
 

@@ -1,0 +1,22 @@
+name: Manter o servidor acordado
+
+# O plano grátis do Render desliga o servidor depois de 15 minutos sem
+# visitas, e a próxima pessoa espera até 1 minuto ele ligar de novo. Este
+# robô visita a rota de saúde a cada 10 minutos. Ela responde sem consultar
+# o banco, então não gasta a cota do Neon.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  visitar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Chamar /api/health
+        run: |
+          codigo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 https://enem-api-cbo6.onrender.com/api/health || echo "000")
+          echo "Resposta: HTTP $codigo"
