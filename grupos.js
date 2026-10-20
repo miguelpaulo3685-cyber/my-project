@@ -7,6 +7,7 @@
 
 const crypto = require('crypto');
 const imagens = require('./imagens');
+const { registrarAtividade } = require('./comunidade');
 
 const LETRAS_DO_CODIGO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sem 0/O e 1/I, que confundem
 const MAXIMO_DE_TURMAS_CRIADAS = 10;
@@ -138,9 +139,11 @@ function registrarGrupos(app, { pool, auth, limitar, exigirLogin }) {
         `INSERT INTO grupo_membros (grupo_id, usuario_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM grupos WHERE id = $1 AND tipo = 'objetivo')
          ON CONFLICT DO NOTHING`, [id, req.usuario.id]
       );
-      const existe = await pool.query(`SELECT tipo FROM grupos WHERE id = $1`, [id]);
+      const existe = await pool.query(`SELECT tipo, nome FROM grupos WHERE id = $1`, [id]);
       if (!existe.rows[0]) return res.status(404).json({ error: 'Grupo não encontrado.' });
       if (existe.rows[0].tipo !== 'objetivo') return res.status(403).json({ error: 'Para entrar numa turma você precisa do código de convite.' });
+      // Só grupos por objetivo viram atividade: turma é coisa privada.
+      if (r.rowCount > 0) await registrarAtividade(pool, { usuarioId: req.usuario.id, tipo: 'grupo', texto: existe.rows[0].nome, alvoId: id });
       res.json({ entrou: r.rowCount > 0 });
     } catch (erro) {
       console.error('Erro ao entrar no grupo:', erro.message);

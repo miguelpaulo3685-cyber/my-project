@@ -1065,6 +1065,8 @@ require('./social')(app, { pool, auth, limitar, exigirLogin });
 require('./discussao')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./desafio')(app, { pool, auth, limitar, exigirLogin });
 require('./grupos')(app, { pool, auth, limitar, exigirLogin });
+require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
+require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;
@@ -1153,6 +1155,10 @@ cron.schedule('0 4 * * *', async () => {
     await pool.query('DELETE FROM tokens_email WHERE expira_em < NOW() OR usado_em IS NOT NULL');
     // Notificação lida e velha não serve para ninguém.
     await pool.query(`DELETE FROM notificacoes WHERE created_at < NOW() - INTERVAL '60 days'`);
+    // Comunidade: atividade de mais de 30 dias, chat das salas e presença velha.
+    await pool.query(`DELETE FROM atividades WHERE created_at < NOW() - INTERVAL '30 days'`);
+    await pool.query(`DELETE FROM sala_mensagens WHERE created_at < NOW() - INTERVAL '1 day'`);
+    await pool.query(`DELETE FROM presenca WHERE visto_em < NOW() - INTERVAL '2 days'`);
   } catch (erro) {
     console.error('❌ Erro ao limpar sessões:', erro.message);
   }

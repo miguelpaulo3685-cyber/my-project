@@ -125,6 +125,19 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
 - **Reels de alunos**: qualquer pessoa com conta envia (5 por dia); o reel fica `pendente` até um
   administrador aprovar no filtro "Para aprovar".
 
+- **Comunidade** (`comunidade.js`, `perguntas.js`), na aba Comunidade:
+  - *Agora*: quantas pessoas estão no site (sinal de presença a cada minuto, `presenca`), metas do dia
+    em bolinhas como stories (somem em 24 h), "O que está rolando" (`atividades`: desafio feito,
+    sequência, pergunta, melhor resposta, pomodoros, grupo) com reações 👏 🔥 💡, primeiros passos para
+    quem chega e sugestões de quem seguir. A mesma contagem aparece numa faixa no Treinar.
+  - *Salas de estudo*: pomodoro coletivo calculado pelo relógio (25 + 5 min, na hora cheia e na meia
+    hora), presença por sala e chat que só abre na pausa. O pomodoro só conta se a pessoa entrou até
+    3 minutos depois do começo do foco e ainda está na sala.
+  - *Pergunte à comunidade*: perguntas por matéria, respostas, "útil", melhor resposta escolhida por
+    quem perguntou (não vale a própria) e denúncia (3 escondem).
+  - Sequência de dias, XP, nível e selos (`GET /api/comunidade/eu`), calculados a partir do treino,
+    pomodoros, desafio e ajuda dada. Ajudar vale mais XP que treinar sozinho.
+
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.
 

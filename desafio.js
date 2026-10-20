@@ -6,6 +6,7 @@
 
 const tri = require('./tri');
 const imagens = require('./imagens');
+const { registrarAtividade } = require('./comunidade');
 
 // Composição: 2 de Linguagens, 3 de Humanas, 2 de Natureza e 3 de Matemática,
 // só questões com parâmetros do INEP (para sair nota TRI) e sem língua estrangeira.
@@ -114,6 +115,7 @@ function registrarDesafio(app, { pool, auth, limitar, exigirLogin }) {
         [semana, req.usuario.id, acertos, nota, segundos, JSON.stringify(respostas)]
       );
       if (r.rowCount === 0) return res.status(409).json({ error: 'Você já fez o desafio desta semana. Volte na segunda para o próximo!' });
+      await registrarAtividade(pool, { usuarioId: req.usuario.id, tipo: 'desafio', texto: `${acertos}/${questoes.length}`, alvoId: acertos });
       res.status(201).json({ acertos, total: questoes.length, nota, segundos, respostas, questoes: questoes.map(semTri) });
     } catch (erro) {
       console.error('Erro ao entregar desafio:', erro.message);

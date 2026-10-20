@@ -376,6 +376,105 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas da rede social criadas');
 
+    // ---------- Comunidade viva ----------
+    await pool.query(`
+      -- Quem está no site agora (e em qual sala de estudo). Um sinal por minuto.
+      CREATE TABLE IF NOT EXISTS presenca (
+        usuario_id INT PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
+        sala VARCHAR(20),
+        desde TIMESTAMP NOT NULL DEFAULT NOW(),
+        visto_em TIMESTAMP NOT NULL DEFAULT NOW(),
+        ultimo_ciclo INT
+      );
+      CREATE INDEX IF NOT EXISTS idx_presenca_visto ON presenca(visto_em);
+
+      -- O que acontece na comunidade: metas do dia, desafio feito, sequência,
+      -- pergunta nova, melhor resposta, pomodoros. Fica 30 dias.
+      CREATE TABLE IF NOT EXISTS atividades (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        tipo VARCHAR(20) NOT NULL,
+        texto VARCHAR(200),
+        alvo_id INT,
+        feito BOOLEAN NOT NULL DEFAULT FALSE,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS atividades_denuncias (
+        atividade_id INT NOT NULL REFERENCES atividades(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (atividade_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_atividades_recentes ON atividades(id DESC);
+      CREATE INDEX IF NOT EXISTS idx_atividades_usuario ON atividades(usuario_id, tipo, created_at DESC);
+      -- Uma reação por pessoa (0 = 👏, 1 = 🔥, 2 = 💡); trocar substitui.
+      CREATE TABLE IF NOT EXISTS atividades_reacoes (
+        atividade_id INT NOT NULL REFERENCES atividades(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        emoji SMALLINT NOT NULL,
+        PRIMARY KEY (atividade_id, usuario_id)
+      );
+
+      -- Salas de estudo: pomodoros completos e o bate-papo das pausas.
+      CREATE TABLE IF NOT EXISTS pomodoros (
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        dia DATE NOT NULL,
+        n SMALLINT NOT NULL DEFAULT 0,
+        PRIMARY KEY (usuario_id, dia)
+      );
+      CREATE TABLE IF NOT EXISTS sala_mensagens (
+        id SERIAL PRIMARY KEY,
+        sala VARCHAR(20) NOT NULL,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        texto VARCHAR(300) NOT NULL,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_sala_mensagens ON sala_mensagens(sala, id);
+      CREATE TABLE IF NOT EXISTS sala_mensagens_denuncias (
+        mensagem_id INT NOT NULL REFERENCES sala_mensagens(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (mensagem_id, usuario_id)
+      );
+
+      -- Pergunte à comunidade: dúvidas com respostas e a melhor marcada por quem perguntou.
+      CREATE TABLE IF NOT EXISTS perguntas (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        area VARCHAR(20) NOT NULL,
+        titulo VARCHAR(140) NOT NULL,
+        texto VARCHAR(2000) NOT NULL DEFAULT '',
+        melhor_resposta_id INT,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_perguntas_recentes ON perguntas(id DESC);
+      CREATE TABLE IF NOT EXISTS perguntas_respostas (
+        id SERIAL PRIMARY KEY,
+        pergunta_id INT NOT NULL REFERENCES perguntas(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        texto VARCHAR(2000) NOT NULL,
+        oculto BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_perguntas_respostas ON perguntas_respostas(pergunta_id, id);
+      CREATE INDEX IF NOT EXISTS idx_perguntas_respostas_usuario ON perguntas_respostas(usuario_id);
+      CREATE TABLE IF NOT EXISTS perguntas_respostas_uteis (
+        resposta_id INT NOT NULL REFERENCES perguntas_respostas(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (resposta_id, usuario_id)
+      );
+      -- alvo_tipo: 'pergunta' ou 'resposta'.
+      CREATE TABLE IF NOT EXISTS perguntas_denuncias (
+        alvo_tipo VARCHAR(10) NOT NULL,
+        alvo_id INT NOT NULL,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (alvo_tipo, alvo_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_respostas_usuario_data ON respostas(usuario_id, created_at);
+    `);
+    console.log('✅ Tabelas da comunidade criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
