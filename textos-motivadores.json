@@ -1,0 +1,68 @@
+{
+  "_como_preencher": [
+    "Para cada ano, coloque os textos motivadores da prova, na ordem do caderno, dentro de \"textos\".",
+    "Cada texto tem: \"texto\" (o texto em si; use \\n para quebrar parágrafo), \"fonte\" (de onde veio, como está no caderno) e, se for imagem, gráfico ou charge, \"imagem\" com o caminho do arquivo (ex.: \"img/redacao/2023-3.png\") e \"descricao\" (o que a imagem mostra, para quem usa leitor de tela).",
+    "Copie do caderno oficial no site do INEP. Sempre coloque a fonte.",
+    "Ano com \"textos\": [] continua mostrando só o link para o caderno do INEP."
+  ],
+  "2023": {
+    "tema": "Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil",
+    "textos": []
+  },
+  "2022": {
+    "tema": "Desafios para a valorização de comunidades e povos tradicionais no Brasil",
+    "textos": []
+  },
+  "2021": {
+    "tema": "Invisibilidade e registro civil: garantia de acesso à cidadania no Brasil",
+    "textos": []
+  },
+  "2020": {
+    "tema": "O estigma associado às doenças mentais na sociedade brasileira",
+    "textos": []
+  },
+  "2019": {
+    "tema": "Democratização do acesso ao cinema no Brasil",
+    "textos": []
+  },
+  "2018": {
+    "tema": "Manipulação do comportamento do usuário pelo controle de dados na internet",
+    "textos": []
+  },
+  "2017": {
+    "tema": "Desafios para a formação educacional de surdos no Brasil",
+    "textos": []
+  },
+  "2016": {
+    "tema": "Caminhos para combater a intolerância religiosa no Brasil",
+    "textos": []
+  },
+  "2015": {
+    "tema": "A persistência da violência contra a mulher na sociedade brasileira",
+    "textos": []
+  },
+  "2014": {
+    "tema": "Publicidade infantil em questão no Brasil",
+    "textos": []
+  },
+  "2013": {
+    "tema": "Efeitos da implantação da Lei Seca no Brasil",
+    "textos": []
+  },
+  "2012": {
+    "tema": "Movimento imigratório para o Brasil no século XXI",
+    "textos": []
+  },
+  "2011": {
+    "tema": "Viver em rede no século XXI: os limites entre o público e o privado",
+    "textos": []
+  },
+  "2010": {
+    "tema": "O trabalho na construção da dignidade humana",
+    "textos": []
+  },
+  "2009": {
+    "tema": "O indivíduo frente à ética nacional",
+    "textos": []
+  }
+}

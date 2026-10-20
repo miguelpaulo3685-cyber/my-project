@@ -85,7 +85,7 @@ app.use(express.json({ limit: '20kb' }));
 
 // Só as páginas do site. Servir a pasta inteira entregava o código do
 // servidor (e o .env, se existisse) para quem pedisse.
-for (const pagina of ['index.html', 'privacidade.html', 'termos.html', 'sw.js', 'manifest.webmanifest']) {
+for (const pagina of ['index.html', 'privacidade.html', 'termos.html', 'sw.js', 'manifest.webmanifest', 'textos-motivadores.json']) {
   app.get(pagina === 'index.html' ? ['/', '/index.html'] : `/${pagina}`, (req, res) => {
     res.sendFile(path.join(__dirname, pagina));
   });
@@ -686,22 +686,27 @@ app.get('/api/simulado', async (req, res) => {
 
 // Quantas questões cada ano tem em cada dia, para o site mostrar quais
 // provas estão completas.
+// Quantas questões de cada ENEM o banco tem, por dia de prova.
+async function contarProvas() {
+  const { rows } = await pool.query(
+    `SELECT ano, disciplina, lingua, COUNT(*)::int AS n FROM questoes
+      WHERE ano IS NOT NULL GROUP BY ano, disciplina, lingua`
+  );
+  const anos = ANOS_DISPONIVEIS.map(ano => {
+    const conta = (disciplina, lingua) => rows
+      .filter(r => r.ano === ano && r.disciplina === disciplina && (lingua === undefined ? true : r.lingua === lingua))
+      .reduce((t, r) => t + r.n, 0);
+    const area = d => Math.min(POR_AREA, d === 'linguagens'
+      ? Math.min(QUESTOES_DE_LINGUA, conta(d, 'ingles')) + Math.min(POR_AREA - QUESTOES_DE_LINGUA, conta(d, null))
+      : conta(d));
+    return { ano, dia1: area('linguagens') + area('ciencias-humanas'), dia2: area('ciencias-natureza') + area('matematica') };
+  }).reverse();
+  return { anos, por_dia: POR_AREA * 2 };
+}
+
 app.get('/api/simulado/anos', async (req, res) => {
   try {
-    const { rows } = await pool.query(
-      `SELECT ano, disciplina, lingua, COUNT(*)::int AS n FROM questoes
-        WHERE ano IS NOT NULL GROUP BY ano, disciplina, lingua`
-    );
-    const anos = ANOS_DISPONIVEIS.map(ano => {
-      const conta = (disciplina, lingua) => rows
-        .filter(r => r.ano === ano && r.disciplina === disciplina && (lingua === undefined ? true : r.lingua === lingua))
-        .reduce((t, r) => t + r.n, 0);
-      const area = d => Math.min(POR_AREA, d === 'linguagens'
-        ? Math.min(QUESTOES_DE_LINGUA, conta(d, 'ingles')) + Math.min(POR_AREA - QUESTOES_DE_LINGUA, conta(d, null))
-        : conta(d));
-      return { ano, dia1: area('linguagens') + area('ciencias-humanas'), dia2: area('ciencias-natureza') + area('matematica') };
-    }).reverse();
-    res.json({ anos, por_dia: POR_AREA * 2 });
+    res.json(await contarProvas());
   } catch (erro) {
     console.error('Erro ao contar provas:', erro.message);
     res.status(500).json({ error: 'Não consegui ver as provas agora.' });
@@ -910,7 +915,9 @@ app.post('/api/admin/tri', exigirAdmin, async (req, res) => {
 
 // Baixa a prova inteira de um ano, pagina por pagina, ate a API dizer que
 // acabou (hasMore). Diferente do sorteio, aqui da para saber que terminou.
-app.post('/api/carregar-ano/:ano', exigirAdmin, async (req, res) => {
+// Também pelo site, para quem é administrador (Conta → Administração).
+app.post(['/api/carregar-ano/:ano', '/api/admin/carregar-ano/:ano'], (req, res, next) =>
+  (req.path.startsWith('/api/admin/') ? exigirModerador : exigirAdmin)(req, res, next), async (req, res) => {
   const ano = Number(req.params.ano);
   if (!ANOS_DISPONIVEIS.includes(ano)) {
     return res.status(400).json({ error: `Ano invalido. Disponiveis: ${ANOS_DISPONIVEIS.join(', ')}` });
@@ -1069,6 +1076,34 @@ require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
 require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 require('./redacoes')(app, { pool, auth, limitar, exigirLogin });
+
+// ================== ADMINISTRAÇÃO ==================
+// Os números que dizem se o site está funcionando, o que espera moderação e
+// quantas questões cada ENEM tem no banco.
+app.get('/api/admin/resumo', exigirModerador, async (req, res) => {
+  try {
+    const n = (await pool.query(`
+      SELECT (SELECT COUNT(*)::int FROM usuarios) AS contas,
+             (SELECT COUNT(*)::int FROM usuarios WHERE created_at > NOW() - INTERVAL '7 days') AS contas_semana,
+             (SELECT COUNT(DISTINCT usuario_id)::int FROM respostas WHERE created_at > NOW() - INTERVAL '1 day' AND usuario_id IS NOT NULL) AS ativos_dia,
+             (SELECT COUNT(DISTINCT usuario_id)::int FROM respostas WHERE created_at > NOW() - INTERVAL '7 days' AND usuario_id IS NOT NULL) AS ativos_semana,
+             (SELECT COUNT(*)::int FROM (SELECT usuario_id FROM respostas WHERE created_at > NOW() - INTERVAL '7 days' AND usuario_id IS NOT NULL
+                GROUP BY usuario_id HAVING COUNT(DISTINCT (created_at - INTERVAL '3 hours')::date) >= 2) v) AS voltaram_semana,
+             (SELECT COUNT(*)::int FROM respostas WHERE created_at > NOW() - INTERVAL '7 days') AS questoes_semana,
+             (SELECT COUNT(*)::int FROM push_inscricoes) AS aparelhos_com_avisos,
+             (SELECT COUNT(*)::int FROM posts WHERE oculto) AS posts_ocultos,
+             (SELECT COUNT(*)::int FROM perguntas WHERE oculto) AS perguntas_ocultas,
+             (SELECT COUNT(*)::int FROM perguntas_respostas WHERE oculto) AS respostas_ocultas,
+             (SELECT COUNT(*)::int FROM questoes_comentarios WHERE oculto) AS comentarios_ocultos,
+             (SELECT COUNT(*)::int FROM redacoes WHERE oculto) AS redacoes_ocultas,
+             (SELECT COUNT(*)::int FROM redacoes_correcoes WHERE oculto) AS correcoes_denunciadas,
+             (SELECT COUNT(*)::int FROM reels WHERE status = 'pendente') AS reels_pendentes`)).rows[0];
+    res.json({ numeros: n, provas: await contarProvas() });
+  } catch (erro) {
+    console.error('Erro no resumo de administração:', erro.message);
+    res.status(500).json({ error: 'Não consegui carregar os números agora.' });
+  }
+});
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;

@@ -154,6 +154,13 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
   a fila estiver vazia também pode); no máximo 3 por semana. Quem escreveu marca a correção útil (+5 XP
   para quem corrigiu) ou denuncia (sai na hora e a redação volta para a fila).
 
+- **Textos motivadores** (`textos-motivadores.json`): preenchidos à mão a partir do caderno do INEP, um
+  ano por vez (as instruções estão no começo do arquivo). Aparecem no simulado e nas redações da
+  comunidade; ano sem textos mostra o link para o caderno oficial.
+- **Administração** (Conta, só para administradores): contas, quem estudou no dia e na semana, quem voltou
+  em 2 dias ou mais, o que espera moderação e quantas questões cada ENEM tem, com botão para buscar o que
+  falta na api.enem.dev.
+
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.
 
