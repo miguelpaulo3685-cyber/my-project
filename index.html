@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://enem-api-cbo6.onrender.com http://localhost:3000 http://127.0.0.1:3000 https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/; object-src 'none'; base-uri 'none'; form-action 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://enem-api-cbo6.onrender.com http://localhost:3000 http://127.0.0.1:3000 https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/ https://www.youtube-nocookie.com; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="dark light">
   <title>M&M Estudos — ENEM</title>
@@ -789,6 +789,69 @@
       .barra-prova { gap: 6px; }
     }
 
+    /* ===================== REELS ===================== */
+    /* Feed vertical como o TikTok: um vídeo por tela, encaixando ao rolar. */
+    body.vendo-reels .rodape { display: none; }
+    #tela-reels { max-width: 760px; padding-top: 14px; padding-bottom: 0; }
+    .reels-topo { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .filtros-reels { display: flex; gap: 6px; overflow-x: auto; flex: 1; scrollbar-width: none; padding-bottom: 2px; }
+    .filtros-reels::-webkit-scrollbar { display: none; }
+    .filtros-reels button {
+      flex-shrink: 0; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--borda); cursor: pointer;
+      background: var(--superficie-2); color: var(--texto-fraco); font: inherit; font-size: .82rem; font-weight: 700;
+    }
+    .filtros-reels button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .reels-topo button.acao { margin: 0; flex-shrink: 0; padding: 9px 14px; font-size: .85rem; }
+    .reels-lista {
+      height: calc(100dvh - var(--altura-topo, 62px) - 74px); overflow-y: auto; scroll-snap-type: y mandatory;
+      overscroll-behavior: contain; scrollbar-width: none; border-radius: 20px;
+    }
+    .reels-lista::-webkit-scrollbar { display: none; }
+    .reels-lista:focus { outline: none; }
+    .reel { height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; padding-bottom: 10px; }
+    .reel-quadro {
+      position: relative; height: 100%; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 18px; overflow: hidden;
+      background: #000; box-shadow: var(--sombra);
+    }
+    .reel-quadro > img { width: 100%; height: 100%; object-fit: cover; opacity: .85; }
+    .reel-quadro iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .reel-play {
+      position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%;
+      border: none; cursor: pointer; background: rgba(0,0,0,.55); color: #fff; display: flex; align-items: center; justify-content: center;
+    }
+    .reel-play svg { width: 30px; height: 30px; margin-left: 4px; }
+    .reel-legenda {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 60px 70px 16px 16px; color: #fff; pointer-events: none;
+      background: linear-gradient(transparent, rgba(0,0,0,.82));
+    }
+    .reel.tocando .reel-legenda { padding-bottom: 54px; } /* não cobre a barra do player */
+    .reel-legenda b { display: block; font-size: 1rem; line-height: 1.35; margin: 6px 0 4px; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+    .reel-legenda p { font-size: .84rem; line-height: 1.45; opacity: .9; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .selo-reel { display: inline-block; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.2); margin-right: 4px; text-transform: uppercase; letter-spacing: .04em; }
+    .reel-lado { position: absolute; right: 8px; bottom: 90px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+    .reel.tocando .reel-lado { bottom: 120px; }
+    .reel-lado button {
+      background: rgba(0,0,0,.45); border: none; color: #fff; cursor: pointer; width: 46px; height: 46px; border-radius: 50%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; font: inherit; font-size: .66rem; font-weight: 700;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); transition: transform .15s;
+    }
+    .reel-lado button:active { transform: scale(.9); }
+    .reel-lado button svg { width: 22px; height: 22px; }
+    .reel-lado button.ligado { color: #ff4d6d; }
+    .reel-lado button.ligado.salvo { color: #ffd166; }
+    .reel-lado small { color: #fff; font-size: .72rem; font-weight: 700; margin-top: -10px; text-shadow: 0 1px 3px rgba(0,0,0,.7); }
+    .reel-som {
+      position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,.55); color: #fff; border: none; cursor: pointer;
+      border-radius: 999px; padding: 7px 12px; font: inherit; font-size: .78rem; font-weight: 700;
+    }
+    .previa-reel img { width: 100%; max-height: 180px; object-fit: cover; border-radius: 12px; margin-top: 10px; display: block; }
+    .previa-reel small { display: block; margin-top: 6px; font-size: .78rem; }
+    @media (max-width: 700px) {
+      #tela-reels { padding: 10px 8px 0; }
+      .reels-lista { height: calc(100dvh - var(--altura-topo, 110px) - 64px); border-radius: 14px; }
+      .reel-quadro { border-radius: 14px; width: 100%; aspect-ratio: auto; }
+    }
+
     /* ===================== COMECE POR AQUI ===================== */
     /* Guia de 3 passos para quem chega e atalhos para começar sem pensar. */
     .guia {
@@ -1134,8 +1197,8 @@
       .indicador span { display: none; }
       #btn-tema { display: none; } /* no celular o tema fica dentro de 🎨 Aparência */
       /* quatro abas cabem lado a lado: ícone em cima, nome embaixo */
-      .abas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; overflow: visible; }
-      .aba { flex-direction: column; gap: 3px; padding: 7px 4px; font-size: .74rem; justify-content: center; }
+      .abas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; overflow: visible; }
+      .aba { flex-direction: column; gap: 3px; padding: 7px 2px; font-size: .7rem; justify-content: center; }
       .aba svg { width: 19px; height: 19px; }
     }
 
@@ -1433,6 +1496,35 @@
     </div>
   </div>
 
+  <!-- Novo reel (só administradores) -->
+  <div class="fundo-modal escondido" id="modal-reel" onclick="if (event.target === this) fecharModal('modal-reel')">
+    <div class="modal" role="dialog" aria-labelledby="titulo-modal-reel">
+      <div class="modal-topo">
+        <h2 id="titulo-modal-reel">Novo reel</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-reel')" title="Fechar">✕</button>
+      </div>
+      <label class="campo-modal" for="reel-link">Link do vídeo no YouTube</label>
+      <input class="entrada-modal" id="reel-link" placeholder="https://youtube.com/shorts/…" oninput="previaDoReel()" maxlength="300">
+      <div class="previa-reel" id="previa-reel"></div>
+      <label class="campo-modal" for="reel-titulo">Título</label>
+      <input class="entrada-modal" id="reel-titulo" maxlength="100" placeholder="Ex.: ENEM 2019 Q.136 em 60 segundos">
+      <label class="campo-modal" for="reel-descricao">Descrição (opcional)</label>
+      <textarea class="entrada-modal" id="reel-descricao" rows="3" maxlength="500"></textarea>
+      <label class="campo-modal">Tipo</label>
+      <div class="chaves" id="reel-tipo">
+        <button aria-pressed="true" data-tipo="resolucao" onclick="escolherTipoReel(this)">Resolução</button>
+        <button aria-pressed="false" data-tipo="dica" onclick="escolherTipoReel(this)">Dica</button>
+      </div>
+      <label class="campo-modal" for="reel-area">Área</label>
+      <select class="entrada-modal" id="reel-area">
+        <option value="">Geral</option><option value="linguagens">Linguagens</option><option value="humanas">Ciências Humanas</option>
+        <option value="natureza">Ciências da Natureza</option><option value="matematica">Matemática</option><option value="redacao">Redação</option>
+      </select>
+      <button class="acao" id="publicar-reel" style="width:100%;margin-top:18px;padding:13px" onclick="publicarReel()">Publicar</button>
+      <div id="recado-reel"></div>
+    </div>
+  </div>
+
   <!-- Simulado: todas as questões -->
   <div class="fundo-modal escondido" id="modal-grade" onclick="if (event.target === this) fecharModal('modal-grade')">
     <div class="modal larga" role="dialog" aria-labelledby="titulo-grade">
@@ -1512,6 +1604,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M9 3.5V6h6V3.5M8 11h8M8 14.5h8M8 18h5"/>
           </svg>Simulado
+        </button>
+        <button class="aba" id="aba-reels" onclick="irPara('reels')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M3.5 8.5h17M8.5 3.5l2.5 5M14 3.5l2.5 5"/><path d="m10.5 12 4 2.3-4 2.3z" fill="currentColor"/>
+          </svg>Reels
         </button>
         <button class="aba" id="aba-feed" onclick="irPara('feed')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1649,6 +1746,15 @@
       <button class="acao" id="botao-entregar" onclick="entregarSimulado()">Entregar</button>
     </div>
     <div class="painel" id="painel-prova"></div>
+  </main>
+
+  <!-- ===================== REELS ===================== -->
+  <main class="pagina escondido" id="tela-reels">
+    <div class="reels-topo">
+      <div class="filtros-reels" id="filtros-reels" role="group" aria-label="Filtrar reels"></div>
+      <button class="acao escondido" id="novo-reel" onclick="abrirNovoReel()">＋ Novo reel</button>
+    </div>
+    <div class="reels-lista" id="reels-lista" tabindex="-1"></div>
   </main>
 
   <!-- ===================== PERFIL ===================== -->
@@ -2177,13 +2283,17 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'feed', 'perfil', 'conta'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'reels', 'feed', 'perfil', 'conta'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'questao', 'resultado'].includes(tela);
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed');
   document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
+  document.getElementById('aba-reels').classList.toggle('ativa', tela === 'reels');
+  document.body.classList.toggle('vendo-reels', tela === 'reels');
+  if (tela !== 'reels') pararReels();
+  if (tela === 'reels') abrirReels();
   document.getElementById('aba-simulado').classList.toggle('ativa', tela === 'simulado' || tela === 'prova');
   if (tela !== 'prova') pararRelogioProva();
   if (tela === 'simulado') abrirSimulado();
@@ -4067,6 +4177,274 @@ document.addEventListener('keydown', e => {
   const q = sim.questoes[sim.atual];
   const quantas = (typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : q.alternativas || []).length;
   if (i >= 0 && i < quantas && !sim.entregue) { e.preventDefault(); escolherSim(i); }
+});
+
+// ===================== REELS =====================
+// Vídeos curtos de resolução de questões e dicas, num feed vertical como o
+// do TikTok. Os vídeos ficam no YouTube (Shorts) e entram pelo modo de
+// privacidade aprimorada. Só o reel que está na tela carrega o player; os
+// outros mostram só a capa, para o celular não baixar vários vídeos de uma vez.
+const FILTROS_REELS = [
+  { id: 'todos', nome: 'Todos' }, { id: 'resolucao', nome: 'Resoluções', tipo: 'resolucao' }, { id: 'dica', nome: 'Dicas', tipo: 'dica' },
+  { id: 'linguagens', nome: 'Linguagens', area: 'linguagens' }, { id: 'humanas', nome: 'Humanas', area: 'humanas' },
+  { id: 'natureza', nome: 'Natureza', area: 'natureza' }, { id: 'matematica', nome: 'Matemática', area: 'matematica' },
+  { id: 'redacao', nome: 'Redação', area: 'redacao' }, { id: 'salvos', nome: '🔖 Salvos' }
+];
+const NOME_AREA_REEL = { linguagens: 'Linguagens', humanas: 'Humanas', natureza: 'Natureza', matematica: 'Matemática', redacao: 'Redação' };
+let reels = [];
+let filtroReels = 'todos';
+let maisReels = false;
+let carregandoReels = false;
+let somReels = false;     // depois que a pessoa liga o som, os próximos já tocam com som
+let observadorReels = null;
+let reelAtivo = null;
+
+const capaDoReel = id => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+const playerDoReel = id => `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=${somReels ? 0 : 1}&playsinline=1&loop=1&playlist=${id}&rel=0&modestbranding=1`;
+
+function medirTopo() {
+  document.documentElement.style.setProperty('--altura-topo', document.querySelector('.topo').offsetHeight + 'px');
+}
+addEventListener('resize', medirTopo);
+
+function abrirReels() {
+  medirTopo();
+  document.getElementById('filtros-reels').innerHTML = FILTROS_REELS.map(f =>
+    `<button aria-pressed="${f.id === filtroReels}" onclick="filtrarReels('${f.id}')">${f.nome}</button>`).join('');
+  carregarReels(true);
+}
+
+function filtrarReels(id) {
+  if (id === 'salvos' && !usuarioLogado) return abrirConta('entrar');
+  filtroReels = id;
+  abrirReels();
+}
+
+async function carregarReels(doComeco) {
+  if (carregandoReels) return;
+  carregandoReels = true;
+  const lista = document.getElementById('reels-lista');
+  if (doComeco) { reels = []; pararReels(); lista.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando reels…</div>'; }
+  const f = FILTROS_REELS.find(x => x.id === filtroReels);
+  const busca = new URLSearchParams();
+  if (f.tipo) busca.set('tipo', f.tipo);
+  if (f.area) busca.set('area', f.area);
+  if (!doComeco && reels.length) busca.set('antes', reels[reels.length - 1].id);
+  try {
+    const r = await fetch(`${API_URL}/api/reels${filtroReels === 'salvos' ? '/salvos' : ''}?${busca}`, { headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    document.getElementById('novo-reel').classList.toggle('escondido', !dados.moderador);
+    maisReels = dados.mais;
+    const novos = dados.reels;
+    reels.push(...novos);
+    if (doComeco) lista.innerHTML = '';
+    if (!reels.length) {
+      lista.innerHTML = `<div class="vazio"><span class="cara">🎬</span>${filtroReels === 'salvos'
+        ? 'Você ainda não salvou nenhum reel. Toque em 🔖 para guardar os que quiser rever.'
+        : 'Nenhum reel aqui ainda. Em breve tem resolução de questão e dica rápida!'}</div>`;
+      return;
+    }
+    lista.insertAdjacentHTML('beforeend', novos.map(htmlDoReel).join(''));
+    observarReels();
+  } catch (e) {
+    if (doComeco) lista.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}<br>
+      <button class="acao" style="margin:18px auto 0" onclick="carregarReels(true)">Tentar de novo</button></div>`;
+  } finally {
+    carregandoReels = false;
+  }
+}
+
+const icone = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICONES_REEL = {
+  curtir: '<path d="M12 20.5s-7.5-4.4-7.5-10A4.3 4.3 0 0 1 12 7.8a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10-7.5 10z"/>',
+  salvar: '<path d="M6.5 3.5h11v17l-5.5-4-5.5 4z"/>',
+  compartilhar: '<path d="M4 12v7.5h16V12M12 3.5v12M7.5 8 12 3.5 16.5 8"/>',
+  apagar: '<path d="M4.5 7h15M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13"/>'
+};
+
+function htmlDoReel(r) {
+  const preenchido = (ligado, d) => icone(d).replace('fill="none"', `fill="${ligado ? 'currentColor' : 'none'}"`);
+  return `<section class="reel" data-id="${r.id}" aria-label="${escapar(r.titulo)}">
+    <div class="reel-quadro">
+      <img src="${escapar(capaDoReel(r.youtube_id))}" alt="" loading="lazy">
+      <button class="reel-play" onclick="tocarReel(${r.id})" aria-label="Assistir">${icone('<path d="m8 5 11 7-11 7z" fill="currentColor"/>')}</button>
+      <div class="reel-legenda">
+        <span class="selo-reel">${r.tipo === 'resolucao' ? 'Resolução' : 'Dica'}</span>${r.area ? `<span class="selo-reel">${escapar(NOME_AREA_REEL[r.area] || '')}</span>` : ''}
+        <b>${escapar(r.titulo)}</b>
+        ${r.descricao ? `<p>${escapar(r.descricao)}</p>` : ''}
+      </div>
+      <div class="reel-lado">
+        <button class="${r.curti ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'curtir', this)" aria-pressed="${r.curti}" aria-label="Curtir">${preenchido(r.curti, ICONES_REEL.curtir)}</button>
+        <small data-curtidas="${r.id}">${r.curtidas}</small>
+        <button class="salvo ${r.salvei ? 'ligado' : ''}" onclick="alternarReel(${r.id}, 'salvar', this)" aria-pressed="${r.salvei}" aria-label="Salvar">${preenchido(r.salvei, ICONES_REEL.salvar)}</button>
+        <button onclick="compartilharReel(${r.id})" aria-label="Compartilhar">${icone(ICONES_REEL.compartilhar)}</button>
+        ${document.getElementById('novo-reel').classList.contains('escondido') ? '' : `<button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>`}
+      </div>
+    </div>
+  </section>`;
+}
+
+// O reel que fica com mais de 60% na tela começa a tocar; os outros param.
+function observarReels() {
+  if (observadorReels) observadorReels.disconnect();
+  const lista = document.getElementById('reels-lista');
+  observadorReels = new IntersectionObserver(entradas => {
+    for (const e of entradas) {
+      const id = Number(e.target.dataset.id);
+      if (e.isIntersecting) {
+        tocarReel(id);
+        if (maisReels && id === reels[reels.length - 1].id) carregarReels(false);
+      } else if (reelAtivo === id) pararReels();
+    }
+  }, { root: lista, threshold: 0.6 });
+  lista.querySelectorAll('.reel').forEach(el => observadorReels.observe(el));
+}
+
+function tocarReel(id) {
+  if (reelAtivo === id) return;
+  pararReels();
+  const el = document.querySelector(`.reel[data-id="${id}"]`);
+  const r = reels.find(x => x.id === id);
+  if (!el || !r) return;
+  reelAtivo = id;
+  el.classList.add('tocando');
+  el.querySelector('.reel-play').remove();
+  const quadro = el.querySelector('.reel-quadro');
+  quadro.insertAdjacentHTML('afterbegin', `<iframe src="${escapar(playerDoReel(r.youtube_id))}" title="${escapar(r.titulo)}"
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`);
+  if (!somReels) quadro.insertAdjacentHTML('beforeend', '<button class="reel-som" onclick="ligarSomReels()">🔇 Ativar som</button>');
+}
+
+// Tira o player do reel que saiu da tela: o vídeo para e a capa volta.
+function pararReels() {
+  const el = reelAtivo && document.querySelector(`.reel[data-id="${reelAtivo}"]`);
+  if (el) {
+    const r = reels.find(x => x.id === reelAtivo);
+    el.querySelector('iframe')?.remove();
+    el.querySelector('.reel-som')?.remove();
+    el.classList.remove('tocando');
+    if (r && !el.querySelector('.reel-play')) {
+      el.querySelector('.reel-quadro > img').insertAdjacentHTML('afterend',
+        `<button class="reel-play" onclick="tocarReel(${r.id})" aria-label="Assistir">${icone('<path d="m8 5 11 7-11 7z" fill="currentColor"/>')}</button>`);
+    }
+  }
+  reelAtivo = null;
+}
+
+function ligarSomReels() {
+  somReels = true;
+  const id = reelAtivo;
+  pararReels();
+  if (id) tocarReel(id);
+}
+
+async function alternarReel(id, acao, botao) {
+  if (!usuarioLogado) return abrirConta('entrar');
+  try {
+    const r = await fetch(`${API_URL}/api/reels/${id}/${acao}`, { method: 'POST', headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    const reel = reels.find(x => x.id === id);
+    if (acao === 'curtir') { reel.curti = dados.ligado; reel.curtidas = dados.curtidas; document.querySelector(`[data-curtidas="${id}"]`).textContent = dados.curtidas; }
+    else reel.salvei = dados.ligado;
+    botao.classList.toggle('ligado', dados.ligado);
+    botao.setAttribute('aria-pressed', dados.ligado);
+    botao.querySelector('svg').setAttribute('fill', dados.ligado ? 'currentColor' : 'none');
+    if (acao === 'salvar') avisoSim(dados.ligado ? '🔖 Salvo! Veja em "Salvos".' : 'Removido dos salvos.');
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
+async function compartilharReel(id) {
+  const r = reels.find(x => x.id === id);
+  const link = `https://youtube.com/shorts/${r.youtube_id}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: r.titulo, text: `${r.titulo} · M&M Estudos`, url: link }); return; } catch (e) { if (e.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(link); avisoSim('🔗 Link copiado!'); }
+  catch (e) { avisoSim(link); }
+}
+
+async function apagarReel(id) {
+  if (!await confirmar('Apagar este reel do site? O vídeo continua no YouTube.', { sim: 'Apagar', perigo: true })) return;
+  try {
+    const r = await fetch(`${API_URL}/api/reels/${id}`, { method: 'DELETE', headers: cabecalhoAuth() });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    carregarReels(true);
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
+}
+
+// ---------- novo reel (administradores) ----------
+function idDoYoutube(link) {
+  try {
+    const url = new URL(link.trim());
+    const host = url.hostname.replace(/^(www\.|m\.)/, '');
+    let id = null;
+    if (host === 'youtu.be') id = url.pathname.slice(1).split('/')[0];
+    else if (host === 'youtube.com') { const m = url.pathname.match(/^\/(shorts|embed|live)\/([^/]+)/); id = m ? m[2] : url.searchParams.get('v'); }
+    return id && /^[A-Za-z0-9_-]{11}$/.test(id) ? id : null;
+  } catch (e) { return null; }
+}
+
+function abrirNovoReel() {
+  for (const id of ['reel-link', 'reel-titulo', 'reel-descricao']) document.getElementById(id).value = '';
+  document.getElementById('reel-area').value = '';
+  document.getElementById('recado-reel').innerHTML = '';
+  document.getElementById('previa-reel').innerHTML = '';
+  abrirModal('modal-reel');
+  document.getElementById('reel-link').focus();
+}
+
+function previaDoReel() {
+  const link = document.getElementById('reel-link').value;
+  const id = idDoYoutube(link);
+  document.getElementById('previa-reel').innerHTML = !link.trim() ? ''
+    : id ? `<img src="${escapar(capaDoReel(id))}" alt="Capa do vídeo">`
+    : '<small style="color:var(--errado)">Esse link não parece ser de um vídeo do YouTube.</small>';
+}
+
+function escolherTipoReel(botao) {
+  document.querySelectorAll('#reel-tipo button').forEach(b => b.setAttribute('aria-pressed', b === botao));
+}
+
+async function publicarReel() {
+  const botao = document.getElementById('publicar-reel');
+  const corpo = {
+    link: document.getElementById('reel-link').value,
+    titulo: document.getElementById('reel-titulo').value.trim(),
+    descricao: document.getElementById('reel-descricao').value.trim(),
+    tipo: document.querySelector('#reel-tipo button[aria-pressed="true"]').dataset.tipo,
+    area: document.getElementById('reel-area').value || null
+  };
+  botao.disabled = true;
+  try {
+    const r = await fetch(`${API_URL}/api/reels`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() }, body: JSON.stringify(corpo) });
+    const dados = await r.json();
+    if (!r.ok) throw { daApi: dados.error };
+    fecharModal('modal-reel');
+    filtroReels = 'todos';
+    abrirReels();
+    avisoSim('🎬 Reel publicado!');
+  } catch (e) {
+    document.getElementById('recado-reel').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  } finally {
+    botao.disabled = false;
+  }
+}
+
+// Setas para cima e para baixo trocam de reel, como no TikTok do computador.
+document.addEventListener('keydown', e => {
+  if (document.getElementById('tela-reels').classList.contains('escondido')) return;
+  if (e.target.closest('input, textarea, select') || document.querySelector('.fundo-modal:not(.escondido)')) return;
+  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+  e.preventDefault();
+  const lista = document.getElementById('reels-lista');
+  lista.scrollBy({ top: (e.key === 'ArrowDown' ? 1 : -1) * lista.clientHeight, behavior: 'smooth' });
 });
 
 // ===================== PERFIL =====================

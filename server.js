@@ -46,7 +46,7 @@ const POLITICA_DE_CONTEUDO = [
   "font-src https://fonts.gstatic.com",
   "img-src 'self' data: https:",
   "connect-src 'self' https://accounts.google.com/gsi/",
-  "frame-src https://accounts.google.com/gsi/",
+  "frame-src https://accounts.google.com/gsi/ https://www.youtube-nocookie.com",
   "object-src 'none'",
   "base-uri 'none'",
   "form-action 'self'",
@@ -1047,6 +1047,7 @@ app.get('/api/posts', async (req, res) => {
 // ================== PERFIL E GALERIA ==================
 require('./perfis')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./simulados')(app, { pool, auth, limitar, exigirLogin });
+require('./reels')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== MODERAÇÃO DO FEED ==================
 const DENUNCIAS_PARA_ESCONDER = 3;

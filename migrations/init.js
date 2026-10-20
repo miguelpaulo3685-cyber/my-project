@@ -218,6 +218,35 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela simulados criada');
 
+    // Reels: vídeos curtos do YouTube (resoluções e dicas), publicados só por
+    // administradores. O vídeo fica no YouTube; aqui só o código dele.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS reels (
+        id SERIAL PRIMARY KEY,
+        autor_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        youtube_id VARCHAR(11) NOT NULL,
+        titulo VARCHAR(100) NOT NULL,
+        descricao VARCHAR(500) NOT NULL DEFAULT '',
+        tipo VARCHAR(12) NOT NULL DEFAULT 'dica',
+        area VARCHAR(12),
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_reels_data ON reels(created_at DESC);
+
+      CREATE TABLE IF NOT EXISTS reels_curtidas (
+        reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        PRIMARY KEY (reel_id, usuario_id)
+      );
+      CREATE TABLE IF NOT EXISTS reels_salvos (
+        reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (reel_id, usuario_id)
+      );
+    `);
+    console.log('✅ Tabelas dos reels criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

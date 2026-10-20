@@ -62,6 +62,9 @@ uma tabela ou coluna que o código espera.
 | `GET /api/simulado?dia=1\|2&ano=2009..2023\|misto&lingua=ingles\|espanhol` | livre (90 questões na ordem da prova) |
 | `GET /api/simulado/anos` | livre (quantas questões cada ENEM tem no banco) |
 | `GET /api/simulados` / `POST /api/simulados` | login (histórico de simulados, com a redação) |
+| `GET /api/reels?tipo=&area=&antes=` / `GET /api/reels/salvos` | livre / login |
+| `POST /api/reels` (link do YouTube), `DELETE /api/reels/:id` | administrador |
+| `POST /api/reels/:id/curtir`, `POST /api/reels/:id/salvar` | login (liga e desliga) |
 | `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
@@ -120,6 +123,13 @@ O aluno escolhe um ENEM (2009 a 2023) e faz os dois dias no formato atual: dia 1
 Matemática, em 5h. Há também o simulado misto, com questões sorteadas. O andamento fica salvo no
 navegador a cada resposta; ao entregar, sai a nota TRI de cada área (`POST /api/tri` com
 `so_estas`) e, com conta, o resultado e a redação vão para a tabela `simulados`.
+
+## Reels
+
+Vídeos curtos de resolução de questões e dicas, num feed vertical como o do TikTok. Os vídeos ficam
+no YouTube (Shorts) e só os administradores publicam, colando o link (`reels.js` aceita shorts,
+youtu.be, watch e embed). O site guarda só o código do vídeo, e o player (youtube-nocookie.com) só
+carrega no reel que está na tela. Alunos com conta curtem e salvam.
 
 ## Perfil e galeria
 
