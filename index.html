@@ -425,6 +425,7 @@
       margin-bottom: 26px;
     }
     .enunciado img { max-width: 100%; height: auto; border-radius: 10px; margin: 14px 0; }
+    .alt img { max-width: 100%; max-height: 220px; height: auto; border-radius: 8px; display: block; }
     .enunciado mark.grifo { background: rgba(250,204,21,.55); color: inherit; border-radius: 3px; padding: 1px 0; cursor: pointer; }
     html[data-tema="escuro"] .enunciado mark.grifo { background: rgba(250,204,21,.35); }
     .enunciado.grifando { cursor: text; }
@@ -3367,7 +3368,7 @@ function desenharQuestao() {
         ontouchstart="pressionar(event, ${i})" ontouchend="soltar(event, ${i})"
         ontouchcancel="cancelarPressao()">
         <span class="letra">${LETRAS[i] || i + 1}</span>
-        <span>${escapar(t)}</span>
+        <span>${formatarEnunciado(t)}</span>
       </button>`).join('')}</div>
     <div id="area-resultado"></div>
     <p class="dica-teclado">Atalhos: <kbd>A</kbd>–<kbd>E</kbd> respondem · <kbd>Enter</kbd> vai para a próxima</p>`;
@@ -4720,7 +4721,7 @@ function desenharProva() {
       if (corrigindo) classe = i === q.correta ? ' gabarito' : (i === minha ? ' errou' : '');
       else if (i === minha) classe = ' escolhida';
       return `<button class="alt${classe}" ${corrigindo ? 'disabled' : ''} onclick="escolherSim(${i})" aria-pressed="${i === minha}">
-        <span class="letra">${LETRAS[i] || i + 1}</span><span>${escapar(t)}</span></button>`;
+        <span class="letra">${LETRAS[i] || i + 1}</span><span>${formatarEnunciado(t)}</span></button>`;
     }).join('')}</div>
     ${corrigindo ? `<div class="nota-gabarito" style="margin-top:6px"><strong>Gabarito: ${LETRAS[q.correta]}</strong> ·
       ${minha === undefined ? 'você deixou em branco' : minha === q.correta ? 'você acertou' : `você marcou ${LETRAS[minha]}`}
@@ -6166,7 +6167,7 @@ function desenharQuestaoDesafio() {
         <small>${escapar(nomeDaArea(AREA_DA_DISCIPLINA[q.disciplina] || ''))} · ENEM ${escapar(q.ano)}</small></div>
       <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
       <div id="alts-desafio">${alternativas.map((t, k) => `<button class="alt${k === minha ? ' escolhida' : ''}" onclick="escolherDesafio(${k})" aria-pressed="${k === minha}">
-        <span class="letra">${LETRAS[k]}</span><span>${escapar(t)}</span></button>`).join('')}</div>
+        <span class="letra">${LETRAS[k]}</span><span>${formatarEnunciado(t)}</span></button>`).join('')}</div>
       <div class="rodape-prova">
         <button class="acao discreta" onclick="irQuestaoDesafio(${i - 1})" ${i === 0 ? 'disabled' : ''}>← Anterior</button>
         <span class="marcar"></span>
@@ -7370,7 +7371,8 @@ async function desenharPainelAdmin() {
       return `<div class="${completo ? '' : 'incompleto'}"><b>${a.ano}</b><small>Dia 1: ${a.dia1} · Dia 2: ${a.dia2}</small>
         ${completo ? '<span>✓</span>' : `<button class="acao discreta pequena" onclick="buscarAno(${a.ano}, this)">Buscar o que falta</button>`}</div>`;
     }).join('')}</div>
-    <p class="pista">As questões vêm da api.enem.dev. Se depois de buscar ainda faltar, é porque a fonte não tem essas questões.</p>`;
+    <p class="pista">As questões vêm da api.enem.dev. Se depois de buscar ainda faltar, é porque a fonte não tem essas questões
+      (o aviso mostra quais). O simulado funciona do mesmo jeito, só com essas questões a menos.</p>`;
 }
 
 async function buscarAno(ano, botao) {
@@ -7378,7 +7380,9 @@ async function buscarAno(ano, botao) {
   botao.textContent = 'Buscando… (pode levar 1 min)';
   try {
     const d = await postar(`/api/admin/carregar-ano/${ano}`);
-    avisoSim(`ENEM ${ano}: ${d.inseridas} ${d.inseridas === 1 ? 'questão nova' : 'questões novas'}.`);
+    avisoSim(`ENEM ${ano}: ${d.inseridas} ${d.inseridas === 1 ? 'questão nova' : 'questões novas'}, ${d.atualizadas} corrigidas. `
+      + `Agora: Dia 1 com ${d.dia1}, Dia 2 com ${d.dia2}.`
+      + (d.faltam_na_fonte.length ? ` A fonte não tem ${d.faltam_na_fonte.length === 1 ? 'a questão' : 'as questões'} ${d.faltam_na_fonte.join(', ')}.` : ''));
   } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
   desenharPainelAdmin();
 }

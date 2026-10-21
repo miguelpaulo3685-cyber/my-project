@@ -688,18 +688,13 @@ app.get('/api/simulado', async (req, res) => {
 // provas estão completas.
 // Quantas questões de cada ENEM o banco tem, por dia de prova.
 async function contarProvas() {
-  const { rows } = await pool.query(
-    `SELECT ano, disciplina, lingua, COUNT(*)::int AS n FROM questoes
-      WHERE ano IS NOT NULL GROUP BY ano, disciplina, lingua`
-  );
+  // Conta do mesmo jeito que o simulado monta a prova (com inglês), para o
+  // número mostrado ser o número de questões que o aluno vai ver.
+  const { rows } = await pool.query('SELECT id, ano, disciplina, lingua, numero FROM questoes WHERE ano IS NOT NULL');
   const anos = ANOS_DISPONIVEIS.map(ano => {
-    const conta = (disciplina, lingua) => rows
-      .filter(r => r.ano === ano && r.disciplina === disciplina && (lingua === undefined ? true : r.lingua === lingua))
-      .reduce((t, r) => t + r.n, 0);
-    const area = d => Math.min(POR_AREA, d === 'linguagens'
-      ? Math.min(QUESTOES_DE_LINGUA, conta(d, 'ingles')) + Math.min(POR_AREA - QUESTOES_DE_LINGUA, conta(d, null))
-      : conta(d));
-    return { ano, dia1: area('linguagens') + area('ciencias-humanas'), dia2: area('ciencias-natureza') + area('matematica') };
+    const doAno = rows.filter(r => r.ano === ano);
+    const dia = n => DIAS_DO_SIMULADO[n].reduce((t, d) => t + montarArea(doAno, d, 'ingles').length, 0);
+    return { ano, dia1: dia(1), dia2: dia(2) };
   }).reverse();
   return { anos, por_dia: POR_AREA * 2 };
 }
@@ -752,25 +747,50 @@ app.get('/api/questoes/:area', async (req, res) => {
 });
 
 // ================== ATUALIZAR CACHE DA API ==================
+// A área de cada questão sai da posição dela na prova, que é fixa. A
+// api.enem.dev erra a área de várias questões (em 2023, 11 de Natureza vêm
+// como Humanas ou Matemática), e a contagem por área ficava incompleta.
+// 2009: Natureza, Humanas | Linguagens, Matemática
+// 2010 a 2016: Humanas, Natureza | Linguagens, Matemática
+// 2017 em diante: Linguagens, Humanas | Natureza, Matemática
+const ORDEM_DAS_AREAS = {
+  antiga2009: ['ciencias-natureza', 'ciencias-humanas', 'linguagens', 'matematica'],
+  antiga: ['ciencias-humanas', 'ciencias-natureza', 'linguagens', 'matematica'],
+  atual: ['linguagens', 'ciencias-humanas', 'ciencias-natureza', 'matematica']
+};
+function areaPeloNumero(ano, numero) {
+  if (!Number.isInteger(numero) || numero < 1 || numero > 180) return null;
+  const ordem = ano >= 2017 ? ORDEM_DAS_AREAS.atual : ano === 2009 ? ORDEM_DAS_AREAS.antiga2009 : ORDEM_DAS_AREAS.antiga;
+  return ordem[Math.floor((numero - 1) / 45)];
+}
+
+const NOME_DA_LINGUA = { ingles: 'Inglês', espanhol: 'Espanhol' };
+
 // Converte uma questão da api.enem.dev para as colunas da tabela questoes.
 // O enunciado vem em alternativesIntroduction e o texto de apoio em context,
 // que pode ser null — juntar os dois evita gravar questão sem enunciado.
+// Questões de inglês e espanhol têm o mesmo título na fonte ("Questão 1 -
+// ENEM 2023"); sem o idioma no título, uma das duas era descartada.
+// Alternativa que é só imagem vira a imagem em markdown (antes ficava vazia).
 function prepararQuestao(q) {
   const alternativas = q.alternatives || [];
   const correta = alternativas.findIndex(a => a.isCorrect);
   if (correta === -1 || !q.title) return null;
-
-  return [
-    q.discipline,
-    q.title,
-    [q.context, q.alternativesIntroduction].filter(Boolean).join('\n\n'),
-    JSON.stringify(alternativas.map(a => a.text)),
+  const numero = numeroDaQuestao(q);
+  const lingua = q.language || null;
+  return {
+    disciplina: areaPeloNumero(q.year, numero) || q.discipline,
+    disciplina_api: q.discipline,
+    titulo_original: q.title,
+    titulo: lingua ? `${q.title} (${NOME_DA_LINGUA[lingua] || lingua})` : q.title,
+    contexto: [q.context, q.alternativesIntroduction].filter(Boolean).join('\n\n'),
+    alternativas: JSON.stringify(alternativas.map(a => [a.text, a.file ? `![](${a.file})` : null].filter(Boolean).join('\n'))),
     correta,
-    q.year,
-    q.files?.[0] || null,
-    numeroDaQuestao(q),
-    q.language || null
-  ];
+    ano: q.year,
+    imagem_url: q.files?.[0] || null,
+    numero,
+    lingua
+  };
 }
 
 function numeroDaQuestao(q) {
@@ -784,21 +804,78 @@ const ANOS_DISPONIVEIS = [
   2017, 2018, 2019, 2020, 2021, 2022, 2023
 ];
 
+// Grava ou corrige cada questão. A que já existe é atualizada no lugar (o id
+// não muda, então respostas, comentários e TRI continuam valendo); antes de
+// inserir, procura pelo título novo e pelo antigo, sem o idioma.
 async function gravarQuestoes(questoes) {
-  let inseridas = 0;
+  let inseridas = 0, atualizadas = 0;
   for (const q of questoes) {
-    const valores = prepararQuestao(q);
-    if (!valores) continue;
-
-    const result = await pool.query(
-      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url, numero, lingua)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       ON CONFLICT (titulo) DO NOTHING`,
-      valores
-    );
-    inseridas += result.rowCount;
+    const v = prepararQuestao(q);
+    if (!v) continue;
+    const campos = [v.disciplina, v.titulo, v.contexto, v.alternativas, v.correta, v.ano, v.imagem_url, v.numero, v.lingua,
+      v.disciplina !== v.disciplina_api ? v.disciplina_api : null];
+    const atualizar = (onde, extra = []) => pool.query(
+      `UPDATE questoes SET disciplina = $1, titulo = $2, contexto = $3, alternativas = $4, correta = $5, ano = $6,
+              imagem_url = $7, numero = $8, lingua = $9, disciplina_api = $10, updated_at = NOW()
+        WHERE ${onde}`, [...campos, ...extra]);
+    let r = await atualizar('titulo = $2');
+    if (!r.rowCount && v.titulo_original !== v.titulo) {
+      // Questão de língua gravada no formato antigo: a primeira das duas
+      // (inglês ou espanhol) fica com a linha que já existia.
+      r = await atualizar('titulo = $11 AND (lingua IS NULL OR lingua = $9)', [v.titulo_original]);
+    }
+    if (r.rowCount) { atualizadas++; continue; }
+    const ins = await pool.query(
+      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, imagem_url, numero, lingua, disciplina_api)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) ON CONFLICT (titulo) DO NOTHING`, campos);
+    inseridas += ins.rowCount;
   }
-  return inseridas;
+  return { inseridas, atualizadas };
+}
+
+// Questões já no banco: a área pela posição na prova, sem precisar da fonte.
+async function corrigirAreas() {
+  const casos = [
+    ['ano >= 2017', ORDEM_DAS_AREAS.atual],
+    ['ano = 2009', ORDEM_DAS_AREAS.antiga2009],
+    ['ano BETWEEN 2010 AND 2016', ORDEM_DAS_AREAS.antiga]
+  ];
+  let total = 0;
+  for (const [onde, ordem] of casos) {
+    const r = await pool.query(
+      `UPDATE questoes SET disciplina_api = COALESCE(disciplina_api, disciplina),
+              disciplina = (ARRAY[$1, $2, $3, $4])[((numero - 1) / 45) + 1]
+        WHERE ${onde} AND numero BETWEEN 1 AND 180
+          AND disciplina <> (ARRAY[$1, $2, $3, $4])[((numero - 1) / 45) + 1]`, ordem);
+    total += r.rowCount;
+  }
+  if (total) console.log(`🧭 ${total} questões mudaram para a área certa (pela posição na prova)`);
+  return total;
+}
+
+// Uma vez por ano de prova: busca a prova inteira de novo e corrige o que
+// foi gravado do jeito antigo (língua estrangeira faltando, alternativas que
+// eram só imagem). Um ano a cada 20 s, para a api.enem.dev não bloquear.
+const VERSAO_DA_CORRECAO = 'questoes_v2';
+async function corrigirProvasUmaVez() {
+  const feitos = new Set((await pool.query(
+    `SELECT chave FROM configuracoes WHERE chave LIKE $1`, [`${VERSAO_DA_CORRECAO}:%`])).rows.map(r => r.chave));
+  let mexeu = false;
+  for (const ano of ANOS_DISPONIVEIS) {
+    const chave = `${VERSAO_DA_CORRECAO}:${ano}`;
+    if (feitos.has(chave)) continue;
+    try {
+      const { inseridas, atualizadas } = await gravarQuestoes(await buscarProvaInteira(ano));
+      await pool.query(`INSERT INTO configuracoes (chave, valor) VALUES ($1, $2) ON CONFLICT (chave) DO NOTHING`,
+        [chave, JSON.stringify({ inseridas, atualizadas, em: new Date().toISOString() })]);
+      console.log(`🛠️ ENEM ${ano} corrigido: ${inseridas} novas, ${atualizadas} atualizadas`);
+      mexeu = mexeu || inseridas > 0 || atualizadas > 0;
+    } catch (erro) {
+      console.error(`❌ Não consegui corrigir o ENEM ${ano} agora (tenta no próximo reinício):`, erro.message);
+    }
+    await new Promise(r => setTimeout(r, 20000));
+  }
+  if (mexeu) await prepararTri();
 }
 
 async function buscarProvaInteira(ano) {
@@ -897,6 +974,7 @@ async function prepararTri() {
     await preencherNumeros();
     diagnosticoTri.etapa = 'casando com o INEP';
     await aplicarTri();
+    await corrigirAreas();
     diagnosticoTri.etapa = 'concluída';
   } catch (erro) {
     console.error('❌ Erro ao aplicar TRI:', erro.message);
@@ -927,12 +1005,21 @@ app.post(['/api/carregar-ano/:ano', '/api/admin/carregar-ano/:ano'], (req, res, 
     console.log(`🔄 Carregando ENEM ${ano} por completo...`);
     const questoes = await buscarProvaInteira(ano);
     const recebidas = questoes.length;
-    const inseridas = await gravarQuestoes(questoes);
-    if (inseridas > 0) await aplicarTri();
+    const { inseridas, atualizadas } = await gravarQuestoes(questoes);
+    await aplicarTri();
+    await corrigirAreas();
+    const prova = (await contarProvas()).anos.find(a => a.ano === ano);
+    // Números que a fonte não tem: não adianta buscar de novo.
+    const tem = new Set(questoes.map(q => `${numeroDaQuestao(q)}${q.language ? '-' + q.language : ''}`));
+    const faltam_na_fonte = [];
+    for (let n = 1; n <= 180; n++) {
+      const deLingua = ano >= 2017 ? n <= 5 : (ano >= 2010 && n >= 91 && n <= 95);
+      if (deLingua ? !tem.has(`${n}-ingles`) && !tem.has(String(n)) : !tem.has(String(n))) faltam_na_fonte.push(n);
+    }
 
-    const msg = `ENEM ${ano} completo: ${recebidas} questoes lidas, ${inseridas} novas gravadas`;
+    const msg = `ENEM ${ano}: ${recebidas} questoes lidas, ${inseridas} novas, ${atualizadas} corrigidas`;
     console.log(`✅ ${msg}`);
-    res.json({ message: msg, ano, recebidas, inseridas });
+    res.json({ message: msg, ano, recebidas, inseridas, atualizadas, dia1: prova.dia1, dia2: prova.dia2, faltam_na_fonte });
   } catch (error) {
     console.error(`❌ Erro ao carregar ${ano}:`, error.message);
     res.status(500).json({ error: `Erro ao carregar ENEM ${ano}`, detalhe: error.message });
@@ -975,7 +1062,7 @@ async function atualizarCache() {
   );
 
   const questoes = response.data?.questions || [];
-  const inseridas = await gravarQuestoes(questoes);
+  const { inseridas } = await gravarQuestoes(questoes);
   if (inseridas > 0) await aplicarTri();
 
   const msg = `ENEM ${ano}: ${questoes.length} questões recebidas, ${inseridas} novas gravadas`;
@@ -1216,6 +1303,7 @@ const server = app.listen(PORT, () => {
       .catch(err => console.error('❌ Erro ao atualizar cache:', err.message))
       .then(prepararTri)
       .then(() => require('./reels').publicarReelsIniciais(pool))
+      .then(corrigirProvasUmaVez)
       .catch(err => console.error('❌ Erro ao publicar reels iniciais:', err.message));
   }, 2000);
 });
@@ -1229,4 +1317,4 @@ process.on('SIGTERM', () => {
   });
 });
 
-module.exports = { app, pool };
+module.exports = { app, pool, prepararQuestao, areaPeloNumero, gravarQuestoes, corrigirAreas };
