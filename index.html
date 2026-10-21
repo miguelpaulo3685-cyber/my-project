@@ -1391,6 +1391,13 @@
       .ficha-correcao { position: static; max-height: none; }
     }
     @media (max-width: 640px) { .acoes-redacao { grid-template-columns: 1fr; } }
+    .alternativa-nova { display: grid; grid-template-columns: 20px 18px 1fr auto; gap: 8px; align-items: center; margin-bottom: 6px; }
+    .alternativa-nova input[type=radio] { accent-color: var(--certo); width: 18px; height: 18px; }
+    .alternativa-nova .entrada-modal { margin: 0; }
+    label.botao-imagem { display: inline-block; cursor: pointer; margin: 6px 0 0; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--borda); background: var(--superficie-2); font-size: .82rem; font-weight: 700; }
+    .alternativa-nova label.botao-imagem { margin: 0; }
+    .previa-questao { padding: 16px; }
+    .previa-questao .alt { cursor: default; }
     .numeros-admin { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .numeros-admin div { background: var(--superficie-2); border-radius: 10px; padding: 10px; }
     .numeros-admin b { display: block; font-family: var(--fonte-titulo); font-size: 1.3rem; }
@@ -2116,6 +2123,17 @@
       </ol>
       <p class="pista">Não está no Safari? Copie o endereço e abra nele: os outros navegadores do iPhone nem sempre têm essa opção.</p>
     </div>
+  </div>
+
+  <!-- Administração: cadastrar uma questão que a fonte não tem -->
+  <div class="fundo-modal escondido" id="modal-questao">
+    <form class="modal larga" role="dialog" aria-labelledby="titulo-questao-nova" onsubmit="salvarNovaQuestao(event)" style="max-width:720px">
+      <div class="modal-topo">
+        <h2 id="titulo-questao-nova">Nova questão</h2>
+        <button type="button" class="btn-sair" onclick="fecharModal('modal-questao')" title="Fechar">✕</button>
+      </div>
+      <div id="form-questao"></div>
+    </form>
   </div>
 
   <!-- Meta do dia: escrever a sua ou ver a de alguém -->
@@ -7372,7 +7390,114 @@ async function desenharPainelAdmin() {
         ${completo ? '<span>✓</span>' : `<button class="acao discreta pequena" onclick="buscarAno(${a.ano}, this)">Buscar o que falta</button>`}</div>`;
     }).join('')}</div>
     <p class="pista">As questões vêm da api.enem.dev. Se depois de buscar ainda faltar, é porque a fonte não tem essas questões
-      (o aviso mostra quais). O simulado funciona do mesmo jeito, só com essas questões a menos.</p>`;
+      (o aviso mostra quais). Dá para cadastrar essas à mão logo abaixo, copiando do caderno do INEP.</p>
+    <div class="rotulo-modal">Questões que faltam</div>
+    <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
+  desenharFaltando();
+}
+
+// ---------- cadastrar à mão as questões que a fonte não tem ----------
+const NOME_AREA_ADMIN = { linguagens: 'Linguagens', 'ciencias-humanas': 'Humanas', 'ciencias-natureza': 'Natureza', matematica: 'Matemática' };
+let questaoNova = null; // { ano, numero, lingua, area, contexto, alternativas[5], correta }
+
+async function desenharFaltando() {
+  const alvo = document.getElementById('lista-faltando');
+  if (!alvo) return;
+  let faltam;
+  try { ({ faltam } = await api('/api/admin/faltando')); } catch (e) { alvo.innerHTML = `<p class="pista">${escapar(e.daApi || SEM_SERVIDOR)}</p>`; return; }
+  if (!faltam.length) { alvo.innerHTML = '<p class="pista">Nenhuma! Todas as provas estão completas 🎉</p>'; return; }
+  // As de espanhol não contam no 90/90 (o simulado conta com inglês): ficam por último.
+  faltam.sort((a, b) => (a.lingua === 'espanhol') - (b.lingua === 'espanhol') || b.ano - a.ano || a.numero - b.numero);
+  alvo.innerHTML = `<p class="pista" style="margin-top:0">${faltam.length} no total.
+      Pegue o caderno e o gabarito no <a href="${PROVAS_DO_INEP}" target="_blank" rel="noopener">site do INEP</a>
+      (caderno azul do dia certo: a numeração é a mesma).</p>
+    <div class="provas-admin">${faltam.map(f => `<div class="incompleto">
+      <b>${f.ano}</b><small>Questão ${f.numero}${f.lingua ? ` (${f.lingua === 'ingles' ? 'inglês' : 'espanhol'})` : ''} · ${NOME_AREA_ADMIN[f.area]} · Dia ${f.numero <= 90 ? 1 : 2} da prova original</small>
+      <button class="acao discreta pequena" onclick='abrirNovaQuestao(${JSON.stringify(f)})'>Adicionar</button></div>`).join('')}</div>`;
+}
+
+function abrirNovaQuestao(f) {
+  questaoNova = { ...f, contexto: '', alternativas: ['', '', '', '', ''], correta: null };
+  desenharNovaQuestao();
+  abrirModal('modal-questao');
+}
+
+function desenharNovaQuestao() {
+  const q = questaoNova;
+  document.getElementById('titulo-questao-nova').textContent = `ENEM ${q.ano} · Questão ${q.numero}${q.lingua ? ` (${q.lingua === 'ingles' ? 'inglês' : 'espanhol'})` : ''}`;
+  document.getElementById('form-questao').innerHTML = `
+    <p class="pista" style="margin-top:0">${NOME_AREA_ADMIN[q.area]}. Copie do caderno oficial do INEP o texto e as alternativas como estão na prova.
+      Figuras, gráficos e tabelas viram imagem: tire um print só da figura e envie.</p>
+    <div class="rotulo-modal">Texto da questão</div>
+    <textarea class="caixa-texto" id="contexto-nova" style="min-height:180px" placeholder="Texto de apoio, enunciado e o comando da questão…"
+      oninput="questaoNova.contexto = this.value; previaNovaQuestao()">${escapar(q.contexto)}</textarea>
+    <label class="acao discreta pequena botao-imagem">🖼️ Pôr imagem no texto<input type="file" accept="image/*" hidden onchange="imagemNaQuestao(this, 'contexto')"></label>
+    <div class="rotulo-modal">Alternativas <span class="pista" style="text-transform:none;letter-spacing:0;margin:0 0 0 6px">marque a correta (gabarito oficial)</span></div>
+    ${q.alternativas.map((a, i) => `<div class="alternativa-nova">
+      <input type="radio" name="correta-nova" aria-label="Alternativa ${LETRAS[i]} é a correta" ${q.correta === i ? 'checked' : ''} onchange="questaoNova.correta = ${i}; previaNovaQuestao()">
+      <b>${LETRAS[i]}</b>
+      <input class="entrada-modal" value="${escapar(a)}" placeholder="Texto da alternativa ${LETRAS[i]}" oninput="questaoNova.alternativas[${i}] = this.value; previaNovaQuestao()">
+      <label class="acao discreta pequena botao-imagem" title="A alternativa é uma imagem">🖼️<input type="file" accept="image/*" hidden onchange="imagemNaQuestao(this, ${i})"></label>
+    </div>`).join('')}
+    <div class="rotulo-modal">Como vai aparecer</div>
+    <div class="painel previa-questao" id="previa-nova"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+      <button type="button" class="acao discreta" style="margin:0" onclick="fecharModal('modal-questao')">Cancelar</button>
+      <button class="acao" style="margin:0" id="salvar-nova">Salvar questão</button>
+    </div>`;
+  previaNovaQuestao();
+}
+
+function previaNovaQuestao() {
+  const q = questaoNova;
+  document.getElementById('previa-nova').innerHTML = `<div class="enunciado">${formatarEnunciado(q.contexto) || '<span class="pista">O texto aparece aqui.</span>'}</div>
+    ${q.alternativas.map((a, i) => `<div class="alt${q.correta === i ? ' gabarito' : ''}"><span class="letra">${LETRAS[i]}</span><span>${formatarEnunciado(a)}</span></div>`).join('')}`;
+}
+
+// Converte para JPEG com fundo branco (figura com fundo transparente
+// ficaria preta) e guarda no servidor; o texto recebe o link da imagem.
+async function imagemNaQuestao(input, onde) {
+  const arquivo = input.files[0];
+  input.value = '';
+  if (!arquivo) return;
+  try {
+    const original = await new Promise((ok, falha) => { const l = new FileReader(); l.onload = () => ok(l.result); l.onerror = falha; l.readAsDataURL(arquivo); });
+    const img = await testarImagem(original);
+    let dados = null;
+    for (const [maximo, qualidade] of [[1400, .88], [1100, .8], [900, .72], [700, .65]]) {
+      const escala = Math.min(1, maximo / Math.max(img.naturalWidth, img.naturalHeight));
+      const tela = document.createElement('canvas');
+      tela.width = Math.round(img.naturalWidth * escala); tela.height = Math.round(img.naturalHeight * escala);
+      const ctx = tela.getContext('2d');
+      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, tela.width, tela.height);
+      ctx.drawImage(img, 0, 0, tela.width, tela.height);
+      dados = tela.toDataURL('image/jpeg', qualidade);
+      if ((dados.length - 23) * 3 / 4 < 440 * 1024) break;
+      dados = null;
+    }
+    if (!dados) throw new Error('Imagem grande demais. Recorte só a figura.');
+    const { caminho } = await postar('/api/admin/questoes-imagens', { imagem: dados });
+    const marcacao = `![](${API_URL}${caminho})`;
+    if (onde === 'contexto') questaoNova.contexto = (questaoNova.contexto ? questaoNova.contexto + '\n\n' : '') + marcacao;
+    else questaoNova.alternativas[onde] = marcacao;
+    desenharNovaQuestao();
+  } catch (e) { avisoSim(e.daApi || e.message || SEM_SERVIDOR); }
+}
+
+async function salvarNovaQuestao(evento) {
+  evento.preventDefault();
+  const q = questaoNova;
+  const botao = document.getElementById('salvar-nova');
+  botao.disabled = true;
+  try {
+    const d = await postar('/api/admin/questoes', { ano: q.ano, numero: q.numero, lingua: q.lingua, contexto: q.contexto, alternativas: q.alternativas, correta: q.correta });
+    fecharModal('modal-questao');
+    avisoSim(`${d.titulo} salva! ENEM ${q.ano} agora tem Dia 1 com ${d.dia1} e Dia 2 com ${d.dia2}.`);
+    desenharPainelAdmin();
+  } catch (e) {
+    avisoSim(e.daApi || SEM_SERVIDOR);
+    botao.disabled = false;
+  }
 }
 
 async function buscarAno(ano, botao) {

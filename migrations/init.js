@@ -536,6 +536,17 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas das redações criadas');
 
+    // Imagens das questões cadastradas à mão pela Administração (as que a
+    // api.enem.dev não tem). São públicas, como as da prova.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS imagens_questoes (
+        id SERIAL PRIMARY KEY,
+        dados BYTEA NOT NULL,
+        enviada_por INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

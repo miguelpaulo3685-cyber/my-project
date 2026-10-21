@@ -80,7 +80,7 @@ app.use(cors({ origin: (origem, ok) => ok(null, !origem || ORIGENS_PERMITIDAS.in
 app.use(morgan('combined'));
 // Perfil e publicações levam uma foto (até ~450 KB, em base64); o resto da
 // API continua com o limite pequeno.
-app.use(['/api/perfil', '/api/publicacoes'], express.json({ limit: '700kb' }));
+app.use(['/api/perfil', '/api/publicacoes', '/api/admin/questoes-imagens'], express.json({ limit: '700kb' }));
 app.use(express.json({ limit: '20kb' }));
 
 // Só as páginas do site. Servir a pasta inteira entregava o código do
@@ -1189,6 +1189,101 @@ app.get('/api/admin/resumo', exigirModerador, async (req, res) => {
   } catch (erro) {
     console.error('Erro no resumo de administração:', erro.message);
     res.status(500).json({ error: 'Não consegui carregar os números agora.' });
+  }
+});
+
+// ---------- questões que a fonte não tem ----------
+// Números de questão (e línguas) de cada prova que ainda não estão no banco.
+// Questão de língua estrangeira precisa das duas versões; sem marcação de
+// língua, a gravada conta como a de inglês.
+const ehDeLingua = (ano, n) => (ano >= 2017 ? n <= 5 : ano >= 2010 && n >= 91 && n <= 95);
+async function questoesFaltando() {
+  const { rows } = await pool.query('SELECT ano, numero, lingua FROM questoes WHERE ano IS NOT NULL AND numero BETWEEN 1 AND 180');
+  const tem = new Set(rows.map(r => `${r.ano}:${r.numero}:${r.lingua || ''}`));
+  const faltam = [];
+  for (const ano of ANOS_DISPONIVEIS) {
+    for (let n = 1; n <= 180; n++) {
+      const area = areaPeloNumero(ano, n);
+      if (!ehDeLingua(ano, n)) { if (!tem.has(`${ano}:${n}:`)) faltam.push({ ano, numero: n, lingua: null, area }); continue; }
+      if (!tem.has(`${ano}:${n}:ingles`) && !tem.has(`${ano}:${n}:`)) faltam.push({ ano, numero: n, lingua: 'ingles', area });
+      if (!tem.has(`${ano}:${n}:espanhol`)) faltam.push({ ano, numero: n, lingua: 'espanhol', area });
+    }
+  }
+  return faltam;
+}
+
+app.get('/api/admin/faltando', exigirModerador, async (req, res) => {
+  try {
+    res.json({ faltam: await questoesFaltando() });
+  } catch (erro) {
+    console.error('Erro ao listar questões faltando:', erro.message);
+    res.status(500).json({ error: 'Não consegui listar agora.' });
+  }
+});
+
+// Imagem de questão: o navegador já manda em JPEG; o servidor confere.
+app.post('/api/admin/questoes-imagens', exigirModerador, async (req, res) => {
+  const { dados, erro } = imagens.lerImagem(req.body?.imagem);
+  if (erro) return res.status(400).json({ error: erro });
+  try {
+    const { rows } = await pool.query('INSERT INTO imagens_questoes (dados, enviada_por) VALUES ($1, $2) RETURNING id', [dados, req.usuario.id]);
+    res.status(201).json({ caminho: `/api/questoes-imagens/${rows[0].id}` });
+  } catch (e) {
+    console.error('Erro ao guardar imagem de questão:', e.message);
+    res.status(500).json({ error: 'Não consegui guardar a imagem agora.' });
+  }
+});
+
+app.get('/api/questoes-imagens/:id', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id) || id < 1) return res.status(404).end();
+  try {
+    const { rows } = await pool.query('SELECT dados FROM imagens_questoes WHERE id = $1', [id]);
+    if (!rows[0]) return res.status(404).end();
+    res.set({
+      'Content-Type': 'image/jpeg',
+      'Cache-Control': 'public, max-age=31536000, immutable', // a imagem de um id nunca muda
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Content-Security-Policy': "default-src 'none'"
+    });
+    res.send(rows[0].dados);
+  } catch (e) {
+    res.status(500).end();
+  }
+});
+
+// Cadastra (ou corrige) uma questão copiada do caderno do INEP. Fica com o
+// mesmo título que a api.enem.dev usaria: se um dia a fonte tiver a questão,
+// a busca atualiza esta mesma linha em vez de duplicar.
+app.post('/api/admin/questoes', exigirModerador, async (req, res) => {
+  const c = req.body || {};
+  const ano = Number(c.ano), numero = Number(c.numero);
+  const lingua = ['ingles', 'espanhol'].includes(c.lingua) ? c.lingua : null;
+  const contexto = typeof c.contexto === 'string' ? c.contexto.trim() : '';
+  const alternativas = Array.isArray(c.alternativas) ? c.alternativas.map(a => (typeof a === 'string' ? a.trim() : '')) : [];
+  const correta = Number(c.correta);
+  if (!ANOS_DISPONIVEIS.includes(ano) || !Number.isInteger(numero) || numero < 1 || numero > 180) return res.status(400).json({ error: 'Ano ou número inválido.' });
+  if (Boolean(lingua) !== ehDeLingua(ano, numero)) return res.status(400).json({ error: 'Essa questão não é (ou é) de língua estrangeira: confira o número.' });
+  if (contexto.length < 10 || contexto.length > 20000) return res.status(400).json({ error: 'Copie o texto da questão (enunciado e o que vier antes das alternativas).' });
+  if (alternativas.length !== 5 || alternativas.some(a => !a || a.length > 3000)) return res.status(400).json({ error: 'Preencha as 5 alternativas (texto ou imagem).' });
+  if (![0, 1, 2, 3, 4].includes(correta)) return res.status(400).json({ error: 'Marque a alternativa correta (veja o gabarito oficial).' });
+  const titulo = `Questão ${numero} - ENEM ${ano}${lingua ? ` (${NOME_DA_LINGUA[lingua]})` : ''}`;
+  try {
+    await pool.query(
+      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, numero, lingua)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       ON CONFLICT (titulo) DO UPDATE SET disciplina = EXCLUDED.disciplina, contexto = EXCLUDED.contexto,
+         alternativas = EXCLUDED.alternativas, correta = EXCLUDED.correta, ano = EXCLUDED.ano, numero = EXCLUDED.numero,
+         lingua = EXCLUDED.lingua, updated_at = NOW()`,
+      [areaPeloNumero(ano, numero), titulo, contexto, JSON.stringify(alternativas), correta, ano, numero, lingua]);
+    console.log(`📝 ${titulo} cadastrada pela Administração (usuário ${req.usuario.id})`);
+    await aplicarTri();
+    await corrigirAreas();
+    const prova = (await contarProvas()).anos.find(a => a.ano === ano);
+    res.status(201).json({ titulo, dia1: prova.dia1, dia2: prova.dia2 });
+  } catch (erro) {
+    console.error('Erro ao cadastrar questão:', erro.message);
+    res.status(500).json({ error: 'Não consegui salvar a questão agora.' });
   }
 });
 
