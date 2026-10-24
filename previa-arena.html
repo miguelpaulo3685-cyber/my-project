@@ -44,6 +44,9 @@
     background: conic-gradient(var(--marca) calc(var(--p) * 1%), var(--superficie-2) 0); position: relative; }
   .relogio::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--fundo); }
   .relogio span { position: relative; }
+  .relogio.acabando { background: conic-gradient(var(--ruim) calc(var(--p) * 1%), var(--superficie-2) 0); animation: pulsa 1s infinite; }
+  .relogio.acabando span { color: var(--ruim); }
+  @keyframes pulsa { 50% { transform: scale(1.08); } }
   .fase { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--marca-texto); font-weight: 800; }
   .enunciado { line-height: 1.6; white-space: pre-wrap; }
   .alts { display: grid; gap: 10px; margin-top: 16px; }
@@ -95,8 +98,21 @@
         <h2 style="font-size:1.2rem">Criar sala</h2>
         <label class="campo" for="area">Área</label>
         <select id="area"><option>Todas as áreas</option><option>Linguagens</option><option>Ciências Humanas</option><option>Ciências da Natureza</option><option>Matemática</option></select>
+        <label class="campo" for="nivel">Nível</label>
+        <select id="nivel">
+          <option value="aquecimento">Aquecimento: só questões fáceis</option>
+          <option value="normal">Normal: fáceis e médias</option>
+          <option value="desafio">Desafio: médias e difíceis</option>
+        </select>
+        <label class="campo" for="ritmo">Ritmo</label>
+        <select id="ritmo">
+          <option value="tranquilo">Tranquilo: 50% mais tempo</option>
+          <option value="normal" selected>Normal</option>
+          <option value="relampago">Relâmpago: menos tempo, mais pressão</option>
+        </select>
         <label class="campo" for="qtd">Questões</label>
         <select id="qtd"><option>3 (prévia)</option><option>5</option><option>10</option></select>
+        <p class="fraco pequeno" style="margin:8px 0 0">Na prévia, as 3 questões são sempre do Aquecimento.</p>
         <button class="botao" style="width:100%;margin-top:16px" onclick="criarSala()">Criar sala</button>
       </div>
       <div class="cartao">
@@ -127,6 +143,7 @@
       <span>Questão <span id="q-num">1</span> de <span id="q-tot">3</span> · <span class="fraco" id="q-orig"></span></span>
       <div class="relogio" id="relogio" style="--p:100"><span id="segundos">20</span></div>
     </div>
+    <div class="fraco pequeno" id="q-nivel" style="margin:-6px 0 8px"></div>
     <div class="fase" id="fase">Leitura</div>
     <div class="cartao" style="margin-top:8px"><div class="enunciado" id="enunciado"></div></div>
     <div class="alts" id="alts"></div>
@@ -164,9 +181,12 @@
   <div class="notas cartao" style="margin-top:30px">
     <b>Como vai funcionar de verdade</b>
     <ul class="lista fraco">
-      <li><b>Leitura antes do relógio:</b> questão do ENEM é longa, então o texto aparece primeiro e as alternativas só liberam depois. A rapidez só conta depois que todo mundo teve tempo de ler.</li>
-      <li><b>Pontos:</b> até 1000 por acerto (mais rápido, mais pontos) e bônus de 🔥 por acertos seguidos. Errar não tira pontos.</li>
-      <li><b>Questões:</b> sorteadas do banco do site, preferindo as mais curtas e sem imagem pequena, para dar para ler no celular.</li>
+      <li><b>Nível pela TRI:</b> cada questão do banco já tem um nível de 1 a 4, calculado com os dados oficiais do INEP. O Aquecimento só sorteia as fáceis (são mais de 500, 150 delas de Matemática).</li>
+      <li><b>Tempo de cada questão:</b> calculado na hora, somando o mínimo da área (Matemática 60 s, Natureza 40 s, Humanas e Linguagens 30 s), o tempo de ler o texto, um peso pelo nível (difícil ganha 50% a mais) e o ritmo escolhido. Fica entre 20 s e 3 min.</li>
+      <li><b>Não fica chato esperando:</b> quando todo mundo responde, a rodada acaba na hora, sem esperar o relógio. E todos veem quantos já responderam, então a pressão vem dos amigos e não só do relógio.</li>
+      <li><b>Leitura antes do relógio:</b> o texto aparece primeiro e as alternativas só liberam depois, para ninguém sair na frente só por ler rápido.</li>
+      <li><b>Pontos:</b> acertar vale 600 garantidos, e a rapidez dá até mais 400. Quem acerta devagar ainda ganha bem mais que quem erra rápido. Acertos seguidos dão bônus de 🔥, e errar não tira pontos.</li>
+      <li><b>Questões:</b> sorteadas do banco do site, preferindo as mais curtas e sem figura pequena, para dar para ler no celular.</li>
       <li><b>Tempo real:</b> o servidor avisa cada celular na hora (sem esperar 10 segundos como as salas de hoje).</li>
       <li><b>Segurança:</b> só aparece o apelido de quem está na sala, não tem chat aberto, e quem criou a sala pode tirar alguém.</li>
       <li><b>Depois do jogo:</b> cada um revê as questões que errou, com a discussão da comunidade, e o resultado vai para o feed.</li>
@@ -178,22 +198,37 @@
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 const CORES = ['var(--a)', 'var(--b)', 'var(--c)', 'var(--d)', 'var(--e)'];
 const QUESTOES = [
-  { origem: 'ENEM 2015 · Matemática', correta: 2,
-    texto: 'O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna. Cada escola deverá receber ingressos para uma única sessão, todas as escolas devem receber o mesmo número de ingressos e não haverá sobra.\n\nO número mínimo de escolas que podem ser escolhidas é',
-    alts: ['2.', '4.', '9.', '40.', '80.'] },
-  { origem: 'ENEM 2019 · Natureza', correta: 3,
+  { origem: 'ENEM 2012', area: 'matematica', nivel: 1, correta: 0,
+    texto: 'Uma mãe recorreu à bula para verificar a dosagem de um remédio que precisava dar a seu filho. Na bula, recomendava-se a seguinte dosagem: 5 gotas para cada 2 kg de massa corporal a cada 8 horas.\n\nSe a mãe ministrou corretamente 30 gotas do remédio a seu filho a cada 8 horas, então a massa corporal dele é de',
+    alts: ['12 kg.', '16 kg.', '24 kg.', '36 kg.', '75 kg.'] },
+  { origem: 'ENEM 2019', area: 'natureza', nivel: 1, correta: 3,
     texto: 'Um alimento orgânico deve apresentar em sua embalagem o selo de uma instituição certificadora, garantindo que, além de ser isento de agrotóxicos, é produzido com técnicas planejadas e controladas.\n\nNesse sistema de produção de alimentos vegetais, o controle de insetos é manejado por meio do(a)',
     alts: ['prática de adubação verde.', 'emprego da compostagem.', 'controle da irrigação do solo.', 'utilização de predadores naturais.', 'uso de sementes inoculadas com Rhizobium.'] },
-  { origem: 'ENEM 2020 · Matemática', correta: 4,
-    texto: 'Um pé de eucalipto rende, em média, 20 mil folhas de papel A4. A densidade superficial do papel A4 é de 75 gramas por metro quadrado, e a área de uma folha é 0,062 metro quadrado.\n\nQuantos quilogramas de papel rende, em média, um pé de eucalipto?',
-    alts: ['4 301', '1 500', '930', '267', '93'] }
+  { origem: 'ENEM 2022', area: 'matematica', nivel: 1, correta: 4,
+    texto: 'Ao escutar a notícia de que um filme recém-lançado arrecadou, no primeiro mês de lançamento, R$ 1,35 bilhão em bilheteria, um estudante escreveu corretamente o número que representa essa quantia, com todos os seus algarismos.\n\nO número escrito pelo estudante foi',
+    alts: ['135 000,00.', '1 350 000,00.', '13 500 000,00.', '135 000 000,00.', '1 350 000 000,00.'] }
 ];
+const AREAS = { linguagens: ['Linguagens', 30], humanas: ['Humanas', 30], natureza: ['Natureza', 40], matematica: ['Matemática', 60] };
+const NIVEIS = { 1: ['Fácil', 1], 2: ['Média', 1.25], 3: ['Difícil', 1.5], 4: ['Muito difícil', 1.75] };
+const RITMOS = { tranquilo: 1.5, normal: 1, relampago: 0.6 };
+
+// Tempo para responder: o mínimo da área (Matemática precisa de conta),
+// mais o tempo de ler o texto, vezes o peso do nível e o ritmo da sala.
+// Arredonda para 5 s e fica entre 20 s e 3 min.
+function tempoDaQuestao(q) {
+  const ritmo = RITMOS[document.getElementById('ritmo').value] || 1;
+  const leitura = (q.texto.length + q.alts.join('').length) / 40;
+  const s = (AREAS[q.area][1] + leitura) * NIVEIS[q.nivel][1] * ritmo;
+  return Math.min(180, Math.max(20, Math.round(s / 5) * 5));
+}
+// Leitura antes das alternativas: o bastante para ler o enunciado.
+const leituraDaQuestao = q => Math.min(15, Math.max(5, Math.round(q.texto.length / 30)));
 const BOTS = [
   { nome: 'Ana', cor: '#f0a04b', acerto: .85, rapidez: .8 }, { nome: 'João', cor: '#6fb3e0', acerto: .7, rapidez: .6 },
   { nome: 'Bia', cor: '#c49be8', acerto: .6, rapidez: .9 }, { nome: 'Lucas', cor: '#7fd1a8', acerto: .5, rapidez: .5 },
   { nome: 'Duda', cor: '#ef8fb1', acerto: .65, rapidez: .4 }
 ];
-const LEITURA = 6, RESPOSTA = 20;
+let tempoRodada = 30;
 let jogadores, rodada, relogio, minhaResposta, inicioResposta, ordemAnterior, erradas;
 
 function mostrar(id) {
@@ -239,13 +274,15 @@ function proximaRodada() {
   jogadores.forEach(j => { j.resposta = null; j.tempo = null; j.ganhou = 0; });
   document.getElementById('q-num').textContent = rodada + 1;
   document.getElementById('q-tot').textContent = QUESTOES.length;
-  document.getElementById('q-orig').textContent = q.origem;
+  tempoRodada = tempoDaQuestao(q);
+  document.getElementById('q-orig').textContent = `${q.origem} · ${AREAS[q.area][0]}`;
+  document.getElementById('q-nivel').textContent = `${NIVEIS[q.nivel][0]} · ${tempoRodada} s para responder`;
   document.getElementById('enunciado').textContent = q.texto;
   document.getElementById('retorno').innerHTML = '';
   document.getElementById('responderam').textContent = '';
   desenharAlts(true);
   mostrar('t-questao');
-  contar(LEITURA, 'Leitura: as alternativas liberam em', () => abrirResposta());
+  contar(leituraDaQuestao(q), 'Leitura: as alternativas liberam em', () => abrirResposta());
 }
 
 function desenharAlts(travadas) {
@@ -262,6 +299,7 @@ function contar(total, rotulo, fim) {
     document.getElementById('segundos').textContent = resta;
     document.getElementById('relogio').style.setProperty('--p', (resta / total) * 100);
     document.getElementById('fase').textContent = `${rotulo} ${resta}s`;
+    document.getElementById('relogio').classList.toggle('acabando', rotulo.startsWith('Responda') && resta <= 10);
     if (resta-- <= 0) { clearInterval(relogio); fim(); }
   };
   passo();
@@ -274,14 +312,14 @@ function abrirResposta() {
   const q = QUESTOES[rodada];
   // Os simulados respondem em momentos diferentes.
   jogadores.filter(j => !j.eu).forEach(j => {
-    const tempo = (1 - j.rapidez) * 14 + Math.random() * 5 + 1.5;
+    const tempo = tempoRodada * (0.15 + (1 - j.rapidez) * 0.35 + Math.random() * 0.15);
     setTimeout(() => {
       if (rodada < 0 || j.resposta !== null) return;
       j.resposta = Math.random() < j.acerto ? q.correta : (q.correta + 1 + Math.floor(Math.random() * 4)) % 5;
       j.tempo = tempo; contarRespostas();
     }, tempo * 1000);
   });
-  contar(RESPOSTA, 'Responda! Faltam', encerrarRodada);
+  contar(tempoRodada, 'Responda! Faltam', encerrarRodada);
 }
 
 function contarRespostas() {
@@ -307,7 +345,8 @@ function encerrarRodada() {
   jogadores.forEach(j => {
     if (j.resposta === q.correta) {
       j.seguidas++;
-      j.ganhou = Math.round(500 + 500 * Math.max(0, 1 - j.tempo / RESPOSTA)) + (j.seguidas >= 2 ? 100 * (j.seguidas - 1) : 0);
+      // Acertar vale mais que ser rápido: 600 garantidos + até 400 pela rapidez.
+      j.ganhou = Math.round(600 + 400 * Math.max(0, 1 - j.tempo / tempoRodada)) + (j.seguidas >= 2 ? 100 * (j.seguidas - 1) : 0);
       j.pts += j.ganhou;
     } else { j.seguidas = 0; j.ganhou = 0; }
   });
