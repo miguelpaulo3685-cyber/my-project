@@ -342,10 +342,23 @@
       width: 44px; height: 44px; padding: 0; border: 2px solid var(--borda);
       border-radius: 10px; background: none; cursor: pointer;
     }
-    #fundo-imagem {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-size: cover; background-position: center;
+    #fundo-imagem { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    #fundo-imagem > div {
+      position: absolute; inset: 0; background-image: var(--fundo-img);
+      background-repeat: no-repeat; background-position: var(--fundo-foco, center);
     }
+    /* Com a imagem inteira, a mesma imagem desfocada ocupa o espaço que sobra. */
+    #fundo-imagem .fundo-desfocado { background-size: cover; background-position: center; filter: blur(28px); transform: scale(1.15); }
+    #fundo-imagem .fundo-foto { background-size: var(--fundo-encaixe, cover); }
+    #fundo-imagem[data-encaixe="cover"] .fundo-desfocado { display: none; }
+    .opcoes-fundo { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; }
+    .opcoes-fundo[hidden] { display: none; }
+    .opcoes-fundo .rotulo { width: 100%; font-weight: 600; font-size: .85rem; }
+    .opcoes-fundo button {
+      flex: 1; min-width: 0; padding: 8px 6px; border-radius: 9px; border: 1px solid var(--borda);
+      background: var(--superficie); color: var(--texto); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer;
+    }
+    .opcoes-fundo button[aria-pressed="true"] { border-color: var(--marca); background: var(--marca-suave); color: var(--marca-texto); }
     /* Véu na cor do fundo por cima da foto: deixa o texto legível. */
     #fundo-imagem::after { content: ''; position: absolute; inset: 0; background: var(--fundo); opacity: var(--veu, .7); }
     body.com-imagem { background: transparent; }
@@ -1980,7 +1993,7 @@
     </div>
   </div>
 
-  <div id="fundo-imagem" aria-hidden="true" hidden></div>
+  <div id="fundo-imagem" aria-hidden="true" hidden><div class="fundo-desfocado"></div><div class="fundo-foto"></div></div>
   <div id="confete"></div>
 
   <!-- ===================== APARÊNCIA ===================== -->
@@ -2060,6 +2073,8 @@
             <label for="veu-imagem">Visibilidade da imagem</label>
             <input type="range" id="veu-imagem" min="10" max="70" step="5" oninput="ajustarVeu(this.value)">
             <button class="acao discreta pequena" onclick="removerImagemFundo()">Remover imagem</button>
+            <div class="opcoes-fundo" id="opcoes-encaixe"><span class="rotulo">Encaixe</span></div>
+            <div class="opcoes-fundo" id="opcoes-foco"><span class="rotulo">Parte que aparece</span></div>
           </div>
           <div class="pista" id="recado-imagem">No Pinterest, clique com o botão direito na imagem → <b>Copiar endereço da imagem</b>.
             Imagens enviadas ficam só neste aparelho.</div>
@@ -2805,6 +2820,47 @@ function desenharAparencia() {
 // Link: só endereços https, testados antes de usar.
 const CHAVE_IMAGEM = 'mm_fundo_img';
 const CHAVE_VEU = 'mm_fundo_veu';
+const CHAVE_ENCAIXE = 'mm_fundo_encaixe';
+const CHAVE_FOCO = 'mm_fundo_foco';
+const ENCAIXES = [['auto', 'Automático'], ['cover', 'Preencher a tela'], ['contain', 'Imagem inteira']];
+const FOCOS = [['top', 'Cima'], ['center', 'Centro'], ['bottom', 'Baixo']];
+let proporcaoDaImagem = null; // largura / altura da imagem de fundo atual
+
+// Preencher a tela corta o que sobra: com proporções muito diferentes (foto
+// em pé num computador, foto deitada no celular) isso vira um zoom enorme.
+// Nesses casos o automático mostra a imagem inteira.
+function encaixeDoFundo() {
+  const escolhido = ler(CHAVE_ENCAIXE);
+  if (escolhido === 'cover' || escolhido === 'contain') return escolhido;
+  if (!proporcaoDaImagem) return 'cover';
+  const tela = window.innerWidth / window.innerHeight;
+  return Math.max(tela / proporcaoDaImagem, proporcaoDaImagem / tela) > 1.5 ? 'contain' : 'cover';
+}
+
+function desenharOpcoesFundo() {
+  const botoes = (id, opcoes, atual, chave) => {
+    const alvo = document.getElementById(id);
+    if (!alvo) return;
+    alvo.querySelectorAll('button').forEach(b => b.remove());
+    for (const [valor, nome] of opcoes) {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = nome;
+      b.setAttribute('aria-pressed', String(valor === atual));
+      b.onclick = () => { guardar(chave, valor); aplicarImagemFundo(); };
+      alvo.appendChild(b);
+    }
+  };
+  botoes('opcoes-encaixe', ENCAIXES, ler(CHAVE_ENCAIXE) || 'auto', CHAVE_ENCAIXE);
+  const foco = document.getElementById('opcoes-foco');
+  if (foco) foco.hidden = encaixeDoFundo() !== 'cover';
+  botoes('opcoes-foco', FOCOS, ler(CHAVE_FOCO) || 'center', CHAVE_FOCO);
+}
+
+window.addEventListener('resize', () => {
+  const el = document.getElementById('fundo-imagem');
+  if (el && !el.hidden) { el.dataset.encaixe = encaixeDoFundo(); el.style.setProperty('--fundo-encaixe', el.dataset.encaixe); }
+});
 
 function recadoImagem(texto, tipo) {
   const el = document.getElementById('recado-imagem');
@@ -2826,7 +2882,24 @@ function aplicarImagemFundo() {
   const src = ler(CHAVE_IMAGEM);
   const ativa = imagemValida(src);
   el.hidden = !ativa;
-  el.style.backgroundImage = ativa ? `url(${JSON.stringify(src)})` : '';
+  el.style.setProperty('--fundo-img', ativa ? `url(${JSON.stringify(src)})` : 'none');
+  const foco = ler(CHAVE_FOCO);
+  el.style.setProperty('--fundo-foco', ['top', 'bottom'].includes(foco) ? `center ${foco}` : 'center');
+  const encaixar = () => {
+    el.dataset.encaixe = encaixeDoFundo();
+    el.style.setProperty('--fundo-encaixe', el.dataset.encaixe);
+    desenharOpcoesFundo();
+  };
+  if (ativa && el.dataset.src !== src) {
+    el.dataset.src = src;
+    proporcaoDaImagem = null;
+    testarImagem(src).then(img => {
+      if (el.dataset.src !== src || !img.naturalHeight) return;
+      proporcaoDaImagem = img.naturalWidth / img.naturalHeight;
+      encaixar();
+    }).catch(() => {});
+  }
+  encaixar();
   document.body.classList.toggle('com-imagem', ativa);
   const veu = Number(ler(CHAVE_VEU)) || 70;
   document.documentElement.style.setProperty('--veu', String(Math.min(Math.max(veu, 30), 90) / 100));
@@ -2876,7 +2949,7 @@ async function usarLinkImagem() {
   recadoImagem('Imagem aplicada! Ajuste a visibilidade se o texto ficar difícil de ler.', 'bom');
 }
 
-// Reduz para no máximo 1600px e converte em JPEG: uma foto de celular de
+// Reduz para no máximo 2400px e converte em JPEG: uma foto de celular de
 // vários MB vira algumas centenas de KB e cabe no armazenamento do navegador.
 async function enviarImagemFundo(input) {
   const arquivo = input.files && input.files[0];
@@ -2894,7 +2967,7 @@ async function enviarImagemFundo(input) {
       leitor.readAsDataURL(arquivo);
     });
     const img = await testarImagem(original);
-    for (const [lado, qualidade] of [[1600, 0.82], [1280, 0.72], [960, 0.65]]) {
+    for (const [lado, qualidade] of [[2400, 0.8], [1600, 0.78], [1280, 0.7], [960, 0.65]]) {
       const escala = Math.min(1, lado / Math.max(img.naturalWidth, img.naturalHeight));
       const tela = document.createElement('canvas');
       tela.width = Math.round(img.naturalWidth * escala);
