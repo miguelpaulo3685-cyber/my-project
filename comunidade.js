@@ -91,7 +91,10 @@ const SELOS = [
   { id: 'melhor10', emoji: '🎓', nome: '10 melhores respostas', vale: c => c.melhores >= 10 },
   { id: 'pomodoro25', emoji: '⏱️', nome: '25 pomodoros', vale: c => c.pomodoros >= 25 },
   { id: 'corretor10', emoji: '✍️', nome: '10 redações corrigidas', vale: c => c.correcoes >= 10 },
-  { id: 'desafio4', emoji: '🏆', nome: '4 desafios da semana', vale: c => c.desafios >= 4 }
+  { id: 'desafio4', emoji: '🏆', nome: '4 desafios da semana', vale: c => c.desafios >= 4 },
+  { id: 'arena1', emoji: '⚔️', nome: 'Venceu na Arena', vale: c => c.arena_vitorias >= 1 },
+  { id: 'arena10', emoji: '👑', nome: '10 vitórias na Arena', vale: c => c.arena_vitorias >= 10 },
+  { id: 'arena_invicto', emoji: '💯', nome: 'Gabaritou uma Arena', vale: c => c.arena_invicto }
 ];
 
 // Registra algo na atividade da comunidade. Nunca atrapalha a ação principal.
@@ -329,6 +332,10 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
                  + (SELECT COUNT(*) FROM questoes_comentarios_uteis v JOIN questoes_comentarios q ON q.id = v.comentario_id WHERE q.usuario_id = $1))::int AS uteis,
                 (SELECT COUNT(*) FROM redacoes_correcoes WHERE usuario_id = $1 AND NOT oculto)::int AS correcoes,
                 (SELECT COUNT(*) FROM redacoes_correcoes WHERE usuario_id = $1 AND util AND NOT oculto)::int AS correcoes_uteis,
+                (SELECT COALESCE(SUM(xp), 0) FROM arena_resultados WHERE usuario_id = $1)::int AS arena_xp,
+                (SELECT COUNT(*) FROM arena_resultados r JOIN arena_partidas p ON p.id = r.partida_id
+                  WHERE r.usuario_id = $1 AND r.posicao = 1 AND p.jogadores >= 2)::int AS arena_vitorias,
+                EXISTS (SELECT 1 FROM arena_resultados WHERE usuario_id = $1 AND acertos = total AND total > 0) AS arena_invicto,
                 EXISTS (SELECT 1 FROM grupo_membros WHERE usuario_id = $1) AS tem_grupo,
                 (SELECT COUNT(*) FROM seguidores WHERE seguidor_id = $1)::int AS seguindo,
                 EXISTS (SELECT 1 FROM atividades WHERE usuario_id = $1 AND tipo = 'meta') AS fez_meta,
@@ -338,7 +345,7 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
       )).rows[0];
       const xp = c.questoes * XP.questao + c.acertos * XP.acerto + c.pomodoros * XP.pomodoro + c.desafios * XP.desafio
         + c.ajudas * XP.ajuda + c.melhores * XP.melhor + c.uteis * XP.util
-        + c.correcoes * XP.correcao + c.correcoes_uteis * XP.correcao_util;
+        + c.correcoes * XP.correcao + c.correcoes_uteis * XP.correcao_util + c.arena_xp;
       const contagem = { ...c, maior: sequencia.maior };
 
       // Marco de sequência vira atividade (uma vez por marco).

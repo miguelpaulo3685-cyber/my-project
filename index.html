@@ -7730,6 +7730,7 @@ async function desenharPainelAvisos() {
         : bloqueado ? '' : `<button class="acao pequena" onclick="ativarAvisos().then(desenharPainelAvisos)">Ligar</button>`}
     </div>
     ${caixa('aviso_sequencia', 'Lembrete da sequência', 'Às 19h, se você ainda não estudou e sua sequência de dias vai acabar.', !ligado)}
+    ${caixa('aviso_arena', 'Arena da noite', 'Um aviso às 19h25, 5 minutos antes da Arena das 19h30.', !ligado)}
     ${caixa('aviso_sessao', 'Sessão das 20h', 'Um aviso às 19h55 quando a comunidade vai estudar junto.', !ligado)}
     ${caixa('email_semanal', 'Resumo semanal por e-mail', pref.email_verificado ? 'Toda segunda de manhã: sua semana, o desafio novo e quem precisa de ajuda.' : 'Confirme seu e-mail para receber.', !pref.email_verificado)}
     ${noApp() ? '' : `<div class="linha-aviso"><span>📲 <b>Instalar o app</b><small>Abre direto da tela inicial, sem a barra do navegador.</small></span>

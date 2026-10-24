@@ -247,7 +247,7 @@ function registrarAvisos(app, { pool, auth, limitar, exigirLogin }) {
   app.get('/api/avisos/preferencias', exigirLogin, async (req, res) => {
     try {
       const { rows } = await pool.query(
-        `SELECT aviso_sequencia, aviso_sessao, email_semanal, COALESCE(email_verificado, FALSE) AS email_verificado,
+        `SELECT aviso_sequencia, aviso_sessao, COALESCE(aviso_arena, TRUE) AS aviso_arena, email_semanal, COALESCE(email_verificado, FALSE) AS email_verificado,
                 (SELECT COUNT(*)::int FROM push_inscricoes WHERE usuario_id = $1) AS aparelhos
            FROM usuarios WHERE id = $1`, [req.usuario.id]);
       res.json(rows[0]);
@@ -257,7 +257,7 @@ function registrarAvisos(app, { pool, auth, limitar, exigirLogin }) {
   });
 
   app.post('/api/avisos/preferencias', exigirLogin, async (req, res) => {
-    const campos = ['aviso_sequencia', 'aviso_sessao', 'email_semanal'].filter(c => typeof req.body?.[c] === 'boolean');
+    const campos = ['aviso_sequencia', 'aviso_sessao', 'aviso_arena', 'email_semanal'].filter(c => typeof req.body?.[c] === 'boolean');
     if (!campos.length) return res.status(400).json({ error: 'Nada para mudar.' });
     try {
       await pool.query(`UPDATE usuarios SET ${campos.map((c, i) => `${c} = $${i + 2}`).join(', ')} WHERE id = $1`,

@@ -547,6 +547,54 @@ async function runMigrations() {
       );
     `);
 
+    // Arena: partidas ao vivo (as salas ficam na memória do servidor; aqui
+    // fica só o resultado), emblemas ganhos no baú e as questões erradas que
+    // voltam dias depois ("revanche contra a questão").
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS arena_partidas (
+        id SERIAL PRIMARY KEY,
+        codigo VARCHAR(6) NOT NULL,
+        criador_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        publica BOOLEAN NOT NULL DEFAULT FALSE,
+        nivel VARCHAR(20), ritmo VARCHAR(20), area VARCHAR(50),
+        jogadores INT NOT NULL, questoes INT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS arena_resultados (
+        partida_id INT REFERENCES arena_partidas(id) ON DELETE CASCADE,
+        usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        posicao INT NOT NULL, pontos INT NOT NULL, acertos INT NOT NULL, total INT NOT NULL,
+        melhor_sequencia INT NOT NULL DEFAULT 0, xp INT NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (partida_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_arena_resultados_usuario ON arena_resultados(usuario_id, created_at DESC);
+      CREATE TABLE IF NOT EXISTS arena_itens (
+        usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        item VARCHAR(30) NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (usuario_id, item)
+      );
+      CREATE TABLE IF NOT EXISTS arena_baus (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        item VARCHAR(30) NOT NULL,
+        repetido BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_arena_baus_usuario ON arena_baus(usuario_id, created_at DESC);
+      CREATE TABLE IF NOT EXISTS arena_revanche (
+        usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        questao_id INT REFERENCES questoes(id) ON DELETE CASCADE,
+        volta_em TIMESTAMP NOT NULL,
+        feito BOOLEAN NOT NULL DEFAULT FALSE,
+        PRIMARY KEY (usuario_id, questao_id)
+      );
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS emblema VARCHAR(30);
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS aviso_arena BOOLEAN DEFAULT TRUE;
+    `);
+    console.log('✅ Tabelas da Arena criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
