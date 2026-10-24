@@ -159,7 +159,9 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
   comunidade; ano sem textos mostra o link para o caderno oficial.
 - **Administração** (Conta, só para administradores): contas, quem estudou no dia e na semana, quem voltou
   em 2 dias ou mais, o que espera moderação e quantas questões cada ENEM tem, com botão para buscar o que
-  falta na api.enem.dev.
+  falta na api.enem.dev (o que ela não mandar vem do repositório dela no GitHub, `yunger7/enem-api`).
+- **Questões que nenhuma fonte tem** (`questoes-manuais.json`): transcritas do caderno azul do INEP, com as
+  figuras em `img/questoes/`. O servidor grava esse arquivo toda vez que liga.
 
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.

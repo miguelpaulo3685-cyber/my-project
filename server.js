@@ -11,6 +11,7 @@ const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
 const imagens = require('./imagens');
+const { numeroDaQuestao, ehDeLingua, completarLinguas, pastasQueFaltam, semRepetir } = require('./provas');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
 const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
@@ -793,12 +794,6 @@ function prepararQuestao(q) {
   };
 }
 
-function numeroDaQuestao(q) {
-  if (Number.isInteger(q.index)) return q.index;
-  const m = String(q.title || '').match(/quest[aã]o\s+(\d+)/i);
-  return m ? Number(m[1]) : null;
-}
-
 const ANOS_DISPONIVEIS = [
   2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
   2017, 2018, 2019, 2020, 2021, 2022, 2023
@@ -809,7 +804,7 @@ const ANOS_DISPONIVEIS = [
 // inserir, procura pelo título novo e pelo antigo, sem o idioma.
 async function gravarQuestoes(questoes) {
   let inseridas = 0, atualizadas = 0;
-  for (const q of questoes) {
+  for (const q of completarLinguas(questoes)) {
     const v = prepararQuestao(q);
     if (!v) continue;
     const campos = [v.disciplina, v.titulo, v.contexto, v.alternativas, v.correta, v.ano, v.imagem_url, v.numero, v.lingua,
@@ -856,7 +851,7 @@ async function corrigirAreas() {
 // Uma vez por ano de prova: busca a prova inteira de novo e corrige o que
 // foi gravado do jeito antigo (língua estrangeira faltando, alternativas que
 // eram só imagem). Um ano a cada 20 s, para a api.enem.dev não bloquear.
-const VERSAO_DA_CORRECAO = 'questoes_v2';
+const VERSAO_DA_CORRECAO = 'questoes_v3';
 async function corrigirProvasUmaVez() {
   const feitos = new Set((await pool.query(
     `SELECT chave FROM configuracoes WHERE chave LIKE $1`, [`${VERSAO_DA_CORRECAO}:%`])).rows.map(r => r.chave));
@@ -878,13 +873,13 @@ async function corrigirProvasUmaVez() {
   if (mexeu) await prepararTri();
 }
 
-async function buscarProvaInteira(ano) {
+async function buscarNaApi(ano, language) {
   const todas = [];
   let offset = 0;
   while (true) {
     const { data } = await axios.get(
       `${ENEM_API}/v1/exams/${ano}/questions`,
-      { params: { limit: 50, offset }, timeout: 30000 }
+      { params: { limit: 50, offset, language }, timeout: 30000 }
     );
     const questoes = data?.questions || [];
     if (questoes.length === 0) break;
@@ -892,6 +887,42 @@ async function buscarProvaInteira(ano) {
     if (!data?.metadata?.hasMore) break;
     offset += questoes.length;
   }
+  return todas;
+}
+
+// O repositório da api.enem.dev no GitHub tem um arquivo por questão, numa
+// pasta "91", "1-ingles" ou "1-espanhol".
+const FONTE_GITHUB = 'https://raw.githubusercontent.com/yunger7/enem-api/main/public';
+async function arquivoDoGithub(caminho, tentativas = 3) {
+  try {
+    return (await axios.get(`${FONTE_GITHUB}/${caminho}`, { timeout: 20000 })).data;
+  } catch (erro) {
+    if (erro.response?.status === 404) return null;
+    if (tentativas <= 1) throw erro;
+    await new Promise(r => setTimeout(r, 2000));
+    return arquivoDoGithub(caminho, tentativas - 1);
+  }
+}
+async function buscarNoGithub(ano, pastas) {
+  const achadas = [];
+  for (let i = 0; i < pastas.length; i += 8) {
+    const lote = await Promise.all(pastas.slice(i, i + 8).map(pasta => arquivoDoGithub(`${ano}/questions/${pasta}/details.json`)));
+    achadas.push(...lote.filter(Boolean));
+  }
+  return achadas;
+}
+
+// A api.enem.dev é a fonte principal, pedida uma vez por idioma. O que ela
+// não mandar, ou tudo se ela estiver fora do ar, vem do GitHub.
+async function buscarProvaInteira(ano) {
+  const daApi = [];
+  for (const language of ['ingles', 'espanhol']) {
+    try { daApi.push(...await buscarNaApi(ano, language)); }
+    catch (erro) { console.error(`⚠️ api.enem.dev não respondeu para ${ano} (${language}): ${erro.message}`); }
+  }
+  let todas = semRepetir(completarLinguas(daApi));
+  const faltam = pastasQueFaltam(ano, todas);
+  if (faltam.length) todas = semRepetir(completarLinguas([...todas, ...await buscarNoGithub(ano, faltam)]));
   return todas;
 }
 
@@ -1010,12 +1041,7 @@ app.post(['/api/carregar-ano/:ano', '/api/admin/carregar-ano/:ano'], (req, res, 
     await corrigirAreas();
     const prova = (await contarProvas()).anos.find(a => a.ano === ano);
     // Números que a fonte não tem: não adianta buscar de novo.
-    const tem = new Set(questoes.map(q => `${numeroDaQuestao(q)}${q.language ? '-' + q.language : ''}`));
-    const faltam_na_fonte = [];
-    for (let n = 1; n <= 180; n++) {
-      const deLingua = ano >= 2017 ? n <= 5 : (ano >= 2010 && n >= 91 && n <= 95);
-      if (deLingua ? !tem.has(`${n}-ingles`) && !tem.has(String(n)) : !tem.has(String(n))) faltam_na_fonte.push(n);
-    }
+    const faltam_na_fonte = [...new Set(pastasQueFaltam(ano, questoes).map(p => parseInt(p, 10)))];
 
     const msg = `ENEM ${ano}: ${recebidas} questoes lidas, ${inseridas} novas, ${atualizadas} corrigidas`;
     console.log(`✅ ${msg}`);
@@ -1196,7 +1222,6 @@ app.get('/api/admin/resumo', exigirModerador, async (req, res) => {
 // Números de questão (e línguas) de cada prova que ainda não estão no banco.
 // Questão de língua estrangeira precisa das duas versões; sem marcação de
 // língua, a gravada conta como a de inglês.
-const ehDeLingua = (ano, n) => (ano >= 2017 ? n <= 5 : ano >= 2010 && n >= 91 && n <= 95);
 async function questoesFaltando() {
   const { rows } = await pool.query('SELECT ano, numero, lingua FROM questoes WHERE ano IS NOT NULL AND numero BETWEEN 1 AND 180');
   const tem = new Set(rows.map(r => `${r.ano}:${r.numero}:${r.lingua || ''}`));
@@ -1255,6 +1280,30 @@ app.get('/api/questoes-imagens/:id', async (req, res) => {
 // Cadastra (ou corrige) uma questão copiada do caderno do INEP. Fica com o
 // mesmo título que a api.enem.dev usaria: se um dia a fonte tiver a questão,
 // a busca atualiza esta mesma linha em vez de duplicar.
+async function salvarQuestaoManual({ ano, numero, lingua, contexto, alternativas, correta }) {
+  const titulo = `Questão ${numero} - ENEM ${ano}${lingua ? ` (${NOME_DA_LINGUA[lingua]})` : ''}`;
+  await pool.query(
+    `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, numero, lingua)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     ON CONFLICT (titulo) DO UPDATE SET disciplina = EXCLUDED.disciplina, contexto = EXCLUDED.contexto,
+       alternativas = EXCLUDED.alternativas, correta = EXCLUDED.correta, ano = EXCLUDED.ano, numero = EXCLUDED.numero,
+       lingua = EXCLUDED.lingua, updated_at = NOW()`,
+    [areaPeloNumero(ano, numero), titulo, contexto, JSON.stringify(alternativas), correta, ano, numero, lingua]);
+  return titulo;
+}
+
+// Questões que nenhuma fonte tem, transcritas dos cadernos do INEP para
+// questoes-manuais.json (as figuras ficam em img/questoes, no GitHub Pages).
+async function gravarQuestoesManuais() {
+  const lista = require('./questoes-manuais.json');
+  for (const q of lista) await salvarQuestaoManual(q);
+  if (lista.length) {
+    await aplicarTri();
+    await corrigirAreas();
+  }
+  console.log(`📝 ${lista.length} questões transcritas do INEP gravadas`);
+}
+
 app.post('/api/admin/questoes', exigirModerador, async (req, res) => {
   const c = req.body || {};
   const ano = Number(c.ano), numero = Number(c.numero);
@@ -1267,15 +1316,8 @@ app.post('/api/admin/questoes', exigirModerador, async (req, res) => {
   if (contexto.length < 10 || contexto.length > 20000) return res.status(400).json({ error: 'Copie o texto da questão (enunciado e o que vier antes das alternativas).' });
   if (alternativas.length !== 5 || alternativas.some(a => !a || a.length > 3000)) return res.status(400).json({ error: 'Preencha as 5 alternativas (texto ou imagem).' });
   if (![0, 1, 2, 3, 4].includes(correta)) return res.status(400).json({ error: 'Marque a alternativa correta (veja o gabarito oficial).' });
-  const titulo = `Questão ${numero} - ENEM ${ano}${lingua ? ` (${NOME_DA_LINGUA[lingua]})` : ''}`;
   try {
-    await pool.query(
-      `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, numero, lingua)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       ON CONFLICT (titulo) DO UPDATE SET disciplina = EXCLUDED.disciplina, contexto = EXCLUDED.contexto,
-         alternativas = EXCLUDED.alternativas, correta = EXCLUDED.correta, ano = EXCLUDED.ano, numero = EXCLUDED.numero,
-         lingua = EXCLUDED.lingua, updated_at = NOW()`,
-      [areaPeloNumero(ano, numero), titulo, contexto, JSON.stringify(alternativas), correta, ano, numero, lingua]);
+    const titulo = await salvarQuestaoManual({ ano, numero, lingua, contexto, alternativas, correta });
     console.log(`📝 ${titulo} cadastrada pela Administração (usuário ${req.usuario.id})`);
     await aplicarTri();
     await corrigirAreas();
@@ -1393,13 +1435,13 @@ const server = app.listen(PORT, () => {
   console.log(`📊 Database: ${process.env.DATABASE_URL?.split('@')[1] || 'config pendente'}`);
 
   // Atualizar cache ao iniciar; depois, numerar o que faltar e aplicar a TRI.
-  setTimeout(() => {
-    atualizarCache()
-      .catch(err => console.error('❌ Erro ao atualizar cache:', err.message))
-      .then(prepararTri)
-      .then(() => require('./reels').publicarReelsIniciais(pool))
-      .then(corrigirProvasUmaVez)
-      .catch(err => console.error('❌ Erro ao publicar reels iniciais:', err.message));
+  // Cada etapa com o seu catch: um erro numa não pode impedir as seguintes.
+  setTimeout(async () => {
+    await atualizarCache().catch(err => console.error('❌ Erro ao atualizar cache:', err.message));
+    await prepararTri().catch(err => console.error('❌ Erro ao preparar a TRI:', err.message));
+    await require('./reels').publicarReelsIniciais(pool).catch(err => console.error('❌ Erro ao publicar reels iniciais:', err.message));
+    await gravarQuestoesManuais().catch(err => console.error('❌ Erro ao gravar as questões transcritas:', err.message));
+    await corrigirProvasUmaVez().catch(err => console.error('❌ Erro ao corrigir as provas:', err.message));
   }, 2000);
 });
 
