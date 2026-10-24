@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arena · prévia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --marca: #c8a96e; --marca-forte: #e4cfa3; --marca-suave: rgba(200,169,110,.14); --marca-texto: #e4cfa3;
+    --fundo: #0e0d0b; --superficie: #171512; --superficie-2: #201d19; --borda: #312c25;
+    --texto: #f2eadc; --texto-fraco: #a79d8c; --bom: #6fbf73; --ruim: #e07a6a;
+    --a: #d9822b; --b: #3f8fd2; --c: #8e6bd1; --d: #2fa38a; --e: #d0567f;
+    --fonte: 'Inter', system-ui, sans-serif; --fonte-titulo: 'Fraunces', Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font-family: var(--fonte); min-height: 100vh; }
+  .faixa { background: var(--marca-suave); color: var(--marca-texto); text-align: center; font-size: .8rem; padding: 8px 16px; border-bottom: 1px solid var(--borda); }
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px 48px; }
+  h1, h2 { font-family: var(--fonte-titulo); font-weight: 700; margin: 0; }
+  h1 { font-size: 2rem; }
+  .fraco { color: var(--texto-fraco); }
+  .cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; padding: 20px; }
+  .botao { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 12px; padding: 13px 20px;
+    font: 700 1rem var(--fonte); cursor: pointer; background: var(--marca); color: #1a160f; }
+  .botao.sec { background: transparent; color: var(--marca-texto); border: 1px solid var(--marca); }
+  .botao:disabled { opacity: .45; cursor: default; }
+  .grade2 { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 560px) { .grade2 { grid-template-columns: 1fr; } }
+  .tela { display: none; animation: entra .35s ease; }
+  .tela.ativa { display: block; }
+  @keyframes entra { from { opacity: 0; transform: translateY(8px); } }
+  label.campo { display: block; font-weight: 600; font-size: .85rem; margin: 14px 0 6px; }
+  select, input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--borda); background: var(--superficie-2); color: var(--texto); font: 500 1rem var(--fonte); }
+  .codigo { font-family: var(--fonte-titulo); font-size: 3rem; letter-spacing: .12em; color: var(--marca-forte); text-align: center; margin: 6px 0; }
+  .jogadores { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; min-height: 44px; }
+  .jogador { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 7px; border-radius: 99px; background: var(--superficie-2); border: 1px solid var(--borda); font-weight: 600; font-size: .9rem; animation: pula .4s ease; }
+  .jogador i, .linha i { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: .75rem; font-weight: 800; color: #111; }
+  @keyframes pula { 0% { transform: scale(.6); opacity: 0; } 70% { transform: scale(1.08); } }
+  .topo-jogo { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; font-weight: 700; font-size: .9rem; }
+  .relogio { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font: 800 1.2rem var(--fonte);
+    background: conic-gradient(var(--marca) calc(var(--p) * 1%), var(--superficie-2) 0); position: relative; }
+  .relogio::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--fundo); }
+  .relogio span { position: relative; }
+  .fase { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--marca-texto); font-weight: 800; }
+  .enunciado { line-height: 1.6; white-space: pre-wrap; }
+  .alts { display: grid; gap: 10px; margin-top: 16px; }
+  .alt { display: flex; align-items: center; gap: 12px; text-align: left; padding: 14px; border-radius: 14px; border: 2px solid transparent;
+    background: var(--superficie-2); color: var(--texto); font: 600 1rem var(--fonte); cursor: pointer; transition: transform .1s, opacity .2s; }
+  .alt:hover:not(:disabled) { transform: translateY(-2px); }
+  .alt b { flex: none; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-size: 1.05rem; }
+  .alt:disabled { cursor: default; }
+  .alt.travada { opacity: .35; }
+  .alt.minha { border-color: var(--texto); opacity: 1; }
+  .alt.certa { border-color: var(--bom); opacity: 1; }
+  .alt .barra { margin-left: auto; font-size: .8rem; color: var(--texto-fraco); }
+  .aviso { margin-top: 14px; padding: 12px 14px; border-radius: 12px; font-weight: 700; text-align: center; }
+  .aviso.bom { background: rgba(111,191,115,.15); color: var(--bom); }
+  .aviso.ruim { background: rgba(224,122,106,.15); color: var(--ruim); }
+  .aviso.neutro { background: var(--marca-suave); color: var(--marca-texto); }
+  .placar { display: grid; gap: 8px; margin-top: 14px; }
+  .linha { display: grid; grid-template-columns: 30px 1fr auto auto; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 12px; background: var(--superficie-2); transition: transform .5s; }
+  .linha.eu { outline: 2px solid var(--marca); }
+  .linha .pos { font-weight: 800; color: var(--texto-fraco); }
+  .linha .seta { font-size: .8rem; font-weight: 800; }
+  .sobe { color: var(--bom); } .desce { color: var(--ruim); }
+  .linha .pts { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .chama { font-size: .78rem; font-weight: 700; color: #f0a04b; margin-left: 6px; }
+  .podio { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: end; gap: 10px; margin: 26px 0 10px; text-align: center; }
+  .degrau { border-radius: 14px 14px 0 0; background: var(--superficie-2); border: 1px solid var(--borda); padding: 12px 6px; font-weight: 800; animation: sobe .6s ease both; }
+  .degrau .nome { font-size: .95rem; } .degrau .pts { font-size: .8rem; color: var(--texto-fraco); }
+  .degrau.p1 { height: 170px; background: linear-gradient(180deg, rgba(200,169,110,.35), var(--superficie-2)); animation-delay: .6s; }
+  .degrau.p2 { height: 130px; animation-delay: .3s; } .degrau.p3 { height: 100px; }
+  .medalha { font-size: 1.8rem; display: block; }
+  @keyframes sobe { from { transform: translateY(30px); opacity: 0; } }
+  .lista { margin: 0; padding-left: 18px; line-height: 1.7; }
+  .notas { margin-top: 28px; font-size: .88rem; }
+  .notas li { margin-bottom: 6px; }
+  .acoes { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .pequeno { font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="faixa">Prévia da Arena: os outros jogadores são simulados. Nada aqui é salvo.</div>
+<main>
+
+  <!-- 1. início -->
+  <section class="tela ativa" id="t-inicio">
+    <h1>Arena</h1>
+    <p class="fraco">Questões do ENEM ao vivo, com a turma ou com os amigos. Todo mundo responde ao mesmo tempo e o placar muda a cada rodada.</p>
+    <div class="grade2" style="margin-top:18px">
+      <div class="cartao">
+        <h2 style="font-size:1.2rem">Criar sala</h2>
+        <label class="campo" for="area">Área</label>
+        <select id="area"><option>Todas as áreas</option><option>Linguagens</option><option>Ciências Humanas</option><option>Ciências da Natureza</option><option>Matemática</option></select>
+        <label class="campo" for="qtd">Questões</label>
+        <select id="qtd"><option>3 (prévia)</option><option>5</option><option>10</option></select>
+        <button class="botao" style="width:100%;margin-top:16px" onclick="criarSala()">Criar sala</button>
+      </div>
+      <div class="cartao">
+        <h2 style="font-size:1.2rem">Entrar numa sala</h2>
+        <label class="campo" for="cod">Código da sala</label>
+        <input id="cod" inputmode="numeric" placeholder="6 números" maxlength="6">
+        <button class="botao sec" style="width:100%;margin-top:16px" onclick="criarSala()">Entrar</button>
+        <p class="fraco pequeno">Na prévia, os dois botões levam para a mesma sala.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. sala de espera -->
+  <section class="tela" id="t-sala">
+    <div class="cartao" style="text-align:center">
+      <div class="fraco">Código da sala</div>
+      <div class="codigo">482 915</div>
+      <div class="fraco pequeno">Entre em <b>mmestudos</b> → Arena → Entrar numa sala. Também dá para projetar esta tela na sala de aula.</div>
+    </div>
+    <h2 style="font-size:1.1rem;margin-top:20px"><span id="n-jog">1</span> na sala</h2>
+    <div class="jogadores" id="jogadores"></div>
+    <div class="acoes"><button class="botao" id="comecar" disabled onclick="proximaRodada()">Começar</button></div>
+  </section>
+
+  <!-- 3. questão -->
+  <section class="tela" id="t-questao">
+    <div class="topo-jogo">
+      <span>Questão <span id="q-num">1</span> de <span id="q-tot">3</span> · <span class="fraco" id="q-orig"></span></span>
+      <div class="relogio" id="relogio" style="--p:100"><span id="segundos">20</span></div>
+    </div>
+    <div class="fase" id="fase">Leitura</div>
+    <div class="cartao" style="margin-top:8px"><div class="enunciado" id="enunciado"></div></div>
+    <div class="alts" id="alts"></div>
+    <div id="retorno"></div>
+    <div class="fraco pequeno" id="responderam" style="margin-top:10px"></div>
+  </section>
+
+  <!-- 4. placar -->
+  <section class="tela" id="t-placar">
+    <h2>Placar</h2>
+    <p class="fraco" id="placar-sub"></p>
+    <div class="placar" id="placar"></div>
+    <div class="acoes"><button class="botao" id="seguir" onclick="proximaRodada()">Próxima questão</button></div>
+  </section>
+
+  <!-- 5. pódio -->
+  <section class="tela" id="t-podio">
+    <h1 style="text-align:center">Fim de jogo!</h1>
+    <div class="podio" id="podio"></div>
+    <div class="cartao" style="margin-top:16px">
+      <h2 style="font-size:1.1rem">Seu resultado</h2>
+      <p id="meu-res" class="fraco"></p>
+      <div id="revisar"></div>
+    </div>
+    <div class="cartao" style="margin-top:14px">
+      <div class="fraco pequeno">Vai para o feed da comunidade:</div>
+      <p style="margin:6px 0 0;font-weight:600" id="post-feed"></p>
+    </div>
+    <div class="acoes">
+      <button class="botao" onclick="revanche()">Revanche</button>
+      <button class="botao sec" onclick="mostrar('t-inicio')">Voltar ao início</button>
+    </div>
+  </section>
+
+  <div class="notas cartao" style="margin-top:30px">
+    <b>Como vai funcionar de verdade</b>
+    <ul class="lista fraco">
+      <li><b>Leitura antes do relógio:</b> questão do ENEM é longa, então o texto aparece primeiro e as alternativas só liberam depois. A rapidez só conta depois que todo mundo teve tempo de ler.</li>
+      <li><b>Pontos:</b> até 1000 por acerto (mais rápido, mais pontos) e bônus de 🔥 por acertos seguidos. Errar não tira pontos.</li>
+      <li><b>Questões:</b> sorteadas do banco do site, preferindo as mais curtas e sem imagem pequena, para dar para ler no celular.</li>
+      <li><b>Tempo real:</b> o servidor avisa cada celular na hora (sem esperar 10 segundos como as salas de hoje).</li>
+      <li><b>Segurança:</b> só aparece o apelido de quem está na sala, não tem chat aberto, e quem criou a sala pode tirar alguém.</li>
+      <li><b>Depois do jogo:</b> cada um revê as questões que errou, com a discussão da comunidade, e o resultado vai para o feed.</li>
+    </ul>
+  </div>
+</main>
+
+<script>
+const LETRAS = ['A', 'B', 'C', 'D', 'E'];
+const CORES = ['var(--a)', 'var(--b)', 'var(--c)', 'var(--d)', 'var(--e)'];
+const QUESTOES = [
+  { origem: 'ENEM 2015 · Matemática', correta: 2,
+    texto: 'O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna. Cada escola deverá receber ingressos para uma única sessão, todas as escolas devem receber o mesmo número de ingressos e não haverá sobra.\n\nO número mínimo de escolas que podem ser escolhidas é',
+    alts: ['2.', '4.', '9.', '40.', '80.'] },
+  { origem: 'ENEM 2019 · Natureza', correta: 3,
+    texto: 'Um alimento orgânico deve apresentar em sua embalagem o selo de uma instituição certificadora, garantindo que, além de ser isento de agrotóxicos, é produzido com técnicas planejadas e controladas.\n\nNesse sistema de produção de alimentos vegetais, o controle de insetos é manejado por meio do(a)',
+    alts: ['prática de adubação verde.', 'emprego da compostagem.', 'controle da irrigação do solo.', 'utilização de predadores naturais.', 'uso de sementes inoculadas com Rhizobium.'] },
+  { origem: 'ENEM 2020 · Matemática', correta: 4,
+    texto: 'Um pé de eucalipto rende, em média, 20 mil folhas de papel A4. A densidade superficial do papel A4 é de 75 gramas por metro quadrado, e a área de uma folha é 0,062 metro quadrado.\n\nQuantos quilogramas de papel rende, em média, um pé de eucalipto?',
+    alts: ['4 301', '1 500', '930', '267', '93'] }
+];
+const BOTS = [
+  { nome: 'Ana', cor: '#f0a04b', acerto: .85, rapidez: .8 }, { nome: 'João', cor: '#6fb3e0', acerto: .7, rapidez: .6 },
+  { nome: 'Bia', cor: '#c49be8', acerto: .6, rapidez: .9 }, { nome: 'Lucas', cor: '#7fd1a8', acerto: .5, rapidez: .5 },
+  { nome: 'Duda', cor: '#ef8fb1', acerto: .65, rapidez: .4 }
+];
+const LEITURA = 6, RESPOSTA = 20;
+let jogadores, rodada, relogio, minhaResposta, inicioResposta, ordemAnterior, erradas;
+
+function mostrar(id) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.toggle('ativa', t.id === id));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+const bolinha = j => `<i style="background:${j.cor}">${j.nome[0]}</i>`;
+
+function novoJogo() {
+  jogadores = [{ nome: 'Você', cor: '#c8a96e', eu: true, pts: 0, seguidas: 0 }];
+  rodada = -1; erradas = []; ordemAnterior = [];
+}
+
+function criarSala() {
+  novoJogo();
+  mostrar('t-sala');
+  const caixa = document.getElementById('jogadores');
+  const desenhar = () => {
+    caixa.innerHTML = jogadores.map(j => `<span class="jogador">${bolinha(j)}${j.nome}</span>`).join('');
+    document.getElementById('n-jog').textContent = jogadores.length;
+    document.getElementById('comecar').disabled = jogadores.length < 2;
+  };
+  desenhar();
+  BOTS.forEach((b, i) => setTimeout(() => {
+    if (!document.getElementById('t-sala').classList.contains('ativa')) return;
+    jogadores.push({ ...b, pts: 0, seguidas: 0 }); desenhar();
+  }, 700 + i * 650));
+}
+
+function revanche() {
+  const antes = jogadores;
+  novoJogo();
+  jogadores.push(...antes.filter(j => !j.eu).map(j => ({ ...j, pts: 0, seguidas: 0 })));
+  proximaRodada();
+}
+
+function proximaRodada() {
+  rodada++;
+  if (rodada >= QUESTOES.length) return fimDeJogo();
+  ordemAnterior = ordenar().map(j => j.nome);
+  const q = QUESTOES[rodada];
+  minhaResposta = null;
+  jogadores.forEach(j => { j.resposta = null; j.tempo = null; j.ganhou = 0; });
+  document.getElementById('q-num').textContent = rodada + 1;
+  document.getElementById('q-tot').textContent = QUESTOES.length;
+  document.getElementById('q-orig').textContent = q.origem;
+  document.getElementById('enunciado').textContent = q.texto;
+  document.getElementById('retorno').innerHTML = '';
+  document.getElementById('responderam').textContent = '';
+  desenharAlts(true);
+  mostrar('t-questao');
+  contar(LEITURA, 'Leitura: as alternativas liberam em', () => abrirResposta());
+}
+
+function desenharAlts(travadas) {
+  const q = QUESTOES[rodada];
+  document.getElementById('alts').innerHTML = q.alts.map((a, i) =>
+    `<button class="alt${travadas ? ' travada' : ''}" ${travadas ? 'disabled' : ''} onclick="responder(${i})">
+      <b style="background:${CORES[i]}">${LETRAS[i]}</b><span>${a}</span><span class="barra" id="barra-${i}"></span></button>`).join('');
+}
+
+function contar(total, rotulo, fim) {
+  clearInterval(relogio);
+  let resta = total;
+  const passo = () => {
+    document.getElementById('segundos').textContent = resta;
+    document.getElementById('relogio').style.setProperty('--p', (resta / total) * 100);
+    document.getElementById('fase').textContent = `${rotulo} ${resta}s`;
+    if (resta-- <= 0) { clearInterval(relogio); fim(); }
+  };
+  passo();
+  relogio = setInterval(passo, 1000);
+}
+
+function abrirResposta() {
+  desenharAlts(false);
+  inicioResposta = Date.now();
+  const q = QUESTOES[rodada];
+  // Os simulados respondem em momentos diferentes.
+  jogadores.filter(j => !j.eu).forEach(j => {
+    const tempo = (1 - j.rapidez) * 14 + Math.random() * 5 + 1.5;
+    setTimeout(() => {
+      if (rodada < 0 || j.resposta !== null) return;
+      j.resposta = Math.random() < j.acerto ? q.correta : (q.correta + 1 + Math.floor(Math.random() * 4)) % 5;
+      j.tempo = tempo; contarRespostas();
+    }, tempo * 1000);
+  });
+  contar(RESPOSTA, 'Responda! Faltam', encerrarRodada);
+}
+
+function contarRespostas() {
+  const n = jogadores.filter(j => j.resposta !== null).length;
+  document.getElementById('responderam').textContent = `${n} de ${jogadores.length} já responderam`;
+  if (n === jogadores.length) { clearInterval(relogio); setTimeout(encerrarRodada, 600); }
+}
+
+function responder(i) {
+  if (minhaResposta !== null) return;
+  minhaResposta = i;
+  const eu = jogadores[0];
+  eu.resposta = i; eu.tempo = (Date.now() - inicioResposta) / 1000;
+  document.querySelectorAll('.alt').forEach((b, k) => { b.disabled = true; b.classList.toggle('travada', k !== i); b.classList.toggle('minha', k === i); });
+  document.getElementById('retorno').innerHTML = '<div class="aviso neutro">Resposta enviada! Esperando os outros…</div>';
+  contarRespostas();
+}
+
+function encerrarRodada() {
+  if (document.getElementById('t-questao').classList.contains('ativa') === false) return;
+  clearInterval(relogio);
+  const q = QUESTOES[rodada];
+  jogadores.forEach(j => {
+    if (j.resposta === q.correta) {
+      j.seguidas++;
+      j.ganhou = Math.round(500 + 500 * Math.max(0, 1 - j.tempo / RESPOSTA)) + (j.seguidas >= 2 ? 100 * (j.seguidas - 1) : 0);
+      j.pts += j.ganhou;
+    } else { j.seguidas = 0; j.ganhou = 0; }
+  });
+  const votos = [0, 0, 0, 0, 0];
+  jogadores.forEach(j => { if (j.resposta !== null) votos[j.resposta]++; });
+  document.querySelectorAll('.alt').forEach((b, k) => {
+    b.disabled = true;
+    b.classList.toggle('certa', k === q.correta);
+    b.classList.toggle('travada', k !== q.correta && k !== minhaResposta);
+    document.getElementById('barra-' + k).textContent = votos[k] ? `${votos[k]} ${votos[k] === 1 ? 'pessoa' : 'pessoas'}` : '';
+  });
+  const eu = jogadores[0];
+  if (eu.resposta !== q.correta) erradas.push(rodada);
+  document.getElementById('fase').textContent = 'Resultado';
+  document.getElementById('retorno').innerHTML = eu.resposta === null
+    ? `<div class="aviso ruim">O tempo acabou! A certa era a ${LETRAS[q.correta]}.</div>`
+    : eu.resposta === q.correta
+      ? `<div class="aviso bom">Acertou! +${eu.ganhou} pontos${eu.seguidas >= 2 ? ` · 🔥 ${eu.seguidas} seguidas` : ''}</div>`
+      : `<div class="aviso ruim">Não foi dessa vez. A certa era a ${LETRAS[q.correta]}.</div>`;
+  setTimeout(mostrarPlacar, 3200);
+}
+
+const ordenar = () => [...jogadores].sort((a, b) => b.pts - a.pts);
+
+function mostrarPlacar() {
+  const ordem = ordenar();
+  const ultima = rodada === QUESTOES.length - 1;
+  document.getElementById('placar-sub').textContent = ultima ? 'Última rodada! Veja quem subiu…' : `Depois da questão ${rodada + 1} de ${QUESTOES.length}`;
+  document.getElementById('placar').innerHTML = ordem.map((j, i) => {
+    const antes = ordemAnterior.indexOf(j.nome);
+    const mudou = rodada > 0 && antes !== -1 ? antes - i : 0;
+    return `<div class="linha${j.eu ? ' eu' : ''}"><span class="pos">${i + 1}º</span>
+      <span style="display:flex;align-items:center;gap:8px;font-weight:600">${bolinha(j)}${j.nome}${j.seguidas >= 2 ? `<span class="chama">🔥${j.seguidas}</span>` : ''}</span>
+      <span class="seta ${mudou > 0 ? 'sobe' : mudou < 0 ? 'desce' : 'fraco'}">${mudou > 0 ? '▲' + mudou : mudou < 0 ? '▼' + -mudou : ''}${j.ganhou ? ` +${j.ganhou}` : ''}</span>
+      <span class="pts">${j.pts}</span></div>`;
+  }).join('');
+  document.getElementById('seguir').textContent = ultima ? 'Ver o pódio' : 'Próxima questão';
+  mostrar('t-placar');
+}
+
+function fimDeJogo() {
+  const ordem = ordenar();
+  const lugar = (i, cls, medalha) => ordem[i]
+    ? `<div class="degrau ${cls}"><span class="medalha">${medalha}</span><div class="nome">${ordem[i].nome}</div><div class="pts">${ordem[i].pts} pts</div></div>` : '<div></div>';
+  document.getElementById('podio').innerHTML = lugar(1, 'p2', '🥈') + lugar(0, 'p1', '🥇') + lugar(2, 'p3', '🥉');
+  const eu = jogadores[0], pos = ordem.indexOf(eu) + 1;
+  const acertos = QUESTOES.length - erradas.length;
+  document.getElementById('meu-res').textContent = `${pos}º lugar de ${jogadores.length} · ${acertos} de ${QUESTOES.length} acertos · ${eu.pts} pontos`;
+  document.getElementById('revisar').innerHTML = erradas.length
+    ? `<div class="fraco pequeno" style="margin-top:10px">Revise as que você errou:</div><ul class="lista">${erradas.map(r => `<li>${QUESTOES[r].origem}: a certa era a <b>${LETRAS[QUESTOES[r].correta]}</b> · <a href="#" style="color:var(--marca-texto)" onclick="return false">ver discussão</a></li>`).join('')}</ul>`
+    : '<p style="margin:8px 0 0">Gabaritou! 🎯</p>';
+  document.getElementById('post-feed').textContent = `🏆 ${ordem[0].eu ? 'Você venceu' : ordem[0].nome + ' venceu'} a Arena de hoje com ${ordem[0].pts} pontos, contra ${jogadores.length - 1} amigos.`;
+  mostrar('t-podio');
+}
+</script>
+</body>
+</html>
