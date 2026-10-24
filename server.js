@@ -11,7 +11,7 @@ const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
 const imagens = require('./imagens');
-const { numeroDaQuestao, ehDeLingua, completarLinguas, pastasQueFaltam, semRepetir } = require('./provas');
+const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir } = require('./provas');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
 const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
@@ -1228,6 +1228,7 @@ async function questoesFaltando() {
   const faltam = [];
   for (const ano of ANOS_DISPONIVEIS) {
     for (let n = 1; n <= 180; n++) {
+      if (foiAnulada(ano, n)) continue;
       const area = areaPeloNumero(ano, n);
       if (!ehDeLingua(ano, n)) { if (!tem.has(`${ano}:${n}:`)) faltam.push({ ano, numero: n, lingua: null, area }); continue; }
       if (!tem.has(`${ano}:${n}:ingles`) && !tem.has(`${ano}:${n}:`)) faltam.push({ ano, numero: n, lingua: 'ingles', area });

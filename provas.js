@@ -10,6 +10,11 @@ function numeroDaQuestao(q) {
 // Língua estrangeira: questões 1 a 5 desde 2017; 91 a 95 de 2010 a 2016.
 const ehDeLingua = (ano, n) => (ano >= 2017 ? n <= 5 : ano >= 2010 && n >= 91 && n <= 95);
 
+// Anuladas pelo INEP (gabarito "X" nos microdados): não têm resposta certa e
+// nenhuma fonte as tem, então não contam como faltando.
+const ANULADAS = new Set(['2009:101']);
+const foiAnulada = (ano, n) => ANULADAS.has(`${ano}:${n}`);
+
 // A fonte às vezes grava uma questão de língua sem dizer o idioma (2020 Q5,
 // 2012 Q94 e 2011 Q95 são de espanhol; 2015 Q95 é de inglês). Se a outra
 // versão do mesmo número tem idioma, esta é a que falta; senão, decide pelo
@@ -50,4 +55,4 @@ function pastasQueFaltam(ano, questoes) {
 
 const semRepetir = questoes => [...new Map(questoes.map(q => [`${numeroDaQuestao(q)}|${q.language || ''}`, q])).values()];
 
-module.exports = { numeroDaQuestao, ehDeLingua, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir };
+module.exports = { numeroDaQuestao, ehDeLingua, foiAnulada, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir };

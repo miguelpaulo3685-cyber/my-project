@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert');
-const { ehDeLingua, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir } = require('../provas');
+const { ehDeLingua, foiAnulada, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir } = require('../provas');
 
 const q = (year, index, language = null, context = '') => ({ year, index, language, context, title: `Questão ${index} - ENEM ${year}` });
 
@@ -8,6 +8,10 @@ test('questões de língua estrangeira pela posição na prova', () => {
   assert.ok(ehDeLingua(2023, 1) && ehDeLingua(2023, 5) && !ehDeLingua(2023, 6) && !ehDeLingua(2023, 91));
   assert.ok(ehDeLingua(2012, 91) && ehDeLingua(2012, 95) && !ehDeLingua(2012, 1));
   assert.ok(!ehDeLingua(2009, 91));
+});
+
+test('questão anulada pelo INEP', () => {
+  assert.ok(foiAnulada(2009, 101) && !foiAnulada(2009, 100) && !foiAnulada(2010, 101));
 });
 
 test('questão sem idioma vira a versão que falta', () => {
