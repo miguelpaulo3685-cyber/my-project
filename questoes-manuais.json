@@ -40,5 +40,13 @@
       "desconhecer como usar um livro impresso."
     ],
     "correta": 4
+  },
+  {
+    "ano": 2015,
+    "numero": 145,
+    "lingua": null,
+    "contexto": "O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna de um mesmo filme. Várias escolas podem ser escolhidas para receberem ingressos. Há alguns critérios para a distribuição dos ingressos:\n\n1) cada escola deverá receber ingressos para uma única sessão;\n\n2) todas as escolas contempladas deverão receber o mesmo número de ingressos;\n\n3) não haverá sobra de ingressos (ou seja, todos os ingressos serão distribuídos).\n\nO número mínimo de escolas que podem ser escolhidas para obter ingressos, segundo os critérios estabelecidos, é",
+    "alternativas": ["2.", "4.", "9.", "40.", "80."],
+    "correta": 2
   }
 ]
