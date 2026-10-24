@@ -1,68 +1,223 @@
 {
-  "_como_preencher": [
-    "Para cada ano, coloque os textos motivadores da prova, na ordem do caderno, dentro de \"textos\".",
-    "Cada texto tem: \"texto\" (o texto em si; use \\n para quebrar parágrafo), \"fonte\" (de onde veio, como está no caderno) e, se for imagem, gráfico ou charge, \"imagem\" com o caminho do arquivo (ex.: \"img/redacao/2023-3.png\") e \"descricao\" (o que a imagem mostra, para quem usa leitor de tela).",
-    "Copie do caderno oficial no site do INEP. Sempre coloque a fonte.",
-    "Ano com \"textos\": [] continua mostrando só o link para o caderno do INEP."
-  ],
-  "2023": {
-    "tema": "Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil",
-    "textos": []
+  "2009": {
+    "tema": "O indivíduo frente à ética nacional",
+    "textos": [
+      {
+        "imagem": "img/redacao/2009-1.jpg",
+        "descricao": "Desenho de Millôr Fernandes: uma pequena figura sozinha no alto de uma paisagem de montanhas rabiscadas, com a frase \"Só lidar com gente honesta, meu Deus, que solidão!\".",
+        "fonte": "Millôr Fernandes. Disponível em: http://www2.uol.com.br/millor. Acesso em: 14 jul. 2009."
+      },
+      {
+        "texto": "Andamos demais acomodados, todo mundo reclamando em voz baixa como se fosse errado indignar-se.\n\nSem ufanismo, porque dele estou cansada, sem dizer que este é um país rico, de gente boa e cordata, com natureza (a que sobrou) belíssima e generosa, sem fantasiar nem botar óculos cor-de-rosa, que o momento não permite, eu me pergunto o que anda acontecendo com a gente.\n\nTenho medo disso que nos tornamos ou em que estamos nos transformando, achando bonita a ignorância eloqüente, engraçado o cinismo bem-vestido, interessante o banditismo arrojado, normal o abismo em cuja beira nos equilibramos — não malabaristas, mas palhaços.",
+        "fonte": "LUFT, L. Ponto de vista. Veja. Ed. 1988, 27 dez. 2006 (adaptado)."
+      },
+      {
+        "texto": "Qual é o efeito em nós do \"eles são todos corruptos\"?\n\nAs denúncias que assolam nosso cotidiano podem dar lugar a uma vontade de transformar o mundo só se nossa indignação não afetar o mundo inteiro. \"Eles são TODOS corruptos\" é um pensamento que serve apenas para \"confirmar\" a \"integridade\" de quem se indigna.\n\nO lugar-comum sobre a corrupção generalizada não é uma armadilha para os corruptos: eles continuam iguais e livres, enquanto, fechados em casa, festejamos nossa esplendorosa retidão.\n\nO dito lugar-comum é uma armadilha que amarra e imobiliza os mesmos que denunciam a imperfeição do mundo inteiro.",
+        "fonte": "CALLIGARIS, C. A armadilha da corrupção. Disponível em: http://www1.folha.uol.com.br (adaptado)."
+      }
+    ]
   },
-  "2022": {
-    "tema": "Desafios para a valorização de comunidades e povos tradicionais no Brasil",
-    "textos": []
-  },
-  "2021": {
-    "tema": "Invisibilidade e registro civil: garantia de acesso à cidadania no Brasil",
-    "textos": []
-  },
-  "2020": {
-    "tema": "O estigma associado às doenças mentais na sociedade brasileira",
-    "textos": []
-  },
-  "2019": {
-    "tema": "Democratização do acesso ao cinema no Brasil",
-    "textos": []
-  },
-  "2018": {
-    "tema": "Manipulação do comportamento do usuário pelo controle de dados na internet",
-    "textos": []
-  },
-  "2017": {
-    "tema": "Desafios para a formação educacional de surdos no Brasil",
-    "textos": []
-  },
-  "2016": {
-    "tema": "Caminhos para combater a intolerância religiosa no Brasil",
-    "textos": []
-  },
-  "2015": {
-    "tema": "A persistência da violência contra a mulher na sociedade brasileira",
-    "textos": []
-  },
-  "2014": {
-    "tema": "Publicidade infantil em questão no Brasil",
-    "textos": []
-  },
-  "2013": {
-    "tema": "Efeitos da implantação da Lei Seca no Brasil",
-    "textos": []
-  },
-  "2012": {
-    "tema": "Movimento imigratório para o Brasil no século XXI",
+  "2010": {
+    "tema": "O trabalho na construção da dignidade humana",
     "textos": []
   },
   "2011": {
     "tema": "Viver em rede no século XXI: os limites entre o público e o privado",
     "textos": []
   },
-  "2010": {
-    "tema": "O trabalho na construção da dignidade humana",
+  "2012": {
+    "tema": "Movimento imigratório para o Brasil no século XXI",
     "textos": []
   },
-  "2009": {
-    "tema": "O indivíduo frente à ética nacional",
+  "2013": {
+    "tema": "Efeitos da implantação da Lei Seca no Brasil",
     "textos": []
-  }
+  },
+  "2014": {
+    "tema": "Publicidade infantil em questão no Brasil",
+    "textos": []
+  },
+  "2015": {
+    "tema": "A persistência da violência contra a mulher na sociedade brasileira",
+    "textos": [
+      {
+        "texto": "Nos 30 anos decorridos entre 1980 e 2010 foram assassinadas no país acima de 92 mil mulheres, 43,7 mil só na última década. O número de mortes nesse período passou de 1.353 para 4.465, que representa um aumento de 230%, mais que triplicando o quantitativo de mulheres vítimas de assassinato no país.",
+        "fonte": "WALSELFISZ, J. J. Mapa da Violência 2012. Atualização: Homicídio de mulheres no Brasil. Disponível em: www.mapadaviolencia.org.br. Acesso em: 8 jun. 2015."
+      },
+      {
+        "texto": "Tipo de violência relatada\n\nViolência física: 51,68%\nViolência psicológica: 31,81%\nViolência moral: 9,68%\nViolência sexual: 2,86%\nViolência patrimonial: 1,94%\nCárcere privado: 1,76%\nTráfico de pessoas: 0,26%",
+        "fonte": "BRASIL. Secretaria de Políticas para as Mulheres. Balanço 2014. Central de Atendimento à Mulher: Disque 180. Brasília, 2015. Disponível em: www.spm.gov.br. Acesso em: 24 jun. 2015 (adaptado)."
+      },
+      {
+        "imagem": "img/redacao/2015-3.jpg",
+        "descricao": "Cartaz com a palavra \"Feminicídio\" no alto e \"Basta\" embaixo; no centro, a marca de uma mão aberta com um alvo de tiro e o símbolo do feminino no meio.",
+        "fonte": "Disponível em: www.compromissoeatitude.org.br. Acesso em: 24 jun. 2015 (adaptado)."
+      },
+      {
+        "texto": "O impacto em números\nCom base na Lei Maria da Penha, mais de 330 mil processos foram instaurados apenas nos juizados e varas especializados\n\n332.216 processos que envolvem a Lei Maria da Penha chegaram, entre setembro de 2006 e março de 2011, aos 52 juizados e varas especializados em Violência Doméstica e Familiar contra a Mulher existentes no País. O que resultou em: 33,4% de processos julgados; 9.715 prisões em flagrante; 1.577 prisões preventivas decretadas.\n\n58 mulheres e 2.777 homens enquadrados na Lei Maria da Penha estavam presos no País em dezembro de 2010. Ceará, Rio de Janeiro e Rio Grande do Sul não constam desse levantamento feito pelo Departamento Penitenciário Nacional.\n\n237 mil relatos de violência foram feitos ao Ligue 180, serviço telefônico da Secretaria de Políticas para as Mulheres.\n\nSete de cada dez vítimas que telefonaram para o Ligue 180 afirmaram ter sido agredidas pelos companheiros.\n\nFontes: Conselho Nacional de Justiça, Departamento Penitenciário Nacional e Secretaria de Políticas para as Mulheres",
+        "fonte": "Disponível em: www.istoe.com.br. Acesso em: 24 jun. 2015 (adaptado)."
+      }
+    ]
+  },
+  "2016": {
+    "tema": "Caminhos para combater a intolerância religiosa no Brasil",
+    "textos": []
+  },
+  "2017": {
+    "tema": "Desafios para a formação educacional de surdos no Brasil",
+    "textos": [
+      {
+        "texto": "CAPÍTULO IV\nDO DIREITO À EDUCAÇÃO\n\nArt. 27. A educação constitui direito da pessoa com deficiência, assegurados sistema educacional inclusivo em todos os níveis e aprendizado ao longo de toda a vida, de forma a alcançar o máximo desenvolvimento possível de seus talentos e habilidades físicas, sensoriais, intelectuais e sociais, segundo suas características, interesses e necessidades de aprendizagem.\n\nParágrafo único. É dever do Estado, da família, da comunidade escolar e da sociedade assegurar educação de qualidade à pessoa com deficiência, colocando-a a salvo de toda forma de violência, negligência e discriminação.\n\nArt. 28. Incumbe ao poder público assegurar, criar, desenvolver, implementar, incentivar, acompanhar e avaliar: [...]\n\nIV - oferta de educação bilíngue, em Libras como primeira língua e na modalidade escrita da língua portuguesa como segunda língua, em escolas e classes bilíngues e em escolas inclusivas; [...]\n\nXII - oferta de ensino da Libras, do Sistema Braille e de uso de recursos de tecnologia assistiva, de forma a ampliar habilidades funcionais dos estudantes, promovendo sua autonomia e participação.",
+        "fonte": "BRASIL. Lei nº 13.146, de 6 de julho de 2015. Disponível em: www.planalto.gov.br. Acesso em: 9 jun. 2017 (fragmento)."
+      },
+      {
+        "imagem": "img/redacao/2017-2.jpg",
+        "descricao": "Gráfico \"Matrículas de Surdos na Educação Básica – Educação Especial\", total em milhar, de 2011 a 2016. Em classes comuns (alunos incluídos), as matrículas passam de cerca de 25 mil em 2011 e 27 mil em 2012 para cerca de 22 mil em 2016. Em classes especiais e escolas exclusivas, caem de cerca de 9,5 mil em 2011 para cerca de 5,5 mil em 2016.",
+        "fonte": "Fonte: Inep."
+      },
+      {
+        "imagem": "img/redacao/2017-3.jpg",
+        "descricao": "Cartaz com o rosto de um homem de óculos e o texto: \"Sou surdo e pós-graduado em marketing. E na sua empresa, tem espaço para mim? Trabalho não tolera preconceito. Valorize as diferenças.\"",
+        "fonte": "Disponível em: http://servicos.prt4.mpt.mp.br. Acesso em: 3 jun. 2017 (adaptado)."
+      },
+      {
+        "texto": "No Brasil, os surdos só começaram a ter acesso à educação durante o Império, no governo de Dom Pedro II, que criou a primeira escola de educação de meninos surdos, em 26 de setembro de 1857, na antiga capital do País, o Rio de Janeiro. Hoje, no lugar da escola funciona o Instituto Nacional de Educação de Surdos (Ines). Por isso, a data foi escolhida como Dia do Surdo.\n\nContudo, foi somente em 2002, por meio da sanção da Lei nº 10.436, que a Língua Brasileira de Sinais (Libras) foi reconhecida como segunda língua oficial no País. A legislação determinou também que devem ser garantidas, por parte do poder público em geral e empresas concessionárias de serviços públicos, formas institucionalizadas de apoiar o uso e difusão da Libras como meio de comunicação objetiva.",
+        "fonte": "Disponível em: www.brasil.gov.br. Acesso em: 9 jun. 2017 (adaptado)."
+      }
+    ]
+  },
+  "2018": {
+    "tema": "Manipulação do comportamento do usuário pelo controle de dados na internet",
+    "textos": [
+      {
+        "texto": "Às segundas-feiras pela manhã, os usuários de um serviço de música digital recebem uma lista personalizada de músicas que lhes permite descobrir novidades. Assim como os sistemas de outros aplicativos e redes sociais, este cérebro artificial consegue traçar um retrato automatizado do gosto de seus assinantes e constrói uma máquina de sugestões que não costuma falhar. O sistema se baseia em um algoritmo cuja evolução e usos aplicados ao consumo cultural são infinitos. De fato, plataformas de transmissão de vídeo on-line começam a desenhar suas séries de sucesso rastreando o banco de dados gerado por todos os movimentos dos usuários para analisar o que os satisfaz. O algoritmo constrói assim um universo cultural adequado e complacente com o gosto do consumidor, que pode avançar até chegar sempre a lugares reconhecíveis. Dessa forma, a filtragem de informação feita pelas redes sociais ou pelos sistemas de busca pode moldar nossa maneira de pensar. E esse é o problema principal: a ilusão de liberdade de escolha que muitas vezes é gerada pelos algoritmos.",
+        "fonte": "VERDÚ, Daniel. O gosto na era do algoritmo. Disponível em: https://brasil.elpais.com. Acesso em: 11 jun. 2018 (adaptado)."
+      },
+      {
+        "texto": "Nos sistemas dos gigantes da internet, a filtragem de dados é transferida para um exército de moderadores em empresas localizadas do Oriente Médio ao Sul da Ásia, que têm um papel importante no controle daquilo que deve ser eliminado da rede social, a partir de sinalizações dos usuários. Mas a informação é então processada por um algoritmo, que tem a decisão final. Os algoritmos são literais. Em poucas palavras, são uma opinião embrulhada em código. E estamos caminhando para um estágio em que é a máquina que decide qual notícia deve ou não ser lida.",
+        "fonte": "PEPE ESCOBAR. A silenciosa ditadura do algoritmo. Disponível em: http://outraspalavras.net. Acesso em: 5 jun. 2017 (adaptado)."
+      },
+      {
+        "texto": "Utilização da Internet\n\n64,7% das pessoas de 10 anos ou mais de idade utilizaram a internet (homens: 63,8%; mulheres: 65,5%).\nCerca de 85% dos jovens de 18 a 24 anos de idade e 25% das pessoas de 60 anos ou mais de idade utilizaram a internet.\n\nFinalidade do acesso à Internet (%)\nEnviar ou receber mensagens de texto, voz ou imagens por aplicativos diferentes de e-mail: 94,2\nAssistir a vídeos, inclusive programas, séries e filmes: 76,4\nConversar por chamada de voz ou vídeo: 73,3\nEnviar ou receber e-mails (correio eletrônico): 69,3",
+        "fonte": "Internet no Brasil em 2016. Disponível em: www.ibge.gov.br. Acesso em: 18 jun. 2018 (adaptado)."
+      },
+      {
+        "texto": "Mudanças sutis nas informações às quais somos expostos podem transformar nosso comportamento. As redes têm selecionado as notícias sob títulos chamativos como “trending topics” ou critérios como “relevância”. Mas nós praticamente não sabemos como isso tudo é filtrado. Quanto mais informações relevantes tivermos nas pontas dos dedos, melhor equipados estamos para tomar decisões. No entanto, surgem algumas tensões fundamentais: entre a conveniência e a deliberação; entre o que o usuário deseja e o que é melhor para ele; entre a transparência e o lado comercial. Quanto mais os sistemas souberem sobre você em comparação ao que você sabe sobre eles, há mais riscos de suas escolhas se tornarem apenas uma série de reações a “cutucadas” invisíveis. O que está em jogo não é tanto a questão “homem versus máquina”, mas sim a disputa “decisão informada versus obediência influenciada”.",
+        "fonte": "CHATFIELD, Tom. Como a internet influencia secretamente nossas escolhas. Disponível em: www.bbc.com. Acesso em: 3 jun. 2017 (adaptado)."
+      }
+    ]
+  },
+  "2019": {
+    "tema": "Democratização do acesso ao cinema no Brasil",
+    "textos": [
+      {
+        "texto": "No dia da primeira exibição pública de cinema — 28 de dezembro de 1895, em Paris —, um homem de teatro que trabalhava com mágicas, Georges Mélies, foi falar com Lumière, um dos inventores do cinema; queria adquirir um aparelho, e Lumière desencorajou-o, disse-lhe que o “Cinematógrapho” não tinha o menor futuro como espetáculo, era um instrumento científico para reproduzir o movimento e só poderia servir para pesquisas. Mesmo que o público, no início, se divertisse com ele, seria uma novidade de vida breve, logo cansaria. Lumière enganou-se. Como essa estranha máquina de austeros cientistas virou uma máquina de contar estórias para enormes plateias, de geração em geração, durante já quase um século?",
+        "fonte": "BERNARDET, Jean-Claude. O que é Cinema. In BERNARDET, Jean-Claude; ROSSI, Clóvis. O que é Jornalismo, O que é Editora, O que é Cinema. São Paulo: Brasiliense, 1993."
+      },
+      {
+        "texto": "Edgar Morin define o cinema como uma máquina que registra a existência e a restitui como tal, porém levando em consideração o indivíduo, ou seja, o cinema seria um meio de transpor para a tela o universo pessoal, solicitando a participação do espectador.",
+        "fonte": "GUTFREIND, C. F. O filme e a representação do real. E-Compós, v. 6, 11, 2006 (adaptado)."
+      },
+      {
+        "imagem": "img/redacao/2019-3.jpg",
+        "descricao": "Infográfico \"Da telona para as telinhas\": cresce o percentual de brasileiros que frequentam salas de cinema e o interesse por filmes tem destaque no consumo de TV. Nos últimos cinco anos, a penetração do cinema cresceu 43% entre os brasileiros. 88% dos telespectadores assistem a filmes na TV regularmente; 17% da população frequenta o cinema (assistiu nos últimos 30 dias); 19% dos telespectadores de filmes na TV vão ao cinema; 95% dos que foram ao cinema assistem a filmes na TV.",
+        "fonte": "Disponível em: www.meioemensagem.com. Acesso em: 12 jun. 2019 (adaptado)."
+      },
+      {
+        "texto": "O Brasil já teve um parque exibidor vigoroso e descentralizado: quase 3 300 salas em 1975, uma para cada 30 000 habitantes, 80% em cidades do interior. Desde então, o país mudou. Quase 120 milhões de pessoas a mais passaram a viver nas cidades. A urbanização acelerada, a falta de investimentos em infraestrutura urbana, a baixa capitalização das empresas exibidoras, as mudanças tecnológicas, entre outros fatores, alteraram a geografia do cinema. Em 1997, chegamos a pouco mais de 1 000 salas. Com a expansão dos shopping centers, a atividade de exibição se reorganizou. O número de cinemas duplicou, até chegar às atuais 2 200 salas. Esse crescimento, porém, além de insuficiente (o Brasil é apenas o 60º país na relação habitantes por sala), ocorreu de forma concentrada. Foram privilegiadas as áreas de renda mais alta das grandes cidades. Populações inteiras foram excluídas do universo do cinema ou continuam mal atendidas: o Norte e o Nordeste, as periferias urbanas, as cidades pequenas e médias do interior.",
+        "fonte": "Disponível em: https://cinemapertodevoce.ancine.gov.br. Acesso em: 13 jun. 2019 (fragmento)."
+      }
+    ]
+  },
+  "2020": {
+    "tema": "O estigma associado às doenças mentais na sociedade brasileira",
+    "textos": [
+      {
+        "texto": "A maior parte das pessoas, quando ouve falar em “saúde mental”, pensa em “doença mental”. Mas a saúde mental implica muito mais que a ausência de doenças mentais. Pessoas mentalmente saudáveis compreendem que ninguém é perfeito, que todos possuem limites e que não se pode ser tudo para todos. Elas vivenciam diariamente uma série de emoções como alegria, amor, satisfação, tristeza, raiva e frustração. São capazes de enfrentar os desafios e as mudanças da vida cotidiana com equilíbrio e sabem procurar ajuda quando têm dificuldade em lidar com conflitos, perturbações, traumas ou transições importantes nos diferentes ciclos da vida. A saúde mental de uma pessoa está relacionada à forma como ela reage às exigências da vida e ao modo como harmoniza seus desejos, capacidades, ambições, ideias e emoções. Todas as pessoas podem apresentar sinais de sofrimento psíquico em alguma fase da vida.",
+        "fonte": "Disponível em: http://www.saude.pr.gov.br. Acesso em: 27 jul. 2020 (adaptado)."
+      },
+      {
+        "texto": "A origem da palavra “estigma” aponta para marcas ou cicatrizes deixadas por feridas. Por extensão, em um período que remonta à Grécia Antiga, passou a designar também as marcas feitas com ferro em brasa em criminosos, escravos e outras pessoas que se desejava separar da sociedade “correta” e “honrada”. Essa mesma palavra muitas vezes está presente no universo das doenças psiquiátricas. No lugar da marca de ferro, relegamos preconceito, falta de informação e tratamentos precários a pessoas que sofrem de depressão, ansiedade, transtorno bipolar e outros transtornos mentais graves.\n\nAchar que a manifestação de um transtorno mental é “frescura” está relacionado a um ideal de felicidade que não é igual para todo mundo. A tentativa de se encaixar nesse modelo cria distância dos sentimentos reais, e quem os demonstra é rotulado, o que progressivamente dificulta a interação social. É aqui que redes sociais de enorme popularidade mostram uma face cruel, desempenhando um papel de validação da vida perfeita e criando um ambiente em que tudo deve ser mostrado em seu melhor ângulo. Fora dos holofotes da internet, porém, transtornos mentais mostram-se mais presentes do que se imagina.",
+        "fonte": "http://www.abrata.org.br. Acesso em: 27 jul. 2020 (adaptado)."
+      },
+      {
+        "imagem": "img/redacao/2020-3.jpg",
+        "descricao": "Infográfico \"Socorro, Brasil!\" sobre depressão, com dados da OMS de fevereiro de 2017: 322 milhões de pessoas vivem com depressão no mundo; mais de 11,5 milhões de brasileiros têm depressão; o Brasil é o país mais depressivo da América Latina; a depressão é hoje a doença mais incapacitante do mundo e a 2ª causa de afastamento do trabalho; a perda econômica mundial gerada pelos transtornos mentais é de 1 trilhão de dólares; o número de mulheres afetadas é 30% mais elevado que o de homens. Se você precisa de ajuda, ligue para o Centro de Valorização da Vida (CVV): 188.",
+        "fonte": "Disponível em: https://zenklub.com.br. Acesso em: 27 jul. 2020 (adaptado)."
+      }
+    ]
+  },
+  "2021": {
+    "tema": "Invisibilidade e registro civil: garantia de acesso à cidadania no Brasil",
+    "textos": [
+      {
+        "texto": "Toda sexta-feira, o ônibus azul e branco estacionado no pátio da Vara da Infância e da Juventude, na Praça Onze, Centro do Rio, sacoleja com o entra e sai de gente a partir das 9h. Do lado de fora, nunca menos de 50 pessoas, todas pobres ou muito pobres, quase todas negras, cercam o veículo, perguntam, sentam e levantam, perguntam de novo e esperam sem reclamar o tempo que for preciso. Adultos, velhos e crianças estão ali para conseguir o que, no Brasil, é oficialmente reconhecido como o primeiro documento da vida – a certidão de nascimento. [...]\n\nAo longo do discurso desses entrevistados, fica clara a forma como os usuários se definem: “zero à esquerda”, “cachorro”, “um nada”, “pessoa que não existe”, entre outras, todas são expressões que conformam claramente a ideia da pessoa sem registro de nascimento sobre si mesma como uma pessoa sem valor, cuja existência nunca foi oficialmente reconhecida pelo Estado.",
+        "fonte": "ESCÓSSIA, F. M. Invisíveis: uma etnografia sobre identidade, direitos e cidadania nas trajetórias de brasileiros sem documento. Tese (Doutorado em História, Política e Bens Culturais). Fundação Getúlio Vargas. Rio de Janeiro, 2019."
+      },
+      {
+        "texto": "A Lei Nº 9 534 de 1997 tornou o registro de nascimento gratuito no Brasil. Só que o problema persiste, mostrando que essa exclusão é complexa e não se explica apenas pela dificuldade financeira em pagar pelo registro, por exemplo.",
+        "imagem": "img/redacao/2021-2.jpg",
+        "descricao": "Mapa da invisibilidade no Brasil: estimativa do número de pessoas sem registro de nascimento. Norte: 320 mil; Nordeste: 828 mil; Centro-Oeste: 243 mil; Sudeste: 1,15 milhão; Sul: 399 mil. Fonte: IBGE (dados de 2015).",
+        "fonte": "Disponível em: https://estudio.r7.com/. Acesso em: 22 jul. 2021 (adaptado)."
+      },
+      {
+        "texto": "A certidão de nascimento é o primeiro e o mais importante documento do cidadão. Com ele, a pessoa existe oficialmente para o Estado e a sociedade. Só de posse da certidão é possível retirar outros documentos civis, como a carteira de trabalho, a carteira de identidade, o título de eleitor e o Cadastro de Pessoa Física (CPF). Além disso, para matricular uma criança na escola e ter acesso a benefícios sociais, a apresentação do documento é obrigatória.",
+        "fonte": "Disponível em: http://www.senado.leg.br/. Acesso em: 21 jul. 2021."
+      },
+      {
+        "imagem": "img/redacao/2021-4.jpg",
+        "descricao": "Cartaz com o rosto de uma pessoa coberto por uma impressão digital e o texto: \"Onde existem pessoas, nós enxergamos cidadãos. Defensoras e defensores públicos pelo direito à documentação pessoal.\"",
+        "fonte": "Disponível em: https://www.ufrgs.br/humanista. Acesso em: 26 jul. 2021 (adaptado)."
+      }
+    ]
+  },
+  "2022": {
+    "tema": "Desafios para a valorização de comunidades e povos tradicionais no Brasil",
+    "textos": [
+      {
+        "texto": "Você sabe quais são as comunidades e os povos tradicionais brasileiros? Talvez indígenas e quilombolas sejam os primeiros que passam pela cabeça, mas, na verdade, além deles, existem 26 reconhecidos oficialmente e muitos outros que ainda não foram incluídos na legislação.\n\nSão pescadores artesanais, quebradeiras de coco babaçu, apanhadores de flores sempre-vivas, caatingueiros, extrativistas, para citar alguns, todos considerados culturalmente diferenciados, capazes de se reconhecerem entre si.\n\nPara uma pesquisadora da UnB, essas populações consideram a terra como uma mãe, e há uma relação de reciprocidade com a natureza. Nessa troca, a natureza fornece “alimento, um lugar saudável para habitar, para ter água. E elas se responsabilizam por cuidar dela, por tirar dela apenas o suficiente para viver bem e respeitam o tempo de regeneração da própria natureza”, diz.",
+        "fonte": "Disponível em: https://g1.globo.com. Acesso em: 17 jun. 2022 (adaptado)."
+      },
+      {
+        "texto": "Povos tradicionais do Brasil – estados com a maior concentração de famílias\n\nIndígena: AM 43.264; MS 21.507; RR 15.316\nQuilombola: BA 43.009; MA 39.316; PA 15.282\nCigano: BA 1.538; GO 643; MG 556\nExtrativista: PA 11.826; AM 9.772; MA 7.190\nPescador: PA 40.123; MA 33.085; BA 30.920\nPovos de terreiro: BA 1.883; PI 856; CE 603\nRibeirinho: PA 50.314; AM 16.507; BA 9.670\n\nFonte: Ministério Público Federal. Infográfico elaborado em: 25/10/2019.",
+        "fonte": "Disponível em: https://g1.globo.com. Acesso em: 17 jun. 2022 (adaptado)."
+      },
+      {
+        "texto": "Povos e comunidades tradicionais\n\nO Ministério do Desenvolvimento Social (MDS) preside, desde 2007, a Comissão Nacional de Desenvolvimento Sustentável dos Povos e Comunidades Tradicionais (CNPCT), criada em 2006. Fruto dos trabalhos da CNPCT, foi instituída, por meio do Decreto nº 6.040, de 7 de fevereiro de 2017, a Política Nacional de Desenvolvimento Sustentável dos Povos e Comunidades Tradicionais (PNPCT). A PNPCT foi criada em um contexto de busca de reconhecimento e preservação de outras formas de organização social por parte do Estado.",
+        "fonte": "Disponível em: http://mds.gov.br. Acesso em: 17 jun. 2022 (adaptado)."
+      },
+      {
+        "texto": "Carta da Amazônia 2021\n\nAos participantes da 26ª Conferência das Nações Unidas sobre Mudanças Climáticas (COP26)\n\nNão podia ser mais estratégico para nós, Povos Indígenas, Populações e Comunidades Tradicionais brasileiras, reafirmarmos a defesa da sociobiodiversidade amazônica neste momento em que o mundo volta a debater a crise climática na COP26. Uma crise que atinge, em todos os contextos, os viventes da Terra! Nossos territórios protegidos e direitos respeitados são as reivindicações dos movimentos sociais e ambientais brasileiros.\n\nNão compactuamos com qualquer tentativa e estratégia baseada somente na lógica do mercado, com empresas que apoiam legislações ambientais que ameaçam nossos direitos e com mecanismos de financiamento que não condizem com a realidade dos nossos territórios.\n\nPropomos o que temos de melhor: a experiência das nossas sociedades e culturas históricas, construídas com base em nossos saberes tradicionais e ancestrais, além de nosso profundo conhecimento da natureza.\n\nInovação, para nós, não pode resultar em processos que venham a ameaçar nossos territórios, nossas formas tradicionais e harmônicas de viver e produzir.\n\nAmazônia, Brasil, 20 de outubro de 2021.\nEntidades signatárias: CNS; Coiab; Conaq; MIQCB; Coica; ANA Amazônia e Confrem",
+        "fonte": "Disponível em: https://s3.amazonaws.com. Acesso em: 17 jun. 2022 (adaptado)."
+      }
+    ]
+  },
+  "2023": {
+    "tema": "Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil",
+    "textos": [
+      {
+        "texto": "O trabalho de cuidado não remunerado e mal pago e a crise global da desigualdade\n\nO trabalho de cuidado é essencial para nossas sociedades e para a economia. Ele inclui o trabalho de cuidar de crianças, idosos e pessoas com doenças e deficiências físicas e mentais, bem como o trabalho doméstico diário que inclui cozinhar, limpar, lavar, consertar coisas e buscar água e lenha. Se ninguém investisse tempo, esforços e recursos nessas tarefas diárias essenciais, comunidades, locais de trabalho e economias inteiras ficariam estagnados. Em todo o mundo, o trabalho de cuidado não remunerado e mal pago é desproporcionalmente assumido por mulheres e meninas em situação de pobreza, especialmente por aquelas que pertencem a grupos que, além da discriminação de gênero, sofrem preconceito em decorrência de sua raça, etnia, nacionalidade e sexualidade. As mulheres são responsáveis por mais de três quartos do cuidado não remunerado e compõem dois terços da força de trabalho envolvida em atividades de cuidado remuneradas.",
+        "fonte": "Documento informativo – Tempo de Cuidar. Disponível em: https://www.oxfam.org.br. Acesso em: 18 de jul. de 2023 (adaptado)."
+      },
+      {
+        "texto": "Média de horas dedicadas pelas pessoas de 14 anos ou mais de idade aos afazeres domésticos e/ou às tarefas de cuidado de pessoas, por sexo (Brasil – 2019)\n\nHomens: 11,0 horas semanais\nMulheres: 21,4 horas semanais\n\nFonte: IBGE – Pnad contínua anual",
+        "fonte": "Disponível em: https://agenciadenoticias.ibge.gov.br. Acesso em: 18 de jul. 2023 (adaptado)."
+      },
+      {
+        "texto": "A sociedade brasileira tem passado por inúmeras transformações sociais ao longo das últimas décadas. Entre elas, as percepções sociais a respeito dos valores e das convenções de gênero e a forma como mulheres têm se inserido na sociedade. Algumas permanências, porém, chamam a atenção, como a delegação quase que exclusiva às famílias – e, nestas, às mulheres – de atividades relacionadas à reprodução da vida e da sociedade, usualmente nominadas trabalho de cuidado.",
+        "fonte": "Disponível em: https://repositorio.ipea.gov.br. Acesso em: 24 maio 2023 (adaptado)."
+      },
+      {
+        "imagem": "img/redacao/2023-4.jpg",
+        "descricao": "Capa da revista Pesquisa FAPESP de janeiro de 2021 com o título \"Desafios do cuidado\" e o texto: \"Aumenta o número de pessoas que demandam serviços de assistência, obrigando os países a repensar seus sistemas de atenção; no Brasil, protagonismo continua familiar\". A ilustração mostra uma mulher de mãos dadas com uma criança e com uma idosa de bengala.",
+        "fonte": "Capa da revista Pesquisa. Disponível em: https://revistapesquisa.fapesp.br. Acesso em: 23 maio 2023 (adaptado)."
+      }
+    ]
+  },
+  "_como_preencher": [
+    "Para cada ano, coloque os textos motivadores da prova, na ordem do caderno, dentro de \"textos\".",
+    "Cada texto tem: \"texto\" (o texto em si; use \\n para quebrar parágrafo), \"fonte\" (de onde veio, como está no caderno) e, se for imagem, gráfico ou charge, \"imagem\" com o caminho do arquivo (ex.: \"img/redacao/2023-3.png\") e \"descricao\" (o que a imagem mostra, para quem usa leitor de tela).",
+    "Copie do caderno oficial no site do INEP. Sempre coloque a fonte.",
+    "Ano com \"textos\": [] continua mostrando só o link para o caderno do INEP."
+  ]
 }
