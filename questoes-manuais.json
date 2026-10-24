@@ -48,5 +48,13 @@
     "contexto": "O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna de um mesmo filme. Várias escolas podem ser escolhidas para receberem ingressos. Há alguns critérios para a distribuição dos ingressos:\n\n1) cada escola deverá receber ingressos para uma única sessão;\n\n2) todas as escolas contempladas deverão receber o mesmo número de ingressos;\n\n3) não haverá sobra de ingressos (ou seja, todos os ingressos serão distribuídos).\n\nO número mínimo de escolas que podem ser escolhidas para obter ingressos, segundo os critérios estabelecidos, é",
     "alternativas": ["2.", "4.", "9.", "40.", "80."],
     "correta": 2
+  },
+  {
+    "ano": 2023,
+    "numero": 174,
+    "lingua": null,
+    "contexto": "Uma pessoa comprou um ingresso para o cinema em cuja entrada está afixado um mapa com a representação bidimensional do posicionamento das poltronas, conforme a figura. Essa pessoa, após consultar o mapa, começou a subir uma das escadas e parou na posição indicada pela estrela, direcionada para o norte. Ela conferiu seu bilhete e observou que, para encontrar sua poltrona, deveria partir do ponto onde estava, continuar subindo a escada na direção norte por mais quatro fileiras e olhar à sua direita, e sua poltrona será a terceira.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-174.jpg)\n\nNesse cinema, as poltronas são identificadas por uma letra, que indica a fileira, e um número, que fornece a posição da poltrona na fileira, respectivamente.\n\nA poltrona dessa pessoa é a identificada por",
+    "alternativas": ["A6.", "H1.", "H6.", "I1.", "I6."],
+    "correta": 4
   }
 ]
