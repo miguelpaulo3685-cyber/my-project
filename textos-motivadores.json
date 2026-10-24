@@ -34,7 +34,21 @@
   },
   "2011": {
     "tema": "Viver em rede no século XXI: os limites entre o público e o privado",
-    "textos": []
+    "textos": [
+      {
+        "texto": "Liberdade sem fio\n\nA ONU acaba de declarar o acesso à rede um direito fundamental do ser humano – assim como saúde, moradia e educação. No mundo todo, pessoas começam a abrir seus sinais privados de wi-fi, organizações e governos se mobilizam para expandir a rede para espaços públicos e regiões onde ela ainda não chega, com acesso livre e gratuito.",
+        "fonte": "ROSA, G.; SANTOS, P. Galileu. Nº 240, jul. 2011 (fragmento)."
+      },
+      {
+        "texto": "A internet tem ouvidos e memória\n\nUma pesquisa da consultoria Forrester Research revela que, nos Estados Unidos, a população já passou mais tempo conectada à internet do que em frente à televisão. Os hábitos estão mudando. No Brasil, as pessoas já gastam cerca de 20% de seu tempo on-line em redes sociais. A grande maioria dos internautas (72%, de acordo com o Ibope Mídia) pretende criar, acessar e manter um perfil em rede. “Faz parte da própria socialização do indivíduo do século XXI estar numa rede social. Não estar equivale a não ter uma identidade ou um número de telefone no passado”, acredita Alessandro Barbosa Lima, CEO da e.Life, empresa de monitoração e análise de mídias.\n\nAs redes sociais são ótimas para disseminar ideias, tornar alguém popular e também arruinar reputações. Um dos maiores desafios dos usuários de internet é saber ponderar o que se publica nela. Especialistas recomendam que não se deve publicar o que não se fala em público, pois a internet é um ambiente social e, ao contrário do que se pensa, a rede não acoberta anonimato, uma vez que mesmo quem se esconde atrás de um pseudônimo pode ser rastreado e identificado. Aqueles que, por impulso, se exaltam e cometem gafes podem pagar caro.",
+        "fonte": "Disponível em: http://www.terra.com.br. Acesso em: 30 jun. 2011 (adaptado)."
+      },
+      {
+        "imagem": "img/redacao/2011-3.jpg",
+        "descricao": "Tirinha \"Quadrinhos dos anos 10\" em três quadros. No primeiro, um homem olha para uma câmera de vigilância e diz: \"Malditas câmeras, somos monitorados o tempo todo!\". No segundo, ele abre os braços para a câmera: \"Se você está me ouvindo, saiba que podemos lutar contra a Sociedade do Controle juntos!\". No terceiro, um vigilante de quepe olha a tela de um computador, sem dizer nada.",
+        "fonte": "DAHMER, A. Disponível em: http://malvados.wordpress.com. Acesso em: 30 jun. 2011."
+      }
+    ]
   },
   "2012": {
     "tema": "Movimento imigratório para o Brasil no século XXI",
