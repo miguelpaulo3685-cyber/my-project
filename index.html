@@ -1080,7 +1080,46 @@
     /* ===================== COMUNIDADE ===================== */
     .indicador.sequencia { color: #f97316; }
     .indicador.sequencia.em-risco { color: var(--texto-fraco); }
-    .subabas { margin-bottom: 20px; }
+    .subabas { margin-bottom: 14px; }
+    .subabas:empty { display: none; }
+    .voltar-comunidade {
+      background: var(--superficie-2); border: 1px solid var(--borda); color: var(--texto); border-radius: 999px;
+      padding: 8px 14px; font: inherit; font-size: .88rem; font-weight: 700; cursor: pointer; flex-shrink: 0;
+    }
+    .voltar-comunidade:hover { border-color: var(--marca); }
+    .atalhos-inicio.atalhos-comunidade { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+    @media (max-width: 900px) { .atalhos-inicio.atalhos-comunidade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .atalhos-comunidade .atalho-inicio { padding: 12px; gap: 10px; height: 100%; }
+    @media (max-width: 640px) {
+      .atalhos-comunidade .atalho-inicio { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .atalhos-comunidade .atalho-inicio small { display: none; }
+    }
+    .seta-capas:disabled { display: none; }
+    .atalhos-comunidade .atalho-inicio .icone { font-size: 1.4rem; }
+    .faixa-reels { padding-bottom: 14px; }
+    .carrossel-capas { position: relative; }
+    .capas-reels { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px; }
+    .capas-reels::-webkit-scrollbar { display: none; }
+    .capa-reel {
+      position: relative; flex: 0 0 auto; width: 132px; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden;
+      border: 0; padding: 0; cursor: pointer; background: #111; scroll-snap-align: start; color: #fff; font: inherit;
+    }
+    .capa-reel img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .capa-reel .capa-tiktok { font-size: 1rem; }
+    .capa-reel .play-capa {
+      position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(0,0,0,.55); display: grid; place-items: center; font-size: .9rem;
+    }
+    .capa-reel .titulo-capa {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 8px 8px; text-align: left; font-size: .76rem; font-weight: 700; line-height: 1.3;
+      background: linear-gradient(transparent, rgba(0,0,0,.85)); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .seta-capas {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 36px; height: 36px; border-radius: 50%;
+      border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font-size: 1.3rem; line-height: 1; cursor: pointer; box-shadow: var(--sombra-leve);
+    }
+    .seta-capas.ante { left: -6px; } .seta-capas.prox { right: -6px; }
+    @media (hover: none) { .seta-capas { display: none; } }
     .ponto-vivo {
       width: 10px; height: 10px; border-radius: 50%; background: var(--certo); display: inline-block; flex-shrink: 0;
       box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: pulsar 2s infinite;
@@ -2486,7 +2525,7 @@
             <rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M9 3.5V6h6V3.5M8 11h8M8 14.5h8M8 18h5"/>
           </svg>Simulado
         </button>
-        <button class="aba" id="aba-feed" onclick="abrirComunidade()">
+        <button class="aba" id="aba-feed" onclick="trocarAbaComunidade('agora')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.9-3.2 3-5 5.5-5s4.6 1.8 5.5 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.2 14.6c2.6-.4 4.6 1.3 5.3 4.4"/>
           </svg>Comunidade
@@ -2606,7 +2645,9 @@
       <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
-    <div class="abas-feed subabas" id="subabas-comunidade" role="group" aria-label="Comunidade"></div>
+    <div class="subabas" id="subabas-comunidade"></div>
+    <div id="faixa-reels"></div>
+    <div class="atalhos-inicio atalhos-comunidade" id="atalhos-comunidade"></div>
     <div id="conteudo-comunidade"></div>
   </main>
 
@@ -2616,7 +2657,7 @@
       <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
       <p>Dicas, dúvidas e explicações entre vocês.</p>
     </div>
-    <div class="abas-feed subabas" id="subabas-feed" role="group" aria-label="Comunidade"></div>
+    <div class="subabas" id="subabas-feed"></div>
     <div class="abas-feed" id="abas-feed" role="group" aria-label="Feeds"></div>
     <div id="cabecalho-grupo"></div>
     <div id="area-publicar"></div>
@@ -2644,6 +2685,7 @@
   <!-- ===================== REELS ===================== -->
   <main class="pagina escondido" id="tela-reels">
     <div class="reels-topo">
+      <button class="voltar-comunidade" onclick="trocarAbaComunidade('agora')" aria-label="Voltar para a Comunidade">←</button>
       <div class="filtros-reels" id="filtros-reels" role="group" aria-label="Filtrar reels"></div>
       <button class="acao escondido" id="novo-reel" onclick="abrirNovoReel()">＋ Novo reel</button>
     </div>
@@ -5517,6 +5559,11 @@ async function carregarReels(doComeco) {
       return;
     }
     lista.insertAdjacentHTML('beforeend', novos.map(htmlDoReel).join(''));
+    if (reelParaAbrir) {
+      const i = reels.findIndex(x => x.id === reelParaAbrir);
+      if (i > 0) lista.scrollLeft = i * lista.clientWidth;
+      reelParaAbrir = null;
+    }
     observarReels();
     atualizarSetasReel();
   } catch (e) {
@@ -6812,11 +6859,71 @@ function trocarAbaComunidade(aba) {
   abrirComunidade(aba);
 }
 
+// Sem fileira de abas: a Comunidade é uma página só (Reels no alto, atalhos e
+// o que está rolando). Salas, Perguntas, Redações e Feed abrem pelos atalhos
+// e ganham um botão de voltar.
+const ATALHOS_COMUNIDADE = [
+  ['salas', '⏱️', 'Salas de estudo', 'Estudar junto no mesmo relógio'],
+  ['perguntas', '🙋', 'Perguntas', 'Tire uma dúvida ou ajude alguém'],
+  ['redacoes', '✍️', 'Redações', 'Mande a sua e corrija a dos outros'],
+  ['feed', '💬', 'Feed e grupos', 'Publicações e grupos de estudo']
+];
+
 function desenharSubabas() {
-  const abas = [['reels', '🎬 Reels'], ['agora', '🟢 Agora'], ['salas', salaAtual ? '⏱️ Sua sala' : '⏱️ Salas de estudo'], ['perguntas', '🙋 Perguntas'], ['redacoes', '✍️ Redações'], ['feed', '💬 Feed e grupos']];
-  const html = abas.map(([id, nome]) => `<button aria-pressed="${id === abaComunidade}" onclick="trocarAbaComunidade('${id}')">${nome}</button>`).join('');
-  document.getElementById('subabas-comunidade').innerHTML = html;
-  document.getElementById('subabas-feed').innerHTML = html;
+  const voltar = abaComunidade === 'agora' ? ''
+    : `<button class="voltar-comunidade" onclick="trocarAbaComunidade('agora')">← Comunidade</button>`;
+  document.getElementById('subabas-comunidade').innerHTML = voltar;
+  document.getElementById('subabas-feed').innerHTML = voltar;
+  const faixa = document.getElementById('faixa-reels');
+  const atalhos = document.getElementById('atalhos-comunidade');
+  if (abaComunidade !== 'agora') { faixa.innerHTML = ''; atalhos.innerHTML = ''; return; }
+  atalhos.innerHTML = ATALHOS_COMUNIDADE.map(([id, icone, nome, sobre]) =>
+    `<button class="atalho-inicio" onclick="trocarAbaComunidade('${id}')"><span class="icone">${icone}</span>
+      <span><b>${id === 'salas' && salaAtual ? 'Sua sala' : nome}</b><small>${sobre}</small></span></button>`).join('');
+  desenharFaixaReels();
+}
+
+// Faixa de Reels no alto da Comunidade: as capas passam para o lado; tocar
+// abre o vídeo em tela cheia, já naquele reel.
+let reelParaAbrir = null;
+async function desenharFaixaReels() {
+  const faixa = document.getElementById('faixa-reels');
+  if (!faixa.innerHTML) faixa.innerHTML = '<section class="painel faixa-reels"><div class="titulo-bloco"><b>🎬 Reels</b></div><p class="pista">Carregando…</p></section>';
+  let lista = [];
+  try {
+    const r = await fetch(`${API_URL}/api/reels`, { headers: cabecalhoAuth() });
+    lista = r.ok ? (await r.json()).reels || [] : [];
+  } catch (e) { /* sem reels, a faixa some */ }
+  if (abaComunidade !== 'agora') return;
+  if (!lista.length) { faixa.innerHTML = ''; return; }
+  faixa.innerHTML = `<section class="painel faixa-reels">
+    <div class="titulo-bloco"><b>🎬 Reels</b><button class="link-bloco" onclick="abrirReelNaLista(null)">Ver todos</button></div>
+    <div class="carrossel-capas">
+      <button class="seta-capas ante" id="capas-ante" onclick="passarCapas(-1)" aria-label="Voltar" disabled>‹</button>
+      <div class="capas-reels" id="capas-reels" onscroll="setasDasCapas()">${lista.slice(0, 12).map(r => `<button class="capa-reel" onclick="abrirReelNaLista(${r.id})" aria-label="${escapar(r.titulo)}">
+        ${r.plataforma === 'tiktok' ? '<span class="capa-tiktok" aria-hidden="true">TikTok</span>' : `<img src="${escapar(capaDoReel(r.youtube_id))}" alt="" loading="lazy">`}
+        <span class="play-capa" aria-hidden="true">▶</span>
+        <span class="titulo-capa">${escapar(r.titulo)}</span></button>`).join('')}</div>
+      <button class="seta-capas prox" id="capas-prox" onclick="passarCapas(1)" aria-label="Mais reels">›</button>
+    </div></section>`;
+  setasDasCapas();
+}
+
+function setasDasCapas() {
+  const el = document.getElementById('capas-reels');
+  if (!el) return;
+  document.getElementById('capas-ante').disabled = el.scrollLeft < 8;
+  document.getElementById('capas-prox').disabled = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+}
+
+function passarCapas(direcao) {
+  const el = document.getElementById('capas-reels');
+  el.scrollBy({ left: direcao * el.clientWidth * 0.8, behavior: 'smooth' });
+}
+
+function abrirReelNaLista(id) {
+  reelParaAbrir = id;
+  irPara('reels');
 }
 
 function mostrarComunidade() {
@@ -8596,10 +8703,9 @@ const AJUDA = {
     'Dá para pausar e continuar depois. No fim sai a nota de cada área.'
   ]],
   comunidade: ['Comunidade', [
-    '<b>Agora</b>: quem está estudando e o que está rolando.',
-    '<b>Salas</b>: estudar junto no mesmo relógio (25 minutos de foco, 5 de pausa).',
-    '<b>Perguntas</b>: pergunte uma dúvida ou ajude alguém. <b>Redações</b>: mande a sua e corrija a dos outros.',
-    '<b>Reels</b>: vídeos curtos de estudo da comunidade.'
+    'No alto ficam os <b>Reels</b>: vídeos curtos de estudo. Toque numa capa para assistir e use as setas para passar.',
+    'Logo abaixo, os atalhos: <b>Salas de estudo</b> (estudar junto no mesmo relógio), <b>Perguntas</b> (tirar dúvida ou ajudar), <b>Redações</b> (mandar a sua e corrigir a dos outros) e <b>Feed e grupos</b>.',
+    'Mais embaixo: quem está estudando agora, as metas do dia e o que está rolando. Para voltar de qualquer parte, toque em <b>← Comunidade</b>.'
   ]]
 };
 
