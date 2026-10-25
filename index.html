@@ -908,7 +908,18 @@
     .seta-reel:disabled { opacity: 0; pointer-events: none; }
     .reels-lista::-webkit-scrollbar { display: none; }
     .reels-lista:focus { outline: none; }
-    .reel { flex: 0 0 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; justify-content: center; padding-bottom: 10px; }
+    .reel { flex: 0 0 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; align-items: center; gap: 12px; overflow-y: auto; scrollbar-width: none; }
+    .reel::-webkit-scrollbar { display: none; }
+    /* Vídeo deitado (16:9) do maior tamanho que couber, com espaço para as informações embaixo. */
+    .reel .reel-quadro { flex: none; width: min(100%, calc((100dvh - var(--altura-topo, 62px) - 74px - 120px) * 16 / 9)); height: auto; aspect-ratio: 16 / 9; }
+    .reel-info { width: min(100%, calc((100dvh - var(--altura-topo, 62px) - 74px - 120px) * 16 / 9)); display: flex; gap: 14px; align-items: flex-start; justify-content: space-between; }
+    .reel-info .reel-legenda { position: static; padding: 0; background: none; color: var(--texto); pointer-events: auto; min-width: 0; }
+    .reel-info .reel-legenda b { text-shadow: none; }
+    .reel-info .selo-reel { background: var(--marca-suave); color: var(--marca-texto); }
+    .reel-info .reel-lado { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px; flex-shrink: 0; align-items: center; }
+    .reel-info .reel-lado button { background: var(--superficie-2); color: var(--texto); border: 1px solid var(--borda); width: 40px; height: 40px; }
+    .reel-info .reel-lado small { color: var(--texto-fraco); text-shadow: none; margin: 0 4px 0 -2px; }
+    .reel.tocando .reel-info .reel-legenda { padding-bottom: 0; }
     .reels-lista > .vazio { flex: 1; }
     .reel-quadro {
       position: relative; height: 100%; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 18px; overflow: hidden;
@@ -957,8 +968,10 @@
     @media (max-width: 700px) {
       #tela-reels { padding: 10px 8px 0; }
       .reels-lista { height: calc(100dvh - var(--altura-topo, 110px) - 64px - var(--altura-nav, 0px)); border-radius: 14px; }
-      .reel-quadro { border-radius: 14px; width: 100%; aspect-ratio: auto; }
-      .seta-reel { top: 30%; width: 40px; height: 40px; }
+      .reel .reel-quadro, .reel-info { width: 100%; }
+      .reel .reel-quadro { border-radius: 14px; }
+      .reel-info { flex-direction: column; gap: 10px; }
+      .seta-reel { width: 40px; height: 40px; }
       .seta-reel.ante { left: 6px; } .seta-reel.prox { right: 6px; }
     }
 
@@ -1096,30 +1109,43 @@
     }
     .seta-capas:disabled { display: none; }
     .atalhos-comunidade .atalho-inicio .icone { font-size: 1.4rem; }
-    .faixa-reels { padding-bottom: 14px; }
-    .carrossel-capas { position: relative; }
-    .capas-reels { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; padding: 2px; }
-    .capas-reels::-webkit-scrollbar { display: none; }
-    .capa-reel {
-      position: relative; flex: 0 0 auto; width: 132px; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden;
-      border: 0; padding: 0; cursor: pointer; background: #111; scroll-snap-align: start; color: #fff; font: inherit;
+    /* Destaque de Reels no alto da Comunidade: um vídeo deitado por vez,
+       passando sozinho como as galerias de site, com setas e bolinhas. */
+    .faixa-reels { padding: 16px; }
+    .faixa-reels .titulo-bloco { margin-bottom: 12px; }
+    .slider-reels { position: relative; border-radius: 16px; overflow: hidden; background: #000; touch-action: pan-y; width: min(100%, calc(60vh * 16 / 9)); margin: 0 auto; }
+    .slides-reels { display: flex; transition: transform .5s cubic-bezier(.4,.1,.2,1); }
+    .slide-reel { position: relative; flex: 0 0 100%; aspect-ratio: 16 / 9; background: #000; color: #fff; }
+    .slide-reel > img, .slide-reel > .capa-tiktok { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .slide-reel iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 2; }
+    .slide-reel .info-slide {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 18px 34px; pointer-events: none;
+      background: linear-gradient(transparent, rgba(0,0,0,.85));
     }
-    .capa-reel img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .capa-reel .capa-tiktok { font-size: 1rem; }
-    .capa-reel .play-capa {
-      position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 38px; height: 38px; border-radius: 50%;
-      background: rgba(0,0,0,.55); display: grid; place-items: center; font-size: .9rem;
+    .slide-reel .info-slide b { display: block; font-size: 1.1rem; line-height: 1.3; text-shadow: 0 1px 3px rgba(0,0,0,.6); }
+    .slide-reel .info-slide small { opacity: .85; font-size: .8rem; }
+    .slide-reel .tocar-slide {
+      position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); width: 64px; height: 64px; border-radius: 50%;
+      border: 0; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; display: grid; place-items: center; z-index: 1;
     }
-    .capa-reel .titulo-capa {
-      position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 8px 8px; text-align: left; font-size: .76rem; font-weight: 700; line-height: 1.3;
-      background: linear-gradient(transparent, rgba(0,0,0,.85)); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    .slide-reel .tocar-slide svg { width: 28px; height: 28px; margin-left: 4px; }
+    .seta-slide {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 42px; height: 42px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.3); background: rgba(0,0,0,.5); color: #fff; cursor: pointer; display: grid; place-items: center;
     }
-    .seta-capas {
-      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; width: 36px; height: 36px; border-radius: 50%;
-      border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font-size: 1.3rem; line-height: 1; cursor: pointer; box-shadow: var(--sombra-leve);
+    .seta-slide svg { width: 20px; height: 20px; }
+    .seta-slide.ante { left: 10px; } .seta-slide.prox { right: 10px; }
+    .bolinhas-slide { position: absolute; left: 0; right: 0; bottom: 10px; z-index: 3; display: flex; justify-content: center; gap: 6px; }
+    .bolinhas-slide button { width: 8px; height: 8px; padding: 0; border-radius: 99px; border: 0; background: rgba(255,255,255,.45); cursor: pointer; transition: width .3s, background .3s; }
+    .bolinhas-slide button[aria-current="true"] { width: 22px; background: #fff; }
+    .slider-reels.tocando .bolinhas-slide, .slider-reels.tocando .info-slide { display: none; }
+    @media (max-width: 640px) {
+      .faixa-reels { padding: 12px; }
+      .seta-slide { width: 36px; height: 36px; }
+      .slide-reel .info-slide { padding: 30px 12px 28px; }
+      .slide-reel .info-slide b { font-size: .95rem; }
+      .slide-reel .tocar-slide { width: 54px; height: 54px; }
     }
-    .seta-capas.ante { left: -6px; } .seta-capas.prox { right: -6px; }
-    @media (hover: none) { .seta-capas { display: none; } }
     .ponto-vivo {
       width: 10px; height: 10px; border-radius: 50%; background: var(--certo); display: inline-block; flex-shrink: 0;
       box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: pulsar 2s infinite;
@@ -3424,6 +3450,7 @@ function irPara(tela) {
   document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
   document.getElementById('aba-arena').classList.toggle('ativa', tela === 'arena');
   if (tela !== 'arena') sairDaTelaArena();
+  if (tela !== 'comunidade') { clearTimeout(slider.relogio); pararSlide(); }
   modoFoco(['questao', 'prova'].includes(tela));
   document.body.classList.toggle('vendo-reels', tela === 'reels');
   if (tela !== 'reels') pararReels();
@@ -5587,8 +5614,10 @@ function htmlDoReel(r) {
   const preenchido = (ligado, d) => icone(d).replace('fill="none"', `fill="${ligado ? 'currentColor' : 'none'}"`);
   return `<section class="reel" data-id="${r.id}" aria-label="${escapar(r.titulo)}">
     <div class="reel-quadro">
-      ${r.plataforma === 'tiktok' ? '<div class="capa-tiktok" aria-hidden="true">TikTok</div>' : `<img src="${escapar(capaDoReel(r.youtube_id))}" alt="" ${reels.indexOf(r) < 2 ? 'fetchpriority="high"' : 'loading="lazy"'}>`}
+      ${r.plataforma === 'tiktok' ? '<div class="capa-tiktok" aria-hidden="true">TikTok</div>' : `<img src="${escapar(capaDeitada(r.youtube_id))}" alt="" ${reels.indexOf(r) < 2 ? 'fetchpriority="high"' : 'loading="lazy"'} onerror="this.onerror=null; this.src='${escapar(capaDoReel(r.youtube_id))}'">`}
       <button class="reel-play" onclick="tocarReel(${r.id})" aria-label="Assistir">${icone('<path d="m8 5 11 7-11 7z" fill="currentColor"/>')}</button>
+    </div>
+    <div class="reel-info">
       <div class="reel-legenda">
         <span class="selo-reel">${r.tipo === 'resolucao' ? 'Resolução' : 'Dica'}</span>${r.area ? `<span class="selo-reel">${escapar(NOME_AREA_REEL[r.area] || '')}</span>` : ''}
         <b>${escapar(r.titulo)}</b>
@@ -5941,7 +5970,11 @@ function atualizarSetasReel() {
   const temReel = Boolean(lista.querySelector('.reel'));
   document.getElementById('seta-reel-ante').disabled = !temReel || lista.scrollLeft < 8;
   document.getElementById('seta-reel-prox').disabled = !temReel || (lista.scrollLeft + lista.clientWidth >= lista.scrollWidth - 8 && !maisReels);
+  // As setas ficam na altura do meio do vídeo (que agora é deitado, no alto).
+  const quadro = lista.querySelector('.reel-quadro');
+  if (quadro) for (const id of ['seta-reel-ante', 'seta-reel-prox']) document.getElementById(id).style.top = `${quadro.offsetHeight / 2}px`;
 }
+addEventListener('resize', () => { if (!document.getElementById('tela-reels').classList.contains('escondido')) atualizarSetasReel(); });
 
 // Setas do teclado trocam de reel (para os lados ou para cima e para baixo).
 document.addEventListener('keydown', e => {
@@ -6883,9 +6916,14 @@ function desenharSubabas() {
   desenharFaixaReels();
 }
 
-// Faixa de Reels no alto da Comunidade: as capas passam para o lado; tocar
-// abre o vídeo em tela cheia, já naquele reel.
+// Destaque de Reels no alto da Comunidade: um vídeo deitado por vez. Passa
+// sozinho a cada 7 segundos (parado quando a pessoa está assistindo ou com
+// o mouse em cima); setas, bolinhas e arrastar também passam. Vídeo do
+// YouTube que termina chama o próximo e já toca.
 let reelParaAbrir = null;
+const slider = { lista: [], i: 0, relogio: null, tocando: false, parado: false };
+const capaDeitada = id => `https://i.ytimg.com/vi/${id}/hq720.jpg`;
+
 async function desenharFaixaReels() {
   const faixa = document.getElementById('faixa-reels');
   if (!faixa.innerHTML) faixa.innerHTML = '<section class="painel faixa-reels"><div class="titulo-bloco"><b>🎬 Reels</b></div><p class="pista">Carregando…</p></section>';
@@ -6893,32 +6931,100 @@ async function desenharFaixaReels() {
   try {
     const r = await fetch(`${API_URL}/api/reels`, { headers: cabecalhoAuth() });
     lista = r.ok ? (await r.json()).reels || [] : [];
-  } catch (e) { /* sem reels, a faixa some */ }
-  if (abaComunidade !== 'agora') return;
+  } catch (e) { /* sem reels, o destaque some */ }
+  if (abaComunidade !== 'agora' || !comunidadeNaTela()) return;
   if (!lista.length) { faixa.innerHTML = ''; return; }
+  Object.assign(slider, { lista: lista.slice(0, 10), i: 0, tocando: false, parado: false });
   faixa.innerHTML = `<section class="painel faixa-reels">
     <div class="titulo-bloco"><b>🎬 Reels</b><button class="link-bloco" onclick="abrirReelNaLista(null)">Ver todos</button></div>
-    <div class="carrossel-capas">
-      <button class="seta-capas ante" id="capas-ante" onclick="passarCapas(-1)" aria-label="Voltar" disabled>‹</button>
-      <div class="capas-reels" id="capas-reels" onscroll="setasDasCapas()">${lista.slice(0, 12).map(r => `<button class="capa-reel" onclick="abrirReelNaLista(${r.id})" aria-label="${escapar(r.titulo)}">
-        ${r.plataforma === 'tiktok' ? '<span class="capa-tiktok" aria-hidden="true">TikTok</span>' : `<img src="${escapar(capaDoReel(r.youtube_id))}" alt="" loading="lazy">`}
-        <span class="play-capa" aria-hidden="true">▶</span>
-        <span class="titulo-capa">${escapar(r.titulo)}</span></button>`).join('')}</div>
-      <button class="seta-capas prox" id="capas-prox" onclick="passarCapas(1)" aria-label="Mais reels">›</button>
+    <div class="slider-reels" id="slider-reels" onmouseenter="slider.parado = true" onmouseleave="slider.parado = false">
+      <div class="slides-reels" id="slides-reels">${slider.lista.map((r, i) => `<div class="slide-reel" data-i="${i}" aria-label="${escapar(r.titulo)}">
+        ${r.plataforma === 'tiktok' ? '<span class="capa-tiktok" aria-hidden="true">TikTok</span>'
+          : `<img src="${escapar(capaDeitada(r.youtube_id))}" alt="" ${i ? 'loading="lazy"' : ''} onerror="this.onerror=null; this.src='${escapar(capaDoReel(r.youtube_id))}'">`}
+        <button class="tocar-slide" onclick="tocarSlide(${i})" aria-label="Assistir">${icone('<path d="m8 5 11 7-11 7z" fill="currentColor"/>')}</button>
+        <div class="info-slide"><b>${escapar(r.titulo)}</b>${r.canal ? `<small>▶ ${escapar(r.canal)}</small>` : ''}</div>
+      </div>`).join('')}</div>
+      <button class="seta-slide ante" onclick="passarSlide(-1)" aria-label="Vídeo anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></button>
+      <button class="seta-slide prox" onclick="passarSlide(1)" aria-label="Próximo vídeo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>
+      <div class="bolinhas-slide">${slider.lista.map((r, i) => `<button onclick="irParaSlide(${i})" aria-label="Vídeo ${i + 1}"${i ? '' : ' aria-current="true"'}></button>`).join('')}</div>
     </div></section>`;
-  setasDasCapas();
+  arrastarSlider(document.getElementById('slider-reels'));
+  irParaSlide(0);
 }
 
-function setasDasCapas() {
-  const el = document.getElementById('capas-reels');
-  if (!el) return;
-  document.getElementById('capas-ante').disabled = el.scrollLeft < 8;
-  document.getElementById('capas-prox').disabled = el.scrollLeft + el.clientWidth >= el.scrollWidth - 8;
+function irParaSlide(i) {
+  const n = slider.lista.length;
+  if (!n) return;
+  pararSlide();
+  slider.i = (i + n) % n;
+  const trilho = document.getElementById('slides-reels');
+  if (!trilho) return;
+  trilho.style.transform = `translateX(-${slider.i * 100}%)`;
+  document.querySelectorAll('.bolinhas-slide button').forEach((b, k) => b.setAttribute('aria-current', String(k === slider.i)));
+  agendarSlide();
+}
+const passarSlide = direcao => irParaSlide(slider.i + direcao);
+
+function agendarSlide() {
+  clearTimeout(slider.relogio);
+  if (slider.lista.length < 2) return;
+  slider.relogio = setTimeout(() => {
+    if (!document.getElementById('slider-reels')) return;
+    // Não passa enquanto a pessoa assiste, está com o mouse em cima ou em outra aba.
+    if (slider.tocando || slider.parado || document.hidden || !comunidadeNaTela()) return agendarSlide();
+    passarSlide(1);
+  }, 7000);
 }
 
-function passarCapas(direcao) {
-  const el = document.getElementById('capas-reels');
-  el.scrollBy({ left: direcao * el.clientWidth * 0.8, behavior: 'smooth' });
+function tocarSlide(i, depoisDeOutro) {
+  const r = slider.lista[i];
+  const slide = document.querySelector(`.slide-reel[data-i="${i}"]`);
+  if (!r || !slide) return;
+  pararSlide();
+  slider.tocando = true;
+  document.getElementById('slider-reels').classList.add('tocando');
+  // Tocado pela pessoa (ou na sequência): com som. O YouTube avisa quando termina.
+  const url = r.plataforma === 'tiktok' ? playerDoReel(r)
+    : `https://www.youtube-nocookie.com/embed/${r.youtube_id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&mute=${depoisDeOutro && !somReels ? 1 : 0}`;
+  slide.insertAdjacentHTML('beforeend', `<iframe src="${escapar(url)}" title="${escapar(r.titulo)}"
+    allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`);
+  const quadro = slide.querySelector('iframe');
+  quadro.addEventListener('load', () => {
+    try { quadro.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'slider', channel: 'widget' }), '*'); } catch (e) { /* TikTok não usa */ }
+  });
+}
+
+function pararSlide() {
+  document.querySelectorAll('.slide-reel iframe').forEach(f => f.remove());
+  slider.tocando = false;
+  document.getElementById('slider-reels')?.classList.remove('tocando');
+}
+
+// O player do YouTube manda o estado por mensagem: 0 = terminou.
+window.addEventListener('message', ev => {
+  if (!/youtube(-nocookie)?\.com$/.test(new URL(ev.origin || 'http://x').hostname)) return;
+  let d;
+  try { d = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data; } catch (e) { return; }
+  const estado = d && (d.event === 'onStateChange' ? d.info : d.info && d.info.playerState);
+  if (estado !== 0 || !slider.tocando) return;
+  const quadro = document.querySelector('.slide-reel iframe');
+  if (!quadro || ev.source !== quadro.contentWindow) return;
+  const proximo = (slider.i + 1) % slider.lista.length;
+  irParaSlide(proximo);
+  setTimeout(() => tocarSlide(proximo, true), 600);
+});
+
+// Arrastar para o lado também passa (no celular é o gesto natural).
+function arrastarSlider(el) {
+  let inicio = null;
+  el.addEventListener('pointerdown', e => { if (!slider.tocando) inicio = e.clientX; });
+  el.addEventListener('pointerup', e => {
+    if (inicio === null) return;
+    const dx = e.clientX - inicio;
+    inicio = null;
+    if (Math.abs(dx) > 40) passarSlide(dx < 0 ? 1 : -1);
+  });
+  el.addEventListener('pointercancel', () => { inicio = null; });
 }
 
 function abrirReelNaLista(id) {
