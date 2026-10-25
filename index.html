@@ -347,22 +347,33 @@
       border-radius: 10px; background: none; cursor: pointer;
     }
     #fundo-imagem { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
-    #fundo-imagem > div {
-      position: absolute; inset: 0; background-image: var(--fundo-img);
-      background-repeat: no-repeat; background-position: var(--fundo-foco, center);
+    /* Sempre cobre a tela sem distorcer; tamanho e posição em px vêm do
+       JavaScript (posicionarFundo), para o personagem ficar no centro. */
+    #fundo-imagem .fundo-foto {
+      position: absolute; inset: 0; background-image: var(--fundo-img); background-repeat: no-repeat;
+      background-size: var(--fundo-tamanho, cover); background-position: var(--fundo-posicao, center);
     }
-    /* Com a imagem inteira, a mesma imagem desfocada ocupa o espaço que sobra. */
-    #fundo-imagem .fundo-desfocado { background-size: cover; background-position: center; filter: blur(28px); transform: scale(1.15); }
-    #fundo-imagem .fundo-foto { background-size: var(--fundo-encaixe, cover); }
-    #fundo-imagem[data-encaixe="cover"] .fundo-desfocado { display: none; }
-    .opcoes-fundo { display: flex; flex-wrap: wrap; gap: 6px; grid-column: 1 / -1; }
-    .opcoes-fundo[hidden] { display: none; }
-    .opcoes-fundo .rotulo { width: 100%; font-weight: 600; font-size: .85rem; }
-    .opcoes-fundo button {
-      flex: 1; min-width: 0; padding: 8px 6px; border-radius: 9px; border: 1px solid var(--borda);
-      background: var(--superficie); color: var(--texto); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer;
+    body.ajustando-fundo #fundo-imagem::after { opacity: 0; }
+    body.ajustando-fundo > :not(#fundo-imagem):not(#ajuste-fundo):not(script) { visibility: hidden; }
+    #ajuste-fundo {
+      position: fixed; inset: 0; z-index: 400; touch-action: none; cursor: grab;
+      display: flex; flex-direction: column; justify-content: space-between; padding: 16px;
     }
-    .opcoes-fundo button[aria-pressed="true"] { border-color: var(--marca); background: var(--marca-suave); color: var(--marca-texto); }
+    #ajuste-fundo[hidden] { display: none; }
+    #ajuste-fundo:active { cursor: grabbing; }
+    #ajuste-fundo .dica-ajuste {
+      align-self: center; background: rgba(0,0,0,.65); color: #fff; padding: 10px 16px; border-radius: 999px;
+      font-weight: 700; font-size: .9rem; text-align: center; pointer-events: none;
+    }
+    #ajuste-fundo .barra-ajuste {
+      align-self: center; width: min(100%, 460px); background: rgba(0,0,0,.72); color: #fff; border-radius: 18px;
+      padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 12px; cursor: default;
+    }
+    #ajuste-fundo label { display: grid; gap: 6px; font-weight: 700; font-size: .85rem; }
+    #ajuste-fundo input[type=range] { width: 100%; accent-color: var(--marca); }
+    #ajuste-fundo .botoes { display: flex; gap: 10px; }
+    #ajuste-fundo .botoes .acao { margin: 0; flex: 1; }
+    #ajuste-fundo .botoes .acao.secundaria { color: #fff; border-color: rgba(255,255,255,.6); background: rgba(255,255,255,.08); }
     /* Véu na cor do fundo por cima da foto: deixa o texto legível. */
     #fundo-imagem::after { content: ''; position: absolute; inset: 0; background: var(--fundo); opacity: var(--veu, .7); }
     body.com-imagem { background: transparent; }
@@ -2137,7 +2148,17 @@
     </div>
   </div>
 
-  <div id="fundo-imagem" aria-hidden="true" hidden><div class="fundo-desfocado"></div><div class="fundo-foto"></div></div>
+  <div id="fundo-imagem" aria-hidden="true" hidden><div class="fundo-foto"></div></div>
+  <div id="ajuste-fundo" hidden role="dialog" aria-label="Ajustar o enquadramento da imagem de fundo">
+    <div class="dica-ajuste">Arraste a imagem para enquadrar o que você quer ver</div>
+    <div class="barra-ajuste" onpointerdown="event.stopPropagation()">
+      <label>Aproximar<input type="range" id="zoom-fundo" min="100" max="300" step="5" value="100" oninput="zoomDoAjuste(this.value)"></label>
+      <div class="botoes">
+        <button class="acao secundaria" onclick="enquadrarSozinho()">Automático</button>
+        <button class="acao" onclick="fecharAjusteFundo()">Pronto</button>
+      </div>
+    </div>
+  </div>
   <div id="confete"></div>
 
   <!-- ===================== APARÊNCIA ===================== -->
@@ -2217,8 +2238,7 @@
             <label for="veu-imagem">Visibilidade da imagem</label>
             <input type="range" id="veu-imagem" min="10" max="70" step="5" oninput="ajustarVeu(this.value)">
             <button class="acao discreta pequena" onclick="removerImagemFundo()">Remover imagem</button>
-            <div class="opcoes-fundo" id="opcoes-encaixe"><span class="rotulo">Encaixe</span></div>
-            <div class="opcoes-fundo" id="opcoes-foco"><span class="rotulo">Parte que aparece</span></div>
+            <button class="acao secundaria" style="grid-column:1 / -1;margin:4px 0 0" onclick="abrirAjusteFundo()">✋ Ajustar enquadramento</button>
           </div>
           <div class="pista" id="recado-imagem">No Pinterest, clique com o botão direito na imagem → <b>Copiar endereço da imagem</b>.
             Imagens enviadas ficam só neste aparelho.</div>
@@ -2964,47 +2984,160 @@ function desenharAparencia() {
 // Link: só endereços https, testados antes de usar.
 const CHAVE_IMAGEM = 'mm_fundo_img';
 const CHAVE_VEU = 'mm_fundo_veu';
-const CHAVE_ENCAIXE = 'mm_fundo_encaixe';
-const CHAVE_FOCO = 'mm_fundo_foco';
-const ENCAIXES = [['auto', 'Automático'], ['cover', 'Preencher a tela'], ['contain', 'Imagem inteira']];
-const FOCOS = [['top', 'Cima'], ['center', 'Centro'], ['bottom', 'Baixo']];
-let proporcaoDaImagem = null; // largura / altura da imagem de fundo atual
+const CHAVE_ENQUADRE = 'mm_fundo_enquadre';
+let imagemDoFundo = null; // { w, h } da imagem atual
 
-// Preencher a tela corta o que sobra: com proporções muito diferentes (foto
-// em pé num computador, foto deitada no celular) isso vira um zoom enorme.
-// Nesses casos o automático mostra a imagem inteira.
-function encaixeDoFundo() {
-  const escolhido = ler(CHAVE_ENCAIXE);
-  if (escolhido === 'cover' || escolhido === 'contain') return escolhido;
-  if (!proporcaoDaImagem) return 'cover';
-  const tela = window.innerWidth / window.innerHeight;
-  return Math.max(tela / proporcaoDaImagem, proporcaoDaImagem / tela) > 1.5 ? 'contain' : 'cover';
+// Enquadramento guardado: o ponto da imagem (de 0 a 1) que fica no centro
+// da tela e o quanto aproximar. Vale para qualquer tamanho de tela.
+function lerEnquadre() {
+  try {
+    const e = JSON.parse(ler(CHAVE_ENQUADRE));
+    if (e && e.src === (ler(CHAVE_IMAGEM) || '').slice(-80)) return e;
+  } catch (x) { /* sem enquadramento salvo */ }
+  return null;
+}
+function salvarEnquadre(e) {
+  guardar(CHAVE_ENQUADRE, JSON.stringify({ ...e, src: (ler(CHAVE_IMAGEM) || '').slice(-80) }));
 }
 
-function desenharOpcoesFundo() {
-  const botoes = (id, opcoes, atual, chave) => {
-    const alvo = document.getElementById(id);
-    if (!alvo) return;
-    alvo.querySelectorAll('button').forEach(b => b.remove());
-    for (const [valor, nome] of opcoes) {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.textContent = nome;
-      b.setAttribute('aria-pressed', String(valor === atual));
-      b.onclick = () => { guardar(chave, valor); aplicarImagemFundo(); };
-      alvo.appendChild(b);
-    }
-  };
-  botoes('opcoes-encaixe', ENCAIXES, ler(CHAVE_ENCAIXE) || 'auto', CHAVE_ENCAIXE);
-  const foco = document.getElementById('opcoes-foco');
-  if (foco) foco.hidden = encaixeDoFundo() !== 'cover';
-  botoes('opcoes-foco', FOCOS, ler(CHAVE_FOCO) || 'center', CHAVE_FOCO);
-}
-
-window.addEventListener('resize', () => {
+// A imagem cobre a tela inteira sem distorcer (como "cover"), mas com o
+// ponto escolhido no centro, sem deixar sobrar borda.
+function posicionarFundo() {
   const el = document.getElementById('fundo-imagem');
-  if (el && !el.hidden) { el.dataset.encaixe = encaixeDoFundo(); el.style.setProperty('--fundo-encaixe', el.dataset.encaixe); }
-});
+  if (!el || el.hidden || !imagemDoFundo) return;
+  const e = lerEnquadre() || { x: 0.5, y: 0.4, zoom: 1 };
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const escala = Math.max(vw / imagemDoFundo.w, vh / imagemDoFundo.h) * Math.max(1, e.zoom || 1);
+  const dw = imagemDoFundo.w * escala, dh = imagemDoFundo.h * escala;
+  const { x, y } = e.caixa ? centroDaCaixa(e.caixa, vw / dw, vh / dh) : e;
+  const esquerda = Math.min(0, Math.max(vw - dw, vw / 2 - x * dw));
+  const topo = Math.min(0, Math.max(vh - dh, vh / 2 - y * dh));
+  el.style.setProperty('--fundo-tamanho', `${dw}px ${dh}px`);
+  el.style.setProperty('--fundo-posicao', `${esquerda}px ${topo}px`);
+  return { vw, vh, dw, dh, esquerda, topo };
+}
+window.addEventListener('resize', posicionarFundo);
+
+// Enquadramento automático guarda a caixa do assunto. Se ela cabe na parte
+// visível, fica centralizada; se não cabe (foto em pé numa tela larga), a
+// tela mostra o alto do assunto, onde costuma estar o rosto.
+function centroDaCaixa(c, fracaoW, fracaoH) {
+  const eixo = (ini, fim, fracao) => (fim - ini <= fracao ? (ini + fim) / 2 : ini - 0.03 + fracao / 2);
+  return { x: eixo(c.x0, c.x1, fracaoW), y: eixo(c.y0, c.y1, fracaoH) };
+}
+
+// Onde está o "assunto" da foto: a região com mais detalhe (bordas,
+// contraste), que costuma ser o personagem; o fundo liso tem pouco. Para o
+// alto da figura (o rosto) não ficar de fora, mira um pouco acima do meio.
+function focoAutomatico(img) {
+  try {
+    const W = 96, H = Math.max(1, Math.round(96 * img.naturalHeight / img.naturalWidth));
+    const tela = document.createElement('canvas');
+    tela.width = W; tela.height = H;
+    const ctx = tela.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, W, H);
+    const px = ctx.getImageData(0, 0, W, H).data;
+    const cinza = new Float32Array(W * H);
+    for (let i = 0; i < W * H; i++) cinza[i] = px[i * 4] * 0.3 + px[i * 4 + 1] * 0.59 + px[i * 4 + 2] * 0.11;
+    const energia = new Float32Array(W * H);
+    let soma = 0, n = 0;
+    for (let y = 2; y < H - 2; y++) for (let x = 2; x < W - 2; x++) {
+      const i = y * W + x;
+      const v = Math.abs(cinza[i + 1] - cinza[i - 1]) + Math.abs(cinza[i + W] - cinza[i - W]);
+      energia[i] = v; soma += v; n++;
+    }
+    const corte = (soma / Math.max(1, n)) * 1.3;
+    let total = 0;
+    const porLinha = new Float32Array(H), porColuna = new Float32Array(W);
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      const v = energia[y * W + x];
+      if (v <= corte) continue;
+      total += v; porLinha[y] += v; porColuna[x] += v;
+    }
+    if (total <= 0) throw new Error('imagem lisa');
+    // Onde começa e termina o assunto: de 4% a 96% do detalhe, em cada direção.
+    const faixa = (lista, tamanho) => {
+      let acc = 0, ini = 0, fim = tamanho - 1;
+      for (let i = 0; i < tamanho; i++) { acc += lista[i]; if (acc >= total * 0.04) { ini = i; break; } }
+      acc = 0;
+      for (let i = tamanho - 1; i >= 0; i--) { acc += lista[i]; if (acc >= total * 0.04) { fim = i; break; } }
+      return [ini / tamanho, (fim + 1) / tamanho];
+    };
+    const [x0, x1] = faixa(porColuna, W), [y0, y1] = faixa(porLinha, H);
+    return { caixa: { x0, x1, y0, y1 } };
+  } catch (x) {
+    // Link de outro site que não deixa ler os pixels: foto em pé costuma ter o rosto no alto.
+    return img.naturalHeight > img.naturalWidth ? { caixa: { x0: 0.2, x1: 0.8, y0: 0.08, y1: 0.95 } } : { x: 0.5, y: 0.45 };
+  }
+}
+
+// Para analisar um link, a imagem precisa vir com permissão (CORS); sem ela, usa o padrão.
+function carregarParaAnalise(src) {
+  return new Promise(ok => {
+    const img = new Image();
+    if (!src.startsWith('data:')) img.crossOrigin = 'anonymous';
+    img.onload = () => ok(img);
+    img.onerror = () => testarImagem(src).then(ok, () => ok(null));
+    img.src = src;
+  });
+}
+
+async function enquadrarSozinho() {
+  const src = ler(CHAVE_IMAGEM);
+  if (!imagemValida(src)) return;
+  const img = await carregarParaAnalise(src);
+  if (!img) return;
+  const zoom = Number(document.getElementById('zoom-fundo')?.value || 100) / 100;
+  salvarEnquadre({ ...focoAutomatico(img), zoom: document.getElementById('ajuste-fundo').hidden ? 1 : zoom });
+  posicionarFundo();
+}
+
+// ---------- ajuste à mão: arrastar e aproximar, vendo a tela de verdade ----------
+let arrasto = null;
+function abrirAjusteFundo() {
+  if (!imagemDoFundo) return;
+  fecharAparencia();
+  const caixa = document.getElementById('ajuste-fundo');
+  caixa.hidden = false;
+  document.body.classList.add('ajustando-fundo');
+  document.getElementById('zoom-fundo').value = Math.round(((lerEnquadre() || {}).zoom || 1) * 100);
+  caixa.onpointerdown = ev => {
+    caixa.setPointerCapture(ev.pointerId);
+    arrasto = { x: ev.clientX, y: ev.clientY };
+  };
+  caixa.onpointermove = ev => {
+    if (!arrasto) return;
+    const p = posicionarFundo();
+    const e = lerEnquadre() || { x: 0.5, y: 0.4, zoom: 1 };
+    // Parte do ponto que está mesmo no centro (depois de encostar na borda).
+    const cx = (p.vw / 2 - p.esquerda) / p.dw, cy = (p.vh / 2 - p.topo) / p.dh;
+    salvarEnquadre({ ...e, x: cx - (ev.clientX - arrasto.x) / p.dw, y: cy - (ev.clientY - arrasto.y) / p.dh });
+    arrasto = { x: ev.clientX, y: ev.clientY };
+    posicionarFundo();
+  };
+  caixa.onpointerup = caixa.onpointercancel = () => { arrasto = null; };
+  caixa.onwheel = ev => {
+    ev.preventDefault();
+    const z = document.getElementById('zoom-fundo');
+    z.value = Math.min(300, Math.max(100, Number(z.value) - Math.sign(ev.deltaY) * 10));
+    zoomDoAjuste(z.value);
+  };
+}
+
+function zoomDoAjuste(valor) {
+  const p = posicionarFundo();
+  const e = lerEnquadre() || { x: 0.5, y: 0.4, zoom: 1 };
+  const cx = p ? (p.vw / 2 - p.esquerda) / p.dw : e.x, cy = p ? (p.vh / 2 - p.topo) / p.dh : e.y;
+  salvarEnquadre({ x: cx, y: cy, zoom: Number(valor) / 100 });
+  posicionarFundo();
+}
+
+function fecharAjusteFundo() {
+  document.getElementById('ajuste-fundo').hidden = true;
+  document.body.classList.remove('ajustando-fundo');
+  abrirAparencia();
+  trocarAbaAparencia('imagem');
+}
 
 function recadoImagem(texto, tipo) {
   const el = document.getElementById('recado-imagem');
@@ -3027,23 +3160,18 @@ function aplicarImagemFundo() {
   const ativa = imagemValida(src);
   el.hidden = !ativa;
   el.style.setProperty('--fundo-img', ativa ? `url(${JSON.stringify(src)})` : 'none');
-  const foco = ler(CHAVE_FOCO);
-  el.style.setProperty('--fundo-foco', ['top', 'bottom'].includes(foco) ? `center ${foco}` : 'center');
-  const encaixar = () => {
-    el.dataset.encaixe = encaixeDoFundo();
-    el.style.setProperty('--fundo-encaixe', el.dataset.encaixe);
-    desenharOpcoesFundo();
-  };
   if (ativa && el.dataset.src !== src) {
     el.dataset.src = src;
-    proporcaoDaImagem = null;
-    testarImagem(src).then(img => {
-      if (el.dataset.src !== src || !img.naturalHeight) return;
-      proporcaoDaImagem = img.naturalWidth / img.naturalHeight;
-      encaixar();
-    }).catch(() => {});
+    imagemDoFundo = null;
+    carregarParaAnalise(src).then(img => {
+      if (!img || el.dataset.src !== src || !img.naturalHeight) return;
+      imagemDoFundo = { w: img.naturalWidth, h: img.naturalHeight };
+      // Imagem nova: enquadra sozinho no assunto da foto.
+      if (!lerEnquadre()) salvarEnquadre({ ...focoAutomatico(img), zoom: 1 });
+      posicionarFundo();
+    });
   }
-  encaixar();
+  posicionarFundo();
   document.body.classList.toggle('com-imagem', ativa);
   const veu = Number(ler(CHAVE_VEU)) || 70;
   document.documentElement.style.setProperty('--veu', String(Math.min(Math.max(veu, 30), 90) / 100));
