@@ -891,13 +891,25 @@
     }
     .filtros-reels button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
     .reels-topo button.acao { margin: 0; flex-shrink: 0; padding: 9px 14px; font-size: .85rem; }
+    /* Carrossel deitado: um reel por vez, passando para o lado (arrastando ou pelas setas). */
+    .reels-carrossel { position: relative; min-width: 0; }
     .reels-lista {
-      height: calc(100dvh - var(--altura-topo, 62px) - 74px); overflow-y: auto; scroll-snap-type: y mandatory;
-      overscroll-behavior: contain; scrollbar-width: none; border-radius: 20px;
+      height: calc(100dvh - var(--altura-topo, 62px) - 74px); display: flex; overflow-x: auto; overflow-y: hidden;
+      scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; border-radius: 20px;
     }
+    .seta-reel {
+      position: absolute; top: 40%; z-index: 5; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.55); color: #fff; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; box-shadow: var(--sombra); transition: opacity .2s, transform .15s;
+    }
+    .seta-reel svg { width: 22px; height: 22px; }
+    .seta-reel.ante { left: 10px; } .seta-reel.prox { right: 10px; }
+    .seta-reel:active { transform: translateY(-50%) scale(.92); }
+    .seta-reel:disabled { opacity: 0; pointer-events: none; }
     .reels-lista::-webkit-scrollbar { display: none; }
     .reels-lista:focus { outline: none; }
-    .reel { height: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; justify-content: center; padding-bottom: 10px; }
+    .reel { flex: 0 0 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; justify-content: center; padding-bottom: 10px; }
+    .reels-lista > .vazio { flex: 1; }
     .reel-quadro {
       position: relative; height: 100%; aspect-ratio: 9 / 16; max-width: 100%; border-radius: 18px; overflow: hidden;
       background: #000; box-shadow: var(--sombra);
@@ -946,6 +958,8 @@
       #tela-reels { padding: 10px 8px 0; }
       .reels-lista { height: calc(100dvh - var(--altura-topo, 110px) - 64px - var(--altura-nav, 0px)); border-radius: 14px; }
       .reel-quadro { border-radius: 14px; width: 100%; aspect-ratio: auto; }
+      .seta-reel { top: 30%; width: 40px; height: 40px; }
+      .seta-reel.ante { left: 6px; } .seta-reel.prox { right: 6px; }
     }
 
     /* ===================== REDE SOCIAL ===================== */
@@ -2634,7 +2648,13 @@
       <button class="acao escondido" id="novo-reel" onclick="abrirNovoReel()">＋ Novo reel</button>
     </div>
     <div class="reels-corpo">
-      <div class="reels-lista" id="reels-lista" tabindex="-1"></div>
+      <div class="reels-carrossel">
+        <button class="seta-reel ante" id="seta-reel-ante" onclick="passarReel(-1)" aria-label="Reel anterior" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></button>
+        <div class="reels-lista" id="reels-lista" tabindex="-1" onscroll="atualizarSetasReel()"></div>
+        <button class="seta-reel prox" id="seta-reel-prox" onclick="passarReel(1)" aria-label="Próximo reel">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5 7 7-7 7"/></svg></button>
+      </div>
       <aside class="painel-comentarios" id="painel-comentarios" aria-label="Comentários">
         <div class="topo-comentarios">
           <b id="titulo-comentarios">Comentários</b>
@@ -5465,7 +5485,7 @@ async function carregarReels(doComeco) {
   if (carregandoReels) return;
   carregandoReels = true;
   const lista = document.getElementById('reels-lista');
-  if (doComeco) { reels = []; pararReels(); lista.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando reels…</div>'; }
+  if (doComeco) { reels = []; pararReels(); lista.scrollLeft = 0; lista.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando reels…</div>'; }
   const f = FILTROS_REELS.find(x => x.id === filtroReels) || {}; // "pendentes" não está na lista fixa
   const busca = new URLSearchParams();
   if (f.tipo) busca.set('tipo', f.tipo);
@@ -5493,10 +5513,12 @@ async function carregarReels(doComeco) {
         : filtroReels === 'salvos'
         ? 'Você ainda não salvou nenhum reel. Toque em 🔖 para guardar os que quiser rever.'
         : 'Nenhum reel aqui ainda. Em breve tem resolução de questão e dica rápida!'}</div>`;
+      atualizarSetasReel();
       return;
     }
     lista.insertAdjacentHTML('beforeend', novos.map(htmlDoReel).join(''));
     observarReels();
+    atualizarSetasReel();
   } catch (e) {
     if (doComeco) lista.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}<br>
       <button class="acao" style="margin:18px auto 0" onclick="carregarReels(true)">Tentar de novo</button></div>`;
@@ -5860,15 +5882,29 @@ async function acaoComentario(id, acao) {
   }
 }
 
-// Setas para cima e para baixo trocam de reel, como no TikTok do computador.
+// Passa para o reel ao lado. Mais confiável que arrastar: com o vídeo
+// tocando, o player do YouTube/TikTok fica com o toque.
+function passarReel(direcao) {
+  const lista = document.getElementById('reels-lista');
+  lista.scrollBy({ left: direcao * lista.clientWidth, behavior: 'smooth' });
+}
+
+function atualizarSetasReel() {
+  const lista = document.getElementById('reels-lista');
+  const temReel = Boolean(lista.querySelector('.reel'));
+  document.getElementById('seta-reel-ante').disabled = !temReel || lista.scrollLeft < 8;
+  document.getElementById('seta-reel-prox').disabled = !temReel || (lista.scrollLeft + lista.clientWidth >= lista.scrollWidth - 8 && !maisReels);
+}
+
+// Setas do teclado trocam de reel (para os lados ou para cima e para baixo).
 document.addEventListener('keydown', e => {
   if (document.getElementById('tela-reels').classList.contains('escondido')) return;
   if (e.target.closest('input, textarea, select') || document.querySelector('.fundo-modal:not(.escondido)')) return;
   if (e.key === 'Escape') { fecharComentarios(); return; }
-  if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+  const direcao = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+  if (!direcao) return;
   e.preventDefault();
-  const lista = document.getElementById('reels-lista');
-  lista.scrollBy({ top: (e.key === 'ArrowDown' ? 1 : -1) * lista.clientHeight, behavior: 'smooth' });
+  passarReel(direcao);
 });
 
 // ===================== PERFIL =====================
@@ -6777,7 +6813,7 @@ function trocarAbaComunidade(aba) {
 }
 
 function desenharSubabas() {
-  const abas = [['agora', '🟢 Agora'], ['salas', salaAtual ? '⏱️ Sua sala' : '⏱️ Salas de estudo'], ['perguntas', '🙋 Perguntas'], ['redacoes', '✍️ Redações'], ['feed', '💬 Feed e grupos'], ['reels', '🎬 Reels']];
+  const abas = [['reels', '🎬 Reels'], ['agora', '🟢 Agora'], ['salas', salaAtual ? '⏱️ Sua sala' : '⏱️ Salas de estudo'], ['perguntas', '🙋 Perguntas'], ['redacoes', '✍️ Redações'], ['feed', '💬 Feed e grupos']];
   const html = abas.map(([id, nome]) => `<button aria-pressed="${id === abaComunidade}" onclick="trocarAbaComunidade('${id}')">${nome}</button>`).join('');
   document.getElementById('subabas-comunidade').innerHTML = html;
   document.getElementById('subabas-feed').innerHTML = html;
