@@ -57,4 +57,6 @@ test('questão incompleta: só a pergunta, ou cita figura que não veio', () => 
   assert.ok(!questaoIncompleta(`![](https://enem.dev/x.png) De acordo com a tabela, quanto?`));
   assert.ok(!questaoIncompleta(`${longo} A figura do índio no Brasil de hoje não pode ser aquela de 500 anos atrás.`));
   assert.ok(!questaoIncompleta(`${longo} O texto descreve o fenômeno da tabelação de preços.`));
+  assert.ok(!questaoIncompleta(`${longo} para que se dê a percepção da imagem.`, 2009, 37));
+  assert.ok(questaoIncompleta(`${longo} para que se dê a percepção da imagem.`, 2009, 38));
 });

@@ -1,17 +1,451 @@
 [
   {
-    "ano": 2023,
-    "numero": 34,
-    "lingua": null,
-    "contexto": "**TEXTO I**\n\nLogo no início de Gira, um grupo de sete bailarinas ocupa o centro da cena. Mãos cruzadas sobre a lateral esquerda do quadril, olhos fechados, troncos que pendulam sobre si mesmos em vaguíssimas órbitas, tudo nelas sugere o transe. Está estabelecido o caráter volátil do que se passará no palco dali para frente. Mas engana-se quem pensa que vai assistir a uma representação mimética dos cultos afro-brasileiros.\n\n**TEXTO II**\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-34.jpg)\n\nDisponível em: www.grupocorpo.com.br. Acesso em: 2 jul. 2019.\n\nNo diálogo que estabelece com religiões afro-brasileiras, sintetizado na descrição e na imagem do espetáculo, a dança exprime uma",
+    "ano": 2011,
+    "numero": 95,
+    "lingua": "ingles",
+    "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2011-95-ingles.jpg)\n\nDisponível em: http://www.garfield.com. Acesso em: 29 jul. 2010.\n\nA tira, definida como um segmento de história em quadrinhos, pode transmitir uma mensagem com efeito de humor. A presença desse efeito no diálogo entre Jon e Garfield acontece porque",
     "alternativas": [
-      "crítica aos movimentos padronizados do balé clássico.",
-      "representação contemporânea de rituais ancestrais extintos.",
-      "reelaboração estética erudita de práticas religiosas populares.",
-      "releitura irônica da atmosfera mística presente no culto a entidades.",
-      "oposição entre o resgate de tradições e a efemeridade da vida humana."
+      "Jon pensa que sua ex-namorada é maluca e que Garfield não sabia disso.",
+      "Jodell é a única namorada maluca que Jon teve, e Garfield acha isso estranho.",
+      "Garfield tem certeza de que a ex-namorada de Jon é sensata, o maluco é o amigo.",
+      "Garfield conhece as ex-namoradas de Jon e considera mais de uma como maluca.",
+      "Jon caracteriza a ex-namorada como maluca e não entende a cara de Garfield."
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2012,
+    "numero": 60,
+    "lingua": null,
+    "contexto": "Para melhorar a mobilidade urbana na rede metroviária é necessário minimizar o tempo entre estações. Para isso a administração do metrô de uma grande cidade adotou o seguinte procedimento entre duas estações: a locomotiva parte do repouso com aceleração constante por um terço do tempo de percurso, mantém a velocidade constante por outro terço e reduz sua velocidade com desaceleração constante no trecho final, até parar.\n\nQual é o gráfico de posição (eixo vertical) em função do tempo (eixo horizontal) que representa o movimento desse trem?",
+    "alternativas": [
+      "![](https://enem.dev/2012/questions/60/f75fbb9b-e2dd-4abf-8796-5b2fc09bb90d.png)",
+      "![](https://enem.dev/2012/questions/60/5cac9f80-9281-4486-9340-9d99e77b59b1.png)",
+      "![](https://enem.dev/2012/questions/60/38bf386c-b484-4f24-aea8-c351b55ab365.png)",
+      "![](https://enem.dev/2012/questions/60/d72eb90a-ce8b-401a-97ab-a62e182a6fd3.png)",
+      "![](https://enem.dev/2012/questions/60/ef17337d-941b-4a83-9815-a2c35a3999d9.png)"
     ],
     "correta": 2
+  },
+  {
+    "ano": 2013,
+    "numero": 71,
+    "lingua": null,
+    "contexto": "A varfarina é um fármaco que diminui a agregação plaquetária, e por isso é utilizada como anticoagulante, desde que esteja presente no plasma, com uma concentração superior a 1,0 mg/L. Entretanto, concentrações plasmáticas superiores a 4,0 mg/L podem desencadear hemorragias. As moléculas desse fármaco ficam retidas no espaço intravascular e dissolvidas exclusivamente no plasma, que representa aproximadamente 60% do sangue em volume. Em um medicamento, a varfarina é administrada por via intravenosa na forma de solução aquosa, com concentração de 3,0 mg/mL. Um indivíduo adulto, com volume sanguíneo total de 5,0 L, será submetido a um tratamento com solução injetável desse medicamento.\n\nQual é o máximo volume da solução do medicamento que pode ser administrado a esse indivíduo, pela via intravenosa, de maneira que não ocorram hemorragias causadas pelo anticoagulante?",
+    "alternativas": [
+      "1,0 mL",
+      "1,7 mL",
+      "2,7 mL",
+      "4,0 mL",
+      "6,7 mL"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2015,
+    "numero": 47,
+    "lingua": null,
+    "contexto": "A indústria têxtil utiliza grande quantidade de corantes no processo de tingimento dos tecidos. O escurecimento das águas dos rios causado pelo despejo desses corantes pode desencadear uma série de problemas no ecossistema aquático.\n\nConsiderando esse escurecimento das águas, o impacto negativo inicial que ocorre é o(a)",
+    "alternativas": [
+      "Eutrofização.",
+      "Proliferação de algas.",
+      "Inibição da fotossíntese.",
+      "Fotodegradação da matéria orgânica.",
+      "Aumento da quantidade de gases dissolvidos."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 52,
+    "lingua": null,
+    "contexto": "A soda cáustica pode ser usada no desentupimento de encanamentos domésticos e tem, em sua composição, o hidróxido de sódio como principal componente, além de algumas impurezas. A soda normalmente é comercializada na forma sólida, mas que apresenta aspecto “derretido” quando exposta ao ar por certo período.\n\nO fenômeno de “derretimento” decorre da",
+    "alternativas": [
+      "Absorção da umidade presente no ar atmosférico.",
+      "Fusão do hidróxido pela troca de calor com o ambiente.",
+      "Reação das impurezas do produto com o oxigênio do ar.",
+      "Adsorção de gases atmosféricos na superfície do sólido.",
+      "Reação do hidróxido de sódio com o gás nitrogênio presente no ar."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2015,
+    "numero": 55,
+    "lingua": null,
+    "contexto": "A hidroponia pode ser definida como uma técnica de produção de vegetais sem necessariamente a presença de solo. Uma das formas de implementação é manter as plantas com suas raízes suspensas em meio líquido, de onde retiram os nutrientes essenciais. Suponha que um produtor de rúcula hidropônica precise ajustar a concentração do íon nitrato (NO₃⁻) para 0,009 mol/L em um tanque de 5 000 litros e, para tanto, tem em mãos uma solução comercial nutritiva de nitrato de cálcio 90 g/L. As massas molares dos elementos N, O e Ca são iguais a 14 g/mol, 16 g/mol e 40 g/mol, respectivamente.\n\nQual o valor mais próximo do volume da solução nutritiva, em litros, que o produtor deve adicionar ao tanque?",
+    "alternativas": [
+      "26",
+      "41",
+      "45",
+      "51",
+      "82"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2015,
+    "numero": 137,
+    "lingua": null,
+    "contexto": "O tampo de vidro de uma mesa quebrou-se e deverá ser substituído por outro que tenha a forma de círculo. O suporte de apoio da mesa tem o formato de um prisma reto, de base em forma de triângulo equilátero com lados medindo 30 cm.\n\nUma loja comercializa cinco tipos de tampos de vidro circulares com cortes já padronizados, cujos raios medem 18 cm, 26 cm, 30 cm, 35 cm e 60 cm. O proprietário da mesa deseja adquirir nessa loja o tampo de menor diâmetro que seja suficiente para cobrir a base superior do suporte da mesa.\n\nConsidere 1,7 como aproximação para √3.\n\nO tampo a ser escolhido será aquele cujo raio, em centímetros, é igual a",
+    "alternativas": [
+      "18",
+      "26",
+      "30",
+      "35",
+      "60"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2015,
+    "numero": 141,
+    "lingua": null,
+    "contexto": "Uma fábrica de sorvetes utiliza embalagens plásticas no formato de paralelepípedo retangular reto. Internamente, a embalagem tem 10 cm de altura e base de 20 cm por 10 cm. No processo de confecção do sorvete, uma mistura é colocada na embalagem no estado líquido e, quando levada ao congelador, tem seu volume aumentado em 25%, ficando com consistência cremosa.\n\nInicialmente é colocada na embalagem uma mistura sabor chocolate com volume de 1 000 cm³ e, após essa mistura ficar cremosa, será adicionada uma mistura sabor morango, de modo que, ao final do processo de congelamento, a embalagem fique completamente preenchida com sorvete, sem transbordar.\n\nO volume máximo, em cm³, da mistura sabor morango que deverá ser colocado na embalagem é",
+    "alternativas": [
+      "450.",
+      "500.",
+      "600.",
+      "750.",
+      "1 000."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 142,
+    "lingua": null,
+    "contexto": "Em uma central de atendimento, cem pessoas receberam senhas numeradas de 1 até 100. Uma das senhas é sorteada ao acaso.\n\nQual é a probabilidade de a senha sorteada ser um número de 1 a 20?",
+    "alternativas": [
+      "1/100",
+      "19/100",
+      "20/100",
+      "21/100",
+      "80/100"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 145,
+    "lingua": null,
+    "contexto": "O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna de um mesmo filme. Várias escolas podem ser escolhidas para receberem ingressos. Há alguns critérios para a distribuição dos ingressos:\n\n1) cada escola deverá receber ingressos para uma única sessão;\n\n2) todas as escolas contempladas deverão receber o mesmo número de ingressos;\n\n3) não haverá sobra de ingressos (ou seja, todos os ingressos serão distribuídos).\n\nO número mínimo de escolas que podem ser escolhidas para obter ingressos, segundo os critérios estabelecidos, é",
+    "alternativas": [
+      "2.",
+      "4.",
+      "9.",
+      "40.",
+      "80."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 146,
+    "lingua": null,
+    "contexto": "Para resolver o problema de abastecimento de água foi decidida, numa reunião do condomínio, a construção de uma nova cisterna. A cisterna atual tem formato cilíndrico, com 3 m de altura e 2 m de diâmetro, e estimou-se que a nova cisterna deverá comportar 81 m³ de água, mantendo o formato cilíndrico e a altura da atual. Após a inauguração da nova cisterna a antiga será desativada. Utilize 3,0 como aproximação para π.\n\nQual deve ser o aumento, em metros, no raio da cisterna para atingir o volume desejado?",
+    "alternativas": [
+      "0,5",
+      "1,0",
+      "2,0",
+      "3,5",
+      "8,0"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 149,
+    "lingua": null,
+    "contexto": "Para o modelo de um troféu foi escolhido um poliedro P, obtido a partir de cortes nos vértices de um cubo. Com um corte plano em cada um dos cantos do cubo, retira-se o canto, que é um tetraedro de arestas menores do que metade da aresta do cubo. Cada face do poliedro P, então, é pintada usando uma cor distinta das demais faces.\n\nCom base nas informações, qual é a quantidade de cores que serão utilizadas na pintura das faces do troféu?",
+    "alternativas": [
+      "6",
+      "8",
+      "14",
+      "24",
+      "30"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 152,
+    "lingua": null,
+    "contexto": "O acréscimo de tecnologias no sistema produtivo industrial tem por objetivo reduzir custos e aumentar a produtividade. No primeiro ano de funcionamento, uma indústria fabricou 8 000 unidades de um determinado produto. No ano seguinte, investiu em tecnologia adquirindo novas máquinas e aumentou a produção em 50%. Estima-se que esse aumento percentual se repita nos próximos anos, garantindo um crescimento anual de 50%. Considere P a quantidade anual de produtos fabricados no ano t de funcionamento da indústria.\n\nSe a estimativa for alcançada, qual é a expressão que determina o número de unidades produzidas P em função de t, para t ≥1?",
+    "alternativas": [
+      "P(t) = 0,5 · t⁻¹ + 8 000",
+      "P(t) = 50 · t⁻¹ + 8 000",
+      "P(t) = 4 000 · t⁻¹ + 8 000",
+      "P(t) = 8 000 · (0,5)ᵗ⁻¹",
+      "P(t) = 8 000 · (1,5)ᵗ⁻¹"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2015,
+    "numero": 156,
+    "lingua": null,
+    "contexto": "Um casal realiza um financiamento imobiliário de R$ 180 000,00, a ser pago em 360 prestações mensais, com taxa de juros efetiva de 1% ao mês. A primeira prestação é paga um mês após a liberação dos recursos e o valor da prestação mensal é de R$ 500,00 mais juro de 1% sobre o saldo devedor (valor devido antes do pagamento). Observe que, a cada pagamento, o saldo devedor se reduz em R$ 500,00 e considere que não há prestação em atraso.\n\nEfetuando o pagamento dessa forma, o valor, em reais, a ser pago ao banco na décima prestação é de",
+    "alternativas": [
+      "2 075,00.",
+      "2 093,00.",
+      "2 138,00.",
+      "2 255,00.",
+      "2 300,00."
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2015,
+    "numero": 162,
+    "lingua": null,
+    "contexto": "Um arquiteto está reformando uma casa. De modo a contribuir com o meio ambiente, decide reaproveitar tábuas de madeira retiradas da casa. Ele dispõe de 40 tábuas de 540 cm, 30 de 810 cm e 10 de 1 080 cm, todas de mesma largura e espessura. Ele pediu a um carpinteiro que cortasse as tábuas em pedaços de mesmo comprimento, sem deixar sobras, e de modo que as novas peças ficassem com o maior tamanho possível, mas de comprimento menor que 2 m.\n\nAtendendo o pedido do arquiteto, o carpinteiro deverá produzir",
+    "alternativas": [
+      "105 peças.",
+      "120 peças.",
+      "210 peças.",
+      "243 peças.",
+      "420 peças."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2015,
+    "numero": 166,
+    "lingua": null,
+    "contexto": "Alguns exames médicos requerem uma ingestão de água maior do que a habitual. Por recomendação médica, antes do horário do exame, uma paciente deveria ingerir 1 copo de água de 150 mililitros a cada meia hora, durante as 10 horas que antecederiam um exame. A paciente foi a um supermercado comprar água e verificou que havia garrafas dos seguintes tipos:\n\n• Garrafa I: 0,15 litro\n• Garrafa II: 0,30 litro\n• Garrafa III: 0,75 litro\n• Garrafa IV: 1,50 litro\n• Garrafa V: 3,00 litros\n\nA paciente decidiu comprar duas garrafas do mesmo tipo, procurando atender à recomendação médica e, ainda, de modo a consumir todo o líquido das duas garrafas antes do exame.\n\nQual o tipo de garrafa escolhida pela paciente?",
+    "alternativas": [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2015,
+    "numero": 168,
+    "lingua": null,
+    "contexto": "Em uma escola, a probabilidade de um aluno compreender e falar inglês é de 30%. Três alunos dessa escola, que estão em fase final de seleção de intercâmbio, aguardam, em uma sala, serem chamados para uma entrevista. Mas, ao invés de chamá-los um a um, o entrevistador entra na sala e faz, oralmente, uma pergunta em inglês que pode ser respondida por qualquer um dos alunos.\n\nA probabilidade de o entrevistador ser entendido e ter sua pergunta oralmente respondida em inglês é",
+    "alternativas": [
+      "23,7%",
+      "30,0%",
+      "44,1%",
+      "65,7%",
+      "90,0%"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2015,
+    "numero": 171,
+    "lingua": null,
+    "contexto": "O índice pluviométrico é utilizado para mensurar a precipitação da água da chuva, em milímetros, em determinado período de tempo. Seu cálculo é feito de acordo com o nível de água da chuva acumulada em 1 m², ou seja, se o índice for de 10 mm, significa que a altura do nível de água acumulada em um tanque aberto, em formato de um cubo com 1 m² de área de base, é de 10 mm. Em uma região, após um forte temporal, verificou-se que a quantidade de chuva acumulada em uma lata de formato cilíndrico, com raio 300 mm e altura 1 200 mm, era de um terço da sua capacidade.\n\nUtilize 3,0 como aproximação para π.\n\nO índice pluviométrico da região, durante o período do temporal, em milímetros, é de",
+    "alternativas": [
+      "10,8.",
+      "12,0.",
+      "32,4.",
+      "108,0.",
+      "324,0."
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2015,
+    "numero": 173,
+    "lingua": null,
+    "contexto": "Deseja-se comprar lentes para óculos. As lentes devem ter espessuras mais próximas possíveis da medida 3 mm. No estoque de uma loja, há lentes de espessuras: 3,10 mm; 3,021 mm; 2,96 mm; 2,099 mm e 3,07 mm.\n\nSe as lentes forem adquiridas nessa loja, a espessura escolhida será, em milímetros, de",
+    "alternativas": [
+      "2,099.",
+      "2,96.",
+      "3,021.",
+      "3,07.",
+      "3,10"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2015,
+    "numero": 176,
+    "lingua": null,
+    "contexto": "Após realizar uma pesquisa de mercado, uma operadora de telefonia celular ofereceu aos clientes que utilizavam até 500 ligações ao mês o seguinte plano mensal: um valor fixo de R$ 12,00 para os clientes que fazem até 100 ligações ao mês. Caso o cliente faça mais de 100 ligações, será cobrado um valor adicional de R$ 0,10 por ligação, a partir da 101ª até a 300ª; e caso realize entre 300 e 500 ligações, será cobrado um valor fixo mensal de R$ 32,00.\n\nCom base nos elementos apresentados, o gráfico que melhor representa a relação entre o valor mensal pago nesse plano e o número de ligações feitas é:",
+    "alternativas": [
+      "![](https://enem.dev/2015/questions/176/da13c004-584e-4012-b169-1476f28c2c75.png)",
+      "![](https://enem.dev/2015/questions/176/4322623b-4209-4b90-8340-47b80a683345.png)",
+      "![](https://enem.dev/2015/questions/176/eeef388a-087d-4d11-8eb7-3ca5656db005.png)",
+      "![](https://enem.dev/2015/questions/176/a37b0cd6-80b8-40ba-b31d-4c81364e63e7.png)",
+      "![](https://enem.dev/2015/questions/176/737b6f37-f58a-43c5-99e0-0dea2e316b4b.png)"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2015,
+    "numero": 178,
+    "lingua": null,
+    "contexto": "Para economizar em suas contas mensais de água, uma família de 10 pessoas deseja construir um reservatório para armazenar a água captada das chuvas, que tenha capacidade suficiente para abastecer a família por 20 dias. Cada pessoa da família consome, diariamente, 0,08 m³ de água.\n\nPara que os objetivos da família sejam atingidos, a capacidade mínima, em litros, do reservatório a ser construído deve ser",
+    "alternativas": [
+      "16.",
+      "800.",
+      "1 600.",
+      "8 000.",
+      "16 000."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2015,
+    "numero": 179,
+    "lingua": null,
+    "contexto": "Uma competição esportiva envolveu 20 equipes com 10 atletas cada. Uma denúncia à organização dizia que um dos atletas havia utilizado substância proibida. Os organizadores, então, decidiram fazer um exame antidoping. Foram propostos três modos diferentes para escolher os atletas que irão realizá-lo:\n\nModo I: sortear três atletas dentre todos os participantes;\n\nModo II: sortear primeiro uma das equipes e, desta, sortear três atletas;\n\nModo III: sortear primeiro três equipes e, então, sortear um atleta de cada uma dessas três equipes.\n\nConsidere que todos os atletas têm igual probabilidade de serem sorteados e que P(I), P(II) e P(III) sejam as probabilidades de o atleta que utilizou a substância proibida seja um dos escolhidos para o exame no caso do sorteio ser feito pelo modo I, II ou III.\n\nComparando-se essas probabilidades, obtém-se",
+    "alternativas": [
+      "P(I) < P(III) < P(II)",
+      "P(II) < P(I) < P(III)",
+      "P(I) < P(II) = P(III)",
+      "P(I) = P(II) < P(III)",
+      "P(I) = P(II) = P(III)"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2016,
+    "numero": 50,
+    "lingua": null,
+    "contexto": "O benzeno, um importante solvente para a indústria química, é obtido industrialmente pela destilação do petróleo. Contudo, também pode ser sintetizado pela trimerização do acetileno catalisada por ferro metálico sob altas temperaturas, conforme a equação química:\n\n3 C₂H₂ (g) → C₆H₆ (l)\n\nA energia envolvida nesse processo pode ser calculada indiretamente pela variação de entalpia das reações de combustão das substâncias participantes, nas mesmas condições experimentais:\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2016-50.jpg)\n\nA variação de entalpia do processo de trimerização, em kcal, para a formação de um mol de benzeno é mais próxima de",
+    "alternativas": [
+      "-1090.",
+      "-150.",
+      "-50.",
+      "+157.",
+      "+470."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2016,
+    "numero": 54,
+    "lingua": null,
+    "contexto": "Durante a primeira fase do projeto de uma usina de geração de energia elétrica, os engenheiros da equipe de avaliação de impactos ambientais procuram saber se esse projeto está de acordo com as normas ambientais. A nova planta estará localizada à beira de um rio, cuja temperatura média da água é de 25 °C, e usará a sua água somente para refrigeração. O projeto pretende que a usina opere com 1,0 MW de potência elétrica e, em razão de restrições técnicas, o dobro dessa potência será dissipada por seu sistema de arrefecimento, na forma de calor. Para atender a resolução número 430, de 13 de maio de 2011, do Conselho Nacional do Meio Ambiente, com uma ampla margem de segurança, os engenheiros determinaram que a água só poderá ser devolvida ao rio com um aumento de temperatura de, no máximo, 3 °C em relação à temperatura da água do rio captada pelo sistema de arrefecimento. Considere o calor específico da água igual a 4 kJ/(kg °C).\n\nPara atender essa determinação, o valor mínimo do fluxo de água, em kg/s, para a refrigeração da usina deve ser mais próximo de",
+    "alternativas": [
+      "42.",
+      "84.",
+      "167.",
+      "250.",
+      "500."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2016,
+    "numero": 57,
+    "lingua": null,
+    "contexto": "O morcego emite pulsos de curta duração de ondas ultrassônicas, os quais voltam na forma de ecos após atingirem objetos no ambiente, trazendo informações a respeito das suas dimensões, suas localizações e dos seus possíveis movimentos. Isso se dá em razão da sensibilidade do morcego em detectar o tempo gasto para os ecos voltarem, bem como das pequenas variações nas frequências e nas intensidades dos pulsos ultrassônicos. Essas características lhe permitem caçar pequenas presas mesmo quando estão em movimento em relação a si. Considere uma situação unidimensional em que uma mariposa se afasta, em movimento retilíneo e uniforme, de um morcego em repouso.\n\nA distância e velocidade da mariposa, na situação descrita, seriam detectadas pelo sistema de um morcego por quais alterações nas características dos pulsos ultrassônicos?",
+    "alternativas": [
+      "Intensidade diminuída, o tempo de retorno aumentado e a frequência percebida diminuída.",
+      "Intensidade aumentada, o tempo de retorno diminuído e a frequência percebida diminuída.",
+      "Intensidade diminuída, o tempo de retorno diminuído e a frequência percebida aumentada.",
+      "Intensidade diminuída, o tempo de retorno aumentado e a frequência percebida aumentada.",
+      "Intensidade aumentada, o tempo de retorno aumentado e a frequência percebida aumentada."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 60,
+    "lingua": null,
+    "contexto": "O carvão ativado é um material que possui elevado teor de carbono, sendo muito utilizado para a remoção de compostos orgânicos voláteis do meio, como o benzeno. Para a remoção desses compostos, utiliza-se a adsorção. Esse fenômeno ocorre por meio de interações do tipo intermoleculares entre a superfície do carvão (adsorvente) e o benzeno (adsorvato, substância adsorvida).\n\nNo caso apresentado, entre o adsorvente e a substância adsorvida ocorre a formação de:",
+    "alternativas": [
+      "Ligações dissulfeto.",
+      "Ligações covalentes.",
+      "Ligações de hidrogênio.",
+      "Interações dipolo induzido – dipolo induzido.",
+      "Interações dipolo permanente – dipolo permanente."
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2016,
+    "numero": 62,
+    "lingua": null,
+    "contexto": "Ao percorrer o trajeto de uma cadeia alimentar, o carbono, elemento essencial e majoritário da matéria orgânica que compõe os indivíduos, ora se encontra em sua forma inorgânica, ora se encontra em sua forma orgânica. Em uma cadeia alimentar composta por fitoplâncton, zooplâncton, moluscos, crustáceos e peixes ocorre a transição desse elemento da forma inorgânica para a orgânica.\n\nEm qual grupo de organismos ocorre essa transição?",
+    "alternativas": [
+      "Fitoplâncton.",
+      "Zooplâncton.",
+      "Moluscos.",
+      "Crustáceos",
+      "Peixes."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 63,
+    "lingua": null,
+    "contexto": "Dois veículos que trafegam com velocidade constante em uma estrada, na mesma direção e sentido, devem manter entre si uma distância mínima. Isso porque o movimento de um veículo, até que ele pare totalmente, ocorre em duas etapas, a partir do momento em que o motorista detecta um problema que exige uma freada brusca. A primeira etapa é associada à distância que o veículo percorre entre o intervalo de tempo da detecção do problema e o acionamento dos freios. Já a segunda se relaciona com a distância que o automóvel percorre enquanto os freios agem com desaceleração constante.\n\nConsiderando a situação descrita, qual esboço gráfico representa a velocidade do automóvel em relação à distância percorrida até parar totalmente?",
+    "alternativas": [
+      "![](https://enem.dev/2016/questions/63/38b23660-032c-403e-b938-8b64e40af10d.png)",
+      "![](https://enem.dev/2016/questions/63/4597eef6-a364-4579-951a-18539ab724f0.png)",
+      "![](https://enem.dev/2016/questions/63/9126bd93-a8bb-4f82-8426-47b0c234b526.png)",
+      "![](https://enem.dev/2016/questions/63/5c565c97-56e7-4e0e-9f84-86534984bb58.png)",
+      "![](https://enem.dev/2016/questions/63/b0952a42-0246-43f6-b3c6-2fee3ad589d5.png)"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2016,
+    "numero": 84,
+    "lingua": null,
+    "contexto": "Num experimento, um professor deixa duas bandejas de mesma massa, uma de plástico e outra de alumínio, sobre a mesa do laboratório. Após algumas horas, ele pede aos alunos que avaliem a temperatura das duas bandejas, usando para isso o tato. Seus alunos afirmam, categoricamente, que a bandeja de alumínio encontra-se numa temperatura mais baixa. Intrigado, ele propõe uma segunda atividade, em que coloca um cubo de gelo sobre cada uma das bandejas, que estão em equilíbrio térmico com o ambiente, e os questiona em qual delas a taxa de derretimento do gelo será maior.\n\nO aluno que responder corretamente ao questionamento do professor dirá que o derretimento ocorrerá",
+    "alternativas": [
+      "Mais rapidamente na bandeja de alumínio, pois ela tem uma maior condutividade térmica que a de plástico.",
+      "Mais rapidamente na bandeja de plástico, pois ela tem inicialmente uma temperatura mais alta que a de alumínio.",
+      "Mais rapidamente na bandeja de plástico, pois ela tem uma maior capacidade térmica que a de alumínio.",
+      "Mais rapidamente na bandeja de alumínio, pois ela tem um calor específico menor que a de plástico.",
+      "Com a mesma rapidez nas duas bandejas, pois apresentarão a mesma variação de temperatura."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 87,
+    "lingua": null,
+    "contexto": "Portadores de diabetes insipidus reclamam da confusão feita pelos profissionais da saúde quanto aos dois tipos de diabetes: mellitus e insipidus. Enquanto o primeiro tipo está associado aos níveis ou à ação da insulina, o segundo não está ligado à deficiência desse hormônio. O diabetes insipidus é caracterizado por um distúrbio na produção ou no funcionamento do hormônio antidiurético (na sigla em inglês, ADH), secretado pela neuro-hipófise para controlar a reabsorção de água pelos túbulos renais.\n\nTendo em vista o papel funcional do ADH, qual é um sintoma clássico de um paciente acometido por diabetes insipidus?",
+    "alternativas": [
+      "Alta taxa de glicose no sangue.",
+      "Aumento da pressão arterial.",
+      "Ganho de massa corporal.",
+      "Anemia crônica.",
+      "Desidratação."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2016,
+    "numero": 88,
+    "lingua": null,
+    "contexto": "A magnetohipertermia é um procedimento terapêutico que se baseia na elevação da temperatura das células de uma região específica do corpo que estejam afetadas por um tumor. Nesse tipo de tratamento, nanopartículas magnéticas são fagocitadas pelas células tumorais, e um campo magnético alternado externo é utilizado para promover a agitação das nanopartículas e consequente aquecimento da célula.\n\nA elevação de temperatura descrita ocorre porque",
+    "alternativas": [
+      "O campo magnético gerado pela oscilação das nanopartículas é absorvido pelo tumor.",
+      "O campo magnético alternado faz as nanopartículas girarem, transferindo calor por atrito.",
+      "As nanopartículas interagem magneticamente com as células do corpo, transferindo calor.",
+      "O campo magnético alternado fornece calor para as nanopartículas que o transfere às células do corpo.",
+      "As nanopartículas são aceleradas em um único sentido em razão da interação com o campo magnético, fazendo-as colidir com as células e transferir calor."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2016,
+    "numero": 90,
+    "lingua": null,
+    "contexto": "Apesar da grande diversidade biológica, a hipótese de que a vida na Terra tenha tido uma única origem comum é aceita pela comunidade científica. Uma evidência que apoia essa hipótese é a observação de processos biológicos comuns a todos os seres vivos atualmente existentes.\n\nUm exemplo de tal processo é o(a)",
+    "alternativas": [
+      "Desenvolvimento embrionário.",
+      "Reprodução sexuada.",
+      "Respiração aeróbica.",
+      "Excreção urinária.",
+      "Síntese proteica."
+    ],
+    "correta": 4
   },
   {
     "ano": 2018,
@@ -42,41 +476,17 @@
     "correta": 4
   },
   {
-    "ano": 2015,
-    "numero": 145,
-    "lingua": null,
-    "contexto": "O gerente de um cinema fornece anualmente ingressos gratuitos para escolas. Este ano serão distribuídos 400 ingressos para uma sessão vespertina e 320 ingressos para uma sessão noturna de um mesmo filme. Várias escolas podem ser escolhidas para receberem ingressos. Há alguns critérios para a distribuição dos ingressos:\n\n1) cada escola deverá receber ingressos para uma única sessão;\n\n2) todas as escolas contempladas deverão receber o mesmo número de ingressos;\n\n3) não haverá sobra de ingressos (ou seja, todos os ingressos serão distribuídos).\n\nO número mínimo de escolas que podem ser escolhidas para obter ingressos, segundo os critérios estabelecidos, é",
-    "alternativas": ["2.", "4.", "9.", "40.", "80."],
-    "correta": 2
-  },
-  {
-    "ano": 2023,
-    "numero": 174,
-    "lingua": null,
-    "contexto": "Uma pessoa comprou um ingresso para o cinema em cuja entrada está afixado um mapa com a representação bidimensional do posicionamento das poltronas, conforme a figura. Essa pessoa, após consultar o mapa, começou a subir uma das escadas e parou na posição indicada pela estrela, direcionada para o norte. Ela conferiu seu bilhete e observou que, para encontrar sua poltrona, deveria partir do ponto onde estava, continuar subindo a escada na direção norte por mais quatro fileiras e olhar à sua direita, e sua poltrona será a terceira.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-174.jpg)\n\nNesse cinema, as poltronas são identificadas por uma letra, que indica a fileira, e um número, que fornece a posição da poltrona na fileira, respectivamente.\n\nA poltrona dessa pessoa é a identificada por",
-    "alternativas": ["A6.", "H1.", "H6.", "I1.", "I6."],
-    "correta": 4
-  },
-  {
-    "ano": 2011,
-    "numero": 95,
-    "lingua": "ingles",
-    "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2011-95-ingles.jpg)\n\nDisponível em: http://www.garfield.com. Acesso em: 29 jul. 2010.\n\nA tira, definida como um segmento de história em quadrinhos, pode transmitir uma mensagem com efeito de humor. A presença desse efeito no diálogo entre Jon e Garfield acontece porque",
-    "alternativas": [
-      "Jon pensa que sua ex-namorada é maluca e que Garfield não sabia disso.",
-      "Jodell é a única namorada maluca que Jon teve, e Garfield acha isso estranho.",
-      "Garfield tem certeza de que a ex-namorada de Jon é sensata, o maluco é o amigo.",
-      "Garfield conhece as ex-namoradas de Jon e considera mais de uma como maluca.",
-      "Jon caracteriza a ex-namorada como maluca e não entende a cara de Garfield."
-    ],
-    "correta": 3
-  },
-  {
     "ano": 2019,
     "numero": 98,
     "lingua": null,
     "contexto": "Os olhos humanos normalmente têm três tipos de cones responsáveis pela percepção das cores: um tipo para tons vermelhos, um para tons azuis e outro para tons verdes. As diversas cores que enxergamos são o resultado da percepção das cores básicas, como indica a figura.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2019-98.jpg)\n\nA protanopia é um tipo de daltonismo em que há diminuição ou ausência de receptores da cor vermelha. Considere um teste com dois voluntários: uma pessoa com visão normal e outra com caso severo de protanopia. Nesse teste, eles devem escrever a cor dos cartões que lhes são mostrados. São utilizadas as cores indicadas na figura.\n\nPara qual cartão os dois voluntários identificarão a mesma cor?",
-    "alternativas": ["Vermelho.", "Magenta.", "Amarelo.", "Branco.", "Azul."],
+    "alternativas": [
+      "Vermelho.",
+      "Magenta.",
+      "Amarelo.",
+      "Branco.",
+      "Azul."
+    ],
     "correta": 4
   },
   {
@@ -98,7 +508,13 @@
     "numero": 128,
     "lingua": null,
     "contexto": "Em 1808, Dalton publicou o seu famoso livro intitulado **Um novo sistema de filosofia química** (do original A New System of Chemical Philosophy), no qual continha os cinco postulados que serviam como alicerce da primeira teoria atômica da matéria fundamentada no método científico. Esses postulados são numerados a seguir:\n\n1. A matéria é constituída de átomos indivisíveis.\n\n2. Todos os átomos de um dado elemento químico são idênticos em massa e em todas as outras propriedades.\n\n3. Diferentes elementos químicos têm diferentes tipos de átomos; em particular, seus átomos têm diferentes massas.\n\n4. Os átomos são indestrutíveis e nas reações químicas mantêm suas identidades.\n\n5. Átomos de elementos combinam com átomos de outros elementos em proporções de números inteiros pequenos para formar compostos.\n\nApós o modelo de Dalton, outros modelos baseados em outros dados experimentais evidenciaram, entre outras coisas, a natureza elétrica da matéria, a composição e organização do átomo e a quantização da energia no modelo atômico.\n\nOXTOBY, D. W.; GILLIS, H. P.; BUTLER, L. J. **Principles of Modern Chemistry**. Boston: Cengage Learning, 2012 (adaptado).\n\nCom base no modelo atual que descreve o átomo, qual dos postulados de Dalton ainda é considerado correto?",
-    "alternativas": ["1", "2", "3", "4", "5"],
+    "alternativas": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
     "correta": 4
   },
   {
@@ -106,7 +522,13 @@
     "numero": 144,
     "lingua": null,
     "contexto": "Uma torneira está gotejando água em um balde com capacidade de 18 litros. No instante atual, o balde se encontra com ocupação de 50% de sua capacidade. A cada segundo caem 5 gotas de água da torneira, e uma gota é formada, em média, por 5 × 10⁻² mL de água.\n\nQuanto tempo, em hora, será necessário para encher completamente o balde, partindo do instante atual?",
-    "alternativas": ["2 × 10¹", "1 × 10¹", "2 × 10⁻²", "1 × 10⁻²", "1 × 10⁻³"],
+    "alternativas": [
+      "2 × 10¹",
+      "1 × 10¹",
+      "2 × 10⁻²",
+      "1 × 10⁻²",
+      "1 × 10⁻³"
+    ],
     "correta": 1
   },
   {
@@ -114,7 +536,13 @@
     "numero": 168,
     "lingua": null,
     "contexto": "Num recipiente com a forma de paralelepípedo reto-retângulo, colocou-se água até a altura de 8 cm e um objeto, que ficou flutuando na superfície da água.\n\nPara retirar o objeto de dentro do recipiente, a altura da coluna de água deve ser de, pelo menos, 15 cm. Para a coluna de água chegar até essa altura, é necessário colocar dentro do recipiente bolinhas de volume igual a 6 cm³ cada, que ficarão totalmente submersas.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2020-168.jpg)\n\nO número mínimo de bolinhas necessárias para que se possa retirar o objeto que flutua na água, seguindo as instruções dadas, é de",
-    "alternativas": ["14.", "16.", "18.", "30.", "34."],
+    "alternativas": [
+      "14.",
+      "16.",
+      "18.",
+      "30.",
+      "34."
+    ],
     "correta": 0
   },
   {
@@ -122,7 +550,83 @@
     "numero": 179,
     "lingua": null,
     "contexto": "Um pé de eucalipto em idade adequada para o corte rende, em média, 20 mil folhas de papel A4. A densidade superficial do papel A4, medida pela razão da massa de uma folha desse papel por sua área, é de 75 gramas por metro quadrado, e a área de uma folha de A4 é 0,062 metro quadrado.\n\nDisponível em: http://revistagalileu.globo.com. Acesso em: 28 fev. 2013 (adaptado).\n\nNessas condições, quantos quilogramas de papel rende, em média, um pé de eucalipto?",
-    "alternativas": ["4 301", "1 500", "930", "267", "93"],
+    "alternativas": [
+      "4 301",
+      "1 500",
+      "930",
+      "267",
+      "93"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2021,
+    "numero": 90,
+    "lingua": null,
+    "contexto": "**TEXTO I**\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2021-90.jpg)\n\nEIGENHEER, E. M. **Lixo**: a limpeza urbana através dos tempos. Porto Alegre: Gráfica Palloti, 2009.\n\n**TEXTO II**\n\nA repugnante tarefa de carregar lixo e os dejetos da casa para as praças e praias era geralmente destinada ao único escravo da família ou ao de menor status ou valor. Todas as noites, depois das dez horas, os escravos conhecidos popularmente como “tigres” levavam tubos ou barris de excremento e lixo sobre a cabeça pelas ruas do Rio.\n\nKARASCH, M. C. **A vida dos escravos no Rio de Janeiro, 1808-1850**. Rio de Janeiro: Cia. das Letras, 2000.\n\nA ação representada na imagem e descrita no texto evidencia uma prática do cotidiano nas cidades no Brasil nos séculos XVIII e XIX caracterizada pela",
+    "alternativas": [
+      "Valorização do trabalho braçal.",
+      "Reiteração das hierarquias sociais.",
+      "Sacralização das atividades laborais.",
+      "Superação das exclusões econômicas.",
+      "Ressignificação das heranças religiosas."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2023,
+    "numero": 34,
+    "lingua": null,
+    "contexto": "**TEXTO I**\n\nLogo no início de Gira, um grupo de sete bailarinas ocupa o centro da cena. Mãos cruzadas sobre a lateral esquerda do quadril, olhos fechados, troncos que pendulam sobre si mesmos em vaguíssimas órbitas, tudo nelas sugere o transe. Está estabelecido o caráter volátil do que se passará no palco dali para frente. Mas engana-se quem pensa que vai assistir a uma representação mimética dos cultos afro-brasileiros.\n\n**TEXTO II**\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-34.jpg)\n\nDisponível em: www.grupocorpo.com.br. Acesso em: 2 jul. 2019.\n\nNo diálogo que estabelece com religiões afro-brasileiras, sintetizado na descrição e na imagem do espetáculo, a dança exprime uma",
+    "alternativas": [
+      "crítica aos movimentos padronizados do balé clássico.",
+      "representação contemporânea de rituais ancestrais extintos.",
+      "reelaboração estética erudita de práticas religiosas populares.",
+      "releitura irônica da atmosfera mística presente no culto a entidades.",
+      "oposição entre o resgate de tradições e a efemeridade da vida humana."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2023,
+    "numero": 141,
+    "lingua": null,
+    "contexto": "No alojamento de uma universidade, há alguns quartos com o padrão superior ao dos demais. Um desses quartos ficou disponível, e muitos estudantes se candidataram para morar no local. Para escolher quem ficará com o quarto, um sorteio será realizado. Para esse sorteio, cartões individuais com os nomes de todos os estudantes inscritos serão depositados em uma urna, sendo que, para cada estudante de primeiro ano, será depositado um único cartão com seu nome; para cada estudante de segundo ano, dois cartões com seu nome; e, para cada estudante de terceiro ano, três cartões com seu nome. Foram inscritos 200 estudantes de primeiro ano, 150 de segundo ano e 100 de terceiro ano. Todos os cartões têm a mesma probabilidade de serem sorteados.\n\nQual a probabilidade de o vencedor do sorteio ser um estudante de terceiro ano?",
+    "alternativas": [
+      "![](https://enem.dev/2023/questions/141/e698edb1-adc0-416b-9370-c20a7e878259.jpg)",
+      "![](https://enem.dev/2023/questions/141/b5f5bdf5-2251-4326-9877-ce9c2d831600.jpg)",
+      "![](https://enem.dev/2023/questions/141/d241fadb-6516-4ca8-aa9b-e72fff314881.jpg)",
+      "![](https://enem.dev/2023/questions/141/1dcce683-4ef7-4862-b554-3e3c66de54c3.jpg)",
+      "![](https://enem.dev/2023/questions/141/7b4de18d-92ca-488f-8419-ec95d852a135.jpg)"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2023,
+    "numero": 142,
+    "lingua": null,
+    "contexto": "A água utilizada pelos 75 moradores de um vilarejo provém de um reservatório de formato cilíndrico circular reto cujo raio da base mede 5 metros, sempre abastecido no primeiro dia de cada mês por caminhões-pipa. Cada morador desse vilarejo consome, em média, 200 litros de água por dia.\n\nNo mês de junho de um determinado ano, o vilarejo festejou o dia do seu padroeiro e houve um gasto extra de água nos primeiros 20 dias. Passado esse período, as pessoas verificaram a quantidade de água presente no reservatório e constataram que o nível da coluna de água estava em 1,5 metro. Decidiram, então, fazer um racionamento de água durante os 10 dias seguintes. Considere 3 como aproximação para π.\n\nQual é a quantidade mínima de água, em litro, que cada morador, em média, deverá economizar por dia, de modo que o reservatório não fique sem água nos próximos 10 dias?",
+    "alternativas": [
+      "50",
+      "60",
+      "80",
+      "140",
+      "150"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2023,
+    "numero": 174,
+    "lingua": null,
+    "contexto": "Uma pessoa comprou um ingresso para o cinema em cuja entrada está afixado um mapa com a representação bidimensional do posicionamento das poltronas, conforme a figura. Essa pessoa, após consultar o mapa, começou a subir uma das escadas e parou na posição indicada pela estrela, direcionada para o norte. Ela conferiu seu bilhete e observou que, para encontrar sua poltrona, deveria partir do ponto onde estava, continuar subindo a escada na direção norte por mais quatro fileiras e olhar à sua direita, e sua poltrona será a terceira.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-174.jpg)\n\nNesse cinema, as poltronas são identificadas por uma letra, que indica a fileira, e um número, que fornece a posição da poltrona na fileira, respectivamente.\n\nA poltrona dessa pessoa é a identificada por",
+    "alternativas": [
+      "A6.",
+      "H1.",
+      "H6.",
+      "I1.",
+      "I6."
+    ],
     "correta": 4
   }
 ]

@@ -62,15 +62,30 @@ const ANTES_DA_PALAVRA = 'd[aoe]s?|n[ao]s?|pel[ao]s?|conforme [ao]s?';
 const REFERENCIA_VISUAL = new RegExp(`(?<![\\p{L}])(?:${ANTES_DA_PALAVRA}) (?:${PALAVRAS_VISUAIS})s?(?![\\p{L}])`, 'iu');
 const MINIMO_DE_TEXTO = 220;
 
-function questaoIncompleta(contexto) {
+// Conferidas no caderno do INEP: a regra acima as pega ("percepção da imagem",
+// pergunta curta), mas estão inteiras. As transcritas do INEP também.
+const CONFERIDAS = require('./questoes-manuais.json').map(q => [q.ano, q.numero]).concat([
+  [2009, 37], [2010, 11], [2010, 26], [2010, 128], [2010, 133], [2010, 139], [2011, 74], [2011, 152],
+  [2012, 23], [2012, 125], [2012, 170], [2014, 50], [2014, 107], [2015, 86], [2017, 18], [2017, 38],
+  [2017, 82], [2017, 86], [2017, 108], [2017, 128], [2018, 79], [2019, 9], [2019, 15], [2020, 54],
+  [2020, 93], [2020, 151], [2021, 45], [2021, 129], [2022, 53], [2022, 130], [2023, 50], [2023, 178]
+]);
+const foiConferida = (ano, numero) => CONFERIDAS.some(([a, n]) => a === ano && n === numero);
+
+function questaoIncompleta(contexto, ano, numero) {
   const texto = String(contexto || '');
-  if (texto.includes('![](')) return false;
+  if (texto.includes('![](') || foiConferida(ano, numero)) return false;
   return texto.length < MINIMO_DE_TEXTO || REFERENCIA_VISUAL.test(texto);
 }
 
 // A mesma regra para o WHERE do banco (\y é a borda de palavra do Postgres).
-const questaoCompletaSql = (coluna = 'contexto') =>
-  `(${coluna} LIKE '%![](%' OR (length(${coluna}) >= ${MINIMO_DE_TEXTO} AND ${coluna} !~* '\\y(${ANTES_DA_PALAVRA}) (${PALAVRAS_VISUAIS})s?\\y'))`;
+// 'q.contexto' usa q.ano e q.numero para as conferidas.
+const questaoCompletaSql = (coluna = 'contexto') => {
+  const tabela = coluna.includes('.') ? coluna.slice(0, coluna.lastIndexOf('.') + 1) : '';
+  const conferidas = CONFERIDAS.map(([a, n]) => `(${a},${n})`).join(',');
+  return `(${coluna} LIKE '%![](%' OR (${tabela}ano, ${tabela}numero) IN (${conferidas})` +
+    ` OR (length(${coluna}) >= ${MINIMO_DE_TEXTO} AND ${coluna} !~* '\\y(${ANTES_DA_PALAVRA}) (${PALAVRAS_VISUAIS})s?\\y'))`;
+};
 
 const semRepetir = questoes => [...new Map(questoes.map(q => [`${numeroDaQuestao(q)}|${q.language || ''}`, q])).values()];
 
