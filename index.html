@@ -122,10 +122,14 @@
       display: flex; align-items: center; gap: 7px;
       transition: background .18s, color .18s;
     }
-    .aba:hover { background: var(--superficie-2); color: var(--texto); }
+    @media (hover: hover) { .aba:hover { background: var(--superficie-2); color: var(--texto); } }
     .aba.ativa { background: var(--marca-suave); color: var(--marca-texto); }
 
     .indicadores { display: flex; align-items: center; gap: 14px; }
+    /* Topo enxuto: só a sequência de dias, o sino, o tema e a conta.
+       Questões e acertos ficam no Perfil. */
+    .indicador:not(.sequencia) { display: none; }
+    .titulo-areas { font-size: 1.05rem; margin: 6px 0 14px; color: var(--texto-fraco); font-family: var(--fonte); font-weight: 700; letter-spacing: 0; }
     .indicador {
       display: flex; align-items: center; gap: 6px;
       font-weight: 700; font-size: .92rem;
@@ -929,7 +933,7 @@
     .previa-reel small { display: block; margin-top: 6px; font-size: .78rem; }
     @media (max-width: 700px) {
       #tela-reels { padding: 10px 8px 0; }
-      .reels-lista { height: calc(100dvh - var(--altura-topo, 110px) - 64px); border-radius: 14px; }
+      .reels-lista { height: calc(100dvh - var(--altura-topo, 110px) - 64px - var(--altura-nav, 0px)); border-radius: 14px; }
       .reel-quadro { border-radius: 14px; width: 100%; aspect-ratio: auto; }
     }
 
@@ -1452,8 +1456,23 @@
     /* Guia de 3 passos para quem chega e atalhos para começar sem pensar. */
     .guia {
       background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
-      padding: 18px 20px; margin-bottom: 22px; box-shadow: var(--sombra-leve);
+      padding: 22px; margin-bottom: 16px; box-shadow: var(--sombra-leve);
     }
+    .guia > b { display: block; font-family: var(--fonte-titulo); font-size: 1.3rem; margin-bottom: 4px; }
+    .guia > p { color: var(--texto-fraco); font-size: .9rem; margin: 0 0 16px; }
+    .atalhos-treino button.acao:first-child { padding: 15px 28px; font-size: 1.02rem; }
+    .atalhos-inicio { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
+    .atalhos-inicio:empty { display: none; }
+    .atalho-inicio {
+      display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; padding: 16px; cursor: pointer;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); color: var(--texto); font: inherit;
+      transition: border-color .18s, transform .18s;
+    }
+    .atalho-inicio:hover { border-color: var(--marca); transform: translateY(-2px); }
+    .atalho-inicio .icone { font-size: 1.7rem; flex: none; }
+    .atalho-inicio b { display: block; font-size: .98rem; }
+    .atalho-inicio small { display: block; color: var(--texto-fraco); font-size: .8rem; line-height: 1.4; margin-top: 2px; }
+    @media (max-width: 640px) { .atalhos-inicio { grid-template-columns: 1fr; } }
     .guia-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
     .guia-topo b { font-size: .95rem; }
     .guia-fechar {
@@ -1776,6 +1795,115 @@
     .vazio { text-align: center; padding: 56px 24px; color: var(--texto-fraco); }
     .vazio .cara { font-size: 2.8rem; display: block; margin-bottom: 14px; }
 
+    /* ===================== ARENA ===================== */
+    #tela-arena { max-width: 780px; }
+    .arena-inicio { display: grid; gap: 14px; }
+    .arena-noite { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .arena-noite .lua { font-size: 2rem; }
+    .arena-noite .info { flex: 1; min-width: 180px; }
+    .arena-noite b { display: block; font-size: 1.05rem; }
+    .arena-noite small { color: var(--texto-fraco); }
+    .arena-noite .acao { margin: 0; }
+    .arena-botoes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+    @media (max-width: 640px) { .arena-botoes { grid-template-columns: minmax(0, 1fr); } }
+    .arena-botoes .painel { margin: 0; display: grid; gap: 10px; align-content: start; }
+    .arena-botoes .painel b { font-size: 1.05rem; }
+    .arena-botoes .painel p { color: var(--texto-fraco); font-size: .88rem; line-height: 1.5; margin: 0; }
+    .arena-botoes .acao { margin: 0; width: 100%; }
+    .codigo-entrada { display: flex; gap: 8px; }
+    .codigo-entrada input {
+      flex: 1; min-width: 0; width: 100%; padding: 12px 14px; border-radius: 11px; border: 1px solid var(--borda); background: var(--superficie-2);
+      color: var(--texto); font: 700 1.15rem var(--fonte); letter-spacing: .2em; text-align: center;
+    }
+    .codigo-entrada .acao { width: auto; }
+    .form-sala { display: grid; gap: 12px; margin-top: 4px; }
+    .form-sala label { font-weight: 700; font-size: .84rem; display: grid; gap: 6px; }
+    .form-sala select { padding: 11px 12px; border-radius: 10px; border: 1px solid var(--borda); background: var(--superficie-2); color: var(--texto); font: 500 .95rem var(--fonte); }
+    .form-sala .caixa { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+    .meus-numeros-arena { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+    .meus-numeros-arena b { display: block; font-family: var(--fonte-titulo); font-size: 1.6rem; }
+    .meus-numeros-arena small { color: var(--texto-fraco); font-size: .78rem; }
+    .colecao { display: grid; grid-template-columns: repeat(auto-fill, minmax(56px, 1fr)); gap: 8px; margin-top: 10px; }
+    .colecao button {
+      aspect-ratio: 1; border-radius: 14px; border: 2px solid var(--borda); background: var(--superficie-2);
+      font-size: 1.55rem; cursor: pointer; display: grid; place-items: center; position: relative;
+    }
+    .colecao button:disabled { cursor: default; filter: grayscale(1); opacity: .28; }
+    .colecao button.usando { border-color: var(--marca); background: var(--marca-suave); }
+    .colecao button.raro { box-shadow: inset 0 0 0 1px #6fb3e0; }
+    .colecao button.epico { box-shadow: inset 0 0 0 1px #c49be8; }
+    .codigo-sala { font-family: var(--fonte-titulo); font-size: 3rem; letter-spacing: .12em; text-align: center; color: var(--marca-texto); line-height: 1.1; }
+    .chips-jogadores { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip-jogador {
+      display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px 6px 6px; border-radius: 99px;
+      background: var(--superficie-2); border: 1px solid var(--borda); font-weight: 600; font-size: .9rem;
+    }
+    .chip-jogador.novo { animation: surgir .35s ease both; }
+    .chip-jogador .ini { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--marca); color: var(--sobre-marca); font-weight: 800; font-size: .78rem; }
+    .chip-jogador.eu { border-color: var(--marca); }
+    .chip-jogador.ausente { opacity: .45; }
+    .chip-jogador button { background: none; border: 0; color: var(--texto-fraco); cursor: pointer; font-size: 1rem; padding: 0 0 0 2px; }
+    .topo-arena { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .topo-arena .onde { font-weight: 700; font-size: .9rem; }
+    .topo-arena .onde small { display: block; color: var(--texto-fraco); font-weight: 600; font-size: .8rem; }
+    .relogio-arena {
+      --p: 100; width: 58px; height: 58px; flex: none; border-radius: 50%; display: grid; place-items: center; position: relative;
+      background: conic-gradient(var(--marca) calc(var(--p) * 1%), var(--superficie-2) 0); font: 800 1.15rem var(--fonte);
+    }
+    .relogio-arena::before { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--fundo); }
+    .relogio-arena span { position: relative; font-variant-numeric: tabular-nums; }
+    .relogio-arena.acabando { background: conic-gradient(var(--errado) calc(var(--p) * 1%), var(--superficie-2) 0); animation: pulsar-relogio 1s infinite; }
+    .relogio-arena.acabando span { color: var(--errado); }
+    @keyframes pulsar-relogio { 50% { transform: scale(1.07); } }
+    .fase-arena { font-size: .78rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--marca-texto); margin-bottom: 8px; }
+    .alts-arena .alt { margin-bottom: 10px; }
+    .alts-arena .alt .letra { color: #fff; }
+    .alts-arena .alt:disabled { cursor: default; }
+    .alts-arena .alt.bloqueada { opacity: .4; }
+    .alts-arena .alt.minha { border-color: var(--texto); }
+    .alts-arena .alt .votos { margin-left: auto; padding-left: 10px; font-size: .8rem; color: var(--texto-fraco); white-space: nowrap; align-self: center; }
+    .aviso-arena { margin: 12px 0 0; padding: 12px 14px; border-radius: 12px; font-weight: 700; text-align: center; }
+    .aviso-arena.bom { background: rgba(34,197,94,.14); color: var(--certo); }
+    .aviso-arena.ruim { background: rgba(239,68,68,.12); color: var(--errado); }
+    .aviso-arena.neutro { background: var(--marca-suave); color: var(--marca-texto); }
+    .placar-arena { display: grid; gap: 8px; }
+    .linha-placar {
+      display: grid; grid-template-columns: 30px 1fr auto auto; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: 12px; background: var(--superficie-2); animation: surgir .35s ease both;
+    }
+    .linha-placar.eu { outline: 2px solid var(--marca); }
+    .linha-placar .pos { font-weight: 800; color: var(--texto-fraco); }
+    .linha-placar .nome { font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .linha-placar .mudou { font-size: .8rem; font-weight: 800; }
+    .linha-placar .pts { font-weight: 800; font-variant-numeric: tabular-nums; }
+    .sobe { color: var(--certo); } .desce { color: var(--errado); }
+    .podio-arena { display: grid; grid-template-columns: 1fr 1fr 1fr; align-items: end; gap: 10px; margin: 18px 0 6px; text-align: center; }
+    .degrau-arena { border-radius: 14px 14px 0 0; background: var(--superficie-2); border: 1px solid var(--borda); padding: 12px 6px; animation: surgir .6s ease both; min-width: 0; }
+    .degrau-arena .med { font-size: 1.8rem; display: block; }
+    .degrau-arena b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .degrau-arena small { color: var(--texto-fraco); font-size: .78rem; }
+    .degrau-arena.p1 { min-height: 160px; background: linear-gradient(180deg, var(--marca-suave), var(--superficie-2)); animation-delay: .5s; }
+    .degrau-arena.p2 { min-height: 125px; animation-delay: .25s; }
+    .degrau-arena.p3 { min-height: 100px; }
+    .vitorias-arena { list-style: none; display: grid; gap: 8px; margin: 10px 0 0; padding: 0; }
+    .vitorias-arena li { padding: 10px 14px; border-radius: 12px; background: var(--marca-suave); font-weight: 700; }
+    .bau { text-align: center; padding: 8px 0 2px; }
+    .bau button.fechado { font-size: 3.4rem; background: none; border: 0; cursor: pointer; animation: balancar 1.6s ease-in-out infinite; }
+    @keyframes balancar { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-8deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(0); } }
+    .bau .item { font-size: 3.6rem; display: block; animation: surgir .5s cubic-bezier(.2,.9,.3,1.6) both; }
+    .bau .raridade { font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .raridade.raro { color: #4f9bd6; } .raridade.epico { color: #a374dc; } .raridade.comum { color: var(--texto-fraco); }
+    .destaques-arena { display: grid; gap: 6px; margin: 0; padding-left: 18px; color: var(--texto-fraco); line-height: 1.5; }
+    .destaques-arena a { color: var(--marca-texto); font-weight: 700; }
+    .acoes-arena { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .acoes-arena .acao { margin: 0; }
+    .ajuda-lista { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 10px; line-height: 1.55; }
+    .botao-ajuda {
+      width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--borda); background: var(--superficie-2);
+      color: var(--texto-fraco); font: 800 .85rem var(--fonte); cursor: pointer; flex: none;
+    }
+    .botao-ajuda:hover { color: var(--texto); border-color: var(--marca); }
+
     /* ===================== CONFETE ===================== */
     #confete { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
     .papel { position: absolute; width: 11px; height: 17px; opacity: .92; animation: cair linear forwards; }
@@ -1783,7 +1911,6 @@
 
     @media (max-width: 700px) {
       .topo-interno { min-height: 56px; gap: 10px; }
-      .abas { order: 3; width: 100%; padding-bottom: 8px; overflow-x: auto; }
       .marca { font-size: 1rem; margin-right: auto; }
       .pagina { padding: 22px 16px 50px; }
       .cabecalho-secao h1 { font-size: 1.4rem; }
@@ -1791,11 +1918,28 @@
       .painel { padding: 20px 17px; }
       .alt { padding: 16px 17px; font-size: .96rem; gap: 13px; }
       .indicador span { display: none; }
-      #btn-tema { display: none; } /* no celular o tema fica dentro de 🎨 Aparência */
-      /* quatro abas cabem lado a lado: ícone em cima, nome embaixo */
-      .abas { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; overflow: visible; }
-      .aba { flex-direction: column; gap: 3px; padding: 7px 2px; font-size: .7rem; justify-content: center; }
-      .aba svg { width: 19px; height: 19px; }
+      #btn-tema { display: none; } /* no celular o tema fica em Conta → Aparência */
+      /* Com backdrop-filter no topo, a barra "fixa" ficaria presa a ele, e não à tela. */
+      .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
+      /* Navegação embaixo, como nos apps: fica no alcance do polegar. */
+      .abas {
+        position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; margin: 0;
+        display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
+        padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+        background: var(--brilho-topo); backdrop-filter: saturate(170%) blur(14px); -webkit-backdrop-filter: saturate(170%) blur(14px);
+        border-top: 1px solid var(--borda);
+      }
+      .aba { flex-direction: column; gap: 3px; padding: 7px 2px; font-size: .72rem; justify-content: center; }
+      .aba svg { width: 21px; height: 21px; }
+      body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)); --altura-nav: 68px; }
+      .chip-sala, body.vendo-reels .chip-sala { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+      .xp-flutuante { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+      .toast-sim { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+      /* Questão, prova e partida da Arena: tela inteira para a questão. */
+      body.modo-foco { padding-bottom: 0; --altura-nav: 0px; }
+      body.modo-foco .abas { display: none; }
+      body.modo-foco .chip-sala { bottom: 16px; }
+      body.modo-foco .toast-sim { bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
     }
 
     /* ===================== ESTILO SERRA ===================== */
@@ -2298,15 +2442,15 @@
             <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>
           </svg>Treinar
         </button>
+        <button class="aba" id="aba-arena" onclick="abrirArena()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12z"/>
+          </svg>Arena
+        </button>
         <button class="aba" id="aba-simulado" onclick="irPara('simulado')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M9 3.5V6h6V3.5M8 11h8M8 14.5h8M8 18h5"/>
           </svg>Simulado
-        </button>
-        <button class="aba" id="aba-reels" onclick="irPara('reels')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M3.5 8.5h17M8.5 3.5l2.5 5M14 3.5l2.5 5"/><path d="m10.5 12 4 2.3-4 2.3z" fill="currentColor"/>
-          </svg>Reels
         </button>
         <button class="aba" id="aba-feed" onclick="abrirComunidade()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -2338,7 +2482,6 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15.5 6 9.5"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg>
           <span class="selo-sino escondido" id="selo-sino"></span>
         </button>
-        <button class="btn-icone" onclick="abrirAparencia()" title="Aparência: tema e cores">🎨</button>
         <button class="btn-icone" id="btn-tema" onclick="trocarTema()" title="Alternar tema">🌙</button>
         <button class="avatar" id="btn-perfil" onclick="cliqueNoPerfil()" title="Conta">?</button>
       </div>
@@ -2348,34 +2491,28 @@
   <!-- ===================== TREINAR ===================== -->
   <main class="pagina" id="tela-treinar">
     <div class="cabecalho-secao">
-      <h1>Treinar</h1>
-      <p>Questões reais do ENEM, de 2009 a 2023, sorteadas do nosso banco.</p>
+      <h1>Treinar <button class="botao-ajuda" onclick="abrirAjuda('treinar')" aria-label="Como funciona o treino">?</button></h1>
+      <p>Questões reais do ENEM, de 2009 a 2023.</p>
     </div>
-
-    <div id="pulso-comunidade"></div>
-    <div id="convite-app"></div>
-    <div id="cartao-desafio"></div>
-
-    <section class="guia" id="guia" aria-label="Comece por aqui">
-      <div class="guia-topo">
-        <b>Comece por aqui</b>
-        <button class="guia-fechar" onclick="fecharGuia()">Entendi, esconder</button>
-      </div>
-      <ol class="passos">
-        <li><span class="num">1</span><span><b>Escolha uma área</b>ou use o treino rápido</span></li>
-        <li><span class="num">2</span><span><b>Responda 5 questões</b>reais do ENEM</span></li>
-        <li><span class="num">3</span><span><b>Veja sua nota TRI</b>igual à do ENEM</span></li>
-      </ol>
-      <div class="atalhos-treino" id="atalhos-treino"></div>
-    </section>
 
     <div id="aviso-topo"></div>
 
-    <div class="faixa-status">
+    <section class="guia" id="guia" aria-label="Começar a treinar">
+      <b>Bora treinar?</b>
+      <p>5 questões reais do ENEM, uns 10 minutos. No fim sai a sua nota.</p>
+      <div class="atalhos-treino" id="atalhos-treino"></div>
+    </section>
+
+    <div class="atalhos-inicio"><div id="atalho-arena"></div><div id="cartao-desafio"></div></div>
+    <div id="pulso-comunidade"></div>
+    <div id="convite-app"></div>
+
+    <div class="faixa-status escondido" id="faixa-status">
       <span class="bolinha" id="bolinha"></span>
       <span id="texto-status">Verificando conexão…</span>
     </div>
 
+    <h2 class="titulo-areas">Ou escolha uma área</h2>
     <div class="grade-areas" id="grade-areas"></div>
     <p class="onde-salva" id="onde-salva"></p>
   </main>
@@ -2432,7 +2569,7 @@
   <!-- ===================== COMUNIDADE ===================== -->
   <main class="pagina escondido" id="tela-comunidade">
     <div class="cabecalho-secao">
-      <h1>Comunidade</h1>
+      <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
     <div class="abas-feed subabas" id="subabas-comunidade" role="group" aria-label="Comunidade"></div>
@@ -2442,7 +2579,7 @@
   <!-- ===================== FEED ===================== -->
   <main class="pagina escondido" id="tela-feed">
     <div class="cabecalho-secao">
-      <h1>Comunidade</h1>
+      <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
       <p>Dicas, dúvidas e explicações entre vocês.</p>
     </div>
     <div class="abas-feed subabas" id="subabas-feed" role="group" aria-label="Comunidade"></div>
@@ -2493,6 +2630,11 @@
   <!-- ===================== DESAFIO DA SEMANA ===================== -->
   <main class="pagina escondido" id="tela-desafio">
     <div id="conteudo-desafio"></div>
+  </main>
+
+  <!-- ===================== ARENA ===================== -->
+  <main class="pagina escondido" id="tela-arena">
+    <div id="conteudo-arena"></div>
   </main>
 
   <!-- ===================== PERFIL ===================== -->
@@ -3081,14 +3223,16 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'conta'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'conta', 'arena'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'questao', 'resultado', 'desafio'].includes(tela);
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
-  document.getElementById('aba-feed').classList.toggle('ativa', tela === 'feed' || tela === 'comunidade');
+  document.getElementById('aba-feed').classList.toggle('ativa', ['feed', 'comunidade', 'reels'].includes(tela));
   document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
-  document.getElementById('aba-reels').classList.toggle('ativa', tela === 'reels');
+  document.getElementById('aba-arena').classList.toggle('ativa', tela === 'arena');
+  if (tela !== 'arena') sairDaTelaArena();
+  modoFoco(['questao', 'prova'].includes(tela));
   document.body.classList.toggle('vendo-reels', tela === 'reels');
   if (tela !== 'reels') pararReels();
   if (tela === 'reels') abrirReels();
@@ -3097,7 +3241,7 @@ function irPara(tela) {
   if (tela === 'simulado') abrirSimulado();
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
-  if (tela === 'treinar') { desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharPulso(); }
+  if (tela === 'treinar') { desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
   if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') { abaComunidade = 'feed'; desenharSubabas(); abrirFeed(); }
   if (tela === 'comunidade') mostrarComunidade();
@@ -3167,7 +3311,6 @@ function desenharTudo() {
 }
 
 // ===================== COMECE POR AQUI =====================
-const CHAVE_GUIA = 'mm_guia_visto';
 const CHAVE_ULTIMA_AREA = 'mm_ultima_area';
 
 // Treino rápido: a área com menos questões feitas, para ninguém ficar
@@ -3180,17 +3323,10 @@ function areaDoTreinoRapido() {
 function desenharGuia() {
   const guia = document.getElementById('guia');
   if (!guia) return;
-  guia.classList.toggle('compacta', !!ler(CHAVE_GUIA));
   const ultima = AREAS.find(a => a.id === ler(CHAVE_ULTIMA_AREA));
   document.getElementById('atalhos-treino').innerHTML = `
-    <button class="acao" onclick="abrirMateria(areaDoTreinoRapido())">⚡ Treino rápido</button>
-    ${ultima ? `<button class="acao secundaria" onclick="abrirMateria('${ultima.id}')">Continuar: ${ultima.nome}</button>` : ''}
-    <small>${ultima ? '5 questões, uns 10 minutos.' : '5 questões, uns 10 minutos. Começa pela área que você menos treinou.'}</small>`;
-}
-
-function fecharGuia() {
-  guardar(CHAVE_GUIA, '1');
-  desenharGuia();
+    <button class="acao" onclick="abrirMateria(areaDoTreinoRapido())">Começar treino</button>
+    ${ultima ? `<button class="acao secundaria" onclick="abrirMateria('${ultima.id}')">Continuar ${ultima.nome}</button>` : ''}`;
 }
 
 function desenharOndeSalva() {
@@ -4630,7 +4766,7 @@ function listaDeEnems() {
   };
   return `
     <div class="cabecalho-secao">
-      <h1>Simulado</h1>
+      <h1>Simulado <button class="botao-ajuda" onclick="abrirAjuda('simulado')" aria-label="Como funciona o simulado">?</button></h1>
       <p>Escolha um ENEM e faça a prova inteira: os dois dias, com a redação daquele ano e o tempo oficial.</p>
     </div>
     <div class="lista-enems">
@@ -6200,17 +6336,30 @@ async function desenharCartaoDesafio() {
   const d = desafio;
   const faltam = diasAte(d.termina_em);
   const prazo = faltam <= 1 ? 'termina hoje' : `termina em ${faltam} dias`;
-  alvo.innerHTML = `<section class="cartao-desafio painel">
-    <div class="trofeu">🏆</div>
-    <div class="info-desafio">
-      <b>Desafio da semana</b>
-      <small>${d.questoes.length} questões · ${prazo} · ${d.participantes ? `${d.participantes} ${d.participantes === 1 ? 'participante' : 'participantes'}` : 'seja o primeiro a fazer!'}</small>
-      ${d.meu ? `<small class="feito">Você fez: <b>${d.meu.acertos}/${d.questoes.length}</b>${d.meu.nota ? ` · nota ${d.meu.nota}` : ''}</small>` : ''}
-    </div>
-    ${!usuarioLogado ? `<button class="acao" onclick="abrirConta('criar')">Entrar para participar</button>`
-      : d.meu ? `<button class="acao discreta" onclick="abrirDesafio()">Ver ranking</button>`
-      : `<button class="acao" onclick="abrirDesafio()">${carregarAndamentoDesafio() ? 'Continuar' : 'Participar'}</button>`}
-  </section>`;
+  const acao = !usuarioLogado ? "abrirConta('criar')" : 'abrirDesafio()';
+  const detalhe = d.meu ? `Você fez ${d.meu.acertos}/${d.questoes.length}. Veja o ranking.`
+    : `${d.questoes.length} questões · ${prazo} · ${d.participantes ? plural(d.participantes, 'participante', 'participantes') : 'seja o primeiro!'}`;
+  alvo.innerHTML = `<button class="atalho-inicio" onclick="${acao}"><span class="icone">🏆</span>
+    <span><b>Desafio da semana${!d.meu && usuarioLogado && carregarAndamentoDesafio() ? ' · continuar' : ''}</b><small>${escapar(detalhe)}</small></span></button>`;
+}
+
+// Atalho da Arena no Treinar: revanche pendente, Arena da noite ou jogar com amigos.
+async function desenharAtalhoArena() {
+  const alvo = document.getElementById('atalho-arena');
+  if (!alvo) return;
+  let detalhe = 'Questões ao vivo com os amigos. Crie uma sala ou entre com um código.';
+  let titulo = 'Arena';
+  if (usuarioLogado) {
+    try {
+      const [eu, ag] = await Promise.all([api('/api/arena/eu'), api('/api/arena/agenda')]);
+      const hora = new Date(ag.comeca_em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+      if (ag.aberta) { titulo = 'Arena da noite: aberta!'; detalhe = `${plural(ag.jogadores, 'pessoa esperando', 'pessoas esperando')}. Começa às ${hora}.`; }
+      else if (eu.revanche) { titulo = 'Arena · revanche'; detalhe = `${plural(eu.revanche, 'questão que você errou voltou', 'questões que você errou voltaram')}. Agora você sabe?`; }
+      else detalhe = `Jogue com os amigos ou na Arena da noite, todo dia às ${hora}.`;
+    } catch (e) { /* fica o texto padrão */ }
+  }
+  alvo.innerHTML = `<button class="atalho-inicio" onclick="abrirArena()"><span class="icone">⚡</span>
+    <span><b>${escapar(titulo)}</b><small>${escapar(detalhe)}</small></span></button>`;
 }
 
 function carregarAndamentoDesafio() {
@@ -6433,7 +6582,7 @@ function faseLocal(t = Date.now()) {
 // ---------- presença e progresso (chamado ao entrar e ao sair da conta) ----------
 function iniciarComunidade() {
   clearInterval(relogioPresenca);
-  if (!document.getElementById('tela-treinar').classList.contains('escondido')) desenharPulso();
+  if (!document.getElementById('tela-treinar').classList.contains('escondido')) { desenharPulso(); desenharAtalhoArena(); desenharCartaoDesafio(); }
   if (!usuarioLogado) {
     salaAtual = null; meuProgresso = null;
     document.getElementById('ind-sequencia').classList.add('escondido');
@@ -6490,13 +6639,14 @@ function abrirComunidade(aba) {
 }
 
 function trocarAbaComunidade(aba) {
+  if (aba === 'reels') return irPara('reels');
   perguntaAberta = null;
   telaRedacoes = { modo: 'painel' };
   abrirComunidade(aba);
 }
 
 function desenharSubabas() {
-  const abas = [['agora', '🟢 Agora'], ['salas', salaAtual ? '⏱️ Sua sala' : '⏱️ Salas de estudo'], ['perguntas', '🙋 Perguntas'], ['redacoes', '✍️ Redações'], ['feed', '💬 Feed e grupos']];
+  const abas = [['agora', '🟢 Agora'], ['salas', salaAtual ? '⏱️ Sua sala' : '⏱️ Salas de estudo'], ['perguntas', '🙋 Perguntas'], ['redacoes', '✍️ Redações'], ['feed', '💬 Feed e grupos'], ['reels', '🎬 Reels']];
   const html = abas.map(([id, nome]) => `<button aria-pressed="${id === abaComunidade}" onclick="trocarAbaComunidade('${id}')">${nome}</button>`).join('');
   document.getElementById('subabas-comunidade').innerHTML = html;
   document.getElementById('subabas-feed').innerHTML = html;
@@ -6706,6 +6856,7 @@ const TEXTO_ATIVIDADE = {
   pergunta: a => `perguntou: <button class="alvo" onclick="abrirPergunta(${Number(a.alvo_id)})">“${escapar(a.texto)}”</button>`,
   melhor_resposta: a => `teve a melhor resposta em <button class="alvo" onclick="abrirPergunta(${Number(a.alvo_id)})">“${escapar(a.texto)}”</button> 🏅`,
   sequencia: a => `chegou a <b>${a.alvo_id} dias seguidos</b> estudando 🔥`,
+  arena: a => `venceu ${a.texto ? `<b>${escapar(a.texto)}</b>` : 'uma partida na <b>Arena</b>'} contra ${plural(Math.max(1, Number(a.alvo_id) - 1), 'pessoa', 'pessoas')} ⚡`,
   correcoes: a => `já corrigiu <b>${plural(a.alvo_id, 'redação', 'redações')}</b> da comunidade ✍️`,
   pomodoros: a => `completou <b>${a.alvo_id} pomodoros</b> hoje${a.texto ? ` na sala ${escapar(a.texto)}` : ''} ⏱️`
 };
@@ -7742,6 +7893,561 @@ async function mudarPreferencia(campo, valor) {
   catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); desenharPainelAvisos(); }
 }
 
+// ===================== ARENA =====================
+// Questões ao vivo. O servidor manda o estado da sala inteiro a cada mudança,
+// por um fluxo de eventos lido com fetch (o EventSource não manda o login).
+const CORES_LETRAS = ['#d9822b', '#3f8fd2', '#8e6bd1', '#2fa38a', '#d0567f'];
+const NOMES_NIVEL_ARENA = { 1: 'Fácil', 2: 'Média', 3: 'Difícil', 4: 'Muito difícil' };
+const ARENA_NIVEIS = [['aquecimento', 'Aquecimento: só fáceis'], ['normal', 'Normal: fáceis e médias'], ['desafio', 'Desafio: médias e difíceis']];
+const ARENA_RITMOS = [['tranquilo', 'Tranquilo: mais tempo'], ['normal', 'Normal'], ['relampago', 'Relâmpago: menos tempo']];
+const ARENA_AREAS = [['', 'Todas as áreas'], ['linguagens', 'Linguagens'], ['ciencias-humanas', 'Humanas'], ['ciencias-natureza', 'Natureza'], ['matematica', 'Matemática']];
+let arena = { codigo: null, estado: null, conexao: null, offset: 0, tique: null, chave: null, eu: null, agenda: null, bauAberto: false, tentativas: 0, criando: false };
+
+function modoFoco(ligado) { document.body.classList.toggle('modo-foco', ligado); }
+
+function abrirArena(codigo) {
+  irPara('arena');
+  if (codigo) return entrarNaArena(codigo);
+  if (arena.codigo) return desenharArena();
+  desenharInicioArena();
+}
+
+function sairDaTelaArena() {
+  // Sair da aba no meio da partida não tira a pessoa da sala: ela volta pela Arena.
+  if (!arena.estado || ['fim', 'espera'].includes(arena.estado.estado)) fecharConexaoArena();
+  clearInterval(arena.tique); arena.tique = null;
+}
+
+function fecharConexaoArena() {
+  if (arena.conexao) arena.conexao.abort();
+  arena.conexao = null;
+}
+
+async function desenharInicioArena() {
+  modoFoco(false);
+  const alvo = document.getElementById('conteudo-arena');
+  const cabecalho = `<div class="cabecalho-secao"><h1>Arena <button class="botao-ajuda" onclick="abrirAjuda('arena')" aria-label="Como funciona a Arena">?</button></h1>
+    <p>Questões do ENEM ao vivo, com os amigos ou com a turma. Todo mundo responde junto e o placar muda a cada rodada.</p></div>`;
+  if (!usuarioLogado) {
+    alvo.innerHTML = `${cabecalho}<section class="painel vazio"><span class="cara">⚡</span>
+      Entre na sua conta para jogar: o resultado conta no seu progresso.<br><br>
+      <button class="acao" onclick="abrirConta('entrar')">Entrar</button></section>`;
+    return;
+  }
+  alvo.innerHTML = `${cabecalho}<div class="arena-inicio">
+    <div id="arena-noite"></div>
+    <div class="arena-botoes">
+      <section class="painel">
+        <b>Criar uma sala</b>
+        <p>Você recebe um código de 6 números para os amigos entrarem.</p>
+        <div id="form-sala"><button class="acao" onclick="mostrarFormSala()">Criar sala</button></div>
+      </section>
+      <section class="painel">
+        <b>Entrar numa sala</b>
+        <p>Digite o código que apareceu para quem criou.</p>
+        <form class="codigo-entrada" onsubmit="event.preventDefault(); entrarNaArena(document.getElementById('codigo-arena').value)">
+          <input id="codigo-arena" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="000000" aria-label="Código da sala">
+          <button class="acao" type="submit">Entrar</button>
+        </form>
+      </section>
+    </div>
+    <div id="arena-revanche"></div>
+    <div id="arena-eu"></div>
+  </div>`;
+  if (!ler('mm_arena_ajuda')) { guardar('mm_arena_ajuda', '1'); abrirAjuda('arena'); }
+  desenharArenaDaNoite();
+  try {
+    arena.eu = await api('/api/arena/eu');
+    desenharMinhaArena();
+  } catch (e) { /* o resto da tela funciona sem isso */ }
+}
+
+async function desenharArenaDaNoite() {
+  const alvo = document.getElementById('arena-noite');
+  if (!alvo) return;
+  try { arena.agenda = await api('/api/arena/agenda'); } catch (e) { alvo.innerHTML = ''; return; }
+  const ag = arena.agenda;
+  arena.offset = ag.agora - Date.now();
+  const comeca = Date.parse(ag.comeca_em);
+  const hora = new Date(comeca).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+  let texto, botao = '';
+  if (ag.aberta) {
+    texto = `Aberta! ${plural(ag.jogadores, 'pessoa esperando', 'pessoas esperando')}. Começa às ${hora}.`;
+    botao = `<button class="acao" onclick="entrarNaArenaDaNoite()">Entrar</button>`;
+  } else if (ag.rolando) {
+    texto = 'Rolando agora. Amanhã tem de novo!';
+  } else {
+    texto = `Todo dia às ${hora}, aberta a todos. <span id="falta-noite"></span>`;
+  }
+  alvo.innerHTML = `<section class="painel arena-noite"><span class="lua">🌙</span>
+    <div class="info"><b>Arena da noite</b><small>${texto} 10 questões contra a comunidade.</small></div>${botao}</section>`;
+  const atualizar = () => {
+    const el = document.getElementById('falta-noite');
+    if (!el) return;
+    const ms = comeca - (Date.now() + arena.offset);
+    el.textContent = ms > 0 ? `Começa em ${ms > 3600000 ? `${Math.floor(ms / 3600000)}h ${Math.floor(ms % 3600000 / 60000)}min` : mmss(ms)}.` : '';
+    if (ms <= 10 * 60000 && ms > 0 && !ag.aberta && !arena.recarregouNoite) { arena.recarregouNoite = true; setTimeout(desenharArenaDaNoite, 1500); }
+  };
+  atualizar();
+  clearInterval(arena.tique);
+  arena.tique = setInterval(atualizar, 1000);
+}
+
+function desenharMinhaArena() {
+  const e = arena.eu;
+  const revanche = document.getElementById('arena-revanche');
+  if (revanche) revanche.innerHTML = e.revanche ? `<section class="painel arena-noite"><span class="lua">🔁</span>
+    <div class="info"><b>Revanche contra a questão</b><small>${plural(e.revanche, 'questão que você errou voltou', 'questões que você errou voltaram')}. Agora você sabe?</small></div>
+    <button class="acao" onclick="abrirRevanche()">Tentar de novo</button></section>` : '';
+  const alvo = document.getElementById('arena-eu');
+  if (!alvo) return;
+  const usando = e.colecao.find(i => i.id === e.emblema);
+  alvo.innerHTML = `<section class="painel">
+    <div class="meus-numeros-arena">
+      <div><b>${e.partidas}</b><small>partidas</small></div>
+      <div><b>${e.vitorias}</b><small>vitórias</small></div>
+      <div><b>${e.recorde}</b><small>recorde de pontos</small></div>
+    </div>
+    <p class="pista" style="margin:12px 0 0">XP da Arena hoje: ${e.xp_hoje} de ${e.xp_limite}. ${e.xp_hoje >= e.xp_limite ? 'Chegou no limite: jogar continua valendo como treino.' : ''}</p>
+  </section>
+  <section class="painel">
+    <b>Seus emblemas</b>
+    <p class="pista" style="margin:4px 0 0">Cada partida com amigos abre um baú. ${usando ? `Usando: ${usando.emoji} ${escapar(usando.nome)}.` : 'Toque num emblema para usar ao lado do seu nome.'}</p>
+    <div class="colecao">${e.colecao.map(i => `<button class="${i.raridade}${i.id === e.emblema ? ' usando' : ''}" ${i.tem ? '' : 'disabled'}
+      title="${escapar(i.tem ? `${i.nome} (${i.raridade === 'epico' ? 'épico' : i.raridade})` : 'Ainda não ganhou')}"
+      onclick="usarEmblema('${i.id}')">${i.tem ? i.emoji : '?'}</button>`).join('')}</div>
+  </section>`;
+}
+
+async function usarEmblema(id) {
+  const novo = arena.eu.emblema === id ? null : id;
+  try {
+    await postar('/api/arena/emblema', { item: novo });
+    arena.eu.emblema = novo;
+    desenharMinhaArena();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+function mostrarFormSala() {
+  const opcoes = (lista, atual) => lista.map(([v, n]) => `<option value="${v}"${v === atual ? ' selected' : ''}>${n}</option>`).join('');
+  document.getElementById('form-sala').innerHTML = `<form class="form-sala" onsubmit="event.preventDefault(); criarSalaArena()">
+    <label>Área<select id="sala-area">${opcoes(ARENA_AREAS, '')}</select></label>
+    <label>Nível<select id="sala-nivel">${opcoes(ARENA_NIVEIS, 'aquecimento')}</select></label>
+    <label>Tempo<select id="sala-ritmo">${opcoes(ARENA_RITMOS, 'normal')}</select></label>
+    <label>Questões<select id="sala-qtd">${opcoes([['5', '5 questões (uns 5 minutos)'], ['10', '10 questões'], ['15', '15 questões']], '5')}</select></label>
+    <label class="caixa"><input type="checkbox" id="sala-joga" checked> Eu também vou jogar</label>
+    <small class="pista" style="margin:-4px 0 0">Professor projetando para a turma? Desmarque para só apresentar.</small>
+    <button class="acao" type="submit">Criar sala</button>
+  </form>`;
+}
+
+async function criarSalaArena() {
+  if (arena.criando) return;
+  arena.criando = true;
+  try {
+    const { codigo } = await postar('/api/arena/salas', {
+      area: document.getElementById('sala-area').value || null, nivel: document.getElementById('sala-nivel').value,
+      ritmo: document.getElementById('sala-ritmo').value, quantidade: Number(document.getElementById('sala-qtd').value),
+      criador_joga: document.getElementById('sala-joga').checked
+    });
+    conectarArena(codigo);
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+  arena.criando = false;
+}
+
+async function entrarNaArena(codigo) {
+  const c = String(codigo || '').replace(/\D/g, '');
+  if (c.length !== 6) return avisoSim('O código tem 6 números.');
+  if (!usuarioLogado) return abrirConta('entrar');
+  try {
+    await postar(`/api/arena/salas/${c}/entrar`);
+    conectarArena(c);
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+async function entrarNaArenaDaNoite() {
+  try {
+    const { codigo } = await postar('/api/arena/noite/entrar');
+    conectarArena(codigo);
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); desenharArenaDaNoite(); }
+}
+
+function conectarArena(codigo) {
+  fecharConexaoArena();
+  arena.codigo = codigo; arena.estado = null; arena.chave = null; arena.bauAberto = false; arena.vistos = new Set();
+  const ctrl = new AbortController();
+  arena.conexao = ctrl;
+  document.getElementById('conteudo-arena').innerHTML = '<div class="vazio">Entrando na sala…</div>';
+  (async () => {
+    try {
+      const r = await fetch(`${API_URL}/api/arena/salas/${codigo}/eventos`, { headers: cabecalhoAuth(), signal: ctrl.signal });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        return arenaAcabou(d.error || 'Não consegui entrar na sala.');
+      }
+      arena.tentativas = 0;
+      const leitor = r.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { value, done } = await leitor.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let i;
+        while ((i = buf.indexOf('\n\n')) >= 0) {
+          const linha = buf.slice(0, i).split('\n').find(l => l.startsWith('data: '));
+          buf = buf.slice(i + 2);
+          if (linha) receberArena(JSON.parse(linha.slice(6)));
+        }
+      }
+    } catch (e) {
+      if (ctrl.signal.aborted) return;
+    }
+    // Caiu a conexão (celular trocou de rede, servidor acordando): tenta de novo.
+    if (arena.conexao !== ctrl || ctrl.signal.aborted) return;
+    arena.tentativas++;
+    if (arena.tentativas > 8) return arenaAcabou('Perdi a conexão com a sala. Confira a internet e entre de novo.');
+    setTimeout(() => { if (arena.conexao === ctrl) conectarArena(codigo); }, Math.min(10000, 1000 * arena.tentativas));
+  })();
+}
+
+function arenaAcabou(motivo) {
+  fecharConexaoArena();
+  arena.codigo = null; arena.estado = null;
+  modoFoco(false);
+  avisoSim(motivo);
+  if (!document.getElementById('tela-arena').classList.contains('escondido')) desenharInicioArena();
+}
+
+function receberArena(e) {
+  if (e.removido) return arenaAcabou('Quem criou a sala tirou você da partida.');
+  if (e.cancelada) return arenaAcabou('A Arena da noite não juntou gente suficiente hoje. Amanhã tem de novo!');
+  arena.estado = e;
+  arena.offset = e.agora - Date.now();
+  if (!document.getElementById('tela-arena').classList.contains('escondido')) desenharArena();
+}
+
+const faltaNaFase = () => arena.estado && arena.estado.fim_da_fase ? Math.max(0, arena.estado.fim_da_fase - (Date.now() + arena.offset)) : 0;
+
+function desenharArena() {
+  const e = arena.estado;
+  if (!e) return;
+  const alvo = document.getElementById('conteudo-arena');
+  const jogando = ['leitura', 'resposta', 'resultado', 'placar'].includes(e.estado);
+  modoFoco(jogando);
+  // Só redesenha a questão quando muda a fase ou a rodada; o resto atualiza no lugar.
+  const chave = `${e.estado}:${e.rodada}:${e.minha ? e.minha.alternativa : '-'}`;
+  if (chave === arena.chave) {
+    if (e.estado === 'resposta') return atualizarRespostasArena();
+    if (e.estado === 'espera') return desenharEsperaArena(alvo);
+    return;
+  }
+  arena.chave = chave;
+  if (e.estado === 'leitura' && e.rodada === 0) { arena.festejou = false; arena.bauAberto = false; }
+  if (e.estado === 'espera') desenharEsperaArena(alvo);
+  else if (e.estado === 'placar') desenharPlacarArena(alvo);
+  else if (e.estado === 'fim') desenharFimArena(alvo);
+  else desenharQuestaoArena(alvo);
+  clearInterval(arena.tique);
+  arena.tique = setInterval(tiqueArena, 250);
+  tiqueArena();
+}
+
+function tiqueArena() {
+  const e = arena.estado;
+  if (!e) return;
+  const falta = faltaNaFase();
+  const rel = document.getElementById('relogio-arena');
+  if (rel && ['leitura', 'resposta'].includes(e.estado)) {
+    const total = e.estado === 'resposta' ? e.questao.tempo * 1000 : Math.max(falta, 1000);
+    const s = Math.ceil(falta / 1000);
+    rel.querySelector('span').textContent = s;
+    rel.style.setProperty('--p', e.estado === 'resposta' ? (falta / total) * 100 : 100);
+    rel.classList.toggle('acabando', e.estado === 'resposta' && s <= 10);
+    const fase = document.getElementById('fase-arena');
+    if (fase) fase.textContent = e.estado === 'leitura' ? `Leia com calma · as alternativas abrem em ${s} s` : (e.minha ? 'Resposta enviada' : `Responda! Faltam ${s} s`);
+  }
+  const espera = document.getElementById('espera-noite');
+  if (espera && e.comeca_em) {
+    const ms = e.comeca_em - (Date.now() + arena.offset);
+    espera.textContent = ms > 0 ? `Começa em ${mmss(ms)}` : (e.jogadores.length >= 2 ? 'Começando…' : 'Esperando mais alguém entrar…');
+  }
+}
+
+// Só quem acabou de entrar ganha a animação (a lista é redesenhada a cada novidade).
+function novoNaSala(id) {
+  arena.vistos = arena.vistos || new Set();
+  if (arena.vistos.has(id)) return false;
+  arena.vistos.add(id);
+  return true;
+}
+
+const nomeComEmblema = j => `${j.emblema ? j.emblema + ' ' : ''}${escapar(j.nome)}`;
+
+function desenharEsperaArena(alvo) {
+  const e = arena.estado;
+  const daNoite = e.publica;
+  const podeComecar = e.criador && !daNoite;
+  alvo.innerHTML = `<div class="cabecalho-secao"><h1>${daNoite ? '🌙 Arena da noite' : 'Sala da Arena'}</h1>
+      <p>${daNoite ? 'Aberta para toda a comunidade.' : `Criada por ${escapar(e.criador_nome)} · ${nomeArenaConfig(e.config)}`}</p></div>
+    ${daNoite ? `<section class="painel" style="text-align:center"><b id="espera-noite" style="font-size:1.3rem"></b>
+        <p class="pista" style="margin:6px 0 0">10 questões · começa sozinha no horário</p></section>`
+      : `<section class="painel" style="text-align:center">
+        <div class="pista">Código da sala</div>
+        <div class="codigo-sala">${e.codigo.slice(0, 3)} ${e.codigo.slice(3)}</div>
+        <p class="pista" style="margin:8px 0 12px">Os amigos entram em <b>Arena → Entrar numa sala</b>.</p>
+        <button class="acao secundaria" onclick="convidarArena()">Enviar convite</button>
+      </section>`}
+    <section class="painel">
+      <b>${plural(e.jogadores.length, 'pessoa na sala', 'pessoas na sala')}</b>
+      <div class="chips-jogadores" style="margin-top:12px">${e.jogadores.map(j => `<span class="chip-jogador${j.eu ? ' eu' : ''}${j.ausente ? ' ausente' : ''}${novoNaSala(j.id) ? ' novo' : ''}">
+        <span class="ini">${escapar(j.nome.charAt(0).toUpperCase())}</span>${nomeComEmblema(j)}
+        ${e.criador && !j.eu && !daNoite ? `<button onclick="removerDaArena(${j.id}, '${escapar(j.nome).replace(/'/g, '&#39;')}')" aria-label="Tirar ${escapar(j.nome)} da sala">✕</button>` : ''}</span>`).join('')}</div>
+    </section>
+    <div class="acoes-arena">
+      ${podeComecar ? `<button class="acao" onclick="comecarArena()">${e.jogadores.length < 2 ? 'Começar mesmo assim' : 'Começar'}</button>` : ''}
+      ${!e.criador && !daNoite ? `<span class="pista" style="align-self:center">Esperando ${escapar(e.criador_nome)} começar…</span>` : ''}
+      <button class="acao discreta" onclick="sairDaArena()">Sair da sala</button>
+    </div>
+    ${podeComecar && e.jogadores.length < 2 ? '<p class="pista">A Arena é mais divertida com 2 ou mais. Mande o código para alguém!</p>' : ''}`;
+}
+
+function nomeArenaConfig(c) {
+  const area = (ARENA_AREAS.find(a => a[0] === (c.area || '')) || ARENA_AREAS[0])[1];
+  const nivel = (ARENA_NIVEIS.find(n => n[0] === c.nivel) || ARENA_NIVEIS[0])[1].split(':')[0];
+  return `${area} · ${nivel} · ${c.quantidade} questões`;
+}
+
+async function convidarArena() {
+  const link = `${location.origin}${location.pathname}?arena=${arena.estado.codigo}`;
+  const texto = `Bora jogar questões do ENEM na Arena? Código: ${arena.estado.codigo}`;
+  try {
+    if (navigator.share) return await navigator.share({ title: 'Arena · M&M Estudos', text: texto, url: link });
+    await navigator.clipboard.writeText(`${texto}\n${link}`);
+    avisoSim('Convite copiado! É só colar no grupo.');
+  } catch (e) { /* a pessoa cancelou o compartilhamento */ }
+}
+
+async function comecarArena() {
+  try { await postar(`/api/arena/salas/${arena.estado.codigo}/comecar`); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+async function removerDaArena(id, nome) {
+  if (!confirm(`Tirar ${nome} da sala?`)) return;
+  try { await postar(`/api/arena/salas/${arena.estado.codigo}/remover`, { usuario_id: id }); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+function confirmarSaidaArena() {
+  if (confirm('Sair da partida? O que você já fez continua no placar.')) sairDaArena();
+}
+
+async function sairDaArena() {
+  const codigo = arena.codigo;
+  fecharConexaoArena();
+  arena.codigo = null; arena.estado = null;
+  modoFoco(false);
+  desenharInicioArena();
+  try { await postar(`/api/arena/salas/${codigo}/sair`); } catch (e) { /* a sala some sozinha */ }
+}
+
+function desenharQuestaoArena(alvo) {
+  const e = arena.estado;
+  const q = e.questao;
+  const resultado = e.estado === 'resultado';
+  const podeResponder = e.estado === 'resposta' && e.jogando && !e.minha;
+  const alternativas = q.alternativas || ['', '', '', '', ''];
+  const minha = e.minha ? e.minha.alternativa : null;
+  let aviso = '';
+  if (resultado && e.jogando) {
+    aviso = !e.minha ? `<div class="aviso-arena ruim">O tempo acabou! A certa era a ${LETRAS[q.correta]}.</div>`
+      : e.minha.acertou ? `<div class="aviso-arena bom">Acertou! +${e.minha.ganhou} pontos${(e.jogadores.find(j => j.eu) || {}).seguidas >= 2 ? ` · 🔥 ${(e.jogadores.find(j => j.eu) || {}).seguidas} seguidas` : ''}</div>`
+      : `<div class="aviso-arena ruim">Não foi dessa vez. A certa era a ${LETRAS[q.correta]}. Ela volta para a sua revanche.</div>`;
+    if (e.minha && e.minha.acertou) soltarConfete();
+  } else if (resultado) {
+    aviso = `<div class="aviso-arena neutro">A certa era a ${LETRAS[q.correta]}.</div>`;
+  } else if (e.minha) {
+    aviso = '<div class="aviso-arena neutro">Resposta enviada! Esperando os outros…</div>';
+  }
+  alvo.innerHTML = `<div class="topo-arena">
+      <button class="btn-sair" onclick="confirmarSaidaArena()" title="Sair da partida" aria-label="Sair da partida">✕</button>
+      <div class="onde" style="margin-right:auto">Questão ${e.rodada + 1} de ${e.total}<small>${escapar(q.area || '')} · ENEM ${q.ano} · ${NOMES_NIVEL_ARENA[q.nivel] || ''} · ${q.tempo} s</small></div>
+      ${resultado ? '' : '<div class="relogio-arena" id="relogio-arena"><span></span></div>'}
+    </div>
+    <div class="fase-arena" id="fase-arena">${resultado ? 'Resultado' : ''}</div>
+    <section class="painel"><div class="enunciado">${formatarEnunciado(q.contexto)}</div></section>
+    <div class="alts-arena">${alternativas.map((t, i) => {
+      const classes = ['alt'];
+      if (e.estado === 'leitura' || (minha !== null && i !== minha && !resultado)) classes.push('bloqueada');
+      if (i === minha) classes.push('minha');
+      if (resultado && i === q.correta) classes.push('certa');
+      else if (resultado && i === minha) classes.push('errada');
+      const votos = resultado && e.votos ? e.votos[i] : 0;
+      return `<button class="${classes.join(' ')}" ${podeResponder ? '' : 'disabled'} onclick="responderArena(${i})">
+        <span class="letra" style="background:${CORES_LETRAS[i]}">${LETRAS[i]}</span>
+        <span>${e.estado === 'leitura' ? '<span class="pista">…</span>' : formatarEnunciado(t)}</span>
+        ${votos ? `<span class="votos">${plural(votos, 'pessoa', 'pessoas')}</span>` : ''}</button>`;
+    }).join('')}</div>
+    ${aviso}
+    <p class="pista" id="arena-responderam" style="margin-top:10px"></p>
+    ${!e.jogando ? '<p class="pista">Você está só apresentando: projete esta tela para a turma.</p>' : ''}`;
+  atualizarRespostasArena();
+}
+
+function atualizarRespostasArena() {
+  const e = arena.estado;
+  const el = document.getElementById('arena-responderam');
+  if (!el || e.estado !== 'resposta') { if (el) el.textContent = ''; return; }
+  const n = e.jogadores.filter(j => j.respondeu).length;
+  el.textContent = `${n} de ${e.jogadores.length} já responderam`;
+}
+
+async function responderArena(i) {
+  const e = arena.estado;
+  if (!e || e.estado !== 'resposta' || e.minha) return;
+  e.minha = { alternativa: i };
+  arena.chave = null;
+  desenharArena();
+  try { await postar(`/api/arena/salas/${e.codigo}/responder`, { rodada: e.rodada, alternativa: i }); }
+  catch (erro) { avisoSim(erro.daApi || SEM_SERVIDOR); }
+}
+
+function desenharPlacarArena(alvo) {
+  const e = arena.estado;
+  const ultima = e.rodada + 1 >= e.total;
+  alvo.innerHTML = `<div class="cabecalho-secao"><h1>Placar</h1><p>${ultima ? 'Última rodada! Já já sai o pódio…' : `Depois da questão ${e.rodada + 1} de ${e.total}`}</p></div>
+    <div class="placar-arena">${e.jogadores.slice(0, 15).map((j, i) => `<div class="linha-placar${j.eu ? ' eu' : ''}" style="animation-delay:${i * 40}ms">
+      <span class="pos">${j.posicao}º</span>
+      <span class="nome">${nomeComEmblema(j)}${j.seguidas >= 2 ? ` <span class="sobe">🔥${j.seguidas}</span>` : ''}</span>
+      <span class="mudou ${j.subiu > 0 ? 'sobe' : j.subiu < 0 ? 'desce' : ''}">${j.subiu > 0 ? `▲${j.subiu}` : j.subiu < 0 ? `▼${-j.subiu}` : ''}${j.ganhou ? ` +${j.ganhou}` : ''}</span>
+      <span class="pts">${j.pontos}</span></div>`).join('')}</div>
+    ${e.jogadores.length > 15 && !e.jogadores.slice(0, 15).some(j => j.eu) ? (() => { const eu = e.jogadores.find(j => j.eu); return eu ? `<p class="pista">Você está em ${eu.posicao}º com ${eu.pontos} pontos.</p>` : ''; })() : ''}
+    <p class="pista" style="margin-top:14px">${ultima ? '' : 'A próxima questão começa sozinha.'}</p>`;
+}
+
+function desenharFimArena(alvo) {
+  const e = arena.estado;
+  const f = e.final || { podio: [], destaques: [], meu: null };
+  const lugar = (i, classe, med) => f.podio[i] ? `<div class="degrau-arena ${classe}"><span class="med">${med}</span><b>${nomeComEmblema(f.podio[i])}</b><small>${f.podio[i].pontos} pts</small></div>` : '<div></div>';
+  const m = f.meu;
+  if (m && m.posicao === 1 && e.jogadores.length >= 2 && !arena.festejou) { arena.festejou = true; soltarConfete(); }
+  alvo.innerHTML = `<div class="cabecalho-secao" style="text-align:center"><h1 style="justify-content:center">Fim de jogo!</h1></div>
+    <div class="podio-arena">${lugar(1, 'p2', '🥈')}${lugar(0, 'p1', '🥇')}${lugar(2, 'p3', '🥉')}</div>
+    ${m ? `<section class="painel">
+      <b>${m.posicao}º lugar · ${m.acertos} de ${m.total} acertos · ${m.pontos} pontos</b>
+      <ul class="vitorias-arena">${m.vitorias.map(v => `<li>${escapar(v)}</li>`).join('')}
+        ${m.xp ? `<li>+${m.xp} XP${m.xp_limite ? ' · chegou no limite de XP da Arena hoje' : ''}</li>` : ''}</ul>
+    </section>
+    ${m.bau ? `<section class="painel bau" id="bau-arena">${m.bau.fechado ? `<p class="pista">${escapar(m.bau.motivo)}</p>`
+      : arena.bauAberto ? htmlItemDoBau(m.bau)
+      : `<button class="fechado" onclick="abrirBauArena()" aria-label="Abrir o baú">🎁</button><p class="pista">Toque para abrir seu baú</p>`}</section>` : ''}
+    ${m.erradas.length ? `<section class="painel"><b>Para revisar</b>
+      <p class="pista" style="margin:4px 0 8px">Essas voltam em 2 dias para a sua revanche. Veja a explicação da comunidade:</p>
+      <ul class="destaques-arena">${m.erradas.map(q => `<li>${escapar(q.area || '')} · ENEM ${q.ano}: a certa era a <b>${LETRAS[q.correta]}</b> ·
+        <a href="#" onclick="event.preventDefault(); abrirDiscussao(${Number(q.id)})">ver discussão</a></li>`).join('')}</ul></section>` : ''}` : ''}
+    ${f.destaques.length ? `<section class="painel"><b>Destaques</b><ul class="destaques-arena" style="margin-top:8px">${f.destaques.map(d => `<li>${escapar(d.texto)}</li>`).join('')}</ul></section>` : ''}
+    <div class="acoes-arena">
+      ${e.criador && !e.publica ? '<button class="acao" onclick="comecarArena()">Jogar de novo</button>' : ''}
+      ${!e.criador && !e.publica ? `<span class="pista" style="align-self:center">Se ${escapar(e.criador_nome)} chamar a revanche, você joga daqui mesmo.</span>` : ''}
+      <button class="acao discreta" onclick="sairDaArena()">Sair</button>
+    </div>`;
+}
+
+function htmlItemDoBau(b) {
+  const nomes = { comum: 'Comum', raro: 'Raro', epico: 'Épico' };
+  return `<span class="item">${b.item.emoji}</span><b>${escapar(b.item.nome)}</b><br>
+    <span class="raridade ${b.item.raridade}">${nomes[b.item.raridade]}</span>
+    <p class="pista" style="margin:6px 0 0">${b.novo ? 'Novo na sua coleção! Use ao lado do seu nome na Arena.' : 'Você já tinha esse. Continue jogando para completar a coleção!'}</p>`;
+}
+
+function abrirBauArena() {
+  arena.bauAberto = true;
+  const m = arena.estado.final.meu;
+  document.getElementById('bau-arena').innerHTML = htmlItemDoBau(m.bau);
+  if (m.bau.item.raridade !== 'comum') soltarConfete();
+}
+
+// ---------- revanche contra a questão ----------
+let revanche = null;
+async function abrirRevanche() {
+  try { revanche = { questoes: (await api('/api/arena/revanche')).questoes, i: 0, acertos: 0, respondida: null }; }
+  catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  if (!revanche.questoes.length) return avisoSim('Nenhuma revanche agora!');
+  irPara('arena');
+  desenharRevanche();
+}
+
+function desenharRevanche() {
+  const alvo = document.getElementById('conteudo-arena');
+  const q = revanche.questoes[revanche.i];
+  if (!q) {
+    alvo.innerHTML = `<div class="cabecalho-secao"><h1>Revanche</h1></div><section class="painel vazio"><span class="cara">${revanche.acertos ? '💪' : '📚'}</span>
+      ${revanche.acertos ? `Você venceu ${plural(revanche.acertos, 'questão', 'questões')} que tinha errado!` : 'Essas ainda vão voltar. Errar e tentar de novo é como a matéria fixa.'}<br><br>
+      <button class="acao" onclick="revanche = null; desenharInicioArena()">Voltar para a Arena</button></section>`;
+    return;
+  }
+  const r = revanche.respondida;
+  alvo.innerHTML = `<div class="topo-arena"><div class="onde">Revanche ${revanche.i + 1} de ${revanche.questoes.length}<small>${escapar(q.area || '')} · ENEM ${q.ano} · você errou essa na Arena</small></div></div>
+    <section class="painel"><div class="enunciado">${formatarEnunciado(q.contexto)}</div></section>
+    <div class="alts-arena">${q.alternativas.map((t, i) => {
+      const c = ['alt'];
+      if (r) { if (i === r.correta) c.push('certa'); else if (i === r.minha) c.push('errada'); else c.push('bloqueada'); }
+      return `<button class="${c.join(' ')}" ${r ? 'disabled' : ''} onclick="responderRevanche(${i})"><span class="letra" style="background:${CORES_LETRAS[i]}">${LETRAS[i]}</span><span>${formatarEnunciado(t)}</span></button>`;
+    }).join('')}</div>
+    ${r ? `<div class="aviso-arena ${r.acertou ? 'bom' : 'ruim'}">${r.acertou ? 'Agora foi! Essa você venceu. 💪' : `Ainda não. A certa é a ${LETRAS[r.correta]}; ela volta em 3 dias.`}</div>
+      <div class="acoes-arena"><button class="acao" onclick="revanche.i++; revanche.respondida = null; desenharRevanche()">Continuar</button>
+      <button class="acao discreta" onclick="abrirDiscussao(${Number(q.id)})">Ver explicações</button></div>` : ''}`;
+}
+
+async function responderRevanche(i) {
+  const q = revanche.questoes[revanche.i];
+  try {
+    const r = await postar(`/api/arena/revanche/${q.id}`, { alternativa: i });
+    revanche.respondida = { ...r, minha: i };
+    if (r.acertou) { revanche.acertos++; soltarConfete(); }
+    desenharRevanche();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+// ---------- ajuda embutida: cada tela explica a si mesma ----------
+const AJUDA = {
+  arena: ['Arena', [
+    '<b>Crie uma sala</b> e mande o código de 6 números para os amigos, ou <b>entre</b> com o código de alguém.',
+    'Primeiro aparece o texto da questão para ler com calma. Depois abrem as alternativas e o relógio começa.',
+    '<b>Acertar vale 600 pontos</b>, e responder rápido dá até mais 400. Acertos seguidos dão bônus 🔥. Errar não tira pontos.',
+    'No fim todo mundo ganha XP e abre um baú com um emblema. As questões que você errou voltam em 2 dias para a revanche.',
+    'Todo dia às 19h30 tem a <b>Arena da noite</b>, aberta para toda a comunidade.'
+  ]],
+  treinar: ['Treinar', [
+    'Toque em <b>Treino rápido</b> para 5 questões reais do ENEM (uns 10 minutos), ou escolha uma área.',
+    'Depois de responder, você vê se acertou e pode abrir as <b>explicações da comunidade</b>.',
+    'Com 5 questões ou mais numa área, aparece a sua <b>nota TRI</b> estimada, calculada como no ENEM.'
+  ]],
+  simulado: ['Simulado', [
+    'É a prova do ENEM de um ano inteiro, com relógio, como no dia da prova.',
+    'Dá para pausar e continuar depois. No fim sai a nota de cada área.'
+  ]],
+  comunidade: ['Comunidade', [
+    '<b>Agora</b>: quem está estudando e o que está rolando.',
+    '<b>Salas</b>: estudar junto no mesmo relógio (25 minutos de foco, 5 de pausa).',
+    '<b>Perguntas</b>: pergunte uma dúvida ou ajude alguém. <b>Redações</b>: mande a sua e corrija a dos outros.',
+    '<b>Reels</b>: vídeos curtos de estudo da comunidade.'
+  ]]
+};
+
+function abrirAjuda(tema) {
+  const [titulo, passos] = AJUDA[tema];
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.onclick = ev => { if (ev.target === fundo) fundo.remove(); };
+  fundo.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="Como funciona: ${titulo}">
+    <div class="modal-topo"><h2>Como funciona</h2><button class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <ol class="ajuda-lista">${passos.map(p => `<li>${p}</li>`).join('')}</ol>
+    <button class="acao" style="width:100%;margin-top:18px" onclick="this.closest('.fundo-modal').remove()">Entendi</button></div>`;
+  document.body.appendChild(fundo);
+}
+
 // Links vindos de avisos e e-mails: ?abrir=pergunta:12, ?abrir=sala:geral...
 function abrirPeloLink(abrir) {
   const [tipo, valor] = String(abrir).split(':');
@@ -7755,14 +8461,22 @@ function abrirPeloLink(abrir) {
   if (tipo === 'comunidade') return abrirComunidade('agora');
   if (tipo === 'reels') return irPara('reels');
   if (tipo === 'treinar') return irPara('treinar');
+  if (tipo === 'arena') return abrirArena();
 }
 
 async function tratarLinkDeAviso(sessaoRestaurada) {
   const params = new URLSearchParams(location.search);
   const abrir = params.get('abrir');
   const descadastrar = params.get('descadastrar');
-  if (!abrir && !descadastrar && !params.get('app')) return;
+  const codigoArena = params.get('arena');
+  if (!abrir && !descadastrar && !params.get('app') && !codigoArena) return;
   history.replaceState(null, '', location.pathname);
+  if (codigoArena) {
+    await sessaoRestaurada;
+    if (usuarioLogado) return abrirArena(codigoArena);
+    avisoTopo('Entre na sua conta e depois em Arena → Entrar numa sala, com o código ' + codigoArena.replace(/\D/g, '').slice(0, 6) + '.', 'bom');
+    return;
+  }
   if (descadastrar) {
     try {
       const r = await fetch(`${API_URL}/api/avisos/descadastrar`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: descadastrar }) });
@@ -7776,20 +8490,20 @@ async function tratarLinkDeAviso(sessaoRestaurada) {
 }
 
 function verificarAPI() {
+  // A faixa só aparece quando há problema: tudo certo não precisa de aviso.
+  const faixa = document.getElementById('faixa-status');
   const bolinha = document.getElementById('bolinha');
   const texto = document.getElementById('texto-status');
+  const problema = msg => { faixa.classList.remove('escondido'); bolinha.className = 'bolinha ruim'; texto.textContent = msg; };
   fetch(`${API_URL}/api/health?banco=1`)
     .then(r => r.json())
     .then(d => {
-      const ok = d.banco === 'conectado';
-      bolinha.className = 'bolinha ' + (ok ? 'ok' : 'ruim');
-      texto.textContent = ok
-        ? 'Tudo funcionando — 2684 questões disponíveis'
-        : 'Servidor no ar, mas sem conexão com o banco';
+      if (d.banco === 'conectado') faixa.classList.add('escondido');
+      else problema('O site está com um problema no banco de dados. Tente de novo em instantes.');
     })
-    .catch(e => {
-      bolinha.className = 'bolinha ruim';
-      texto.textContent = 'Servidor fora do ar ou acordando. Tente de novo em instantes.';
+    .catch(() => {
+      problema('O servidor está acordando (leva até 1 minuto). Já já funciona.');
+      setTimeout(verificarAPI, 15000);
     });
 }
 
