@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const tri = require('./tri');
 const imagens = require('./imagens');
 const { registrarAtividade, hojeEmBrasilia } = require('./comunidade');
+const { questaoCompletaSql } = require('./provas');
 
 // ---------- regras ----------
 const AREAS = {
@@ -125,13 +126,14 @@ function vitoriasPessoais(j, { anterior, total, jogadores }) {
 }
 
 // Sorteia as questões da sala: sem língua estrangeira, sem figura (difícil
-// de ler no celular), com nível da TRI e, se forem todas as áreas, uma de cada vez.
+// de ler no celular), sem as incompletas da fonte, com nível da TRI e, se forem todas as áreas, uma de cada vez.
 async function sortearQuestoes(pool, cortes, { nivel, area, quantidade }) {
   const niveis = NIVEIS_DA_SALA[nivel] || NIVEIS_DA_SALA.normal;
   const { rows } = await pool.query(
     `SELECT id, disciplina, ano, contexto, alternativas, correta, tri_b FROM questoes
       WHERE lingua IS NULL AND tri_b IS NOT NULL AND ($1::text IS NULL OR disciplina = $1)
         AND contexto NOT LIKE '%![](%' AND alternativas::text NOT LIKE '%![](%' AND length(contexto) < 1300
+        AND ${questaoCompletaSql()}
       ORDER BY RANDOM() LIMIT 600`, [area || null]);
   const comNivel = rows.map(q => ({ ...q, nivel: tri.nivelPelaTri(cortes, q.disciplina, q.tri_b) }));
   let boas = comNivel.filter(q => niveis.includes(q.nivel));

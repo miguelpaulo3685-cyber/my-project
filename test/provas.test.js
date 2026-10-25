@@ -47,3 +47,14 @@ test('pastas do GitHub que ainda faltam buscar', () => {
 test('não repete a mesma questão', () => {
   assert.strictEqual(semRepetir([q(2023, 1, 'ingles'), q(2023, 1, 'ingles'), q(2023, 1, 'espanhol'), q(2023, 7), q(2023, 7)]).length, 3);
 });
+
+test('questão incompleta: só a pergunta, ou cita figura que não veio', () => {
+  const { questaoIncompleta } = require('../provas');
+  const longo = 'x '.repeat(150);
+  assert.ok(questaoIncompleta('Qual desses jogadores apresentou maior desempenho?'));
+  assert.ok(questaoIncompleta(`${longo} Considerando os versos e as informações da tabela, a qual planeta o cordel faz referência?`));
+  assert.ok(questaoIncompleta(`${longo} Conforme o gráfico, a produção caiu.`));
+  assert.ok(!questaoIncompleta(`![](https://enem.dev/x.png) De acordo com a tabela, quanto?`));
+  assert.ok(!questaoIncompleta(`${longo} A figura do índio no Brasil de hoje não pode ser aquela de 500 anos atrás.`));
+  assert.ok(!questaoIncompleta(`${longo} O texto descreve o fenômeno da tabelação de preços.`));
+});

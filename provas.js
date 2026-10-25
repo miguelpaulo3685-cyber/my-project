@@ -53,6 +53,28 @@ function pastasQueFaltam(ano, questoes) {
   return pastas;
 }
 
+// Questão incompleta: a fonte perdeu o texto de apoio ou a figura. Sem
+// imagem, ou o texto é só a pergunta final (menos de 220 letras), ou ele
+// aponta para algo visual que não está lá ("da tabela", "no gráfico").
+// O sorteio do treino, do desafio e da Arena pula essas.
+const PALAVRAS_VISUAIS = 'figura|gr[aá]fico|tabela|charge|tirinha|cartum|quadrinhos?|infogr[aá]fico|imagem|imagens|fotografia|ilustra[cç][aã]o|esquema|diagrama|histograma|mapa';
+const ANTES_DA_PALAVRA = 'd[aoe]s?|n[ao]s?|pel[ao]s?|conforme [ao]s?';
+const REFERENCIA_VISUAL = new RegExp(`(?<![\\p{L}])(?:${ANTES_DA_PALAVRA}) (?:${PALAVRAS_VISUAIS})s?(?![\\p{L}])`, 'iu');
+const MINIMO_DE_TEXTO = 220;
+
+function questaoIncompleta(contexto) {
+  const texto = String(contexto || '');
+  if (texto.includes('![](')) return false;
+  return texto.length < MINIMO_DE_TEXTO || REFERENCIA_VISUAL.test(texto);
+}
+
+// A mesma regra para o WHERE do banco (\y é a borda de palavra do Postgres).
+const questaoCompletaSql = (coluna = 'contexto') =>
+  `(${coluna} LIKE '%![](%' OR (length(${coluna}) >= ${MINIMO_DE_TEXTO} AND ${coluna} !~* '\\y(${ANTES_DA_PALAVRA}) (${PALAVRAS_VISUAIS})s?\\y'))`;
+
 const semRepetir = questoes => [...new Map(questoes.map(q => [`${numeroDaQuestao(q)}|${q.language || ''}`, q])).values()];
 
-module.exports = { numeroDaQuestao, ehDeLingua, foiAnulada, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir };
+module.exports = {
+  numeroDaQuestao, ehDeLingua, foiAnulada, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir,
+  questaoIncompleta, questaoCompletaSql
+};

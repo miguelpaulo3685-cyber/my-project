@@ -11,7 +11,7 @@ const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
 const imagens = require('./imagens');
-const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir } = require('./provas');
+const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir, questaoCompletaSql } = require('./provas');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
 const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
@@ -662,11 +662,11 @@ app.get('/api/simulado', async (req, res) => {
     if (ano === 'misto') {
       // Questões sorteadas de todos os anos: 45 por área (5 da língua escolhida).
       ({ rows: linhas } = await pool.query(
-        `(SELECT * FROM questoes WHERE disciplina = $1 AND lingua = $3 ORDER BY RANDOM() LIMIT ${QUESTOES_DE_LINGUA})
+        `(SELECT * FROM questoes WHERE disciplina = $1 AND lingua = $3 AND ${questaoCompletaSql()} ORDER BY RANDOM() LIMIT ${QUESTOES_DE_LINGUA})
          UNION ALL
-         (SELECT * FROM questoes WHERE disciplina = $1 AND lingua IS NULL ORDER BY RANDOM() LIMIT ${POR_AREA})
+         (SELECT * FROM questoes WHERE disciplina = $1 AND lingua IS NULL AND ${questaoCompletaSql()} ORDER BY RANDOM() LIMIT ${POR_AREA})
          UNION ALL
-         (SELECT * FROM questoes WHERE disciplina = $2 ORDER BY RANDOM() LIMIT ${POR_AREA})`,
+         (SELECT * FROM questoes WHERE disciplina = $2 AND ${questaoCompletaSql()} ORDER BY RANDOM() LIMIT ${POR_AREA})`,
         [disciplinas[0], disciplinas[1], lingua]
       ));
       // No sorteio a ordem não existe: numera na sequência para a prova ficar organizada.
@@ -723,7 +723,7 @@ app.get('/api/questoes/:area', async (req, res) => {
               COALESCE(AVG(CASE WHEN r.acertou THEN 1.0 ELSE 0 END), 0)::float AS taxa_acerto
          FROM questoes q
          LEFT JOIN respostas r ON r.questao_id = q.id
-        WHERE q.disciplina = $1
+        WHERE q.disciplina = $1 AND ${questaoCompletaSql('q.contexto')}
         GROUP BY q.id
         ORDER BY RANDOM()
         LIMIT 5`,

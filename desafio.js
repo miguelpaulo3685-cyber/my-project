@@ -7,6 +7,7 @@
 const tri = require('./tri');
 const imagens = require('./imagens');
 const { registrarAtividade } = require('./comunidade');
+const { questaoCompletaSql } = require('./provas');
 
 // Composição: 2 de Linguagens, 3 de Humanas, 2 de Natureza e 3 de Matemática,
 // só questões com parâmetros do INEP (para sair nota TRI) e sem língua estrangeira.
@@ -44,7 +45,7 @@ function registrarDesafio(app, { pool, auth, limitar, exigirLogin }) {
     const ids = [];
     for (const [disciplina, n] of COMPOSICAO) {
       const { rows } = await pool.query(
-        `SELECT id FROM questoes WHERE disciplina = $1 AND lingua IS NULL AND tri_b IS NOT NULL
+        `SELECT id FROM questoes WHERE disciplina = $1 AND lingua IS NULL AND tri_b IS NOT NULL AND ${questaoCompletaSql()}
           ORDER BY RANDOM() LIMIT $2`, [disciplina, n]
       );
       ids.push(...rows.map(r => r.id));
@@ -53,7 +54,7 @@ function registrarDesafio(app, { pool, auth, limitar, exigirLogin }) {
     if (ids.length < total) {
       // Faltou questão com parâmetros do INEP: completa com outras.
       const { rows } = await pool.query(
-        'SELECT id FROM questoes WHERE lingua IS NULL AND NOT (id = ANY($1::int[])) ORDER BY RANDOM() LIMIT $2', [ids, total - ids.length]
+        `SELECT id FROM questoes WHERE lingua IS NULL AND NOT (id = ANY($1::int[])) AND ${questaoCompletaSql()} ORDER BY RANDOM() LIMIT $2`, [ids, total - ids.length]
       );
       ids.push(...rows.map(r => r.id));
     }
