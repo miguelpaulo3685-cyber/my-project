@@ -2739,7 +2739,9 @@ function escapar(texto) {
 function formatarEnunciado(texto) {
   return escapar(texto)
     .replace(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g, '<img src="$1" alt="Imagem da questão" loading="lazy">')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    // Itálico das fontes (_Título do livro_), sem mexer em sublinhados de links.
+    .replace(/(^|[\s(“"])_([^_\n<>]{2,200}?)_(?=[\s.,;:)”"!?]|$)/g, '$1<em>$2</em>');
 }
 
 function guardar(chave, valor) {
@@ -5823,6 +5825,7 @@ function desenharPaginaPerfil() {
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
+        <button class="acao discreta" onclick="cliqueNoPerfil()">⚙️ Conta e configurações</button>
       </div>` : ''}
     <div class="rotulo-galeria">Publicações</div>
     <div class="galeria">${cartoes || `<div class="vazio galeria-vazia"><span class="cara">🖼️</span>

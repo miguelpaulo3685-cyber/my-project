@@ -162,6 +162,17 @@ verificado). Conta criada pelo Google não tem senha; se a pessoa quiser uma, us
   falta na api.enem.dev (o que ela não mandar vem do repositório dela no GitHub, `yunger7/enem-api`).
 - **Questões que nenhuma fonte tem** (`questoes-manuais.json`): transcritas do caderno azul do INEP, com as
   figuras em `img/questoes/`. O servidor grava esse arquivo toda vez que liga.
+- **Arena** (`arena.js`): questões ao vivo, estilo Kahoot. Quem cria a sala recebe um código de 6 números
+  (ou manda o link `?arena=CÓDIGO`) e escolhe área, nível pela TRI (Aquecimento só sorteia fáceis), tempo e
+  quantidade; o professor pode só apresentar. O tempo de cada questão sai da área (Matemática tem mais), do
+  tamanho do texto e do nível; o texto aparece antes das alternativas e a rodada acaba quando todos
+  respondem. Acertar vale 600 e a rapidez até 400. No fim: pódio, destaques, vitórias pessoais para todos,
+  XP (até 80 por dia vindo da Arena), um baú com emblema só visual (3 por dia) e as respostas contam no
+  progresso. As erradas voltam em 2 dias ("revanche contra a questão"). Todo dia às 19h30 abre a **Arena da
+  noite**, aberta a todos, com aviso às 19h25. As salas ficam na memória do servidor (um processo só) e o
+  estado chega por SSE. `ARENA_HORA` (ex.: `19:30`) muda o horário da Arena da noite, útil para testar.
+- **Navegação**: no celular as abas ficam embaixo e somem durante questão, prova e partida. Cada tela tem
+  um botão "?" com o passo a passo, e a Arena mostra o dela sozinha na primeira visita.
 
 Não há mensagens privadas entre alunos, de propósito: com tantos menores de idade, a conversa fica em
 público ou em grupo, sempre com denúncia.
