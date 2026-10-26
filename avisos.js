@@ -88,7 +88,8 @@ const AVISO_DA_NOTIFICACAO = {
   correcao: (ator, n) => ({ titulo: 'Sua redação recebeu uma correção ✍️', corpo: `${n.texto} pontos nesta correção. Veja os comentários!`, abrir: `redacao:${n.alvoId}` }),
   redacao_corrigida: (ator, n) => ({ titulo: `Sua redação foi corrigida: nota ${n.texto} ✍️`, corpo: 'Veja o que melhorar em cada competência.', abrir: `redacao:${n.alvoId}` }),
   correcao_util: (ator, n) => ({ titulo: `${ator} achou sua correção útil ✍️ +5 XP`, abrir: 'redacoes' }),
-  melhor_resposta: (ator, n) => ({ titulo: 'Sua resposta foi escolhida a melhor 🏅 +25 XP', corpo: n.texto, abrir: `pergunta:${n.alvoId}` })
+  melhor_resposta: (ator, n) => ({ titulo: 'Sua resposta foi escolhida a melhor 🏅 +25 XP', corpo: n.texto, abrir: `pergunta:${n.alvoId}` }),
+  mensagem: (ator, n) => ({ titulo: `${ator} mandou uma mensagem 💬`, corpo: n.texto, abrir: `conversa:${n.alvoId}` })
 };
 
 // Chamado por notificar(); nunca espera nem falha a ação principal.

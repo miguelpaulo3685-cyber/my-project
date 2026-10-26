@@ -595,6 +595,30 @@ async function runMigrations() {
     `);
     console.log('✅ Tabelas da Arena criadas');
 
+    // Mensagens diretas entre perfis, com bloqueio e denúncia.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS mensagens (
+        id SERIAL PRIMARY KEY,
+        de_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        para_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        texto VARCHAR(1000) NOT NULL,
+        lida BOOLEAN NOT NULL DEFAULT FALSE,
+        denunciada BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        CHECK (de_id <> para_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_mensagens_par ON mensagens (LEAST(de_id, para_id), GREATEST(de_id, para_id), id DESC);
+      CREATE INDEX IF NOT EXISTS idx_mensagens_para ON mensagens (para_id) WHERE NOT lida;
+      CREATE TABLE IF NOT EXISTS bloqueios (
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        bloqueado_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (usuario_id, bloqueado_id)
+      );
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS quem_mensagem VARCHAR(10) DEFAULT 'todos';
+    `);
+    console.log('✅ Tabelas de mensagens criadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

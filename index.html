@@ -596,6 +596,46 @@
     .perfil-botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
     .perfil-botoes button.acao { margin: 0; }
     .painel.config { max-width: 560px; }
+    /* mensagens */
+    .lista-conversas { display: flex; flex-direction: column; gap: 8px; max-width: 640px; }
+    .item-conversa {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; font: inherit; color: var(--texto);
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 12px 14px;
+    }
+    .item-conversa:hover { border-color: var(--marca); }
+    .item-conversa .bolha-autor, .chat-pessoa .bolha-autor {
+      border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800;
+    }
+    .item-conversa .bolha-autor img, .chat-pessoa .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .item-conversa .bolha-autor { width: 42px; height: 42px; margin: 0; font-size: 1rem; }
+    .item-conversa .meio { flex: 1; min-width: 0; }
+    .item-conversa .meio small { display: block; color: var(--texto-fraco); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-conversa.nova .meio small { color: var(--texto); font-weight: 600; }
+    .item-conversa .fim { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; color: var(--texto-fraco); font-size: .8rem; }
+    .item-conversa .fim i { font-style: normal; background: var(--marca); color: var(--sobre-marca); border-radius: 999px; padding: 1px 7px; font-weight: 800; font-size: .72rem; }
+    .chat { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; height: calc(100dvh - 150px - var(--altura-nav, 0px)); min-height: 380px; }
+    .chat-topo { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .chat-pessoa { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; background: none; border: none; cursor: pointer; font: inherit; color: var(--texto); text-align: left; }
+    .chat-pessoa .bolha-autor { width: 38px; height: 38px; margin: 0; }
+    .chat-pessoa b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chat-aviso { font-size: .78rem; color: var(--texto-fraco); margin-bottom: 8px; }
+    .chat-lista {
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 12px;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+    }
+    .chat-vazio { margin: auto; }
+    .msg { align-self: flex-start; max-width: 80%; padding: 8px 12px; border-radius: 16px 16px 16px 4px; background: var(--superficie-2); white-space: pre-wrap; overflow-wrap: anywhere; font-size: .94rem; }
+    .msg.minha { align-self: flex-end; border-radius: 16px 16px 4px 16px; background: var(--marca); color: var(--sobre-marca); }
+    .msg small { display: block; font-size: .68rem; opacity: .7; margin-top: 3px; }
+    .msg small button { background: none; border: none; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
+    .chat-escrever { display: flex; gap: 8px; margin-top: 10px; align-items: flex-end; }
+    .chat-escrever textarea {
+      flex: 1; resize: none; max-height: 120px; padding: 11px 14px; border-radius: 14px; font: inherit; font-size: .95rem;
+      background: var(--superficie); color: var(--texto); border: 1px solid var(--borda);
+    }
+    .chat-escrever textarea:focus { outline: none; border-color: var(--marca); }
+    #painel-mensagens select { padding: 6px 8px; border-radius: 8px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font: inherit; font-size: .85rem; }
     #tela-config .voltar-comunidade { margin-bottom: 14px; }
     .rotulo-galeria {
       display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--borda); padding-top: 16px; margin-bottom: 16px;
@@ -1994,6 +2034,8 @@
     }
     .botao-ajuda:hover { color: var(--texto); border-color: var(--marca); }
 
+    @media (max-width: 400px) { .marca em { display: none; } }
+
     /* ===================== CONFETE ===================== */
     #confete { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 999; }
     .papel { position: absolute; width: 11px; height: 17px; opacity: .92; animation: cair linear forwards; }
@@ -2002,13 +2044,15 @@
     @media (max-width: 700px) {
       .topo-interno { min-height: 56px; gap: 10px; }
       .marca { font-size: 1rem; margin-right: auto; }
+      /* Mensagens, sino, paleta e perfil cabem na mesma linha da marca. */
+      .indicadores { gap: 7px; }
+      .indicadores .btn-icone, .indicadores .avatar { width: 34px; height: 34px; }
       .pagina { padding: 22px 16px 50px; }
       .cabecalho-secao h1 { font-size: 1.4rem; }
       .grade-areas { grid-template-columns: 1fr; }
       .painel { padding: 20px 17px; }
       .alt { padding: 16px 17px; font-size: .96rem; gap: 13px; }
       .indicador span { display: none; }
-      #btn-tema { display: none; } /* no celular o tema fica em Conta → Aparência */
       /* Com backdrop-filter no topo, a barra "fixa" ficaria presa a ele, e não à tela. */
       .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
       /* Navegação embaixo, como nos apps: fica no alcance do polegar. */
@@ -2079,7 +2123,6 @@
     }
     html[data-estilo="serra"] .marca em { color: #fff; }
     html[data-estilo="serra"] :is(input, textarea):not([type=checkbox]):not([type=range]):not([type=color]) { border-radius: 14px; }
-    html[data-estilo="serra"] #btn-tema { display: none; } /* claro/escuro não muda este estilo */
     .estilos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .estilo-op {
       border: 2px solid var(--borda); border-radius: 12px; padding: 0; overflow: hidden; cursor: pointer;
@@ -2572,11 +2615,15 @@
         <div class="indicador sequencia escondido" id="ind-sequencia" title="Dias seguidos estudando">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.6 2.5c.4 3-1.2 4.6-2.6 6.1C8.6 10.1 7 11.7 7 14.6 7 18 9.3 21 12.5 21s5.5-2.6 5.5-6c0-2.4-1.1-4-2.2-5.2-.2 1.4-.9 2.4-1.9 2.9.4-3.5-.4-7.1-1.3-9.2z"/></svg><b id="ind-dias">0</b>
         </div>
+        <button class="btn-icone sino escondido" id="btn-mensagens" onclick="abrirMensagens()" title="Mensagens" aria-label="Mensagens">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 11.5a8 8 0 0 1-11.9 7L3.5 20l1.6-4.6A8 8 0 1 1 20.5 11.5z"/></svg>
+          <span class="selo-sino escondido" id="selo-mensagens"></span>
+        </button>
         <button class="btn-icone sino escondido" id="btn-sino" onclick="abrirNotificacoes()" title="Notificações" aria-label="Notificações">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9.5a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15.5 6 9.5"/><path d="M10 20.5a2.2 2.2 0 0 0 4 0"/></svg>
           <span class="selo-sino escondido" id="selo-sino"></span>
         </button>
-        <button class="btn-icone" id="btn-tema" onclick="trocarTema()" title="Alternar tema">🌙</button>
+        <button class="btn-icone" id="btn-aparencia" onclick="abrirAparencia()" title="Aparência e cores" aria-label="Aparência e cores">🎨</button>
         <button class="avatar" id="btn-perfil" onclick="cliqueNoPerfil()" title="Meu perfil">?</button>
       </div>
     </div>
@@ -2746,6 +2793,11 @@
     <div id="conteudo-perfil"></div>
   </main>
 
+  <!-- ===================== MENSAGENS ===================== -->
+  <main class="pagina escondido" id="tela-mensagens">
+    <div id="conteudo-mensagens"></div>
+  </main>
+
   <!-- ===================== CONFIGURAÇÕES ===================== -->
   <main class="pagina escondido" id="tela-config">
     <button class="voltar-comunidade" onclick="abrirMeuPerfil()">← Meu perfil</button>
@@ -2761,6 +2813,7 @@
         </div>
         <div id="status-email"></div>
         <div id="painel-avisos"></div>
+        <div id="painel-mensagens"></div>
         <div id="painel-admin"></div>
         <button class="acao secundaria" style="width:100%;padding:13px;margin-bottom:10px" onclick="abrirAparencia()">🎨 Aparência e cores</button>
         <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
@@ -2858,14 +2911,9 @@ function ler(chave) {
 // ===================== TEMA =====================
 function aplicarTema(tema) {
   document.documentElement.dataset.tema = tema;
-  document.getElementById('btn-tema').textContent = tema === 'escuro' ? '🌙' : '☀️';
   guardar(CHAVE_TEMA, tema);
   aplicarCores(); // o contraste dos links depende do fundo do tema
   if (!document.getElementById('painel-aparencia').classList.contains('escondido')) desenharAparencia();
-}
-
-function trocarTema() {
-  escolherTema(document.documentElement.dataset.tema === 'escuro' ? 'claro' : 'escuro');
 }
 
 // ===================== CORES =====================
@@ -2968,7 +3016,6 @@ function aplicarCores() {
     // O tema acompanha o fundo: os detalhes feitos para fundo escuro ou claro
     // (grifo, sombras) continuam certos.
     raiz.dataset.tema = f.tema;
-    document.getElementById('btn-tema').textContent = f.tema === 'escuro' ? '🌙' : '☀️';
     for (const [nome, valor] of Object.entries(f.vars)) raiz.style.setProperty(nome, valor);
     Object.assign(extras, f.vars);
     const aviso = document.getElementById('aviso-fundo');
@@ -3437,7 +3484,7 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'arena'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'questao', 'resultado', 'desafio'].includes(tela);
@@ -3446,6 +3493,7 @@ function irPara(tela) {
   document.getElementById('btn-perfil').classList.toggle('ativo', ['perfil', 'config'].includes(tela));
   document.getElementById('aba-arena').classList.toggle('ativa', tela === 'arena');
   if (tela !== 'arena') sairDaTelaArena();
+  if (tela !== 'mensagens') pararConversa();
   if (tela !== 'comunidade') { clearTimeout(slider.relogio); pararSlide(); }
   modoFoco(['questao', 'prova'].includes(tela));
   document.body.classList.toggle('vendo-reels', tela === 'reels');
@@ -4146,6 +4194,7 @@ function prepararConta() {
   document.querySelector('.zona-perigo').open = false;
   desenharStatusEmail();
   desenharPainelAvisos();
+  desenharPreferenciaMensagens();
   desenharPainelAdmin();
 }
 
@@ -6067,7 +6116,8 @@ function desenharPaginaPerfil() {
       </div>
     </div>
     <p class="perfil-bio">${escapar(u.bio)}</p>
-    ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button></div>` : ''}
+    ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button>
+        <button class="acao discreta" onclick="abrirConversa(${u.id})">💬 Mensagem</button></div>` : ''}
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
@@ -6457,11 +6507,13 @@ const TEXTO_DA_NOTIFICACAO = {
   correcao: n => `Sua redação recebeu uma correção: <b>${escapar(n.texto || '')} pontos</b> ✍️`,
   redacao_corrigida: n => `Sua redação foi corrigida! Nota final: <b>${escapar(n.texto || '')}</b> ✍️`,
   correcao_util: n => `<b>${escapar(n.ator)}</b> marcou a sua correção como útil ✍️ +5 XP`,
-  melhor_resposta: n => `<b>${escapar(n.ator)}</b> escolheu a sua resposta como a melhor em “${escapar(n.texto || '')}” 🏅 +25 XP`
+  melhor_resposta: n => `<b>${escapar(n.ator)}</b> escolheu a sua resposta como a melhor em “${escapar(n.texto || '')}” 🏅 +25 XP`,
+  mensagem: n => `<b>${escapar(n.ator)}</b> mandou uma mensagem: “${escapar(n.texto || '')}”`
 };
 
 function iniciarSino() {
   document.getElementById('btn-sino').classList.toggle('escondido', !usuarioLogado);
+  document.getElementById('btn-mensagens').classList.toggle('escondido', !usuarioLogado);
   clearInterval(relogioSino);
   if (!usuarioLogado) return;
   atualizarSino();
@@ -6470,6 +6522,7 @@ function iniciarSino() {
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && usuarioLogado) atualizarSino(); });
 
 async function atualizarSino() {
+  atualizarSeloMensagens();
   try {
     const r = await fetch(`${API_URL}/api/notificacoes/contagem`, { headers: cabecalhoAuth() });
     if (!r.ok) return;
@@ -6509,6 +6562,7 @@ async function abrirNotificacoes() {
 
 function abrirNotificacao(n) {
   fecharModal('modal-notificacoes');
+  if (n.alvo_tipo === 'conversa' && n.alvo_id) return abrirConversa(n.alvo_id);
   if (n.alvo_tipo === 'questao' && n.alvo_id) return abrirDiscussao(n.alvo_id);
   if (n.alvo_tipo === 'pergunta' && n.alvo_id) return abrirPergunta(n.alvo_id);
   if (n.tipo === 'correcao_util') return abrirPeloLink('redacoes');
@@ -6517,6 +6571,135 @@ function abrirNotificacao(n) {
   if (n.alvo_tipo === 'reel') return irPara('reels');
   if (n.alvo_tipo === 'perfil' && n.alvo_id) return abrirPerfil(n.alvo_id);
   if (n.ator_id) return abrirPerfil(n.ator_id);
+}
+
+// ===================== MENSAGENS =====================
+// Conversa direta entre perfis. Quem recebe escolhe quem pode mandar
+// (Configurações), pode bloquear e denunciar; links não passam.
+let conversaAberta = null;
+let relogioConversa = null;
+
+async function atualizarSeloMensagens() {
+  try {
+    const { nao_lidas: n } = await api('/api/mensagens/nao-lidas');
+    const selo = document.getElementById('selo-mensagens');
+    selo.textContent = n > 9 ? '9+' : n;
+    selo.classList.toggle('escondido', !n);
+  } catch (e) { /* tenta de novo no próximo ciclo */ }
+}
+
+function pararConversa() { clearInterval(relogioConversa); relogioConversa = null; conversaAberta = null; }
+
+async function abrirMensagens() {
+  if (!usuarioLogado) return abrirConta('entrar');
+  irPara('mensagens');
+  const alvo = document.getElementById('conteudo-mensagens');
+  alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
+  let conversas;
+  try { ({ conversas } = await api('/api/mensagens')); } catch (e) {
+    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return;
+  }
+  alvo.innerHTML = `<div class="cabecalho-secao"><h1>Mensagens</h1><p>Para começar uma conversa, abra o perfil de alguém e toque em 💬 Mensagem.</p></div>
+    <div class="lista-conversas">${conversas.length ? conversas.map(c => `
+      <button class="item-conversa${c.nao_lidas ? ' nova' : ''}" onclick="abrirConversa(${c.id})">
+        ${bolha(c)}<span class="meio"><b>${escapar(c.nome)}</b><small>${c.minha ? 'Você: ' : ''}${escapar(c.texto)}</small></span>
+        <span class="fim"><small>${tempoAtras(c.quando)}</small>${c.nao_lidas ? `<i>${c.nao_lidas}</i>` : ''}</span>
+      </button>`).join('') : '<div class="painel vazio"><span class="cara">💬</span>Nenhuma conversa ainda.</div>'}</div>`;
+  atualizarSeloMensagens();
+}
+
+async function abrirConversa(id) {
+  if (!usuarioLogado) return abrirConta('entrar');
+  if (conversaAberta !== id) { irPara('mensagens'); conversaAberta = id; }
+  await carregarConversa(true);
+  clearInterval(relogioConversa);
+  relogioConversa = setInterval(() => { if (document.visibilityState === 'visible') carregarConversa(); }, 6000);
+}
+
+async function carregarConversa(primeira) {
+  const id = conversaAberta;
+  const alvo = document.getElementById('conteudo-mensagens');
+  if (primeira) alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
+  let d;
+  try { d = await api(`/api/mensagens/${id}`); } catch (e) {
+    if (primeira) alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+    return;
+  }
+  if (conversaAberta !== id) return;
+  const lista = document.getElementById('chat-lista');
+  const noFim = !lista || lista.scrollHeight - lista.scrollTop - lista.clientHeight < 60;
+  const rascunho = document.getElementById('chat-texto')?.value || '';
+  const html = d.mensagens.map(m => `<div class="msg${m.minha ? ' minha' : ''}">${escapar(m.texto)}
+      <small>${tempoAtras(m.created_at)}${!m.minha ? (m.denunciada ? ' · denunciada' : ` · <button onclick="denunciarMensagem(${m.id})">denunciar</button>`) : ''}</small></div>`).join('')
+    || '<p class="pista chat-vazio">Diga oi! 👋</p>';
+  if (lista && !primeira) {
+    if (lista.dataset.n !== String(d.mensagens.length)) { lista.innerHTML = html; lista.dataset.n = d.mensagens.length; }
+  } else {
+    alvo.innerHTML = `<div class="chat">
+      <div class="chat-topo">
+        <button class="voltar-comunidade" onclick="abrirMensagens()" aria-label="Voltar para as mensagens">←</button>
+        <button class="chat-pessoa" onclick="abrirPerfil(${d.pessoa.id})">${bolha(d.pessoa)}<b>${escapar(d.pessoa.nome)}</b></button>
+        <button class="acao discreta pequena" onclick="bloquearConversa(${d.pessoa.id}, ${d.bloqueei})">${d.bloqueei ? 'Desbloquear' : 'Bloquear'}</button>
+      </div>
+      <p class="chat-aviso">🔒 Não passe telefone, endereço ou redes sociais. Se algo te incomodar, bloqueie e denuncie.</p>
+      <div class="chat-lista" id="chat-lista" data-n="${d.mensagens.length}">${html}</div>
+      ${d.bloqueei ? '<p class="pista">Você bloqueou este perfil.</p>' : `<form class="chat-escrever" onsubmit="enviarMensagem(event)">
+        <textarea id="chat-texto" maxlength="1000" rows="1" placeholder="Escreva uma mensagem…" onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); this.form.requestSubmit(); }"></textarea>
+        <button class="acao" id="chat-enviar">Enviar</button></form>`}
+    </div>`;
+    const campo = document.getElementById('chat-texto');
+    if (campo) { campo.value = rascunho; if (!matchMedia('(pointer: coarse)').matches) campo.focus(); }
+  }
+  const nova = document.getElementById('chat-lista');
+  if (primeira || noFim) nova.scrollTop = nova.scrollHeight;
+  atualizarSeloMensagens();
+}
+
+async function enviarMensagem(evento) {
+  evento.preventDefault();
+  const campo = document.getElementById('chat-texto');
+  const texto = campo.value.trim();
+  if (!texto) return;
+  const botao = document.getElementById('chat-enviar');
+  botao.disabled = true;
+  try {
+    await postar(`/api/mensagens/${conversaAberta}`, { texto });
+    campo.value = '';
+    await carregarConversa();
+    const lista = document.getElementById('chat-lista');
+    lista.scrollTop = lista.scrollHeight;
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+  botao.disabled = false;
+  campo.focus();
+}
+
+async function bloquearConversa(id, bloqueado) {
+  if (!bloqueado && !await confirmar('Bloquear este perfil? Vocês não vão conseguir mandar mensagens um para o outro.', { sim: 'Bloquear', perigo: true })) return;
+  try { await postar(`/api/mensagens/${id}/bloquear`); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  if (conversaAberta === id) carregarConversa(true);
+}
+
+async function denunciarMensagem(id) {
+  if (!await confirmar('Denunciar esta mensagem? A equipe vai ler.', { sim: 'Denunciar' })) return;
+  try { avisoSim((await postar(`/api/mensagens/denunciar/${id}`)).message); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  carregarConversa(true);
+}
+
+async function desenharPreferenciaMensagens() {
+  const alvo = document.getElementById('painel-mensagens');
+  let d;
+  try { d = await api('/api/mensagens/preferencia'); } catch (e) { alvo.innerHTML = ''; return; }
+  const opcoes = [['todos', 'Todo mundo'], ['seguindo', 'Só quem eu sigo'], ['ninguem', 'Ninguém']];
+  alvo.innerHTML = `<div class="rotulo-modal">Mensagens</div>
+    <label class="linha-aviso"><span>Quem pode me mandar mensagem</span>
+      <select onchange="salvarPreferenciaMensagens(this.value)">${opcoes.map(([v, t]) => `<option value="${v}"${d.quem === v ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
+    ${d.bloqueados.length ? `<small class="pista">Bloqueados:</small>${d.bloqueados.map(b => `<div class="linha-aviso"><span>${escapar(b.nome)}</span>
+      <button class="acao discreta pequena" onclick="bloquearConversa(${b.id}, true).then(desenharPreferenciaMensagens)">Desbloquear</button></div>`).join('')}` : ''}`;
+}
+
+async function salvarPreferenciaMensagens(quem) {
+  try { await api('/api/mensagens/preferencia', { method: 'PUT', body: JSON.stringify({ quem }) }); avisoSim('Pronto, salvo.'); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
 }
 
 // ===================== SEGUIR =====================
@@ -7974,6 +8157,7 @@ async function desenharPainelAdmin() {
     ${moderar.length ? moderar.map(([q, texto, acao]) => `<div class="linha-aviso"><span><b>${q}</b> ${texto}</span>
       ${acao ? `<button class="acao discreta pequena" onclick="${acao}">Ver</button>` : ''}</div>`).join('')
       : '<p class="pista">Nada esperando moderação 👍</p>'}
+    <div id="admin-mensagens"></div>
     <div class="rotulo-modal">Provas no banco (de ${total} por dia)</div>
     <div class="provas-admin">${d.provas.anos.map(a => {
       const completo = a.dia1 >= total && a.dia2 >= total;
@@ -7985,6 +8169,23 @@ async function desenharPainelAdmin() {
     <div class="rotulo-modal">Questões que faltam</div>
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
+  desenharMensagensDenunciadas();
+}
+
+async function desenharMensagensDenunciadas() {
+  const alvo = document.getElementById('admin-mensagens');
+  let d;
+  try { d = await api('/api/admin/mensagens-denunciadas'); } catch (e) { return; }
+  if (!d.mensagens.length) { alvo.innerHTML = ''; return; }
+  alvo.innerHTML = `<div class="rotulo-modal">Mensagens denunciadas</div>${d.mensagens.map(m => `<div class="linha-aviso"><span>
+      <b>${escapar(m.de)}</b> → ${escapar(m.para)}: “${escapar(m.texto)}” <small>${tempoAtras(m.created_at)}</small></span>
+      <span><button class="acao discreta pequena" onclick="abrirPerfil(${m.de_id})">Perfil</button>
+      <button class="acao discreta pequena" onclick="apagarMensagemAdmin(${m.id})">Apagar</button></span></div>`).join('')}`;
+}
+
+async function apagarMensagemAdmin(id) {
+  try { await api(`/api/admin/mensagens/${id}`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharMensagensDenunciadas();
 }
 
 // ---------- cadastrar à mão as questões que a fonte não tem ----------
@@ -8828,6 +9029,7 @@ function abrirPeloLink(abrir) {
   if (tipo === 'reels') return irPara('reels');
   if (tipo === 'treinar') return irPara('treinar');
   if (tipo === 'arena') return abrirArena();
+  if (tipo === 'conversa' && id) return abrirConversa(id);
 }
 
 async function tratarLinkDeAviso(sessaoRestaurada) {
