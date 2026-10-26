@@ -593,6 +593,8 @@
     .perfil-bio:empty { display: none; }
     .perfil-botoes { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 26px; }
     .perfil-botoes button.acao { margin: 0; }
+    .secao-conta { margin-top: 36px; }
+    .secao-conta .painel { max-width: 560px; }
     .rotulo-galeria {
       display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--borda); padding-top: 16px; margin-bottom: 16px;
       text-transform: uppercase; letter-spacing: 1px; font-size: .74rem; font-weight: 700; color: var(--texto-fraco);
@@ -1162,23 +1164,19 @@
     .bolhas img, .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
     .bolhas small { margin-left: 8px; color: var(--texto-fraco); font-size: .8rem; }
 
-    /* faixa no Treinar */
-    .pulso-mini {
-      display: flex; align-items: center; gap: 12px; flex-wrap: wrap; width: 100%; text-align: left; cursor: pointer;
-      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); padding: 12px 16px;
-      margin-bottom: 14px; color: var(--texto); font: inherit; transition: border-color .2s;
+    /* contador ao vivo, ao lado do título */
+    .vivo {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+      background: var(--superficie); border: 1px solid var(--borda); color: var(--texto-fraco);
+      font-family: var(--fonte); font-size: .74rem; font-weight: 600; letter-spacing: 0; line-height: 1.2; white-space: nowrap;
     }
-    .pulso-mini:hover { border-color: var(--marca); }
-    .pulso-mini .texto { flex: 1; min-width: 170px; font-size: .9rem; }
-    .pulso-mini .texto small { display: block; color: var(--texto-fraco); font-size: .8rem; margin-top: 1px; }
-    .pulso-mini .seta { color: var(--marca-texto); font-weight: 700; font-size: .85rem; white-space: nowrap; }
+    .vivo[hidden] { display: none; }
+    button.vivo { cursor: pointer; transition: border-color .2s; }
+    button.vivo:hover { border-color: var(--marca); }
+    .vivo .ponto-vivo { width: 7px; height: 7px; }
 
     /* agora */
-    .pulso { display: grid; grid-template-columns: 1fr auto; gap: 14px 20px; align-items: center; margin-bottom: 18px; padding: 22px 24px; }
-    .pulso .grande { display: flex; align-items: center; gap: 12px; font-size: 1.05rem; }
-    .pulso .grande b { font-family: var(--fonte-titulo); font-size: 2rem; line-height: 1; }
-    .pulso .resumo { grid-column: 1 / -1; color: var(--texto-fraco); font-size: .86rem; display: flex; gap: 6px 16px; flex-wrap: wrap; }
-    .pulso .resumo b { color: var(--texto); }
+    .pulso { margin-bottom: 18px; padding: 14px 16px; }
     .ritual {
       grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
       background: var(--marca-suave); border-radius: 12px; padding: 10px 14px; font-size: .88rem;
@@ -2590,7 +2588,8 @@
   <!-- ===================== TREINAR ===================== -->
   <main class="pagina" id="tela-treinar">
     <div class="cabecalho-secao">
-      <h1>Treinar <button class="botao-ajuda" onclick="abrirAjuda('treinar')" aria-label="Como funciona o treino">?</button></h1>
+      <h1>Treinar <button class="botao-ajuda" onclick="abrirAjuda('treinar')" aria-label="Como funciona o treino">?</button>
+        <button class="vivo" id="vivo-treinar" onclick="abrirComunidade('agora')" title="Ver a comunidade" hidden></button></h1>
       <p>Questões reais do ENEM, de 2009 a 2023.</p>
     </div>
 
@@ -2603,7 +2602,6 @@
     </section>
 
     <div class="atalhos-inicio"><div id="atalho-arena"></div><div id="cartao-desafio"></div></div>
-    <div id="pulso-comunidade"></div>
     <div id="convite-app"></div>
 
     <div class="faixa-status escondido" id="faixa-status">
@@ -2668,7 +2666,8 @@
   <!-- ===================== COMUNIDADE ===================== -->
   <main class="pagina escondido" id="tela-comunidade">
     <div class="cabecalho-secao">
-      <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
+      <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button>
+        <span class="vivo" id="vivo-comunidade" hidden></span></h1>
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
     <div class="subabas" id="subabas-comunidade"></div>
@@ -2681,7 +2680,7 @@
   <main class="pagina escondido" id="tela-feed">
     <div class="cabecalho-secao">
       <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button></h1>
-      <p>Dicas, dúvidas e explicações entre vocês.</p>
+      <p>Turmas e grupos de estudo.</p>
     </div>
     <div class="subabas" id="subabas-feed"></div>
     <div class="abas-feed" id="abas-feed" role="group" aria-label="Feeds"></div>
@@ -2748,40 +2747,35 @@
   <!-- ===================== PERFIL ===================== -->
   <main class="pagina escondido" id="tela-perfil">
     <div id="conteudo-perfil"></div>
-  </main>
+    <!-- Conta e configurações: só no seu próprio perfil -->
+    <section class="secao-conta escondido" id="secao-conta">
+      <div class="rotulo-galeria">Conta e configurações</div>
+      <div class="painel">
+        <div class="form-conta" id="painel-logado">
+          <div class="dados-conta">
+            <span class="bolha" id="conta-inicial">?</span>
+            <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
+          </div>
+          <div id="status-email"></div>
+          <div id="painel-avisos"></div>
+          <div id="painel-admin"></div>
+          <button class="acao secundaria" style="width:100%;padding:13px;margin-bottom:10px" onclick="abrirAparencia()">🎨 Aparência e cores</button>
+          <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
 
-  <!-- ===================== CONTA ===================== -->
-  <main class="pagina escondido" id="tela-conta">
-    <div class="cabecalho-secao">
-      <h1 id="titulo-conta">Entrar</h1>
-      <p id="sub-conta">Sua conta guarda seu progresso e seus posts.</p>
-    </div>
-
-    <div class="painel">
-      <div class="form-conta" id="painel-logado">
-        <div class="dados-conta">
-          <span class="bolha" id="conta-inicial">?</span>
-          <div><b id="conta-nome-exibido"></b><small id="conta-email-exibido"></small></div>
+          <details class="zona-perigo">
+            <summary>Excluir minha conta</summary>
+            <p>Apaga sua conta, seus posts e suas sessões. Suas respostas às questões
+            ficam apenas como estatística anônima, sem ligação com você. Não dá para desfazer.</p>
+            <form onsubmit="excluirConta(event)">
+              <label for="excluir-senha" id="rotulo-excluir">Confirme sua senha</label>
+              <input type="password" id="excluir-senha" autocomplete="current-password" required>
+              <button type="submit" class="acao perigo" id="botao-excluir">Excluir conta para sempre</button>
+            </form>
+            <div id="recado-excluir"></div>
+          </details>
         </div>
-        <div id="status-email"></div>
-        <div id="painel-avisos"></div>
-        <div id="painel-admin"></div>
-        <button class="acao secundaria" style="width:100%;padding:13px;margin-bottom:10px" onclick="abrirAparencia()">🎨 Aparência e cores</button>
-        <button class="acao" style="width:100%;padding:14px" onclick="sair()">Sair da conta</button>
-
-        <details class="zona-perigo">
-          <summary>Excluir minha conta</summary>
-          <p>Apaga sua conta, seus posts e suas sessões. Suas respostas às questões
-          ficam apenas como estatística anônima, sem ligação com você. Não dá para desfazer.</p>
-          <form onsubmit="excluirConta(event)">
-            <label for="excluir-senha" id="rotulo-excluir">Confirme sua senha</label>
-            <input type="password" id="excluir-senha" autocomplete="current-password" required>
-            <button type="submit" class="acao perigo" id="botao-excluir">Excluir conta para sempre</button>
-          </form>
-          <div id="recado-excluir"></div>
-        </details>
       </div>
-    </div>
+    </section>
   </main>
 
   <footer class="rodape">
@@ -3441,7 +3435,7 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'conta', 'arena'].forEach(t => {
+  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'arena'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'questao', 'resultado', 'desafio'].includes(tela);
@@ -4124,30 +4118,36 @@ function cliqueNoPerfil() {
 }
 
 // Entrar, criar conta, esqueci e nova senha aparecem na tela de entrada, por
-// cima do site. "Minha conta" (já logado) é uma página normal.
+// cima do site. Já logado, a conta fica no fim do seu Perfil.
 function abrirConta(modo, mostrar = true) {
   if (modo === 'logado') {
-    document.getElementById('titulo-conta').textContent = 'Minha conta';
-    document.getElementById('sub-conta').textContent = 'Seu progresso fica salvo aqui, em qualquer aparelho.';
-    document.getElementById('conta-inicial').textContent = (usuarioLogado.username || '?').charAt(0).toUpperCase();
-    document.getElementById('conta-nome-exibido').textContent = usuarioLogado.username;
-    document.getElementById('conta-email-exibido').textContent = usuarioLogado.email;
-    // Conta criada pelo Google não tem senha: confirma digitando o e-mail.
-    const semSenha = usuarioLogado.tem_senha === false;
-    const campoExcluir = document.getElementById('excluir-senha');
-    document.getElementById('rotulo-excluir').textContent = semSenha ? 'Digite seu e-mail para confirmar' : 'Confirme sua senha';
-    campoExcluir.type = semSenha ? 'email' : 'password';
-    campoExcluir.autocomplete = semSenha ? 'off' : 'current-password';
-    campoExcluir.value = '';
-    document.getElementById('recado-excluir').innerHTML = '';
-    document.querySelector('.zona-perigo').open = false;
-    desenharStatusEmail();
-    desenharPainelAvisos();
-    desenharPainelAdmin();
-    irPara('conta');
+    const irAteConta = () => document.getElementById('secao-conta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (perfilAberto && perfilAberto.perfil.meu && !document.getElementById('tela-perfil').classList.contains('escondido')) irAteConta();
+    else abrirPerfil(usuarioLogado.id).then(irAteConta);
     return;
   }
+  abrirFormularioConta(modo, mostrar);
+}
 
+function prepararConta() {
+  document.getElementById('conta-inicial').textContent = (usuarioLogado.username || '?').charAt(0).toUpperCase();
+  document.getElementById('conta-nome-exibido').textContent = usuarioLogado.username;
+  document.getElementById('conta-email-exibido').textContent = usuarioLogado.email;
+  // Conta criada pelo Google não tem senha: confirma digitando o e-mail.
+  const semSenha = usuarioLogado.tem_senha === false;
+  const campoExcluir = document.getElementById('excluir-senha');
+  document.getElementById('rotulo-excluir').textContent = semSenha ? 'Digite seu e-mail para confirmar' : 'Confirme sua senha';
+  campoExcluir.type = semSenha ? 'email' : 'password';
+  campoExcluir.autocomplete = semSenha ? 'off' : 'current-password';
+  campoExcluir.value = '';
+  document.getElementById('recado-excluir').innerHTML = '';
+  document.querySelector('.zona-perigo').open = false;
+  desenharStatusEmail();
+  desenharPainelAvisos();
+  desenharPainelAdmin();
+}
+
+function abrirFormularioConta(modo, mostrar) {
   modoConta = modo;
   const m = MODOS_CONTA[modo];
   const tem = campo => m.campos.includes(campo);
@@ -4630,14 +4630,14 @@ async function publicar() {
 
 // Feed: "Geral" é o de sempre; cada grupo tem o seu; "Grupos" mostra a
 // página para entrar, criar turma e usar código de convite.
-let feedAtual = 'geral';
+let feedAtual = 'grupos';
 let meusGrupos = [];
 
 async function abrirFeed() {
   await carregarGrupos();
   desenharAbasFeed();
   if (feedAtual === 'grupos') return desenharPaginaGrupos();
-  if (feedAtual !== 'geral' && !meusGrupos.some(g => g.id === feedAtual)) feedAtual = 'geral';
+  if (!meusGrupos.some(g => g.id === feedAtual)) { feedAtual = 'grupos'; return desenharPaginaGrupos(); }
   const grupo = meusGrupos.find(g => g.id === feedAtual);
   document.getElementById('cabecalho-grupo').innerHTML = grupo ? cabecalhoDoGrupo(grupo) : '';
   document.getElementById('area-publicar').innerHTML = usuarioLogado
@@ -4700,7 +4700,7 @@ async function carregarGrupos() {
 }
 
 function desenharAbasFeed() {
-  const abas = [['geral', 'Geral'], ...meusGrupos.map(g => [g.id, (g.tipo === 'turma' ? '🏫 ' : '🎯 ') + g.nome]), ['grupos', '＋ Grupos']];
+  const abas = [['grupos', 'Grupos'], ...meusGrupos.map(g => [g.id, (g.tipo === 'turma' ? '🏫 ' : '🎯 ') + g.nome])];
   document.getElementById('abas-feed').innerHTML = abas.map(([id, nome]) =>
     `<button aria-pressed="${id === feedAtual}" onclick="trocarFeed(${typeof id === 'number' ? id : `'${id}'`})">${escapar(nome)}</button>`).join('');
 }
@@ -4783,7 +4783,7 @@ function criarTurma(evento) {
 }
 async function sairDoGrupo(id) {
   if (!await confirmar('Sair deste grupo? Se você for o dono de uma turma, ela passa para o membro mais antigo.', { sim: 'Sair' })) return;
-  acaoGrupo(`/api/grupos/${id}/sair`, {}, () => trocarFeed('geral'));
+  acaoGrupo(`/api/grupos/${id}/sair`, {}, () => trocarFeed('grupos'));
 }
 
 async function verMembros(id, nome) {
@@ -6010,6 +6010,7 @@ document.addEventListener('keydown', e => {
 function abrirMeuPerfil() {
   if (usuarioLogado) return abrirPerfil(usuarioLogado.id);
   irPara('perfil');
+  document.getElementById('secao-conta').classList.add('escondido');
   document.getElementById('conteudo-perfil').innerHTML = `
     <div class="painel vazio"><span class="cara">🪪</span>
       Perfis, fotos e publicações aparecem só para quem tem conta.<br>
@@ -6039,6 +6040,8 @@ async function abrirPerfil(id) {
 
 function desenharPaginaPerfil() {
   const { perfil: u, publicacoes } = perfilAberto;
+  document.getElementById('secao-conta').classList.toggle('escondido', !u.meu);
+  if (u.meu) prepararConta();
   const foto = u.foto ? `<img src="${escapar(urlImagem(u.foto))}" alt="Foto de ${escapar(u.nome)}">` : inicial(u.nome);
   const cartoes = publicacoes.map(p => `
     <button class="cartao-pub${p.oculto ? ' oculta' : ''}" onclick="verPublicacao(${p.id})">
@@ -6069,7 +6072,7 @@ function desenharPaginaPerfil() {
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
-        <button class="acao discreta" onclick="cliqueNoPerfil()">⚙️ Conta e configurações</button>
+        <button class="acao discreta" onclick="cliqueNoPerfil()">⚙️ Configurações</button>
       </div>` : ''}
     <div class="rotulo-galeria">Publicações</div>
     <div class="galeria">${cartoes || `<div class="vazio galeria-vazia"><span class="cara">🖼️</span>
@@ -6861,21 +6864,12 @@ async function atualizarMeuProgresso() {
   ind.title = s.hoje ? `${plural(s.dias, 'dia seguido', 'dias seguidos')} estudando 🔥` : `${plural(s.dias, 'dia seguido', 'dias seguidos')}. Estude hoje para não perder a sequência!`;
 }
 
-// Faixa no Treinar: a primeira coisa que mostra que tem gente aqui.
+// Ao lado do título do Treinar: quantos estudaram hoje.
 async function desenharPulso() {
-  const alvo = document.getElementById('pulso-comunidade');
-  try { agora = await api('/api/comunidade/agora'); } catch (e) { alvo.innerHTML = ''; return; }
-  const outros = (agora.pessoas_online || []).filter(p => !usuarioLogado || p.id !== usuarioLogado.id);
-  const sozinho = agora.online <= 1;
-  const bv = usuarioLogado && meuProgresso && !meuProgresso.boas_vindas.completo && !boasVindasFechadas()
-    ? meuProgresso.boas_vindas.passos.filter(p => p.feito).length : null;
-  alvo.innerHTML = `<button class="pulso-mini" onclick="abrirComunidade('agora')">
-    <span class="ponto-vivo"></span>
-    <span class="texto"><b>${sozinho ? `${plural(agora.estudaram_hoje, 'pessoa estudou', 'pessoas estudaram')} hoje` : `${agora.online} pessoas no site agora`}</b>
-      <small>${plural(agora.questoes_hoje, 'questão respondida', 'questões respondidas')} hoje${agora.em_salas ? ` · ${agora.em_salas} em salas de estudo` : ''}</small></span>
-    ${outros.length ? `<span class="bolhas">${outros.slice(0, 5).map(p => bolha(p)).join('')}</span>` : ''}
-    <span class="seta">${bv !== null ? `Seu começo: ${bv}/4 →` : 'Ver a comunidade →'}</span>
-  </button>`;
+  const alvo = document.getElementById('vivo-treinar');
+  try { agora = await api('/api/comunidade/agora'); } catch (e) { alvo.hidden = true; return; }
+  alvo.innerHTML = `<span class="ponto-vivo"></span>${plural(agora.estudaram_hoje, 'estudou hoje', 'estudaram hoje')}`;
+  alvo.hidden = false;
 }
 
 // ---------- navegação ----------
@@ -6899,7 +6893,7 @@ const ATALHOS_COMUNIDADE = [
   ['salas', '⏱️', 'Salas de estudo', 'Estudar junto no mesmo relógio'],
   ['perguntas', '🙋', 'Perguntas', 'Tire uma dúvida ou ajude alguém'],
   ['redacoes', '✍️', 'Redações', 'Mande a sua e corrija a dos outros'],
-  ['feed', '💬', 'Feed e grupos', 'Publicações e grupos de estudo']
+  ['feed', '👥', 'Grupos', 'Turmas e grupos de estudo']
 ];
 
 function desenharSubabas() {
@@ -7065,22 +7059,16 @@ async function desenharAgora() {
   carregarSugestoes();
 }
 
+// Ao lado do título da Comunidade: quantos estão no site agora. Na hora da
+// sessão coletiva (20h às 22h), um convite para a Sala geral.
 function htmlPulsoGrande() {
-  const a = agora;
-  const pessoas = a.pessoas_online || [];
-  const sozinho = a.online <= 1;
+  const vivo = document.getElementById('vivo-comunidade');
+  vivo.innerHTML = `<span class="ponto-vivo"></span>${agora.online} no site agora`;
+  vivo.hidden = false;
   const h = horaDeBrasilia();
-  // Ritual diário: todo dia às 20h a comunidade estuda junto na Sala geral.
-  const ritual = h >= 20 && h < 22;
-  return `<section class="painel pulso">
-    <div class="grande"><span class="ponto-vivo"></span><span><b>${a.online}</b> ${a.online === 1 ? 'pessoa' : 'pessoas'} no site agora</span></div>
-    ${pessoas.length ? `<div class="bolhas">${pessoas.slice(0, 8).map(p => bolha(p)).join('')}${a.online > 8 ? `<small>+${a.online - 8}</small>` : ''}</div>` : '<span></span>'}
-    <div class="resumo"><span><b>${a.estudaram_hoje}</b> estudaram hoje</span><span><b>${a.questoes_hoje}</b> questões respondidas hoje</span><span><b>${a.em_salas}</b> em salas de estudo</span></div>
-    ${ritual ? `<div class="ritual"><span>🌙 <b>Sessão das 20h</b> acontecendo agora: a comunidade estuda junto até as 22h.</span>
-        <button class="acao pequena" onclick="entrarNaSala('geral')">Entrar na Sala geral</button></div>`
-      : sozinho ? `<div class="ritual"><span>👋 Está tranquilo agora. Abra uma sala: quem chegar estuda com você. E todo dia às <b>20h</b> tem sessão coletiva.</span>
-        <button class="acao pequena" onclick="trocarAbaComunidade('salas')">Abrir uma sala</button></div>` : ''}
-  </section>`;
+  if (h < 20 || h >= 22) return '';
+  return `<section class="painel pulso"><div class="ritual"><span>🌙 <b>Sessão das 20h</b> acontecendo agora: a comunidade estuda junto até as 22h.</span>
+    <button class="acao pequena" onclick="entrarNaSala('geral')">Entrar na Sala geral</button></div></section>`;
 }
 
 // Metas do dia em bolinhas, como os stories: some em 24 horas.
@@ -8138,7 +8126,7 @@ window.addEventListener('beforeinstallprompt', evento => {
   evento.preventDefault();
   pedidoInstalar = evento;
   desenharConviteApp();
-  if (!document.getElementById('tela-conta').classList.contains('escondido')) desenharPainelAvisos();
+  if (!document.getElementById('secao-conta').classList.contains('escondido')) desenharPainelAvisos();
 });
 window.addEventListener('appinstalled', () => {
   pedidoInstalar = null;
@@ -8810,7 +8798,7 @@ const AJUDA = {
   ]],
   comunidade: ['Comunidade', [
     'No alto ficam os <b>Reels</b>: vídeos curtos de estudo. Toque numa capa para assistir e use as setas para passar.',
-    'Logo abaixo, os atalhos: <b>Salas de estudo</b> (estudar junto no mesmo relógio), <b>Perguntas</b> (tirar dúvida ou ajudar), <b>Redações</b> (mandar a sua e corrigir a dos outros) e <b>Feed e grupos</b>.',
+    'Logo abaixo, os atalhos: <b>Salas de estudo</b> (estudar junto no mesmo relógio), <b>Perguntas</b> (tirar dúvida ou ajudar), <b>Redações</b> (mandar a sua e corrigir a dos outros) e <b>Grupos</b>.',
     'Mais embaixo: quem está estudando agora, as metas do dia e o que está rolando. Para voltar de qualquer parte, toque em <b>← Comunidade</b>.'
   ]]
 };
