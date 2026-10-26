@@ -7047,12 +7047,15 @@ async function atualizarMeuProgresso() {
   ind.title = s.hoje ? `${plural(s.dias, 'dia seguido', 'dias seguidos')} estudando 🔥` : `${plural(s.dias, 'dia seguido', 'dias seguidos')}. Estude hoje para não perder a sequência!`;
 }
 
+// Abaixo disso o contador some: "2 estudaram hoje" passa a sensação de site vazio.
+const MINIMO_NO_CONTADOR = 10;
+
 // Ao lado do título do Treinar: quantos estudaram hoje.
 async function desenharPulso() {
   const alvo = document.getElementById('vivo-treinar');
   try { agora = await api('/api/comunidade/agora'); } catch (e) { alvo.hidden = true; return; }
   alvo.innerHTML = `<span class="ponto-vivo"></span>${plural(agora.estudaram_hoje, 'estudou hoje', 'estudaram hoje')}`;
-  alvo.hidden = false;
+  alvo.hidden = agora.estudaram_hoje < MINIMO_NO_CONTADOR;
 }
 
 // ---------- navegação ----------
@@ -7247,7 +7250,7 @@ async function desenharAgora() {
 function htmlPulsoGrande() {
   const vivo = document.getElementById('vivo-comunidade');
   vivo.innerHTML = `<span class="ponto-vivo"></span>${agora.online} no site agora`;
-  vivo.hidden = false;
+  vivo.hidden = agora.online < MINIMO_NO_CONTADOR;
   const h = horaDeBrasilia();
   if (h < 20 || h >= 22) return '';
   return `<section class="painel pulso"><div class="ritual"><span>🌙 <b>Sessão das 20h</b> acontecendo agora: a comunidade estuda junto até as 22h.</span>
