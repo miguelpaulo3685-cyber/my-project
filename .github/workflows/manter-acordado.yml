@@ -20,3 +20,6 @@ jobs:
         run: |
           codigo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 https://enem-api-cbo6.onrender.com/api/health || echo "000")
           echo "Resposta: HTTP $codigo"
+          # 401 = a versão nova (com mensagens) está no ar; 404 = o Render ainda roda a antiga.
+          novo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://enem-api-cbo6.onrender.com/api/mensagens/nao-lidas || echo "000")
+          echo "Rota de mensagens: HTTP $novo"
