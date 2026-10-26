@@ -2,6 +2,7 @@
 //
 // Muita gente aqui é menor de idade, então a conversa vem com freios:
 // - cada pessoa escolhe quem pode mandar mensagem (todos, quem eu sigo, ninguém);
+//   o padrão é só quem eu sigo;
 // - bloquear corta a conversa nos dois sentidos;
 // - links não passam (é o caminho mais comum para levar alguém para fora do site);
 // - limite de mensagens e de conversas novas por dia;
@@ -71,7 +72,7 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
   app.get('/api/mensagens/preferencia', exigirLogin, async (req, res) => {
     try {
       const { rows } = await pool.query(
-        `SELECT COALESCE(u.quem_mensagem, 'todos') AS quem,
+        `SELECT COALESCE(u.quem_mensagem, 'seguindo') AS quem,
                 COALESCE((SELECT json_agg(json_build_object('id', b.bloqueado_id, 'nome', x.username) ORDER BY b.created_at DESC)
                             FROM bloqueios b JOIN usuarios x ON x.id = b.bloqueado_id WHERE b.usuario_id = u.id), '[]') AS bloqueados
            FROM usuarios u WHERE u.id = $1`, [req.usuario.id]);
@@ -112,7 +113,7 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
     if (texto.length > TAMANHO_MAXIMO) return res.status(400).json({ error: `Mensagem grande demais (máximo de ${TAMANHO_MAXIMO} letras).` });
     if (TEM_LINK.test(texto)) return res.status(400).json({ error: 'Links não são permitidos nas mensagens.' });
     try {
-      const pessoa = (await pool.query(`SELECT id, COALESCE(quem_mensagem, 'todos') AS quem FROM usuarios WHERE id = $1`, [outro])).rows[0];
+      const pessoa = (await pool.query(`SELECT id, COALESCE(quem_mensagem, 'seguindo') AS quem FROM usuarios WHERE id = $1`, [outro])).rows[0];
       if (!pessoa) return res.status(404).json({ error: 'Perfil não encontrado.' });
       if (await bloqueado(req.usuario.id, outro)) return res.status(403).json({ error: 'Não dá para conversar com esse perfil.' });
       const jaConversam = (await pool.query(

@@ -615,8 +615,16 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW(),
         PRIMARY KEY (usuario_id, bloqueado_id)
       );
-      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS quem_mensagem VARCHAR(10) DEFAULT 'todos';
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS quem_mensagem VARCHAR(10) DEFAULT 'seguindo';
+      ALTER TABLE usuarios ALTER COLUMN quem_mensagem SET DEFAULT 'seguindo';
     `);
+    // Uma vez só: quem ganhou 'todos' no período de teste passa para 'seguindo'
+    // (desconhecido não puxa conversa com menor). Depois, vale o que cada um escolher.
+    const jaMudou = await pool.query(`SELECT 1 FROM configuracoes WHERE chave = 'mensagens_so_seguindo'`);
+    if (!jaMudou.rowCount) {
+      await pool.query(`UPDATE usuarios SET quem_mensagem = 'seguindo' WHERE quem_mensagem IS NULL OR quem_mensagem = 'todos'`);
+      await pool.query(`INSERT INTO configuracoes (chave, valor) VALUES ('mensagens_so_seguindo', 'feito') ON CONFLICT (chave) DO NOTHING`);
+    }
     console.log('✅ Tabelas de mensagens criadas');
 
     // Tabela de histórico de cache
