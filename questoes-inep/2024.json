@@ -2133,11 +2133,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altE.jpg)"
+   "II",
+   "III",
+   "IV",
+   "V",
+   "VI"
   ],
   "correta": 2,
   "pagina": 13,
@@ -2165,11 +2165,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altE.jpg)"
+   "A",
+   "B",
+   "C",
+   "D",
+   "E"
   ],
   "correta": 1,
   "pagina": 14,
@@ -2229,11 +2229,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altE.jpg)"
+   "I",
+   "II",
+   "III",
+   "IV",
+   "V"
   ],
   "correta": 0,
   "pagina": 16,
@@ -2357,11 +2357,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altE.jpg)"
+   "cone.",
+   "cilindro.",
+   "pirâmide.",
+   "tronco de cone.",
+   "tronco de pirâmide."
   ],
   "correta": 3,
   "pagina": 18,
@@ -2373,11 +2373,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altE.jpg)"
+   "24",
+   "35",
+   "555",
+   "1 110",
+   "1 145"
   ],
   "correta": 3,
   "pagina": 18,
@@ -2421,11 +2421,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altE.jpg)"
+   "a = 20; b = log(0,5)",
+   "a = 100; b = 0,5",
+   "a = 20; b = (0,5)¹ᐟ¹⁰",
+   "a = 20; b = (40)¹ᐟ¹⁰ / 80",
+   "a = 20; b = 40"
   ],
   "correta": 2,
   "pagina": 19,
@@ -2437,11 +2437,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altE.jpg)"
+   "6",
+   "18",
+   "6√6",
+   "6∛6",
+   "3∛12"
   ],
   "correta": 4,
   "pagina": 19,
@@ -2453,11 +2453,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altE.jpg)"
+   "I",
+   "II",
+   "III",
+   "IV",
+   "V"
   ],
   "correta": 2,
   "pagina": 20,
@@ -2517,11 +2517,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altE.jpg)"
+   "13,0",
+   "15,0",
+   "19,8",
+   "20,0",
+   "23,3"
   ],
   "correta": 2,
   "pagina": 21,
@@ -2533,11 +2533,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-orig1.jpg)\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-orig2.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altE.jpg)"
+   "I",
+   "II",
+   "III",
+   "IV",
+   "V"
   ],
   "correta": 4,
   "pagina": 21,
@@ -2549,11 +2549,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altE.jpg)"
+   "2,00F + 0,26T + 1,40D",
+   "2,00 + 0,26T + 1,40D",
+   "2,00 + 0,26T + D",
+   "0,26T + 1,40D",
+   "F + T + D"
   ],
   "correta": 1,
   "pagina": 21,
@@ -2661,11 +2661,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altE.jpg)"
+   "54",
+   "60",
+   "66",
+   "68",
+   "72"
   ],
   "correta": 3,
   "pagina": 24,
@@ -2677,11 +2677,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altE.jpg)"
+   "2 e 3",
+   "4 e 5",
+   "5 e 6",
+   "7 e 8",
+   "8 e 9"
   ],
   "correta": 2,
   "pagina": 24,
@@ -2709,11 +2709,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altE.jpg)"
+   "d(Q) = (1/4)·d(R)",
+   "d(Q) = (1/2)·d(R)",
+   "d(Q) = (3/4)·d(R)",
+   "d(Q) = (3/2)·d(R)",
+   "d(Q) = (2/3)·d(R)"
   ],
   "correta": 4,
   "pagina": 25,
@@ -2725,11 +2725,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altE.jpg)"
+   "0,1",
+   "0,5",
+   "1,0",
+   "1,3",
+   "1,8"
   ],
   "correta": 3,
   "pagina": 25,
@@ -2757,11 +2757,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altE.jpg)"
+   "1/25 + 1/25 + 1/25",
+   "24/25 + 23/24 + 1/23",
+   "1/25 × 1/24 × 1/23",
+   "24/25 × 23/25 × 1/25",
+   "24/25 × 23/24 × 1/23"
   ],
   "correta": 4,
   "pagina": 27,
@@ -2773,11 +2773,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altE.jpg)"
+   "5,4",
+   "6,2",
+   "7,6",
+   "8,2",
+   "8,4"
   ],
   "correta": 2,
   "pagina": 27,
@@ -2789,11 +2789,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altE.jpg)"
+   "hexágono regular, pois a área do jardim, em metro quadrado, será k²√3/24.",
+   "hexágono regular, pois a área do jardim, em metro quadrado, será 3k²√3/2.",
+   "quadrado, pois a área do jardim, em metro quadrado, será k²/16.",
+   "triângulo equilátero, pois a área do jardim, em metro quadrado, será k²√3/36.",
+   "triângulo equilátero, pois a área do jardim, em metro quadrado, será k²√3/4."
   ],
   "correta": 0,
   "pagina": 28,
@@ -2821,11 +2821,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altE.jpg)"
+   "entre 25 e 45 anos, pois é a faixa etária com maior quantidade de funcionários.",
+   "entre 25 e 45 anos, pois é a única faixa etária cujas porcentagens são maiores do que as porcentagens mínimas de cada setor.",
+   "até 25 anos, pois é a única faixa etária cujos percentuais associados aos setores aumentam com o aumento da quantidade de funcionários por setor.",
+   "até 25 anos, pois é a faixa etária que apresenta maior quantidade de funcionários no setor de produção, que é o setor que emprega metade dos funcionários dessa empresa.",
+   "a partir de 45 anos, pois a soma das porcentagens associadas a essa faixa etária é 110%, que é maior do que as respectivas somas associadas às outras faixas etárias, que são 105% e 85%."
   ],
   "correta": 0,
   "pagina": 29,
@@ -2853,11 +2853,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altE.jpg)"
+   "4 000π",
+   "2 000π",
+   "4 000/π",
+   "1 000/π",
+   "500/π"
   ],
   "correta": 3,
   "pagina": 30,
@@ -2869,11 +2869,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altE.jpg)"
+   "7",
+   "8",
+   "9",
+   "10",
+   "11"
   ],
   "correta": 1,
   "pagina": 30,
@@ -2885,11 +2885,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altE.jpg)"
+   "2 400,00",
+   "2 520,00",
+   "2 550,00",
+   "2 700,00",
+   "2 800,00"
   ],
   "correta": 2,
   "pagina": 31,
@@ -2901,11 +2901,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altE.jpg)"
+   "56",
+   "58",
+   "59",
+   "60",
+   "62"
   ],
   "correta": 4,
   "pagina": 31,
@@ -2917,11 +2917,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altE.jpg)"
+   "1 000",
+   "1 500",
+   "3 500",
+   "3 800",
+   "5 250"
   ],
   "correta": 2,
   "pagina": 31,
@@ -2933,11 +2933,11 @@
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-orig1.jpg)",
   "alternativas": [
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altA.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altB.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altC.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altD.jpg)",
-   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altE.jpg)"
+   "(7!/4!) × (6!/4!)",
+   "7!/(3! × 4!) × 6!/(2! × 4!)",
+   "7!/(3! × 4!) + 6!/(2! × 4!) + 5!/(1! × 4!)",
+   "(7!/(3! × 4!) + 6!/(2! × 4!)) × (7!/(4! × 3!) + 6!/(1! × 5!)) × (7!/(5! × 2!) + 6!/(0! × 6!))",
+   "(7!/(3! × 4!) × 6!/(2! × 4!)) + (7!/(4! × 3!) × 6!/(1! × 5!)) + (7!/(5! × 2!) × 6!/(0! × 6!))"
   ],
   "correta": 4,
   "pagina": 31,

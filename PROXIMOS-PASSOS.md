@@ -35,7 +35,14 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 2. **Corrigir** o que aparecer. Mandar para o Claude os prints e os números das questões
    (o "Avisar erro" de cada questão e a lista de erros da Administração ajudam).
 3. **Resoluções:** pegar Administração → Mais erradas e pedir ao Claude as resoluções dessas questões.
-4. **Revisão rápida das questões de 2024 e 2025** que aparecem como recorte do caderno (ver se estão legíveis).
+4. [x] **Revisão das alternativas em recorte de 2024 e 2025** (27/10): 92 questões passaram a ter alternativas em
+   texto (tiradas do PDF pelo `extrair.py` ou digitadas das fórmulas); os recortes cortados foram corrigidos.
+   Ficaram como imagem só as alternativas que são desenho (gráficos, circuitos, heredogramas): 2024-112, 121, 131;
+   2025-106, 107, 108, 119, 127, 135 e 172.
+4b. **Manter o servidor acordado de verdade:** o robô do GitHub (`manter-acordado.yml`) deveria rodar a cada
+   10 minutos, mas o GitHub atrasa esses horários e ele roda só a cada 4 a 6 horas. Até o Render pago, criem um
+   monitor grátis no UptimeRobot (uptimerobot.com → New monitor → HTTP(s) →
+   `https://enem-api-cbo6.onrender.com/api/health`, a cada 5 minutos).
 5. **Compras, 1 a 2 semanas antes do lançamento:** Render pago, domínio, autenticar o domínio no Brevo,
    pesquisa no INPI (itens 2 e 3 abaixo).
 6. **Lançamento** depois do ENEM 2026; divulgação de janeiro a março de 2027, com links `?origem=...`.
@@ -56,7 +63,8 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 - [~] **Resolução comentada** (27/10): o aluno vê "📘 Ver resolução comentada" depois de responder.
       Administradores escrevem no próprio site: no botão "✏️ Escrever resolução" que aparece na questão
       respondida, ou em Administração → **Mais erradas** (as 40 com menor % de acerto, com ✅ nas que já têm).
-      10 já escritas (2024-93, 95, 97, 99, 114, 116, 139, 150, 152 e 153) em `resolucoes.json`.
+      16 já escritas em `resolucoes.json` (2024-93, 95, 97, 99, 114, 116, 139, 150, 152, 153;
+      2025-140, 146, 152, 155, 177 e 180).
       Para o Claude escrever mais: copie a lista "Mais erradas" (ano e número) e peça "escreva as resoluções
       destas questões em resolucoes.json". O arquivo nunca apaga o que foi escrito pelo site.
 
