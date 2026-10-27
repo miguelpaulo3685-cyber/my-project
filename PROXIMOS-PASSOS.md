@@ -21,6 +21,26 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   (padrão "só quem eu sigo", bloquear, denunciar, sem links, limites por dia); site a partir de 13 anos.
 - Respostas em português, simples e diretas.
 
+## FASE FINAL (decidido em 27/10): nada de função nova
+
+Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
+
+1. **Teste com amigos (7 dias).** 5 a 10 pessoas, de preferência quem vai fazer o ENEM.
+   Mandar o link com `?origem=teste` (aparece separado no painel de crescimento).
+   Pedir que usem no celular e anotem tudo que der errado ou confundir. No fim, perguntar:
+   - O que você mais usou? O que nunca abriu?
+   - Teve alguma questão com texto, imagem ou gabarito errado? Qual (ano e número)?
+   - Alguma coisa travou, demorou ou não funcionou? Em qual celular ou navegador?
+   - Você usaria até o ENEM? Indicaria para um amigo? Por quê?
+2. **Corrigir** o que aparecer. Mandar para o Claude os prints e os números das questões
+   (o "Avisar erro" de cada questão e a lista de erros da Administração ajudam).
+3. **Resoluções:** pegar Administração → Mais erradas e pedir ao Claude as resoluções dessas questões.
+4. **Revisão rápida das questões de 2024 e 2025** que aparecem como recorte do caderno (ver se estão legíveis).
+5. **Compras, 1 a 2 semanas antes do lançamento:** Render pago, domínio, autenticar o domínio no Brevo,
+   pesquisa no INPI (itens 2 e 3 abaixo).
+6. **Lançamento** depois do ENEM 2026; divulgação de janeiro a março de 2027, com links `?origem=...`.
+7. **Prova do ENEM 2026:** quando o INEP publicar cadernos e gabaritos, usar `ferramentas-inep/` para incluir.
+
 ## Pendências para lançar (em ordem)
 
 ### 1. Conteúdo
@@ -74,8 +94,9 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
       que viram livro, esfera em fatias, globo, mapa do Brasil, fita, sela (Matemática), sistema solar, cavalo
       do xadrez (História), vulcão (Geografia), "Aa" (Linguagens), arcos, galáxia e, no fim, a moldura do
       cartão de entrar. O mouse gira a forma, empurra e acende os pontos; o cursor é um ponto de luz com rastro.
-      Só com mouse e tela de 900px ou mais; no celular continua a versão com as montanhas.
-- [ ] Novo estilo visual (se ainda quiserem): um só, testado em todas as telas.
+      Aparece em computador com mouse e tela de 820px ou mais (`?entrada=pc` força); no celular continua
+      a versão com as montanhas.
+- [-] Novo estilo visual: cancelado (fase final, sem função nova).
 
 ## Já feito recentemente
 
