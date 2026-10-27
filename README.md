@@ -68,6 +68,7 @@ uma tabela ou coluna que o código espera.
 | `GET /api/reels/:id/comentarios` / `POST` | livre / login |
 | `DELETE /api/reels/comentarios/:id`, `POST /api/reels/comentarios/:id/denunciar` | autor ou administrador / login |
 | `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
+| `GET /api/admin/crescimento` (cadastros por dia, quem voltou em 7 dias, origem e convites, só números somados) | administrador |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
 Exemplo de carga de um ano inteiro:
@@ -246,3 +247,16 @@ npm test
 Testam senhas, limites, validação de e-mail, casamento com o INEP, a nota TRI e a limpeza das fotos. Rodam também no
 GitHub a cada push (`.github/workflows/testes.yml`), junto com `npm audit` nas dependências.
 O `package-lock.json` fica no repositório para o Render instalar sempre as mesmas versões.
+
+## Crescimento e convites
+
+- **De onde veio** (`crescimento.js`): na primeira visita o site guarda uma palavra (tiktok, instagram,
+  whatsapp, youtube, busca, indicacao, outro ou direto), tirada de `?origem=` (ou `?utm_source=`) e do site
+  de onde a pessoa veio. Ela só vai para o servidor no cadastro, que aceita apenas palavras dessa lista.
+  Para medir uma divulgação, use links como `https://miguelpaulo3685-cyber.github.io/my-project/?origem=tiktok`.
+- **Convite da Arena**: na sala de espera, "Chamar amigos no WhatsApp" manda o link
+  `?arena=CÓDIGO&convite=ID`. Quem não tem conta cria e cai direto na sala. A conta nova fica como
+  `indicacao` e guarda quem convidou; quem convidou ganha o emblema 🤝 no primeiro amigo e 📣 no quinto
+  (só visuais, fora do baú) e recebe uma notificação.
+- **Painel** (Configurações → Administração): cadastros por dia nos últimos 30 dias, quem voltou em 7 dias
+  (respondeu alguma questão num dos 7 dias depois do cadastro), por semana de cadastro, e as origens.

@@ -1962,6 +1962,27 @@
     .colecao button.usando { border-color: var(--marca); background: var(--marca-suave); }
     .colecao button.raro { box-shadow: inset 0 0 0 1px #6fb3e0; }
     .colecao button.epico { box-shadow: inset 0 0 0 1px #c49be8; }
+    .colecao button.convite { box-shadow: inset 0 0 0 1px #3fae6a; }
+    /* Painel de crescimento (Administração) */
+    .grafico-dias { display: flex; align-items: flex-end; gap: 2px; height: 110px; padding: 6px 0;
+      border-bottom: 1px solid var(--borda); }
+    .grafico-dias span { flex: 1; height: 100%; display: flex; align-items: flex-end; cursor: default; }
+    .grafico-dias span:hover { background: var(--marca-suave); border-radius: 4px 4px 0 0; }
+    .grafico-dias i { display: block; width: 100%; background: var(--marca); border-radius: 4px 4px 0 0; }
+    .eixo-dias { display: flex; justify-content: space-between; color: var(--texto-fraco); margin: 4px 0 6px; }
+    .tabela-admin summary { cursor: pointer; color: var(--texto-fraco); font-size: .85rem; }
+    .tabela-admin div { display: flex; justify-content: space-between; max-width: 220px; font-size: .88rem; padding: 2px 0; }
+    .barra-admin { display: grid; grid-template-columns: minmax(110px, 1.2fr) 2fr auto auto; gap: 10px; align-items: center;
+      padding: 6px 0; font-size: .9rem; }
+    .barra-admin small { color: var(--texto-fraco); white-space: nowrap; }
+    .barra-admin .trilho { height: 8px; border-radius: 4px; background: var(--superficie-2); overflow: hidden; }
+    .barra-admin .trilho i { display: block; height: 100%; background: var(--marca); border-radius: 4px; }
+    @media (max-width: 560px) { .barra-admin { grid-template-columns: 1fr auto auto; } .barra-admin .trilho { grid-column: 1 / -1; grid-row: 2; } }
+    .convite-arena { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .convite-arena > * { margin: 0; }
+    a.acao.whatsapp { display: inline-flex; align-items: center; background: #1f8f4e; color: #fff; text-decoration: none;
+      border-radius: 11px; padding: 11px 24px; font-size: .92rem; font-weight: 700; transition: background .2s, transform .14s; }
+    a.acao.whatsapp:hover { background: #187a42; transform: translateY(-2px); }
     .codigo-sala { font-family: var(--fonte-titulo); font-size: 3rem; letter-spacing: .12em; text-align: center; color: var(--marca-texto); line-height: 1.1; }
     .chips-jogadores { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip-jogador {
@@ -2143,6 +2164,28 @@
       if (p.has('redefinir') || (!localStorage.getItem('mm_token') && !semConta && !p.has('confirmar'))) {
         document.documentElement.classList.add('com-entrada');
       }
+    } catch (e) {}
+    // De onde a pessoa veio, guardado na primeira visita e mandado só no
+    // cadastro: uma palavra da lista (tiktok, instagram...) e, se veio por um
+    // convite, o número de quem convidou. Nada do endereço completo.
+    try {
+      const p = new URLSearchParams(location.search);
+      if (!localStorage.getItem('mm_origem')) {
+        const marca = (p.get('origem') || p.get('utm_source') || '').toLowerCase();
+        let ref = '';
+        try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) {}
+        if (ref === location.hostname) ref = '';
+        const pela = t => marca.includes(t) || ref.includes(t);
+        const convite = /^\d{1,9}$/.test(p.get('convite') || '') ? p.get('convite') : null;
+        const origem = convite ? 'indicacao'
+          : pela('tiktok') ? 'tiktok' : pela('insta') ? 'instagram' : (pela('whatsapp') || marca === 'wa') ? 'whatsapp'
+          : (pela('youtube') || ref === 'youtu.be') ? 'youtube' : /(^|\.)(google|bing|duckduckgo|yahoo)\./.test(ref) ? 'busca'
+          : (marca || ref) ? 'outro' : 'direto';
+        localStorage.setItem('mm_origem', JSON.stringify({ origem, convite }));
+      }
+      // Link de sala da Arena: quem ainda não tem conta cai direto na sala depois de entrar.
+      const sala = (p.get('arena') || '').replace(/\D/g, '');
+      if (sala.length === 6 && !localStorage.getItem('mm_token')) sessionStorage.setItem('mm_arena_pendente', sala);
     } catch (e) {}
     // Estilo escolhido em Aparência, aplicado já aqui para a página não piscar.
     try { if (localStorage.getItem('mm_estilo') === 'serra') document.documentElement.dataset.estilo = 'serra'; } catch (e) {}
@@ -4439,6 +4482,7 @@ async function enviarConta(evento) {
   if (modo === 'criar') {
     corpo.nome = document.getElementById('conta-nome').value.trim();
     corpo.aceite = document.getElementById('conta-aceite').checked;
+    Object.assign(corpo, origemDaVisita());
     if (!corpo.aceite) {
       recadoConta('Para criar a conta, aceite os Termos de Uso e a Política de Privacidade.', 'ruim');
       return;
@@ -4474,6 +4518,11 @@ async function enviarConta(evento) {
   }
 }
 
+// Guardado na primeira visita (veja o script do <head>); só vai no cadastro.
+function origemDaVisita() {
+  try { return JSON.parse(localStorage.getItem('mm_origem')) || {}; } catch (e) { return {}; }
+}
+
 async function concluirEntrada(dados, mensagem) {
   historicoSim = null; // o histórico de simulados passa a vir da conta
   guardar(CHAVE_TOKEN, dados.token);
@@ -4481,9 +4530,11 @@ async function concluirEntrada(dados, mensagem) {
   desenharPerfil();
   await sincronizarProgresso();
   recadoConta(mensagem, 'bom');
+  let sala = null;
+  try { sala = sessionStorage.getItem('mm_arena_pendente'); sessionStorage.removeItem('mm_arena_pendente'); } catch (e) {}
   setTimeout(() => {
     fecharEntrada();
-    irPara('treinar');
+    if (sala) abrirArena(sala); else irPara('treinar');
     avisoTopo(mensagem + ' Seu progresso agora fica salvo na conta.', 'bom');
   }, 700);
 }
@@ -4522,7 +4573,7 @@ async function entrarComGoogle(resposta) {
     const r = await fetch(`${API_URL}/api/auth/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credencial: resposta.credential })
+      body: JSON.stringify({ credencial: resposta.credential, ...origemDaVisita() })
     });
     const dados = await r.json();
     if (!r.ok) { recadoConta(dados.error || 'Não deu certo.', 'ruim'); return; }
@@ -6494,6 +6545,7 @@ async function acaoDiscussao(id, acao) {
 let relogioSino = null;
 const TEXTO_DA_NOTIFICACAO = {
   seguidor: n => `<b>${escapar(n.ator)}</b> começou a seguir você.`,
+  convite: n => `<b>${escapar(n.ator)}</b> entrou no site pelo seu convite 🤝 ${Number(n.texto) >= 5 ? 'Você já trouxe a turma: emblema 📣 liberado!' : 'Emblema de convite liberado na Arena!'}`,
   resposta: n => `<b>${escapar(n.ator)}</b> respondeu seu comentário: “${escapar(n.texto || '')}”`,
   util: n => `<b>${escapar(n.ator)}</b> achou sua explicação útil 👍`,
   fixado: () => 'A equipe fixou a sua explicação como a melhor da questão 📌',
@@ -8157,6 +8209,7 @@ async function desenharPainelAdmin() {
       ${numero(n.aparelhos_com_avisos, 'aparelhos com avisos')}
     </div>
     <p class="pista">"Voltaram em 2+ dias" é o número mais importante: mostra quem criou o hábito.</p>
+    <div id="admin-crescimento"></div>
     <div class="rotulo-modal">Moderação</div>
     ${moderar.length ? moderar.map(([q, texto, acao]) => `<div class="linha-aviso"><span><b>${q}</b> ${texto}</span>
       ${acao ? `<button class="acao discreta pequena" onclick="${acao}">Ver</button>` : ''}</div>`).join('')
@@ -8174,6 +8227,42 @@ async function desenharPainelAdmin() {
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
   desenharMensagensDenunciadas();
+  desenharCrescimento();
+}
+
+// Crescimento: só números somados, sem nome de ninguém.
+async function desenharCrescimento() {
+  const alvo = document.getElementById('admin-crescimento');
+  let d;
+  try { d = await api('/api/admin/crescimento'); } catch (e) { alvo.innerHTML = ''; return; }
+  const dataCurta = iso => { const [, m, dia] = String(iso).slice(0, 10).split('-'); return `${dia}/${m}`; };
+  const pct = (a, b) => (b ? Math.round(a / b * 100) : 0);
+  const maior = Math.max(1, ...d.por_dia.map(x => x.cadastros));
+  const total30 = d.por_dia.reduce((s, x) => s + x.cadastros, 0);
+  const totalMes = d.origens.reduce((s, o) => s + o.mes, 0);
+  const coorte = d.semanas.reduce((s, x) => ({ c: s.c + x.cadastros, v: s.v + x.voltaram }), { c: 0, v: 0 });
+  alvo.innerHTML = `<div class="rotulo-modal">Cadastros por dia (últimos 30 dias: ${total30})</div>
+    <div class="grafico-dias" role="img" aria-label="Cadastros por dia nos últimos 30 dias">${d.por_dia.map(x =>
+      `<span title="${dataCurta(x.dia)}: ${plural(x.cadastros, 'cadastro', 'cadastros')}"><i style="height:${x.cadastros ? Math.max(4, x.cadastros / maior * 100) : 0}%"></i></span>`).join('')}</div>
+    <div class="eixo-dias"><small>${dataCurta(d.por_dia[0].dia)}</small><small>maior dia: ${maior === 1 && !total30 ? 0 : maior}</small><small>hoje</small></div>
+    <details class="tabela-admin"><summary>Ver em tabela</summary>${d.por_dia.slice().reverse().map(x =>
+      `<div><span>${dataCurta(x.dia)}</span><b>${x.cadastros}</b></div>`).join('')}</details>
+
+    <div class="rotulo-modal">Voltaram em 7 dias ${coorte.c ? `(${pct(coorte.v, coorte.c)}% no total)` : ''}</div>
+    ${d.semanas.length ? d.semanas.map(s => `<div class="barra-admin"><span>Semana de ${dataCurta(s.semana)}</span>
+      <div class="trilho"><i style="width:${pct(s.voltaram, s.cadastros)}%"></i></div>
+      <b>${pct(s.voltaram, s.cadastros)}%</b><small>${s.voltaram} de ${s.cadastros}</small></div>`).join('')
+      : '<p class="pista">Ainda não há contas com mais de 7 dias.</p>'}
+    <p class="pista">Conta quem criou a conta naquela semana e respondeu ao menos uma questão (treino, simulado ou Arena)
+      em algum dos 7 dias seguintes. Acima de 30% é bom sinal.</p>
+
+    <div class="rotulo-modal">De onde vieram (últimos 30 dias: ${totalMes})</div>
+    ${d.origens.filter(o => o.total).map(o => `<div class="barra-admin"><span>${escapar(o.nome)}</span>
+      <div class="trilho"><i style="width:${pct(o.mes, totalMes)}%"></i></div>
+      <b>${o.mes}</b><small>${o.total} no total</small></div>`).join('')}
+    <p class="pista">${plural(d.convites.mes, 'conta nova veio', 'contas novas vieram')} por convite de amigo neste mês
+      (${plural(d.convites.quem_convidou, 'pessoa já trouxe', 'pessoas já trouxeram')} alguém).
+      Para saber o que funciona, use links com <b>?origem=tiktok</b> ou <b>?origem=instagram</b> na bio e nos posts.</p>`;
 }
 
 async function desenharMensagensDenunciadas() {
@@ -8585,10 +8674,21 @@ function desenharMinhaArena() {
   <section class="painel">
     <b>Seus emblemas</b>
     <p class="pista" style="margin:4px 0 0">Cada partida com amigos abre um baú. ${usando ? `Usando: ${usando.emoji} ${escapar(usando.nome)}.` : 'Toque num emblema para usar ao lado do seu nome.'}</p>
-    <div class="colecao">${e.colecao.map(i => `<button class="${i.raridade}${i.id === e.emblema ? ' usando' : ''}" ${i.tem ? '' : 'disabled'}
-      title="${escapar(i.tem ? `${i.nome} (${i.raridade === 'epico' ? 'épico' : i.raridade})` : 'Ainda não ganhou')}"
-      onclick="usarEmblema('${i.id}')">${i.tem ? i.emoji : '?'}</button>`).join('')}</div>
+    <div class="colecao">${e.colecao.filter(i => i.raridade !== 'convite').map(botaoEmblema).join('')}</div>
+    <b style="display:block;margin-top:16px">Emblemas de convite</b>
+    <p class="pista" style="margin:4px 0 0">Crie uma sala e chame amigos pelo WhatsApp. ${e.convidados
+      ? `${plural(e.convidados, 'amigo já entrou', 'amigos já entraram')} pelo seu convite.` : 'Ninguém entrou pelo seu convite ainda.'}
+      1 amigo dá o 🤝, 5 amigos dão o 📣.</p>
+    <div class="colecao">${e.colecao.filter(i => i.raridade === 'convite').map(botaoEmblema).join('')}</div>
   </section>`;
+}
+
+const NOME_RARIDADE = { comum: 'comum', raro: 'raro', epico: 'épico', convite: 'por convite' };
+function botaoEmblema(i) {
+  const falta = i.raridade === 'convite' ? (i.id === 'turma' ? 'Chame 5 amigos para ganhar' : 'Chame 1 amigo para ganhar') : 'Ainda não ganhou';
+  return `<button class="${i.raridade}${i.id === arena.eu.emblema ? ' usando' : ''}" ${i.tem ? '' : 'disabled'}
+    title="${escapar(i.tem ? `${i.nome} (${NOME_RARIDADE[i.raridade] || i.raridade})` : falta)}"
+    onclick="usarEmblema('${i.id}')">${i.tem ? i.emoji : '?'}</button>`;
 }
 
 async function usarEmblema(id) {
@@ -8767,8 +8867,12 @@ function desenharEsperaArena(alvo) {
       : `<section class="painel" style="text-align:center">
         <div class="pista">Código da sala</div>
         <div class="codigo-sala">${e.codigo.slice(0, 3)} ${e.codigo.slice(3)}</div>
-        <p class="pista" style="margin:8px 0 12px">Os amigos entram em <b>Arena → Entrar numa sala</b>.</p>
-        <button class="acao secundaria" onclick="convidarArena()">Enviar convite</button>
+        <p class="pista" style="margin:8px 0 12px">Os amigos entram em <b>Arena → Entrar numa sala</b> ou pelo link do convite.</p>
+        <div class="convite-arena">
+          <a class="acao whatsapp" href="${linkWhatsAppArena()}" target="_blank" rel="noopener">Chamar amigos no WhatsApp</a>
+          <button class="acao secundaria" onclick="convidarArena()">Outro app ou copiar link</button>
+        </div>
+        <p class="pista" style="margin:10px 0 0">Amigo que criar conta pelo seu link te dá o emblema 🤝.</p>
       </section>`}
     <section class="painel">
       <b>${plural(e.jogadores.length, 'pessoa na sala', 'pessoas na sala')}</b>
@@ -8790,9 +8894,23 @@ function nomeArenaConfig(c) {
   return `${area} · ${nivel} · ${c.quantidade} questões`;
 }
 
+// O link leva o código da sala e quem convidou (para o emblema de convite).
+function linkDaSalaArena(origem) {
+  const p = new URLSearchParams({ arena: arena.estado.codigo });
+  if (usuarioLogado) p.set('convite', usuarioLogado.id);
+  if (origem) p.set('origem', origem);
+  return `${location.origin}${location.pathname}?${p}`;
+}
+
+const TEXTO_CONVITE_ARENA = codigo => `Bora jogar questões do ENEM comigo na Arena do M&M Estudos? É grátis. Sala ${codigo}:`;
+
+function linkWhatsAppArena() {
+  return 'https://wa.me/?text=' + encodeURIComponent(`${TEXTO_CONVITE_ARENA(arena.estado.codigo)} ${linkDaSalaArena('whatsapp')}`);
+}
+
 async function convidarArena() {
-  const link = `${location.origin}${location.pathname}?arena=${arena.estado.codigo}`;
-  const texto = `Bora jogar questões do ENEM na Arena? Código: ${arena.estado.codigo}`;
+  const link = linkDaSalaArena();
+  const texto = TEXTO_CONVITE_ARENA(arena.estado.codigo);
   try {
     if (navigator.share) return await navigator.share({ title: 'Arena · M&M Estudos', text: texto, url: link });
     await navigator.clipboard.writeText(`${texto}\n${link}`);
@@ -9046,7 +9164,8 @@ async function tratarLinkDeAviso(sessaoRestaurada) {
   if (codigoArena) {
     await sessaoRestaurada;
     if (usuarioLogado) return abrirArena(codigoArena);
-    avisoTopo('Entre na sua conta e depois em Arena → Entrar numa sala, com o código ' + codigoArena.replace(/\D/g, '').slice(0, 6) + '.', 'bom');
+    avisoTopo('Crie sua conta ou entre: depois disso você vai direto para a sala da Arena.', 'bom');
+    recadoConta('Te chamaram para a Arena! Crie sua conta ou entre e você vai direto para a sala.', 'bom');
     return;
   }
   if (descadastrar) {

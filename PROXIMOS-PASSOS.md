@@ -53,9 +53,10 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - [ ] Aviso automático de erros do site.
 
 ### 4. Crescimento
-- [ ] Painel de números para vocês: cadastros por dia, quem voltou em 7 dias, de onde veio
-      (TikTok, Instagram, indicação). Sem dados pessoais.
-- [ ] Botão "Chamar amigos para a Arena" (link da sala para o WhatsApp) e emblema por convite.
+- [x] Painel de números (Configurações → Administração): cadastros por dia, quem voltou em 7 dias,
+      de onde veio. Contas criadas antes disso aparecem como "Antes do registro de origem".
+      Na divulgação, usar links com `?origem=tiktok`, `?origem=instagram` etc.
+- [x] Botão "Chamar amigos no WhatsApp" na sala da Arena e emblemas de convite (🤝 1 amigo, 📣 5 amigos).
 - [ ] Primeira visita guiada: levar o aluno a fazer 5 questões e ver a nota TRI.
 - [ ] Reels em formato de série: episódios numerados, "continuar assistindo", selo "Original M&M".
       Vídeos de terceiros só incorporados do YouTube, nunca baixados.

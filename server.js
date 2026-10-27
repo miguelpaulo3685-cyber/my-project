@@ -11,6 +11,7 @@ const auth = require('./auth');
 const correio = require('./email');
 const tri = require('./tri');
 const imagens = require('./imagens');
+const crescimento = require('./crescimento');
 const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir, questaoCompletaSql } = require('./provas');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
@@ -179,7 +180,7 @@ async function abrirSessao(usuarioId) {
 }
 
 app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
-  const { nome, email, senha, aceite } = req.body || {};
+  const { nome, email, senha, aceite, origem, convite } = req.body || {};
 
   if (!nome || String(nome).trim().length < 2) {
     return res.status(400).json({ error: 'Diga seu nome (ao menos 2 letras).' });
@@ -213,6 +214,7 @@ app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
       .then(t => correio.enviarConfirmacao(rows[0].email, rows[0].username, t))
       .catch(erro => console.error('Erro ao enviar confirmação:', erro.message));
 
+    await crescimento.registrarOrigem(pool, rows[0].id, { origem, convite });
     const token = await abrirSessao(rows[0].id);
     res.status(201).json({ token, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO });
   } catch (erro) {
@@ -287,6 +289,7 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
         [google.nome, google.email]
       );
       id = rows[0].id;
+      await crescimento.registrarOrigem(pool, id, { origem: req.body?.origem, convite: req.body?.convite });
     }
 
     const { rows } = await pool.query(
@@ -1189,6 +1192,7 @@ require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
 require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./crescimento')(app, { pool, exigirModerador });
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });

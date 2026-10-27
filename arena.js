@@ -67,7 +67,9 @@ const ITENS = [
   ['cerebro', '🧠', 'Cérebro', 'comum'], ['cafe', '☕', 'Café', 'comum'], ['fone', '🎧', 'Fone', 'comum'], ['vela', '🕯️', 'Vela da madrugada', 'comum'],
   ['coruja', '🦉', 'Coruja', 'raro'], ['foguete', '🚀', 'Foguete', 'raro'], ['raio', '⚡', 'Raio', 'raro'],
   ['telescopio', '🔭', 'Telescópio', 'raro'], ['dna', '🧬', 'DNA', 'raro'], ['alvo', '🎯', 'Alvo', 'raro'],
-  ['coroa', '👑', 'Coroa', 'epico'], ['dragao', '🐉', 'Dragão', 'epico'], ['galaxia', '🌌', 'Galáxia', 'epico'], ['diamante', '💎', 'Diamante', 'epico']
+  ['coroa', '👑', 'Coroa', 'epico'], ['dragao', '🐉', 'Dragão', 'epico'], ['galaxia', '🌌', 'Galáxia', 'epico'], ['diamante', '💎', 'Diamante', 'epico'],
+  // Só por convite (crescimento.js): nunca saem do baú.
+  ['convite', '🤝', 'Chamou um amigo', 'convite'], ['turma', '📣', 'Trouxe a turma', 'convite']
 ].map(([id, emoji, nome, raridade]) => ({ id, emoji, nome, raridade }));
 const ITEM_POR_ID = new Map(ITENS.map(i => [i.id, i]));
 const PESO_RARIDADE = { comum: 70, raro: 25, epico: 5 };
@@ -543,7 +545,7 @@ function registrarArena(app, { pool, auth, limitar, exigirLogin, cortes, enviarP
   app.get('/api/arena/eu', exigirLogin, async (req, res) => {
     const eu = req.usuario.id;
     try {
-      const [itens, emblema, numeros, revanche] = await Promise.all([
+      const [itens, emblema, numeros, revanche, convidados] = await Promise.all([
         pool.query('SELECT item FROM arena_itens WHERE usuario_id = $1', [eu]),
         pool.query('SELECT emblema FROM usuarios WHERE id = $1', [eu]),
         pool.query(
@@ -551,11 +553,12 @@ function registrarArena(app, { pool, auth, limitar, exigirLogin, cortes, enviarP
                   COALESCE(MAX(r.pontos), 0)::int AS recorde,
                   COALESCE(SUM(r.xp) FILTER (WHERE r.created_at >= date_trunc('day', NOW() - INTERVAL '3 hours') + INTERVAL '3 hours'), 0)::int AS xp_hoje
              FROM arena_resultados r JOIN arena_partidas p ON p.id = r.partida_id WHERE r.usuario_id = $1`, [eu]),
-        pool.query('SELECT COUNT(*)::int AS n FROM arena_revanche WHERE usuario_id = $1 AND NOT feito AND volta_em <= NOW()', [eu])
+        pool.query('SELECT COUNT(*)::int AS n FROM arena_revanche WHERE usuario_id = $1 AND NOT feito AND volta_em <= NOW()', [eu]),
+        pool.query('SELECT COUNT(*)::int AS n FROM usuarios WHERE convidado_por = $1', [eu])
       ]);
       const tem = new Set(itens.rows.map(r => r.item));
       res.json({
-        ...numeros.rows[0], xp_limite: XP_ARENA.limite_dia, revanche: revanche.rows[0].n,
+        ...numeros.rows[0], xp_limite: XP_ARENA.limite_dia, revanche: revanche.rows[0].n, convidados: convidados.rows[0].n,
         emblema: emblema.rows[0]?.emblema || null,
         colecao: ITENS.map(i => ({ ...i, tem: tem.has(i.id) }))
       });

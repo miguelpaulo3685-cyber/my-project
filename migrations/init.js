@@ -627,6 +627,16 @@ async function runMigrations() {
     }
     console.log('✅ Tabelas de mensagens criadas');
 
+    // De onde veio cada conta (palavra de uma lista fechada) e quem convidou,
+    // para o painel de crescimento e o emblema de convite.
+    await pool.query(`
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS origem VARCHAR(20);
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS convidado_por INT REFERENCES usuarios(id) ON DELETE SET NULL;
+      CREATE INDEX IF NOT EXISTS idx_usuarios_convidado_por ON usuarios (convidado_por) WHERE convidado_por IS NOT NULL;
+      CREATE INDEX IF NOT EXISTS idx_usuarios_criado ON usuarios (created_at);
+    `);
+    console.log('✅ Origem das contas e convites');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
