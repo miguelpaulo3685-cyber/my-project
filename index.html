@@ -1800,12 +1800,20 @@
     .pena { transform: translate(calc(40px + min(1, var(--p) * 1.8) * 320px), calc(170px + sin(var(--p) * 40rad) * 6px)); }
     .cena-fim { min-height: 60vh; }
     /* seta própria (só com mouse): segue o cursor com atraso; os desenhos inclinam e podem ser arrastados */
-    .seta-cursor { position: fixed; left: 0; top: 0; width: 30px; height: 30px; pointer-events: none; z-index: 400;
-      opacity: 0; transition: opacity .2s, width .2s, height .2s; filter: drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
-    html.com-mouse #entrada .historia { cursor: none; }
+    .seta-cursor { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 400; opacity: 0; transition: opacity .3s; }
+    .seta-cursor canvas { position: absolute; left: 0; top: 0; }
+    .seta-cabeca { --s: 8px; position: absolute; left: 0; top: 0; width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+      border-radius: 50%; background: #fff; box-shadow: 0 0 10px 2px #fff; will-change: transform;
+      transition: width .3s, height .3s, margin .3s, background-color .3s, box-shadow .3s; }
+    html.com-mouse #entrada .historia, html.com-mouse #entrada .historia * { cursor: none; }
     html.com-mouse .seta-cursor.visivel { opacity: 1; }
-    .seta-cursor.sobre { width: 40px; height: 40px; }
-    .seta-cursor.segurando path { fill: #f2c94c; }
+    .seta-cursor.sobre .seta-cabeca { --s: 40px; background: transparent; box-shadow: inset 0 0 0 1px #fff; }
+    .seta-cursor.segurando .seta-cabeca { --s: 26px; background: rgba(255,255,255,.25); }
+    /* brilho que acompanha o mouse em cima do desenho */
+    .arte-caixa { position: relative; }
+    .arte-caixa::after { content: ""; position: absolute; inset: -10%; pointer-events: none; opacity: 0; transition: opacity .3s;
+      background: radial-gradient(circle 120px at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.35), transparent 70%); mix-blend-mode: screen; }
+    .arte-caixa.acesa::after { opacity: 1; }
     .arte-caixa { width: 100%; max-width: 520px; justify-self: center; transition: transform .5s cubic-bezier(.2,.9,.3,1.3); will-change: transform; }
     .cena-livro .arte-caixa { max-width: 460px; }
     .arte-caixa .arte { max-width: none; }
@@ -2362,7 +2370,7 @@
     <!-- História de entrada: rolando, cada área do ENEM sai das páginas do livro. -->
     <div class="historia" id="historia">
       <button class="pular-historia" onclick="pularHistoria()">Pular para entrar ↓</button>
-      <svg class="seta-cursor" id="seta-cursor" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 3 L27 15 L16 17.5 L11 28 Z" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round"/></svg>
+      <div class="seta-cursor" id="seta-cursor" aria-hidden="true"><canvas></canvas><div class="seta-cabeca"></div></div>
 
       <section class="cena cena-livro" aria-label="M&amp;M Estudos">
         <svg class="arte livro" viewBox="0 0 400 260" aria-hidden="true">
@@ -4686,7 +4694,7 @@ const historia = (() => {
   };
 })();
 
-// Seta própria e desenhos que reagem ao mouse (no celular, a rolagem segue normal).
+// Ponto de luz com rastro no lugar da seta, e desenhos que reagem ao mouse (no celular, a rolagem segue normal).
 (() => {
   // cada desenho ganha uma caixa: o mouse mexe na caixa, a rolagem continua mexendo no desenho
   document.querySelectorAll('#historia .cena .arte').forEach(a => {
@@ -4694,12 +4702,42 @@ const historia = (() => {
   });
   if (!matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   document.documentElement.classList.add('com-mouse');
-  let x = innerWidth / 2, y = innerHeight / 2, sx = x, sy = y, ligado = false, arraste = null;
+  let x = innerWidth / 2, y = innerHeight / 2, sx = x, sy = y, ligado = false, arraste = null, rastro = [];
   const seta = () => document.getElementById('seta-cursor');
-  function quadro() {
-    if (!document.documentElement.classList.contains('com-entrada')) { ligado = false; return; }
-    sx += (x - sx) * .22; sy += (y - sy) * .22;
-    const s = seta(); if (s) s.style.transform = `translate(${sx - 4}px, ${sy - 3}px)`;
+  const tela = document.querySelector('#seta-cursor canvas'), ctx = tela.getContext('2d');
+  let dpr = 1;
+  const medir = () => {
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    tela.width = innerWidth * dpr; tela.height = innerHeight * dpr;
+    tela.style.width = innerWidth + 'px'; tela.style.height = innerHeight + 'px';
+  };
+  medir(); addEventListener('resize', medir);
+  // rastro: os pontos dos últimos 150 ms viram uma faixa que afina e some
+  function desenharRastro(t) {
+    const u = rastro[rastro.length - 1];
+    if (!u || Math.hypot(sx - u.x, sy - u.y) >= 1.5) rastro.push({ x: sx, y: sy, t });
+    while (rastro.length && t - rastro[0].t > 150) rastro.shift();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, innerWidth, innerHeight);
+    const n = rastro.length; if (n < 3) return;
+    const esq = [], dir = [];
+    for (let i = 0; i < n; i++) {
+      const o = rastro[i], a = rastro[Math.max(0, i - 1)], b = rastro[Math.min(n - 1, i + 1)];
+      let dx = b.x - a.x, dy = b.y - a.y; const d = Math.hypot(dx, dy) || 1; dx /= d; dy /= d;
+      const r = (1.5 + 7.5 * Math.max(0, 1 - (t - o.t) / 150)) / 2;
+      esq.push([o.x - dy * r, o.y + dx * r]); dir.push([o.x + dy * r, o.y - dx * r]);
+    }
+    const g = ctx.createLinearGradient(rastro[0].x, rastro[0].y, sx, sy);
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, '#fff');
+    ctx.beginPath(); ctx.moveTo(...esq[0]);
+    esq.forEach(p => ctx.lineTo(...p)); dir.reverse().forEach(p => ctx.lineTo(...p));
+    ctx.closePath(); ctx.fillStyle = g; ctx.fill();
+  }
+  function quadro(t) {
+    if (!document.documentElement.classList.contains('com-entrada')) { ligado = false; rastro = []; return; }
+    sx += (x - sx) * .28; sy += (y - sy) * .28;
+    const cab = document.querySelector('#seta-cursor .seta-cabeca');
+    if (cab) cab.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+    desenharRastro(t);
     requestAnimationFrame(quadro);
   }
   addEventListener('pointermove', e => {
@@ -4709,7 +4747,7 @@ const historia = (() => {
     const naHistoria = !!e.target.closest?.('#historia');
     s.classList.toggle('visivel', naHistoria);
     const arte = e.target.closest?.('.arte-caixa');
-    s.classList.toggle('sobre', !!arte);
+    s.classList.toggle('sobre', !!e.target.closest?.('a, button'));
     if (arraste) {
       arraste.el.style.transform = `translate(${x - arraste.x0}px, ${y - arraste.y0}px) rotate(${(x - arraste.x0) / 18}deg)`;
     } else if (arte) {
@@ -4717,6 +4755,8 @@ const historia = (() => {
       const r = arte.getBoundingClientRect();
       const dx = (x - r.left) / r.width - .5, dy = (y - r.top) / r.height - .5;
       arte.style.transform = `perspective(700px) rotateY(${dx * 16}deg) rotateX(${-dy * 16}deg) translate(${dx * 14}px, ${dy * 14}px)`;
+      arte.style.setProperty('--mx', (dx + .5) * 100 / 1.2 + 8.33 + '%'); arte.style.setProperty('--my', (dy + .5) * 100 / 1.2 + 8.33 + '%');
+      arte.classList.add('acesa');
     }
     if (!ligado && document.documentElement.classList.contains('com-entrada')) { ligado = true; requestAnimationFrame(quadro); }
   }, { passive: true });
@@ -4735,7 +4775,7 @@ const historia = (() => {
   addEventListener('pointerup', soltar); addEventListener('pointercancel', soltar);
   document.addEventListener('pointerout', e => {
     const arte = e.target.closest?.('.arte-caixa');
-    if (arte && !arte.contains(e.relatedTarget) && !arraste) arte.style.transform = '';
+    if (arte && !arte.contains(e.relatedTarget) && !arraste) { arte.style.transform = ''; arte.classList.remove('acesa'); }
   });
 })();
 
