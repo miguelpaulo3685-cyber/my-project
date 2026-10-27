@@ -566,6 +566,19 @@
     .nivel.n4 { background: rgba(239,68,68,.15);  color: var(--errado); border-color: rgba(239,68,68,.45); }
     .nivel.novo { background: var(--superficie-2); color: var(--texto-fraco); border-color: var(--borda); }
 
+    /* visita guiada: primeira vez no site */
+    .faixa-visita { display: flex; flex-direction: column; gap: 3px; background: var(--marca-suave);
+      border: 1px solid var(--marca); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; font-size: .9rem; animation: surgir .4s ease; }
+    .faixa-visita b { color: var(--marca-texto); font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; }
+    .modal.visita p { line-height: 1.55; }
+    .areas-visita { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .areas-visita .acao { margin: 0; padding: 12px 10px; }
+    .link-visita { display: block; margin: 14px auto 0; background: none; border: none; color: var(--texto-fraco);
+      text-decoration: underline; cursor: pointer; font: inherit; font-size: .88rem; }
+    .fim-visita { text-align: left; margin: 18px 0 6px; }
+    .fim-visita p { margin: 8px 0; line-height: 1.55; color: var(--texto-fraco); }
+    .botoes-visita { display: flex; flex-wrap: wrap; gap: 8px; }
+    .botoes-visita .acao { margin: 0; }
     /* o desafio merece destaque na tela */
     .faixa-desafio {
       display: flex; align-items: center; gap: 11px;
@@ -990,6 +1003,25 @@
     }
     .capa-tiktok.pequena { height: 120px; border-radius: 12px; margin-top: 10px; font-size: 1.1rem; }
     .canal-reel { display: block; margin-top: 6px; font-size: .78rem; font-weight: 700; opacity: .85; }
+    .selo-reel.original { background: linear-gradient(90deg, #c9a45c, #e8d3a2); color: #2a1f0c; }
+    button.selo-reel.serie { border: none; cursor: pointer; font-family: inherit; color: inherit; }
+    .lista-series { padding-bottom: 24px; }
+    .titulo-series { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 1.1rem; margin: 18px 0 12px; }
+    .grade-series { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .cartao-serie { background: var(--superficie); border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .capa-serie { position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; border: none; padding: 0; cursor: pointer; background: #000; overflow: hidden; }
+    .capa-serie img, .capa-serie .capa-tiktok { width: 100%; height: 100%; object-fit: cover; display: grid; place-items: center; }
+    .capa-serie .selo-reel { position: absolute; left: 10px; top: 10px; }
+    .progresso-serie { position: absolute; left: 0; bottom: 0; height: 4px; background: var(--marca); }
+    .info-serie { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .info-serie small { color: var(--texto-fraco); }
+    .info-serie p { font-size: .88rem; color: var(--texto-fraco); margin: 2px 0 0; }
+    .acoes-serie { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
+    .acoes-serie .acao { margin: 0; }
+    .form-serie label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; font-size: .9rem; font-weight: 600; }
+    .form-serie label.caixa { flex-direction: row; align-items: center; font-weight: 500; }
+    .form-serie input:not([type=checkbox]), .form-serie textarea, .form-serie select { font: inherit; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid var(--borda); background: var(--superficie-2); color: var(--texto); }
     .selo-reel { display: inline-block; font-size: .7rem; font-weight: 800; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,.2); margin-right: 4px; text-transform: uppercase; letter-spacing: .04em; }
     .reel-lado { position: absolute; right: 8px; bottom: 90px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
     .reel.tocando .reel-lado { bottom: 120px; }
@@ -2744,6 +2776,7 @@
         </div>
       </div>
 
+      <div id="res-visita"></div>
       <div class="botoes-final">
         <button class="acao" onclick="abrirMateria(materiaAtual)">Novo bloco</button>
         <button class="acao discreta" onclick="irPara('treinar')">Voltar para o início</button>
@@ -2804,7 +2837,8 @@
       <div class="filtros-reels" id="filtros-reels" role="group" aria-label="Filtrar reels"></div>
       <button class="acao escondido" id="novo-reel" onclick="abrirNovoReel()">＋ Novo reel</button>
     </div>
-    <div class="reels-corpo">
+    <div class="lista-series escondido" id="lista-series"></div>
+    <div class="reels-corpo" id="reels-corpo">
       <div class="reels-carrossel">
         <button class="seta-reel ante" id="seta-reel-ante" onclick="passarReel(-1)" aria-label="Reel anterior" disabled>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg></button>
@@ -3663,6 +3697,70 @@ function desenharGuia() {
     ${ultima ? `<button class="acao secundaria" onclick="abrirMateria('${ultima.id}')">Continuar ${ultima.nome}</button>` : ''}`;
 }
 
+// ---------- primeira visita guiada ----------
+// Quem chega pela primeira vez (sem nenhuma questão feita) é levado a fazer
+// 5 questões e ver a nota TRI, com uma dica por questão. Aparece uma vez só.
+const CHAVE_VISITA = 'mm_visita';
+let visitaNoProximoBloco = false;
+const DICAS_VISITA = [
+  'Leia o texto com calma e toque na alternativa que você acha certa. Depois aparece a resposta.',
+  'Errou? Normal. A nota TRI do ENEM olha a dificuldade de cada questão, não só quantas você acertou.',
+  'O selo no alto (Nv 1 a 4) mostra a dificuldade oficial da questão, medida pelo INEP.',
+  'Passou da metade! Responder com calma vale mais do que correr.',
+  'Última! Depois dela sai a sua nota TRI.'
+];
+
+function talvezMostrarVisita() {
+  if (ler(CHAVE_VISITA) || totais().feitas > 0) return;
+  if (document.documentElement.classList.contains('com-entrada')) return;
+  if (document.getElementById('tela-treinar').classList.contains('escondido') || document.querySelector('.fundo-modal:not(.escondido)')) return;
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<div class="modal visita" role="dialog" aria-modal="true" aria-label="Boas-vindas">
+    <div class="modal-topo"><h2>Bem-vindo${usuarioLogado ? `, ${escapar(usuarioLogado.username.split(' ')[0])}` : ''}! 👋</h2>
+      <button class="btn-sair" onclick="pularVisita(this)" aria-label="Fechar">✕</button></div>
+    <p>Em uns 10 minutos você descobre a sua nota no ENEM de hoje:</p>
+    <ol class="ajuda-lista">
+      <li><b>5 questões reais</b> do ENEM, de uma área só.</li>
+      <li>Depois de cada uma, você vê <b>a resposta certa</b> na hora.</li>
+      <li>No fim sai a sua <b>nota TRI</b>, calculada como no ENEM.</li>
+    </ol>
+    <p class="pista" style="margin:14px 0 8px">Por onde você quer começar?</p>
+    <div class="areas-visita">${AREAS.map(a => `<button class="acao secundaria" onclick="comecarVisita('${a.id}', this)">${escapar(a.nome)}</button>`).join('')}</div>
+    <button class="link-visita" onclick="pularVisita(this)">Agora não, quero explorar sozinho</button></div>`;
+  document.body.appendChild(fundo);
+}
+
+function comecarVisita(area, botao) {
+  guardar(CHAVE_VISITA, 'comecou');
+  botao.closest('.fundo-modal').remove();
+  visitaNoProximoBloco = true;
+  abrirMateria(area);
+}
+
+function pularVisita(botao) {
+  guardar(CHAVE_VISITA, 'pulou');
+  botao.closest('.fundo-modal').remove();
+}
+
+function desenharFimDaVisita() {
+  const alvo = document.getElementById('res-visita');
+  if (!bloco.visita) { alvo.innerHTML = ''; return; }
+  guardar(CHAVE_VISITA, 'feita');
+  soltarConfete();
+  alvo.innerHTML = `<div class="painel fim-visita">
+    <b>🎉 Você fez o seu primeiro bloco!</b>
+    <p>A nota TRI acima é uma estimativa. No ENEM ela vai mais ou menos de 300 a 900, e quanto mais questões você
+      faz, mais certa ela fica. Cada área tem a sua nota.</p>
+    <p><b>O que fazer agora:</b></p>
+    <div class="botoes-visita">
+      <button class="acao secundaria" onclick="irPara('treinar')">Treinar outra área</button>
+      <button class="acao secundaria" onclick="abrirDesafio()">Desafio da semana</button>
+      <button class="acao secundaria" onclick="abrirArena()">Jogar com amigos na Arena</button>
+      ${usuarioLogado ? '' : `<button class="acao" onclick="abrirConta('criar')">Criar conta para salvar a nota</button>`}
+    </div></div>`;
+}
+
 function desenharOndeSalva() {
   const alvo = document.getElementById('onde-salva');
   if (!alvo) return;
@@ -3832,7 +3930,7 @@ async function abrirMateria(area) {
 
   let questoes = [];
   try {
-    const r = await fetch(`${API_URL}/api/questoes/${area}`);
+    const r = await fetch(`${API_URL}/api/questoes/${area}${visitaNoProximoBloco ? '?com_tri=1' : ''}`);
     if (r.status === 404) {
       painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>
         Ainda não há questões de ${escapar(nomeDaArea(area))} no banco.</div>`;
@@ -3855,7 +3953,8 @@ async function abrirMateria(area) {
 
   buscarContagemDiscussao(questoes.map(q => q.id));
   bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(),
-            notaAntes: notasTri[area] ? notasTri[area].nota : null };
+            notaAntes: notasTri[area] ? notasTri[area].nota : null, visita: visitaNoProximoBloco };
+  visitaNoProximoBloco = false;
   atualizarTrilho();
   iniciarCronometro();
   desenharQuestao();
@@ -3895,6 +3994,8 @@ function desenharQuestao() {
     </div>`;
 
   const n = NIVEIS[q.nivel] || NIVEIS.novo;
+  const passoVisita = bloco.visita ? `<div class="faixa-visita" role="status"><b>Visita guiada · ${bloco.indice + 1} de ${bloco.questoes.length}</b>
+      <span>${DICAS_VISITA[Math.min(bloco.indice, DICAS_VISITA.length - 1)]}</span></div>` : '';
   const desafio = q.nivel === 4 ? `
     <div class="faixa-desafio">
       <span>🔥</span>
@@ -3913,6 +4014,7 @@ function desenharQuestao() {
         ${n.selo}<small>${n.nome}${q.nivel_fonte === 'tri' ? ' · TRI' : ''}</small>
       </span>
     </div>
+    ${passoVisita}
     ${desafio}
     ${dica}
     <div class="barra-grifo">
@@ -4167,6 +4269,7 @@ function mostrarResultado() {
     'acertar questão difícil vale mais, e errar fácil pesa mais. É uma estimativa — quanto mais ' +
     'questões você faz, menor a margem. Conta só a primeira vez que você responde cada questão.';
 
+  desenharFimDaVisita();
   irPara('resultado');
   mostrarNotaTriDoBloco();
 }
@@ -4459,6 +4562,7 @@ const livroEmPontos = (() => {
 function continuarSemConta() {
   try { sessionStorage.setItem('mm_sem_conta', '1'); } catch (e) {}
   fecharEntrada();
+  setTimeout(talvezMostrarVisita, 400);
 }
 
 document.addEventListener('keydown', e => {
@@ -4562,7 +4666,7 @@ async function concluirEntrada(dados, mensagem) {
   try { sala = sessionStorage.getItem('mm_arena_pendente'); sessionStorage.removeItem('mm_arena_pendente'); } catch (e) {}
   setTimeout(() => {
     fecharEntrada();
-    if (sala) abrirArena(sala); else irPara('treinar');
+    if (sala) abrirArena(sala); else { irPara('treinar'); setTimeout(talvezMostrarVisita, 600); }
     avisoTopo(mensagem + ' Seu progresso agora fica salvo na conta.', 'bom');
   }, 700);
 }
@@ -5632,7 +5736,7 @@ document.addEventListener('keydown', e => {
 // no TikTok (player oficial de incorporação). Só o reel que está na tela carrega o player; os
 // outros mostram só a capa, para o celular não baixar vários vídeos de uma vez.
 const FILTROS_REELS = [
-  { id: 'todos', nome: 'Todos' }, { id: 'resolucao', nome: 'Resoluções', tipo: 'resolucao' }, { id: 'dica', nome: 'Dicas', tipo: 'dica' },
+  { id: 'todos', nome: 'Todos' }, { id: 'series', nome: '📺 Séries' }, { id: 'resolucao', nome: 'Resoluções', tipo: 'resolucao' }, { id: 'dica', nome: 'Dicas', tipo: 'dica' },
   { id: 'linguagens', nome: 'Linguagens', area: 'linguagens' }, { id: 'humanas', nome: 'Humanas', area: 'humanas' },
   { id: 'natureza', nome: 'Natureza', area: 'natureza' }, { id: 'matematica', nome: 'Matemática', area: 'matematica' },
   { id: 'redacao', nome: 'Redação', area: 'redacao' }, { id: 'salvos', nome: '🔖 Salvos' }
@@ -5647,6 +5751,9 @@ let observadorReels = null;
 let reelAtivo = null;
 let moderadorReels = false;
 let pendentesReels = 0;
+let relogioAssistido = null;
+let serieAberta = null; // { id, titulo } da série que está tocando
+let seriesCarregadas = [];
 
 const capaDoReel = id => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 // O player do TikTok tem o próprio botão de volume; o do YouTube começa mudo
@@ -5670,8 +5777,10 @@ function abrirReels() {
 // Administradores ganham o filtro "Para aprovar" quando há reels na fila.
 function desenharFiltrosReels() {
   const filtros = [...FILTROS_REELS, ...(moderadorReels && (pendentesReels || filtroReels === 'pendentes') ? [{ id: 'pendentes', nome: `⏳ Para aprovar (${pendentesReels})` }] : [])];
+  const naSerie = serieAberta && filtroReels === `serie:${serieAberta.id}`;
   document.getElementById('filtros-reels').innerHTML = filtros.map(f =>
-    `<button aria-pressed="${f.id === filtroReels}" onclick="filtrarReels('${f.id}')">${f.nome}</button>`).join('');
+    `<button aria-pressed="${f.id === filtroReels || (naSerie && f.id === 'series')}" onclick="filtrarReels('${f.id}')">${f.nome}</button>`).join('')
+    + (naSerie ? `<button aria-pressed="true" onclick="filtrarReels('series')">📺 ${escapar(serieAberta.titulo)} ✕</button>` : '');
 }
 
 function filtrarReels(id) {
@@ -5681,6 +5790,10 @@ function filtrarReels(id) {
 }
 
 async function carregarReels(doComeco) {
+  const modoSeries = filtroReels === 'series';
+  document.getElementById('lista-series').classList.toggle('escondido', !modoSeries);
+  document.getElementById('reels-corpo').classList.toggle('escondido', modoSeries);
+  if (modoSeries) { pararReels(); return desenharSeries(); }
   if (carregandoReels) return;
   carregandoReels = true;
   const lista = document.getElementById('reels-lista');
@@ -5690,6 +5803,7 @@ async function carregarReels(doComeco) {
   if (f.tipo) busca.set('tipo', f.tipo);
   if (f.area) busca.set('area', f.area);
   if (!doComeco && reels.length) busca.set('antes', reels[reels.length - 1].id);
+  if (filtroReels.startsWith('serie:')) busca.set('serie', filtroReels.slice(6));
   try {
     const rota = { salvos: '/salvos', pendentes: '/pendentes' }[filtroReels] || '';
     const r = await fetch(`${API_URL}/api/reels${rota}?${busca}`, { headers: cabecalhoAuth() });
@@ -5749,6 +5863,7 @@ function htmlDoReel(r) {
     </div>
     <div class="reel-info">
       <div class="reel-legenda">
+        ${r.original ? '<span class="selo-reel original">✦ Original M&amp;M</span>' : ''}${r.serie_id ? `<button class="selo-reel serie" onclick="abrirSerie(${r.serie_id}, ${r.id})">📺 ${escapar(r.serie_titulo || 'Série')} · Ep. ${r.episodio}</button>` : ''}
         <span class="selo-reel">${r.tipo === 'resolucao' ? 'Resolução' : 'Dica'}</span>${r.area ? `<span class="selo-reel">${escapar(NOME_AREA_REEL[r.area] || '')}</span>` : ''}
         <b>${escapar(r.titulo)}</b>
         ${r.descricao ? `<p>${escapar(r.descricao)}</p>` : ''}
@@ -5765,7 +5880,8 @@ function htmlDoReel(r) {
         ${r.status === 'pendente' && moderadorReels ? `
           <button class="aprovar" onclick="decidirReel(${r.id}, 'aprovar')" aria-label="Aprovar">${icone('<path d="m5 12.5 4.5 4.5L19 7.5"/>')}</button>
           <button class="recusar" onclick="decidirReel(${r.id}, 'recusar')" aria-label="Recusar">${icone('<path d="M6 6l12 12M18 6 6 18"/>')}</button>`
-          : moderadorReels ? `<button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>` : ''}
+          : moderadorReels ? `<button onclick="abrirSerieDoReel(${r.id})" aria-label="Pôr numa série" title="Pôr numa série">📺</button>
+            <button onclick="apagarReel(${r.id})" aria-label="Apagar reel">${icone(ICONES_REEL.apagar)}</button>` : ''}
       </div>
     </div>
   </section>`;
@@ -5798,6 +5914,13 @@ function tocarReel(id) {
   reelAtivo = id;
   el.classList.add('tocando');
   agendarComentarios(id);
+  // Depois de 8 s tocando conta como visto (é o que move o "continuar assistindo").
+  clearTimeout(relogioAssistido);
+  if (usuarioLogado && !r.assistido) relogioAssistido = setTimeout(() => {
+    if (reelAtivo !== id) return;
+    r.assistido = true;
+    postar(`/api/reels/${id}/assistido`).catch(() => {});
+  }, 8000);
   el.querySelector('.reel-play').remove();
   const quadro = el.querySelector('.reel-quadro');
   quadro.insertAdjacentHTML('afterbegin', `<iframe src="${escapar(playerDoReel(r))}" title="${escapar(r.titulo)}"
@@ -5807,6 +5930,7 @@ function tocarReel(id) {
 
 // Tira o player do reel que saiu da tela: o vídeo para e a capa volta.
 function pararReels() {
+  clearTimeout(relogioAssistido);
   const el = reelAtivo && document.querySelector(`.reel[data-id="${reelAtivo}"]`);
   if (el) {
     const r = reels.find(x => x.id === reelAtivo);
@@ -5894,6 +6018,125 @@ async function decidirReel(id, acao) {
   } catch (e) {
     avisoSim(e.daApi || SEM_SERVIDOR);
   }
+}
+
+// ---------- séries ----------
+async function desenharSeries() {
+  const alvo = document.getElementById('lista-series');
+  alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando séries…</div>';
+  let d;
+  try { d = await api('/api/reels/series'); } catch (e) {
+    alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return;
+  }
+  seriesCarregadas = d.series;
+  const capa = s => !s.capa_id ? '<div class="capa-tiktok">Em breve</div>'
+    : s.capa_plataforma === 'tiktok' ? '<div class="capa-tiktok">TikTok</div>'
+    : `<img src="${escapar(capaDeitada(s.capa_id))}" alt="" loading="lazy" onerror="this.onerror=null; this.src='${escapar(capaDoReel(s.capa_id))}'">`;
+  const cartao = (s, continuar) => `<article class="cartao-serie">
+    <button class="capa-serie" onclick="abrirSerie(${s.id}, ${continuar ? s.proximo_id : 'null'})" aria-label="Assistir ${escapar(s.titulo)}">${capa(s)}
+      ${s.original ? '<span class="selo-reel original">✦ Original M&amp;M</span>' : ''}
+      ${s.assistidos ? `<i class="progresso-serie" style="width:${Math.round(s.assistidos / Math.max(1, s.episodios) * 100)}%"></i>` : ''}</button>
+    <div class="info-serie">
+      <b>${escapar(s.titulo)}</b>
+      <small>${plural(s.episodios, 'episódio', 'episódios')}${s.area ? ` · ${escapar(NOME_AREA_REEL[s.area] || '')}` : ''}${s.assistidos ? ` · ${s.assistidos} visto${s.assistidos > 1 ? 's' : ''}` : ''}</small>
+      ${s.descricao ? `<p>${escapar(s.descricao)}</p>` : ''}
+      <div class="acoes-serie">
+        ${s.episodios ? `<button class="acao pequena" onclick="abrirSerie(${s.id}, ${s.proximo_id && s.assistidos ? s.proximo_id : 'null'})">${
+          s.assistidos && s.proximo_id ? `▶ Continuar: ep. ${s.proximo_episodio}` : s.assistidos ? '↺ Ver de novo' : '▶ Assistir do início'}</button>` : ''}
+        ${moderadorReels ? `<button class="acao discreta pequena" onclick="editarSerie(${s.id})">Editar</button>` : ''}
+      </div>
+    </div></article>`;
+  alvo.innerHTML = `${d.continuar.length ? `<h2 class="titulo-series">Continuar assistindo</h2>
+      <div class="grade-series">${d.continuar.map(s => cartao(s, true)).join('')}</div>` : ''}
+    <h2 class="titulo-series">Séries ${moderadorReels ? '<button class="acao discreta pequena" onclick="editarSerie(null)">＋ Nova série</button>' : ''}</h2>
+    ${d.series.length ? `<div class="grade-series">${d.series.map(s => cartao(s, false)).join('')}</div>`
+      : '<div class="vazio"><span class="cara">📺</span>As primeiras séries estão chegando: aulas em episódios curtos, na ordem certa.</div>'}
+    ${usuarioLogado ? '' : '<p class="pista">Entre na sua conta para o site lembrar em que episódio você parou.</p>'}`;
+}
+
+function abrirSerie(id, reelId) {
+  const s = seriesCarregadas.find(x => x.id === id);
+  const r = reels.find(x => x.serie_id === id);
+  serieAberta = { id, titulo: s ? s.titulo : (r && r.serie_titulo) || 'Série' };
+  reelParaAbrir = reelId || null;
+  filtroReels = `serie:${id}`;
+  if (document.getElementById('tela-reels').classList.contains('escondido')) irPara('reels');
+  abrirReels();
+}
+
+// Administração: criar ou editar uma série.
+async function editarSerie(id) {
+  const s = id ? seriesCarregadas.find(x => x.id === id) : { titulo: '', descricao: '', original: false, area: '' };
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<form class="modal form-serie" onsubmit="salvarSerie(event, ${id || 'null'})">
+    <div class="modal-topo"><h2>${id ? 'Editar série' : 'Nova série'}</h2><button type="button" class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <label>Nome<input name="titulo" maxlength="80" required value="${escapar(s.titulo)}" placeholder="Ex.: Funções em 5 episódios"></label>
+    <label>Descrição<textarea name="descricao" maxlength="300" rows="3">${escapar(s.descricao || '')}</textarea></label>
+    <label>Área<select name="area"><option value="">Várias</option>${Object.entries(NOME_AREA_REEL).map(([v, n]) => `<option value="${v}"${v === s.area ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
+    <label class="caixa"><input type="checkbox" name="original"${s.original ? ' checked' : ''}> Selo <b>Original M&amp;M</b> (vídeos gravados por vocês)</label>
+    <p class="pista">Para pôr vídeos na série, toque em 📺 ao lado de cada reel.</p>
+    <div class="botoes-visita"><button class="acao" type="submit">Salvar</button>
+      ${id ? `<button class="acao discreta" type="button" onclick="apagarSerie(${id}, this)">Apagar série</button>` : ''}</div>
+    <div class="recado-serie"></div></form>`;
+  document.body.appendChild(fundo);
+}
+
+async function salvarSerie(ev, id) {
+  ev.preventDefault();
+  const f = ev.target;
+  const corpo = { titulo: f.titulo.value, descricao: f.descricao.value, area: f.area.value || null, original: f.original.checked };
+  try {
+    await api(id ? `/api/reels/series/${id}` : '/api/reels/series', { method: id ? 'PUT' : 'POST', body: JSON.stringify(corpo) });
+    f.closest('.fundo-modal').remove();
+    desenharSeries();
+  } catch (e) { f.querySelector('.recado-serie').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; }
+}
+
+async function apagarSerie(id, botao) {
+  if (!await confirmar('Apagar a série? Os vídeos continuam no site como reels avulsos.', { sim: 'Apagar', perigo: true })) return;
+  try { await api(`/api/reels/series/${id}`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  botao.closest('.fundo-modal').remove();
+  desenharSeries();
+}
+
+// Administração: pôr um reel numa série, com o número do episódio.
+async function abrirSerieDoReel(reelId) {
+  const r = reels.find(x => x.id === reelId);
+  let d;
+  try { d = await api('/api/reels/series'); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  seriesCarregadas = d.series;
+  if (!d.series.length) { avisoSim('Crie uma série primeiro, no filtro 📺 Séries.'); return; }
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<form class="modal form-serie" onsubmit="salvarSerieDoReel(event, ${reelId})">
+    <div class="modal-topo"><h2>Série do reel</h2><button type="button" class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <p class="pista">${escapar(r ? r.titulo : '')}</p>
+    <label>Série<select name="serie"><option value="">Nenhuma (reel avulso)</option>${d.series.map(s =>
+      `<option value="${s.id}"${r && r.serie_id === s.id ? ' selected' : ''}>${escapar(s.titulo)}${s.original ? ' ✦' : ''}</option>`).join('')}</select></label>
+    <label>Episódio<input name="episodio" type="number" min="1" max="999" value="${r && r.episodio ? r.episodio : ''}" placeholder="Em branco: vira o último"></label>
+    <button class="acao" type="submit">Salvar</button>
+    <div class="recado-serie"></div></form>`;
+  document.body.appendChild(fundo);
+}
+
+async function salvarSerieDoReel(ev, reelId) {
+  ev.preventDefault();
+  const f = ev.target;
+  try {
+    const d = await api(`/api/reels/${reelId}/serie`, { method: 'PUT',
+      body: JSON.stringify({ serie_id: f.serie.value ? Number(f.serie.value) : null, episodio: f.episodio.value || null }) });
+    f.closest('.fundo-modal').remove();
+    avisoSim(d.message);
+    const r = reels.find(x => x.id === reelId);
+    if (r) {
+      const s = seriesCarregadas.find(x => x.id === d.serie_id);
+      Object.assign(r, { serie_id: d.serie_id, episodio: d.episodio, serie_titulo: s ? s.titulo : null, original: s ? s.original : false });
+      const el = document.querySelector(`.reel[data-id="${reelId}"]`);
+      if (el && reelAtivo !== reelId) el.outerHTML = htmlDoReel(r);
+      observarReels();
+    }
+  } catch (e) { f.querySelector('.recado-serie').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; }
 }
 
 function abrirNovoReel() {
@@ -9268,6 +9511,7 @@ window.addEventListener('load', () => {
   const sessao = restaurarSessao();
   tratarLinkDoEmail(sessao);
   tratarLinkDeAviso(sessao);
+  sessao.then(() => setTimeout(talvezMostrarVisita, 800)).catch(() => {});
 });
 </script>
 </body>

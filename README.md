@@ -68,6 +68,11 @@ uma tabela ou coluna que o código espera.
 | `GET /api/reels/:id/comentarios` / `POST` | livre / login |
 | `DELETE /api/reels/comentarios/:id`, `POST /api/reels/comentarios/:id/denunciar` | autor ou administrador / login |
 | `GET /api/imagens/:id?ate=…&ass=…` | link assinado, que o servidor só entrega a quem está logado e que vence em até 6 horas |
+| `GET /api/reels/series` (séries, com "continuar assistindo" para quem tem conta) / `GET /api/reels?serie=ID` (episódios em ordem) | livre |
+| `POST /api/reels/:id/assistido` | login (o site chama depois de 8 s do vídeo tocando) |
+| `POST /api/reels/series`, `PUT` e `DELETE /api/reels/series/:id`, `PUT /api/reels/:id/serie` (`serie_id`, `episodio`) | administrador |
+| `POST /api/erros` (erro do navegador: mensagem, linha e tela) | livre, com freio |
+| `GET` e `DELETE /api/admin/erros` | administrador |
 | `GET /api/admin/crescimento` (cadastros por dia, quem voltou em 7 dias, origem e convites, só números somados) | administrador |
 | `POST /api/carregar-ano/:ano`, `POST /api/atualizar-cache` | cabeçalho `X-Admin-Key` |
 
@@ -260,3 +265,31 @@ O `package-lock.json` fica no repositório para o Render instalar sempre as mesm
   (só visuais, fora do baú) e recebe uma notificação.
 - **Painel** (Configurações → Administração): cadastros por dia nos últimos 30 dias, quem voltou em 7 dias
   (respondeu alguma questão num dos 7 dias depois do cadastro), por semana de cadastro, e as origens.
+
+## Aviso automático de erros
+
+`erros.js` copia para a tabela `erros_site` tudo que o servidor manda para `console.error`, e o site
+manda os erros do navegador para `POST /api/erros` (até 5 por visita). Erros iguais são agrupados
+(números diferentes contam como o mesmo erro), e e-mails, tokens e o que vem depois do "?" são
+apagados antes de guardar. Quando aparece um erro novo, ou 30 num minuto, os administradores
+recebem e-mail (conta com e-mail confirmado) e aviso no celular, no máximo um a cada 3 horas.
+A lista fica em Configurações → Administração → Erros do site; "Marcar todos como resolvidos" limpa,
+e o que voltar a acontecer avisa de novo. Erro sem acontecer há 30 dias some sozinho.
+
+O robô `manter-acordado.yml` também falha quando o servidor não responde em duas tentativas, e o
+GitHub manda e-mail ao dono do repositório.
+
+## Primeira visita guiada
+
+Quem abre o site sem nenhuma questão feita vê uma boas-vindas: escolhe a área e faz 5 questões com
+uma dica por questão (faixa "Visita guiada · 1 de 5"). Nessa visita o servidor prefere questões com os
+parâmetros do INEP (`GET /api/questoes/:area?com_tri=1`), para a nota TRI sair já no fim. O resultado
+explica a nota e sugere o próximo passo. Aparece uma vez só (`mm_visita` no navegador).
+
+## Reels em série
+
+Administradores criam a série no filtro 📺 Séries (＋ Nova série; o selo **Original M&M** é para os
+vídeos gravados por vocês) e põem cada reel nela pelo botão 📺 ao lado do vídeo, com o número do
+episódio (em branco, vira o último). Quem tem conta vê "Continuar assistindo" com o próximo episódio:
+um reel conta como visto depois de 8 s tocando. Vídeos de outros canais continuam só incorporados
+do YouTube ou do TikTok, nunca baixados.

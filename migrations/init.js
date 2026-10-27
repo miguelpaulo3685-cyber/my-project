@@ -652,6 +652,29 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela de erros do site');
 
+    // Reels em série: episódios numerados e o que cada pessoa já assistiu.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS reels_series (
+        id SERIAL PRIMARY KEY,
+        titulo VARCHAR(80) NOT NULL,
+        descricao VARCHAR(300) NOT NULL DEFAULT '',
+        original BOOLEAN NOT NULL DEFAULT FALSE,
+        area VARCHAR(12),
+        criador_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS serie_id INT REFERENCES reels_series(id) ON DELETE SET NULL;
+      ALTER TABLE reels ADD COLUMN IF NOT EXISTS episodio INT;
+      CREATE INDEX IF NOT EXISTS idx_reels_serie ON reels (serie_id, episodio) WHERE serie_id IS NOT NULL;
+      CREATE TABLE IF NOT EXISTS reels_assistidos (
+        reel_id INT NOT NULL REFERENCES reels(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        assistido_em TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (reel_id, usuario_id)
+      );
+    `);
+    console.log('✅ Séries de reels');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

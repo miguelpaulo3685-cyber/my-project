@@ -50,19 +50,20 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - [ ] Render pago (~US$ 7/mês) antes de divulgar: o grátis reinicia e as salas da Arena ficam na memória.
 - [ ] Domínio (Hostinger, .com.br): apontar para o GitHub Pages, atualizar SITE_URL e autenticar
       o domínio no Brevo (para o e-mail não cair no spam).
-- [ ] Aviso automático de erros do site.
+- [x] Aviso automático de erros do site (e-mail e celular para os administradores; lista na Administração).
+      No primeiro deploy deve chegar um alerta com os erros da api.enem.dev: é esperado, é só limpar a lista.
 
 ### 4. Crescimento
 - [x] Painel de números (Configurações → Administração): cadastros por dia, quem voltou em 7 dias,
       de onde veio. Contas criadas antes disso aparecem como "Antes do registro de origem".
       Na divulgação, usar links com `?origem=tiktok`, `?origem=instagram` etc.
 - [x] Botão "Chamar amigos no WhatsApp" na sala da Arena e emblemas de convite (🤝 1 amigo, 📣 5 amigos).
-- [ ] Primeira visita guiada: levar o aluno a fazer 5 questões e ver a nota TRI.
-- [ ] Reels em formato de série: episódios numerados, "continuar assistindo", selo "Original M&M".
-      Vídeos de terceiros só incorporados do YouTube, nunca baixados.
+- [x] Primeira visita guiada: 5 questões com dicas e a nota TRI no fim.
+- [x] Reels em série: episódios numerados, "continuar assistindo", selo "Original M&M".
+      Falta vocês criarem as primeiras séries (Reels → 📺 Séries → ＋ Nova série; 📺 em cada vídeo).
 - [ ] Teste de 7 dias com amigos (anotar tudo que der errado ou confundir).
 
-### 5. Por último
+### 5. Por último (combinado em 27/10: depois do conteúdo das questões)
 - [ ] Tela de login com animações estilo Awwwards (GSAP): abertura animada, fundo com
       profundidade, botões magnéticos, transição ao entrar. Leve no celular, respeitando
       "reduzir movimento", no máximo 1-2 s e dá para pular.

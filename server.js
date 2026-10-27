@@ -737,6 +737,9 @@ app.get('/api/questoes/:area', async (req, res) => {
   const { area } = req.params;
   const disciplina = AREA_PARA_DISCIPLINA[area];
   if (!disciplina) return res.status(400).json({ error: 'Área inválida' });
+  // Primeira visita guiada (?com_tri=1): prefere questões com os parâmetros do
+  // INEP, para a nota TRI sair já no fim das 5.
+  const comTri = req.query.com_tri === '1';
 
   try {
     // Junta as respostas já dadas para calcular o nível de cada questão.
@@ -748,7 +751,7 @@ app.get('/api/questoes/:area', async (req, res) => {
          LEFT JOIN respostas r ON r.questao_id = q.id
         WHERE q.disciplina = $1 AND ${questaoCompletaSql('q.contexto')}
         GROUP BY q.id
-        ORDER BY RANDOM()
+        ORDER BY ${comTri ? '(q.tri_b IS NULL), ' : ''}RANDOM()
         LIMIT 5`,
       [disciplina]
     );

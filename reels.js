@@ -4,6 +4,11 @@
 // crédito. Administradores publicam direto; alunos enviam e o reel só
 // aparece depois que um administrador aprovar.
 //
+// Séries: um administrador junta reels em episódios numerados (1, 2, 3...).
+// Quem tem conta vê "continuar assistindo" com o próximo episódio. Série com
+// o selo "Original M&M" é a que vocês mesmos gravaram. Vídeo de outro canal
+// continua só incorporado do YouTube ou do TikTok, nunca baixado.
+//
 // A coluna youtube_id guarda o código do vídeo nas duas plataformas (o nome
 // ficou da primeira versão); a coluna plataforma diz de onde ele é.
 
@@ -148,6 +153,7 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     const tipo = TIPOS.includes(req.query.tipo) ? req.query.tipo : null;
     const area = AREAS.includes(req.query.area) ? req.query.area : null;
     const antesDe = idValido(req.query.antes); // paginação: reels mais antigos que este id
+    const serie = idValido(req.query.serie);  // uma série inteira, na ordem dos episódios
     try {
       const { rows } = await pool.query(
         `SELECT r.id, r.youtube_id, COALESCE(r.plataforma, 'youtube') AS plataforma, r.link, r.titulo, r.descricao, r.tipo, r.area, r.canal, r.created_at,
@@ -155,19 +161,22 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
                 EXISTS (SELECT 1 FROM reels_curtidas c WHERE c.reel_id = r.id AND c.usuario_id = $1) AS curti,
                 EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1) AS salvei,
                 (SELECT COUNT(*)::int FROM reels_comentarios m WHERE m.reel_id = r.id AND NOT m.oculto) AS comentarios,
-                r.status, a.username AS enviado_por
-           FROM reels r LEFT JOIN usuarios a ON a.id = r.autor_id
+                r.status, a.username AS enviado_por,
+                r.serie_id, r.episodio, se.titulo AS serie_titulo, COALESCE(se.original, FALSE) AS original,
+                EXISTS (SELECT 1 FROM reels_assistidos v WHERE v.reel_id = r.id AND v.usuario_id = $1) AS assistido
+           FROM reels r LEFT JOIN usuarios a ON a.id = r.autor_id LEFT JOIN reels_series se ON se.id = r.serie_id
           WHERE r.status = $6 AND ($2::text IS NULL OR r.tipo = $2) AND ($3::text IS NULL OR r.area = $3)
             AND ($4::int IS NULL OR r.id < $4)
             AND (NOT $5 OR EXISTS (SELECT 1 FROM reels_salvos s WHERE s.reel_id = r.id AND s.usuario_id = $1))
-          ORDER BY r.id DESC
-          LIMIT ${POR_PAGINA}`,
-        [eu ? eu.id : null, tipo, area, antesDe, salvos, pendentes ? 'pendente' : 'aprovado']
+            AND ($7::int IS NULL OR r.serie_id = $7)
+          ORDER BY ${serie ? 'r.episodio, r.id' : 'r.id DESC'}
+          LIMIT ${serie ? 200 : POR_PAGINA}`,
+        [eu ? eu.id : null, tipo, area, serie ? null : antesDe, salvos, pendentes ? 'pendente' : 'aprovado', serie]
       );
       const admin = Boolean(eu && eu.admin);
       const naFila = admin ? (await pool.query(`SELECT COUNT(*)::int AS n FROM reels WHERE status = 'pendente'`)).rows[0].n : 0;
       // Quem enviou só aparece para administradores (na fila de aprovação).
-      res.json({ reels: rows.map(r => (admin ? r : { ...r, enviado_por: undefined })), mais: rows.length === POR_PAGINA, moderador: admin, pendentes: naFila });
+      res.json({ reels: rows.map(r => (admin ? r : { ...r, enviado_por: undefined })), mais: !serie && rows.length === POR_PAGINA, moderador: admin, pendentes: naFila });
     } catch (erro) {
       console.error('Erro ao listar reels:', erro.message);
       res.status(500).json({ error: 'Não consegui carregar os reels agora.' });
@@ -339,6 +348,123 @@ function registrarReels(app, { pool, auth, limitar, exigirLogin, exigirModerador
     } catch (erro) {
       console.error('Erro ao denunciar comentário:', erro.message);
       res.status(500).json({ error: 'Não consegui registrar a denúncia agora.' });
+    }
+  });
+
+  // ---------- séries ----------
+  // Lista das séries com quantos episódios têm e, com conta, quantos a
+  // pessoa já viu e qual é o próximo (o primeiro da ordem que ela não viu).
+  app.get('/api/reels/series', async (req, res) => {
+    const eu = req.usuario ? req.usuario.id : null;
+    try {
+      const { rows } = await pool.query(
+        `SELECT s.id, s.titulo, s.descricao, s.original, s.area,
+                COUNT(r.id)::int AS episodios,
+                COUNT(v.reel_id)::int AS assistidos,
+                MAX(v.assistido_em) AS visto_em,
+                (ARRAY_AGG(r.id ORDER BY r.episodio, r.id) FILTER (WHERE v.reel_id IS NULL))[1] AS proximo_id,
+                (ARRAY_AGG(r.episodio ORDER BY r.episodio, r.id) FILTER (WHERE v.reel_id IS NULL))[1] AS proximo_episodio,
+                (ARRAY_AGG(r.youtube_id ORDER BY r.episodio, r.id))[1] AS capa_id,
+                (ARRAY_AGG(COALESCE(r.plataforma, 'youtube') ORDER BY r.episodio, r.id))[1] AS capa_plataforma
+           FROM reels_series s
+           LEFT JOIN reels r ON r.serie_id = s.id AND r.status = 'aprovado'
+           LEFT JOIN reels_assistidos v ON v.reel_id = r.id AND v.usuario_id = $1
+          GROUP BY s.id
+          ORDER BY s.original DESC, s.id DESC`, [eu]);
+      const series = rows.filter(s => s.episodios > 0 || (req.usuario && req.usuario.admin));
+      const continuar = series.filter(s => s.assistidos > 0 && s.proximo_id).sort((a, b) => new Date(b.visto_em) - new Date(a.visto_em));
+      res.json({ series, continuar });
+    } catch (erro) {
+      console.error('Erro ao listar séries:', erro.message);
+      res.status(500).json({ error: 'Não consegui carregar as séries agora.' });
+    }
+  });
+
+  const lerSerie = c => {
+    const titulo = typeof c.titulo === 'string' ? c.titulo.trim() : '';
+    const descricao = typeof c.descricao === 'string' ? c.descricao.trim() : '';
+    if (!titulo || titulo.length > 80) return { erro: 'Dê um nome para a série (até 80 caracteres).' };
+    if (descricao.length > 300) return { erro: 'A descrição pode ter até 300 caracteres.' };
+    if (c.area && !AREAS.includes(c.area)) return { erro: 'Área inválida.' };
+    return { titulo, descricao, original: c.original === true, area: c.area || null };
+  };
+
+  app.post('/api/reels/series', exigirModerador, async (req, res) => {
+    const s = lerSerie(req.body || {});
+    if (s.erro) return res.status(400).json({ error: s.erro });
+    try {
+      const { rows } = await pool.query(
+        'INSERT INTO reels_series (titulo, descricao, original, area, criador_id) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+        [s.titulo, s.descricao, s.original, s.area, req.usuario.id]);
+      res.status(201).json({ id: rows[0].id, message: 'Série criada!' });
+    } catch (erro) {
+      console.error('Erro ao criar série:', erro.message);
+      res.status(500).json({ error: 'Não consegui criar a série agora.' });
+    }
+  });
+
+  app.put('/api/reels/series/:id', exigirModerador, async (req, res) => {
+    const s = lerSerie(req.body || {});
+    if (s.erro) return res.status(400).json({ error: s.erro });
+    try {
+      const r = await pool.query('UPDATE reels_series SET titulo = $1, descricao = $2, original = $3, area = $4 WHERE id = $5',
+        [s.titulo, s.descricao, s.original, s.area, idValido(req.params.id)]);
+      if (!r.rowCount) return res.status(404).json({ error: 'Série não encontrada.' });
+      res.json({ message: 'Série atualizada.' });
+    } catch (erro) {
+      console.error('Erro ao editar série:', erro.message);
+      res.status(500).json({ error: 'Não consegui salvar agora.' });
+    }
+  });
+
+  // Apagar a série não apaga os vídeos: eles voltam a ser reels avulsos.
+  app.delete('/api/reels/series/:id', exigirModerador, async (req, res) => {
+    try {
+      const r = await pool.query('DELETE FROM reels_series WHERE id = $1', [idValido(req.params.id)]);
+      if (!r.rowCount) return res.status(404).json({ error: 'Série não encontrada.' });
+      res.json({ message: 'Série apagada. Os vídeos continuam como reels avulsos.' });
+    } catch (erro) {
+      console.error('Erro ao apagar série:', erro.message);
+      res.status(500).json({ error: 'Não consegui apagar agora.' });
+    }
+  });
+
+  // Põe um reel numa série (sem número, vira o último episódio) ou tira dela.
+  app.put('/api/reels/:id/serie', exigirModerador, async (req, res) => {
+    const id = idValido(req.params.id);
+    const serie = req.body?.serie_id === null ? null : idValido(req.body?.serie_id);
+    if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
+    if (req.body?.serie_id !== null && !serie) return res.status(400).json({ error: 'Escolha a série.' });
+    let episodio = req.body?.episodio == null || req.body.episodio === '' ? null : Number(req.body.episodio);
+    if (episodio !== null && !(Number.isInteger(episodio) && episodio >= 1 && episodio <= 999)) return res.status(400).json({ error: 'O episódio é um número de 1 a 999.' });
+    try {
+      if (serie) {
+        if (!(await pool.query('SELECT 1 FROM reels_series WHERE id = $1', [serie])).rowCount) return res.status(404).json({ error: 'Série não encontrada.' });
+        if (episodio === null) {
+          episodio = (await pool.query('SELECT COALESCE(MAX(episodio), 0)::int + 1 AS n FROM reels WHERE serie_id = $1 AND id <> $2', [serie, id])).rows[0].n;
+        }
+      }
+      const r = await pool.query('UPDATE reels SET serie_id = $1, episodio = $2 WHERE id = $3', [serie, serie ? episodio : null, id]);
+      if (!r.rowCount) return res.status(404).json({ error: 'Reel não encontrado.' });
+      res.json({ serie_id: serie, episodio: serie ? episodio : null, message: serie ? `Agora é o episódio ${episodio}.` : 'O reel saiu da série.' });
+    } catch (erro) {
+      console.error('Erro ao pôr reel na série:', erro.message);
+      res.status(500).json({ error: 'Não consegui salvar agora.' });
+    }
+  });
+
+  // O site avisa depois de alguns segundos do vídeo tocando.
+  app.post('/api/reels/:id/assistido', exigirLogin, freioCurtir, async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Reel não encontrado.' });
+    try {
+      await pool.query(
+        `INSERT INTO reels_assistidos (reel_id, usuario_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM reels WHERE id = $1)
+         ON CONFLICT (reel_id, usuario_id) DO UPDATE SET assistido_em = NOW()`, [id, req.usuario.id]);
+      res.status(204).end();
+    } catch (erro) {
+      console.error('Erro ao marcar reel assistido:', erro.message);
+      res.status(500).json({ error: 'Não deu certo agora.' });
     }
   });
 
