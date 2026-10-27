@@ -46,6 +46,7 @@ def ler():
     tamanhos = [(float(a), float(b)) for a, b in re.findall(r'<page width="([\d.]+)" height="([\d.]+)">', bb)]
     xml = subprocess.run(['pdftohtml', '-xml', '-i', '-stdout', pdf], capture_output=True, text=True).stdout
     fontes = {m.group(1): float(m.group(2)) for m in re.finditer(r'<fontspec id="(\d+)" size="([\d.]+)"', xml)}
+    familias = {m.group(1): m.group(2) for m in re.finditer(r'<fontspec id="(\d+)" size="[\d.]+" family="([^"]*)"', xml)}
     paginas = []
     for k, pg in enumerate(re.finditer(r'<page number="\d+"[^>]*height="(\d+)" width="(\d+)">(.*?)</page>', xml, re.S)):
         w, h = tamanhos[k]
@@ -65,7 +66,7 @@ def ler():
             for _ in range(2): t = re.sub(r'<(b|i)>(.*?)</\1>', estilo, t, flags=re.S)
             t = html.unescape(re.sub(r'<[^>]+>', '', t))
             if not t.strip() or re.fullmatch(r'\s*(ENEM\d{4})+\S*\s*', t) or re.search(r'(ENEM\d{4}){2,}', t): continue
-            runs.append(dict(x0=left / z, y0=top / z, x1=(left + wd) / z, y1=(top + ht) / z, t=t, tam=tam))
+            runs.append(dict(x0=left / z, y0=top / z, x1=(left + wd) / z, y1=(top + ht) / z, t=t, tam=tam, fam=familias.get(f, '')))
         # junta os trechos em linhas: mesma base, mesma coluna, um depois do outro.
         # Trecho pequeno e curto (2, +, −) colado em outro vira índice: subscrito ou sobrescrito.
         INDICE = re.compile(r'(?=.*[0-9+\-−–])[0-9+\-−–=()n]{1,4}|[→←↔⇌⇄]|[a-z]{1,2}')
@@ -239,13 +240,20 @@ def limites(p):
     a, b = (cols[0][0], cols[1][1]) if p['col'] == 2 else cols[p['col']]
     return max(p['x0'], a - 10), min(p['x1'], b + 10)
 
+def _marcador():
+    # fonte dos círculos das alternativas: a mais comum entre letras A-E sozinhas
+    from collections import Counter
+    c = Counter(w.get('fam', '') for pg in pgs for l in pg['linhas'] for w in l['ws'] if len(w['t']) == 1 and w['t'] in 'ABCDE')
+    return c.most_common(1)[0][0] if c else ''
+MARCADOR = None
+
 def alternativas(linhas_todas):
     # Letras A-E sozinhas (o círculo da alternativa) numa coluna, de cima para baixo.
     letras = []
     for pi, ls in linhas_todas:
         for l in ls:
             w = l['ws'][0]
-            if w['t'] in 'ABCDE' and len(w['t']) == 1:
+            if w['t'] in 'ABCDE' and len(w['t']) == 1 and (not MARCADOR or w.get('fam', '') == MARCADOR):
                 letras.append(dict(pi=pi, l=l, w=w, letra=w['t']))
     # procura a última sequência A,B,C,D,E em ordem
     for i in range(len(letras) - 4):
@@ -302,6 +310,7 @@ def para_texto(ls, x_esq):
     out = re.sub(r'([“(]) +', r'\1', out); out = re.sub(r' +([”)])', r'\1', out)
     return out
 
+MARCADOR = _marcador()
 resultado = {}
 ocorr = {}
 for k, c in enumerate(cabs):
@@ -415,7 +424,8 @@ for k, c in enumerate(cabs):
         else: juntos.append(parte)
     resultado[chave] = dict(ano=ano, numero=n, lingua=lingua, contexto='\n\n'.join(juntos), alternativas=alts,
                             figuras=figs, alt_img=alt_img, pedacos=peds, achou_alternativas=bool(seq),
-                            fim_e=[peds[seq[4]['pi']]['pag'], fim_e] if seq else None)
+                            fim_e=[peds[seq[4]['pi']]['pag'], fim_e] if seq else None,
+                            letras=[dict(pi=x['pi'], y0=x['l']['y0'], x1=x['w']['x1']) for x in seq] if seq else None)
 json.dump(resultado, open(f'{saida}/extraido.json', 'w'), ensure_ascii=False, indent=1)
 print(len(resultado), 'questões;', sum(1 for r in resultado.values() if not r['achou_alternativas']), 'sem alternativas achadas;',
       sum(len(r['figuras']) for r in resultado.values()), 'figuras;', sum(1 for r in resultado.values() for a in r['alt_img'] if a), 'alternativas em imagem')

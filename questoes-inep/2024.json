@@ -2029,8 +2029,7 @@
   ],
   "correta": 0,
   "pagina": 11,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2046,8 +2045,7 @@
   ],
   "correta": 0,
   "pagina": 11,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2063,8 +2061,7 @@
   ],
   "correta": 2,
   "pagina": 11,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2080,8 +2077,7 @@
   ],
   "correta": 2,
   "pagina": 12,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2113,31 +2109,29 @@
   ],
   "correta": 4,
   "pagina": 13,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 130,
   "lingua": null,
-  "contexto": "O diagrama P-V a seguir representa o ciclo de Otto para um motor de combustão interna, como os motores a gasolina ou a etanol, utilizados nos automóveis.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130.jpg)\n\nAs etapas representadas no diagrama estão descritas no quadro.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-2.jpg)\n\nAdmissão isobárica da mistura\nI 0 a 1\nar-combustível no cilindro do motor.\n\nII 1 a 2 Compressão adiabática da mistura.\n\nIntrodução de energia na forma\nIII 2 a 3\nde calor da combustão.\n\nIV 3 a 4\nExpansão adiabática.\n\nLiberação de energia\nV 4 a 1\nna forma de calor.\n\nLiberação dos gases\nVI 1 a 0\nresultantes da combustão.\n\nDisponível em: www.mspc.eng.br. Acesso em: 24 fev. 2013 (adaptado).\n\nA transformação da energia térmica em energia útil ocorre na etapa",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-orig1.jpg)",
   "alternativas": [
-   "II.",
-   "III.",
-   "IV.",
-   "V.",
-   "VI."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-130-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 13,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 131,
   "lingua": null,
-  "contexto": "O LED é um dispositivo eletrônico que conduz corrente elétrica em um único sentido, sendo caracterizado por uma tensão e uma corrente máxima de funcionamento, _I_máx. Um LED acende apenas se a corrente que o percorre está no sentido permitido e se a diferença de potencial à qual está submetido é igual ou superior à sua tensão de funcionamento. A figura ilustra o símbolo do LED usado na representação de circuitos.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-131.jpg)\n\nUm estudante de física analisa as propriedades do LED em um circuito simples de corrente contínua. Ele dispõe dos seguintes materiais: uma bateria ideal de 4,5 V; dois LEDs de tensão 3,0 V e _I_máx 1,0 mA cada; e dois resistores de = 1,5 kΩ cada.\n\nO circuito que o estudante pode montar, para que ambos os LEDs fiquem acesos e cada um seja percorrido por máx, é I\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-131-2.jpg)",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-131-orig1.jpg)",
   "alternativas": [
    "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-131-altA.jpg)",
    "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-131-altB.jpg)",
@@ -2147,25 +2141,23 @@
   ],
   "correta": 1,
   "pagina": 14,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 132,
   "lingua": null,
-  "contexto": "Uma caixa decorativa utiliza duas pequenas lâmpadas, **L**₁ (6 V – 9 W) e **L**₂ (12 V – 18 W), ligadas em série a uma bateria de tensão _V_QR. Um fio resistivo **QR**, de 48 centímetros, está ligado em paralelo à bateria. Cinco pontos, A, B, C , D e E, dividem o fio **QR** em seis segmentos de comprimentos iguais. O circuito também tem um amperímetro com dois terminais. Um dos terminais (**P**) está ligado ao fio entre as duas lâmpadas. O outro terminal () _**S**_ está livre e será ligado ao fio **QR**. Dependendo do ponto em que esse terminal livre for conectado, ocorrerá a mudança na tensão à qual as lâmpadas são submetidas. Os demais fios do circuito têm resistências elétricas desprezíveis. A figura ilustra esse circuito.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132.jpg)\n\nEm qual desses pontos o amperímetro deve ser conectado para que as lâmpadas acendam exatamente segundo as especificações de tensão e potência elétricas fornecidas?",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-orig1.jpg)",
   "alternativas": [
-   "A",
-   "B",
-   "C",
-   "D",
-   "E"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-132-altE.jpg)"
   ],
   "correta": 1,
   "pagina": 14,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2197,8 +2189,7 @@
   ],
   "correta": 4,
   "pagina": 15,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2214,25 +2205,23 @@
   ],
   "correta": 3,
   "pagina": 15,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 136,
   "lingua": null,
-  "contexto": "O tamanho mínimo que a visão humana é capaz de visualizar sem o uso de equipamento auxiliar é equivalente a 100 micrômetros (1 micrômetro milímetros). = 10⁻³ Uma estudante pretende visualizar e analisar hemácias do sangue humano, que medem 0,007 mm de diâmetro. Ela adquiriu um microscópio óptico que tem uma lente ocular que amplia em 10 vezes a imagem do objeto em observação, e um conjunto de lentes objetivas com estas capacidades de ampliação:\n\n• lente I: 2 vezes;\n• lente II: 10 vezes;\n• lente III: 15 vezes;\n• lente IV: 1,1 vez;\n• lente V: 1,4 vez.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136.jpg)\n\nO funcionamento desse microscópio permite o uso da lente ocular sozinha ou a combinação dela com uma de suas lentes objetivas, proporcionando, nesse caso, um aumento de sua capacidade de ampliação final, que é dada pelo produto entre as capacidades de ampliação da ocular e da objetiva.\n\nEssa estudante pretende selecionar a lente objetiva de menor capacidade de ampliação que permita, na combinação com a ocular, visualizar hemácias do sangue humano.\n\nA lente objetiva a ser selecionada pela estudante é a",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-orig1.jpg)",
   "alternativas": [
-   "I.",
-   "II.",
-   "III.",
-   "IV.",
-   "V."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-136-altE.jpg)"
   ],
   "correta": 0,
   "pagina": 16,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2264,8 +2253,7 @@
   ],
   "correta": 1,
   "pagina": 16,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2281,8 +2269,7 @@
   ],
   "correta": 0,
   "pagina": 17,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2314,8 +2301,7 @@
   ],
   "correta": 1,
   "pagina": 17,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2331,8 +2317,7 @@
   ],
   "correta": 0,
   "pagina": 18,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2354,35 +2339,33 @@
   "ano": 2024,
   "numero": 144,
   "lingua": null,
-  "contexto": "Para obter um sólido de revolução (rotação de 360\n°°\nem torno de um eixo fixo), uma professora realizou as\nseguintes etapas:\n• recortou o trapézio retângulo _PQRS_ de um\n\nmaterial rígido;\n• afixou o lado do trapézio em uma vareta fixa\n_PS_\nretilínea (eixo de rotação);\n• girou o trapézio 360 em torno da vareta e obteve\n°°\num sólido de revolução.\nObserve a figura que apresenta o trapézio afixado na\nvareta e o sentido de giro.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144.jpg)\n\nO sólido obtido foi um(a)",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-orig1.jpg)",
   "alternativas": [
-   "cone.",
-   "cilindro.",
-   "pirâmide.",
-   "tronco de cone.",
-   "tronco de pirâmide."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-144-altE.jpg)"
   ],
   "correta": 3,
   "pagina": 18,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 145,
   "lingua": null,
-  "contexto": "O estádio do Maracanã passou por algumas modificações estruturais para a realização da Copa do Mundo de 2014, como, por exemplo, as dimensões do campo retangular. Para se adaptar aos padrões da Fifa, as dimensões do campo foram reduzidas de 110 m 75 m ×\npara 105 m 68 m.\n×\n\nDisponível em: http://virgula.uol.com.br. Acesso em: 14 ago. 2013 (adaptado).\n\nEm quantos metros quadrados a área do campo do Maracanã foi reduzida?",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-orig1.jpg)",
   "alternativas": [
-   "24",
-   "35",
-   "555",
-   "1 110",
-   "1 145"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-145-altE.jpg)"
   ],
   "correta": 3,
   "pagina": 18,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2414,59 +2397,55 @@
   ],
   "correta": 1,
   "pagina": 19,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 148,
   "lingua": null,
-  "contexto": "Uma caneca com água fervendo é retirada de um forno de micro-ondas. A temperatura , em grau Celsius, T da caneca, em função do tempo t, em minuto, pode ser modelada pela função () T t = a + 80 b t , representada no gráfico a seguir.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148.jpg)\n\nOs valores das constantes a e b são",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-orig1.jpg)",
   "alternativas": [
-   "a = 20; b = log(0,5)",
-   "a = 100; b = 0,5",
-   "a = 20; b = ( , )¹⁰¹ 0 5 ( )40¹⁰¹",
-   "a = 20; b = 80",
-   "a = 20; b = 40"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-148-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 19,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 149,
   "lingua": null,
-  "contexto": "Em uma empresa é comercializado um produto em embalagens em formato de cilindro circular reto, com raio medindo 3 cm, e altura medindo 15 cm. Essa empresa planeja comercializar o mesmo produto em embalagens em formato de cubo, com capacidade igual a 80% da capacidade da embalagem cilíndrica utilizada atualmente.\n\nπ\n\nUse 3 como valor aproximado para .\n\nA medida da aresta da nova embalagem, em centímetro, deve ser",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-orig1.jpg)",
   "alternativas": [
-   "6",
-   "18",
-   "6 6",
-   "6 6³",
-   "3 12³"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-149-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 19,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 150,
   "lingua": null,
-  "contexto": "Uma sala com piso no formato retangular, com lados de medidas 3 m e 6 m, será dividida em dois ambientes. Para isso, serão utilizadas colunas em formato cilíndrico, dispostas perpendicularmente ao piso e representadas na figura pelos círculos de cor azul. Os centros desses círculos estarão sobre uma reta paralela aos lados de menor medida do piso da sala. Os vãos entre duas colunas e entre uma coluna e a parede não poderão ser superiores a 15 cm.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150.jpg)\n\nPara efetuar a compra dessas colunas, foram feitos orçamentos com base em dados fornecidos por cinco lojas.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-2.jpg)\n\nA compra será realizada na loja cujo orçamento resulte no menor valor total possível. A compra será realizada na loja",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-orig1.jpg)",
   "alternativas": [
-   "I.",
-   "II.",
-   "III.",
-   "IV.",
-   "V."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-150-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 20,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2498,8 +2477,7 @@
   ],
   "correta": 0,
   "pagina": 20,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2515,59 +2493,55 @@
   ],
   "correta": 3,
   "pagina": 20,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 154,
   "lingua": null,
-  "contexto": "Contratos de vários serviços disponíveis na internet apresentam uma quantidade excessiva de informações. Isso faz com que o tempo necessário para a leitura desses contratos possa ser longo.\n\nO quadro apresenta uma amostra do tempo considerado necessário para a leitura completa do contrato de alguns serviços digitais.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154.jpg)",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-orig1.jpg)",
   "alternativas": [
-   "36",
-   "17",
-   "27",
-   "13",
-   "13 F 13"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-154-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 21,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 155,
   "lingua": null,
-  "contexto": "Um proprietário pretende instalar um sensor de presença para a proteção de seu imóvel. O sensor deverá detectar movimentos de objetos e pessoas numa determinada região plana. A figura ilustra a vista superior da área de cobertura (setor circular em azul) de um sensor colocado no ponto . Essa área depende da medida do S\n\nângulo α, em grau, e do raio\n\nR, em metro.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155.jpg)\n\nα\n\nAo aumentar o ângulo ou o raio aumenta-se a R área de cobertura do sensor. Entretanto, quanto maior essa área, maior o preço do sensor.\n\nº\n\nPara esse fim, há cinco tipos de sensores disponíveis no mercado, cada um com as seguintes características:\n\n• tipo I: α\n\n= 15°° e R = 20 m;\n\n• tipo II: α\n\n= 30°° e R = 22 m;\n\nα = 40°° e R = 12 m;\n\n• tipo III:\n\n• tipo IV: α\n\n= 60°° e R = 16 m;\n\n• tipo V: α\n\n= 90°° e R = 10 m.\n\nEsse proprietário pretende adquirir um desses sensores que seja capaz de cobrir, no mínimo, uma área de medida 70 m², com o menor preço possível.\n\nUse 3 como valor aproximado para π.\n\nO proprietário do imóvel deverá adquirir o sensor do tipo",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-orig1.jpg)\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-orig2.jpg)",
   "alternativas": [
-   "I.",
-   "II.",
-   "III.",
-   "IV.",
-   "V."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-155-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 21,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 156,
   "lingua": null,
-  "contexto": "O uso de aplicativos de transporte tem sido uma alternativa à população que busca preços mais competitivos para se locomover, principalmente nas grandes cidades. As formas usadas para determinar o valor cobrado por cada viagem variam de um aplicativo para outro, mas, em geral, o valor a ser pago, em real, varia em função de: V\n\n• tarifa base : valor fixo, em real, cobrado no início F\n\nda viagem;\n\n• tempo T: tempo, em minuto, de duração da viagem;\n• distância : distância percorrida, em quilômetro. D\n\nUm desses aplicativos cobra R$ 2,00 de valor fixo, acrescido de R$ 0,26 por minuto de viagem e de R$ 1,40 por quilômetro rodado.\n\nNessas condições, a expressão que fornece o valor V a ser pago por uma viagem desse aplicativo é",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-orig1.jpg)",
   "alternativas": [
-   "2,00_F_ + 0,26_T_ + 1,40_D_",
-   "2,00 + 0,26_T_ + 1,40_D_",
-   "2,00 + 0,26_T_ + D",
-   "0,26_T_ + 1,40_D_",
-   "F + T + D"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-156-altE.jpg)"
   ],
   "correta": 1,
   "pagina": 21,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2599,8 +2573,7 @@
   ],
   "correta": 2,
   "pagina": 22,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2654,35 +2627,33 @@
   "ano": 2024,
   "numero": 163,
   "lingua": null,
-  "contexto": "Um sistema de polias circulares e correias é um dos mecanismos responsáveis pela transmissão de movimento em máquinas rotativas. O manual de um motor traz uma figura representando um sistema composto por duas polias e uma correia de transmissão, tensionada e perfeitamente ajustada sobre as polias, de modo a não apresentar folgas nos contatos com as polias. Considere que as partes dessa correia que não ficam em contato com as polias são representadas por segmentos de reta tangentes às polias.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163.jpg)\n\nPara substituição dessa correia, é necessária a especificação de seu comprimento.\n\nπ\n\nConsidere 3 como valor aproximado para .\n\nA medida do comprimento dessa correia, em centímetro, é",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-orig1.jpg)",
   "alternativas": [
-   "54.",
-   "60.",
-   "66.",
-   "68.",
-   "72."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-163-altE.jpg)"
   ],
   "correta": 3,
   "pagina": 24,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 164,
   "lingua": null,
-  "contexto": "A prefeitura de uma cidade planeja construir três postos de saúde. Esses postos devem ser construídos em locais equidistantes entre si e de forma que as distâncias desses três postos ao hospital dessa cidade sejam iguais. Foram conseguidos três locais para a construção dos postos de saúde que apresentam as características desejadas, e que distam 10 km entre si, conforme o esquema, no qual o ponto H representa o local onde está construído o hospital; os pontos , e , os postos de saúde; e esses quatro P₁ P₂ P₃ pontos estão em um mesmo plano.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164.jpg)\n\nA distância, em quilômetro, entre o hospital e cada um dos postos de saúde, é um valor entre",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-orig1.jpg)",
   "alternativas": [
-   "2 e 3.",
-   "4 e 5.",
-   "5 e 6.",
-   "7 e 8.",
-   "8 e 9."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-164-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 24,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2704,86 +2675,81 @@
   "ano": 2024,
   "numero": 166,
   "lingua": null,
-  "contexto": "A densidade demográfica de uma região é definida como sendo a razão entre o número de habitantes dessa região e sua área, expressa na unidade habitantes por quilômetro quadrado.\n\nUma região é subdividida em várias outras, sendo R uma delas a região . A área de é igual a três quartos da Q\nQ\nárea de _R,_ e o número de habitantes de Q é igual à metade do número de habitantes de As densidades demográficas\n_R._ correspondentes a essas regiões são denotadas por d() Q\ne d\n(R).\n\nA expressão que relaciona d () e () é\nQ d R\n\n1",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-orig1.jpg)",
   "alternativas": [
-   "_d Q_ _d R_ 4 1",
-   "_d Q_ _d R_ 2 3",
-   "_d Q_ _d R_ 4 3",
-   "_d Q_ _d R_ 2 2",
-   "_d Q_ _d R_ 3"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-166-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 25,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 167,
   "lingua": null,
-  "contexto": "Atualmente, há telefones celulares com telas de diversos tamanhos e em formatos retangulares. Alguns\n\ndeles apresentam telas medindo 3 1 polegadas, com 2 determinadas especificações técnicas. Além disso, em muitos modelos, com a inclusão de novas funções no celular, suas telas ficaram maiores, sendo muito comum\n\nencontrarmos atualmente telas medindo 4 5 polegadas, 6 conforme a figura.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167.jpg)\n\nDisponível em: www.tecmundo.com.br. Acesso em: 5 nov. 2014 (adaptado).\n\nA diferença de tamanho, em valor absoluto, entre as medidas, em polegada, das telas do celular 2 e do celular 1, representada apenas com uma casa decimal, é",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-orig1.jpg)",
   "alternativas": [
-   "0,1.",
-   "0,5.",
-   "1,0.",
-   "1,3.",
-   "1,8."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-167-altE.jpg)"
   ],
   "correta": 3,
   "pagina": 25,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 169,
   "lingua": null,
-  "contexto": "A criptografia refere-se à construção e análise de protocolos que impedem terceiros de lerem mensagens privadas. Júlio César, imperador romano, utilizava um código para proteger as mensagens enviadas a seus generais. Assim, se a mensagem caísse em mãos inimigas, a informação não poderia ser compreendida. Nesse código, cada letra do alfabeto era substituída pela letra três posições à frente, ou seja, o “A” era substituído pelo “D”, o “B” pelo “E”, o “C” pelo “F”, e assim sucessivamente.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169.jpg)\n\nA B C D E F G H I J K L M N O P Q R S T U V W X Y Z Letra do texto original\n\nDisponível em: www.codifica.ibict.br. Acesso em: 15 out. 2019.\n\nQualquer código que tenha um padrão de substituição de letras como o descrito é considerado uma Cifra de César ou um Código de César. Note que, para decifrar uma Cifra de César, basta descobrir por qual letra o “A” foi substituído, pois isso define todas as demais substituições a serem feitas.\n\nUma mensagem, em um alfabeto de 26 letras, foi codificada usando uma Cifra de César. Considere a probabilidade de se descobrir, aleatoriamente, o padrão utilizado nessa codificação, e que uma tentativa frustrada deverá ser eliminada nas tentativas seguintes.\n\nA probabilidade de se descobrir o padrão dessa Cifra de César apenas na terceira tentativa é dada por\n\n1\n1\n1\n+\n+",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-orig1.jpg)",
   "alternativas": [
-   "25 25 25 24 23 1 + +",
-   "25 24 23 1 1 1",
-   "× × 25 24 23 24 23 1",
-   "× × 25 25 25 24 23 1",
-   "× × 25 24 23"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 27,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 170,
   "lingua": null,
-  "contexto": "Em uma região com grande incidência de terremotos, observou-se que dois terremotos ocorridos apresentaram magnitudes e , medidos segundo a escala Richter, e liberaram energias iguais a E₁ e E₂, respectivamente. Entre M₁ M₂\nos estudiosos do assunto, é conhecida uma expressão algébrica relacionando esses valores dada por\n\n2\nE₂\nM₂ M₁\n_log_\n3\nE₁\n\nEstudos mais abrangentes observaram que o primeiro terremoto apresentou a magnitude M₁ = 6,9 e a energia liberada foi um décimo da observada no segundo terremoto.\n\nO valor aproximado da magnitude do segundo terremoto, expresso com uma casa decimal, é igual a\nM₂",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-orig1.jpg)",
   "alternativas": [
-   "5,4.",
-   "6,2.",
-   "7,6.",
-   "8,2.",
-   "8,4."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-170-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 27,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 171,
   "lingua": null,
-  "contexto": "Um jardineiro dispõe de k metros lineares de cerca baixa para fazer um jardim ornamental. O jardim, delimitado por essa cerca, deve ter a forma de um triângulo equilátero, um quadrado ou um hexágono regular. A escolha será pela forma que resulte na maior área.\nO jardineiro escolherá a forma de\n3",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-orig1.jpg)",
   "alternativas": [
-   "k² hexágono regular, pois a área do jardim, em metro quadrado, será . 24₂ 3_k_ 3",
-   "hexágono regular, pois a área do jardim, em metro quadrado, será . 2",
-   "k² quadrado, pois a área do jardim, em metro quadrado, será . 16 3",
-   "k² triângulo equilátero, pois a área do jardim, em metro quadrado, será . 36 3",
-   "triângulo equilátero, pois a área do jardim, em metro quadrado, será k² . 4"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-171-altE.jpg)"
   ],
   "correta": 0,
   "pagina": 28,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2806,119 +2772,112 @@
   "ano": 2024,
   "numero": 173,
   "lingua": null,
-  "contexto": "Uma empresa tem 400 funcionários, distribuídos em três setores: administrativo, logística e produção. O gráfico apresenta a distribuição quantitativa desses funcionários, por setor e por faixa etária.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173.jpg)\n\nUma viagem de férias será sorteada entre esses funcionários, de forma que todos terão igual probabilidade de serem sorteados.\n\nA maior probabilidade é que o funcionário sorteado esteja na faixa etária",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-orig1.jpg)",
   "alternativas": [
-   "entre 25 e 45 anos, pois é a faixa etária com maior quantidade de funcionários.",
-   "entre 25 e 45 anos, pois é a única faixa etária cujas porcentagens são maiores do que as porcentagens mínimas de cada setor.",
-   "até 25 anos, pois é a única faixa etária cujos percentuais associados aos setores aumentam com o aumento da quantidade de funcionários por setor.",
-   "até 25 anos, pois é a faixa etária que apresenta maior quantidade de funcionários no setor de produção, que é o setor que emprega metade dos funcionários dessa empresa.",
-   "a partir de 45 anos, pois a soma das porcentagens associadas a essa faixa etária é 110%, que é maior do que as respectivas somas associadas às outras faixas etárias, que são 105% e 85%."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altE.jpg)"
   ],
   "correta": 0,
   "pagina": 29,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 175,
   "lingua": null,
-  "contexto": "Uma indústria faz uma parceria com uma distribuidora de sucos para lançar no mercado dois tipos de embalagens. Para a fabricação dessas embalagens, a indústria dispõe de folhas de alumínio retangulares, de dimensões 10 cm por 20 cm. Cada uma dessas folhas é utilizada para formar a superfície lateral da embalagem, em formato de cilindro circular reto, que posteriormente recebe fundo e tampa circulares. A figura ilustra, dependendo de qual das duas extensões será utilizada como altura, as duas opções para formar a possível embalagem.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175.jpg)\n\nDentre essas duas embalagens, a de maior capacidade apresentará volume, em centímetro cúbico, igual a",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-orig1.jpg)",
   "alternativas": [
-   "4 000 π",
-   "2 000 π 4 000",
-   "π",
-   "¹⁰⁰⁰π",
-   "⁵⁰⁰π"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-175-altE.jpg)"
   ],
   "correta": 3,
   "pagina": 30,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 176,
   "lingua": null,
-  "contexto": "As receitas anuais obtidas por uma indústria no período de 2014 a 2021, em milhão de reais, foram registradas, por pontos, em um gráfico. Nele, também está representada a reta que descreve a tendência de evolução das receitas. Essa reta pode ser utilizada para estimar as receitas dos anos seguintes.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176.jpg)\n\nA estimativa da receita, em milhão de reais, dessa indústria, para o ano de 2026, obtida a partir dessa reta de tendência, é",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-orig1.jpg)",
   "alternativas": [
-   "7.",
-   "8.",
-   "9.",
-   "10.",
-   "11."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-176-altE.jpg)"
   ],
   "correta": 1,
   "pagina": 30,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 177,
   "lingua": null,
-  "contexto": "Uma empresa produz mochilas escolares sob encomenda. Essa empresa tem um custo total de produção, composto por um custo fixo, que não depende do número de mochilas, mais um custo variável, que é proporcional ao número de mochilas produzidas. O custo total cresce de forma linear, e a tabela apresenta esse custo para três quantidades de mochilas produzidas.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177.jpg)\n\nO custo total, em real, para a produção de 80 mochilas será",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-orig1.jpg)",
   "alternativas": [
-   "2 400,00.",
-   "2 520,00.",
-   "2 550,00.",
-   "2 700,00.",
-   "2 800,00."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-177-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 31,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 178,
   "lingua": null,
-  "contexto": "A umidade relativa do ar é um dos indicadores utilizados na meteorologia para fazer previsões sobre o clima. O quadro apresenta as médias mensais, em porcentagem, da umidade relativa do ar em um período de seis meses consecutivos em uma cidade.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178.jpg)\n\n**Média mensal da**\n**umidade relativa**\n66\n64\n54\n46\n60\n64\n**do ar (%)**\n\nNessa cidade, a mediana desses dados, em porcentagem, da umidade relativa do ar no período considerado foi",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-orig1.jpg)",
   "alternativas": [
-   "56.",
-   "58.",
-   "59.",
-   "60.",
-   "62."
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-178-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 31,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 179,
   "lingua": null,
-  "contexto": "Uma empresa de engenharia foi contratada para realizar um serviço no valor de R$ 71 250,00. Os sócios da empresa decidiram que 40% desse valor seria destinado ao pagamento de três engenheiros que gerenciaram o serviço. O pagamento para cada um deles será feito de forma diretamente proporcional ao total de horas trabalhadas. O número de dias e o número de horas diárias trabalhadas pelos engenheiros foram, respectivamente:\n\n• engenheiro I: 4 dias, numa jornada de 5 horas e\n\nmeia por dia;\n\n• engenheiro II: 5 dias, numa jornada de 4 horas por dia;\n\n• engenheiro III: 6 dias, numa jornada de 2 horas e\n\nmeia por dia.\n\nQual a maior diferença, em real, entre os valores recebidos por esse serviço entre dois desses engenheiros?",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-orig1.jpg)",
   "alternativas": [
-   "1 000",
-   "1 500",
-   "3 500",
-   "3 800",
-   "5 250"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-179-altE.jpg)"
   ],
   "correta": 2,
   "pagina": 31,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
   "numero": 180,
   "lingua": null,
-  "contexto": "Um hospital tem 7 médicos cardiologistas e 6 médicos neurologistas em seu quadro de funcionários. Para executar determinada atividade, a direção desse hospital formará uma equipe com 5 médicos, sendo, pelo menos, 3 cardiologistas.\n\nA expressão numérica que representa o número máximo de maneiras distintas de formar essa equipe é\n\n7\n! 6!",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-orig1.jpg)",
   "alternativas": [
-   "× 4 ! 4! 7 ! 6 ! ×",
-   "! × ! × 3 4 ! 2 4! 7 ! 6! 5!",
-   "3 4 ! ! ! ! 2 4 ! 1 4 ! 7 ! 6! 7 ! 6 ! 7 ! 6!",
-   "3 4 ! ! ! 2 4 ! 4 3 ! ! ! 1 5 ! 5 2 ! ! ! 0 6 !! 7 ! 6 ! 7 ! 6! 7 ! 6 !",
-   "3 4 ! ! ! 2 4! 4 3 ! ! ! 1 5! 5 2 ! ! ! 0 6 !!"
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altA.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altB.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altC.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altD.jpg)",
+   "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-180-altE.jpg)"
   ],
   "correta": 4,
   "pagina": 31,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  }
 ]
