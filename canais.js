@@ -105,6 +105,29 @@ async function buscarNovos(pool, buscar = fetch) {
   return novos;
 }
 
+// canais-iniciais.json: lista que a equipe manda ([{ "link", "tipo", "area", "direto" }]).
+// Ao ligar, o servidor passa a seguir os que ainda não segue. Canal removido pelo
+// site volta no próximo início se continuar no arquivo: tire-o daqui também.
+async function seguirCanaisIniciais(pool, arquivo = require('path').join(__dirname, 'canais-iniciais.json'), buscar = fetch) {
+  let lista;
+  try { lista = JSON.parse(require('fs').readFileSync(arquivo, 'utf8')); } catch (e) { return 0; }
+  let novos = 0;
+  for (const item of Array.isArray(lista) ? lista : []) {
+    const lido = lerLinkCanal(item.link);
+    if (!lido) { console.warn('📡 Link de canal inválido em canais-iniciais.json:', item.link); continue; }
+    const canalId = lido.id || await idDoHandle(lido.handle, buscar);
+    if (!canalId) { console.warn('📡 Não achei o canal, tento na próxima vez:', item.link); continue; }
+    const r = await pool.query(
+      `INSERT INTO reels_canais (canal_id, nome, area, tipo, direto, desde)
+       VALUES ($1, $2, $3, $4, $5, NOW() - INTERVAL '${DIAS_ATRAS} days') ON CONFLICT (canal_id) DO NOTHING`,
+      [canalId, String(item.nome || lido.handle || canalId).slice(0, 100), AREAS.includes(item.area) ? item.area : null,
+       TIPOS.includes(item.tipo) ? item.tipo : 'resolucao', item.direto !== false]);
+    novos += r.rowCount;
+  }
+  if (novos) console.log(`📡 ${novos} canais novos de canais-iniciais.json`);
+  return novos;
+}
+
 function registrarCanais(app, { pool, exigirModerador }) {
   const idValido = v => { const n = Number(v); return Number.isInteger(n) && n > 0 ? n : null; };
 
@@ -171,6 +194,7 @@ function registrarCanais(app, { pool, exigirModerador }) {
 module.exports = registrarCanais;
 module.exports.INTERVALO = INTERVALO;
 module.exports.buscarNovos = buscarNovos;
+module.exports.seguirCanaisIniciais = seguirCanaisIniciais;
 module.exports.lerLinkCanal = lerLinkCanal;
 module.exports.lerFeed = lerFeed;
 module.exports.ehShort = ehShort;

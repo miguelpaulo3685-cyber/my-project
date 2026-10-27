@@ -1523,7 +1523,8 @@ const server = app.listen(PORT, () => {
   }, 2000);
   // Shorts novos dos canais automáticos dos Reels: um minuto depois de ligar e de 3 em 3 horas.
   const canais = require('./canais');
-  const buscarCanais = () => canais.buscarNovos(pool).catch(err => console.error('❌ Erro nos canais automáticos:', err.message));
+  const buscarCanais = () => canais.seguirCanaisIniciais(pool).then(() => canais.buscarNovos(pool))
+    .catch(err => console.error('❌ Erro nos canais automáticos:', err.message));
   setTimeout(buscarCanais, 60 * 1000).unref();
   setInterval(buscarCanais, canais.INTERVALO).unref();
 });
