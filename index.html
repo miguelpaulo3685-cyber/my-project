@@ -8374,6 +8374,10 @@ async function desenharFaixaReels() {
   irParaSlide(0);
 }
 
+// Vídeo do YouTube começa sozinho, sem som (o navegador só deixa assim); TikTok espera o toque.
+const slideSozinho = i => slider.lista[i] && slider.lista[i].plataforma !== 'tiktok'
+  && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 function irParaSlide(i) {
   const n = slider.lista.length;
   if (!n) return;
@@ -8383,7 +8387,8 @@ function irParaSlide(i) {
   if (!trilho) return;
   trilho.style.transform = `translateX(-${slider.i * 100}%)`;
   document.querySelectorAll('.bolinhas-slide button').forEach((b, k) => b.setAttribute('aria-current', String(k === slider.i)));
-  agendarSlide();
+  if (slideSozinho(slider.i)) tocarSlide(slider.i, true);
+  else agendarSlide();
 }
 const passarSlide = direcao => irParaSlide(slider.i + direcao);
 
@@ -8410,14 +8415,22 @@ function tocarSlide(i, depoisDeOutro) {
     : `https://www.youtube-nocookie.com/embed/${r.youtube_id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&mute=${depoisDeOutro && !somReels ? 1 : 0}`;
   slide.insertAdjacentHTML('beforeend', `<iframe src="${escapar(url)}" title="${escapar(r.titulo)}"
     allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`);
+  if (r.plataforma !== 'tiktok' && depoisDeOutro && !somReels) {
+    slide.insertAdjacentHTML('beforeend', `<button class="reel-som" onclick="somNoSlide()">🔇 Ativar som</button>`);
+  }
   const quadro = slide.querySelector('iframe');
   quadro.addEventListener('load', () => {
     try { quadro.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 'slider', channel: 'widget' }), '*'); } catch (e) { /* TikTok não usa */ }
   });
 }
 
+function somNoSlide() {
+  somReels = true;
+  tocarSlide(slider.i, false);
+}
+
 function pararSlide() {
-  document.querySelectorAll('.slide-reel iframe').forEach(f => f.remove());
+  document.querySelectorAll('.slide-reel iframe, .slide-reel .reel-som').forEach(f => f.remove());
   slider.tocando = false;
   document.getElementById('slider-reels')?.classList.remove('tocando');
 }
@@ -8433,13 +8446,13 @@ window.addEventListener('message', ev => {
   if (!quadro || ev.source !== quadro.contentWindow) return;
   const proximo = (slider.i + 1) % slider.lista.length;
   irParaSlide(proximo);
-  setTimeout(() => tocarSlide(proximo, true), 600);
+  if (!slider.tocando) setTimeout(() => tocarSlide(proximo, true), 600);
 });
 
 // Arrastar para o lado também passa (no celular é o gesto natural).
 function arrastarSlider(el) {
   let inicio = null;
-  el.addEventListener('pointerdown', e => { if (!slider.tocando) inicio = e.clientX; });
+  el.addEventListener('pointerdown', e => { inicio = e.clientX; });
   el.addEventListener('pointerup', e => {
     if (inicio === null) return;
     const dx = e.clientX - inicio;
