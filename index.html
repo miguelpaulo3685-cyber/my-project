@@ -1999,6 +1999,8 @@
     .item-revisao summary { cursor: pointer; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .item-revisao .enunciado { margin: 10px 0; font-size: .92rem; }
     .item-revisao img { max-width: 100%; }
+    .original-revisao { width: 100%; border: 1px solid var(--borda); border-radius: 8px; background: #fff; }
+    .rotulo-revisao { font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--texto-fraco); margin: 10px 0 4px; }
     .alts-revisao { list-style: none; padding: 0; margin: 0 0 10px; }
     .alts-revisao li { padding: 4px 6px; border-radius: 6px; }
     .alts-revisao li.certa { background: rgba(34, 197, 94, .15); }
@@ -8524,6 +8526,9 @@ async function desenharRevisao() {
       Se estiver igual, toque em "Está certa": a questão passa a cair no treino e no simulado.</p>
     ${revisao.map(q => `<details class="item-revisao" id="rev-${q.id}"><summary><b>${q.ano} · Questão ${q.numero}${q.lingua ? ` (${q.lingua === 'ingles' ? 'inglês' : 'espanhol'})` : ''}</b>
       ${q.caderno ? `<a href="${escapar(q.caderno)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">caderno, página ${q.pagina}</a>` : ''}</summary>
+      <div class="rotulo-revisao">No caderno do INEP:</div>
+      <img class="original-revisao" src="${escapar(q.original)}" alt="Questão no caderno original" loading="lazy">
+      <div class="rotulo-revisao">Como fica no site:</div>
       <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
       <ol class="alts-revisao">${(typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : q.alternativas).map((a, i) =>
         `<li class="${i === q.correta ? 'certa' : ''}"><b>${LETRAS[i]}</b> ${formatarEnunciado(a)}</li>`).join('')}</ol>

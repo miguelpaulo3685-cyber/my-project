@@ -35,8 +35,8 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 
       **Passo a passo para pôr as que sobram:**
       1. Pelo site (sem gastar limite do Claude): Configurações → Administração → **Questões em revisão**.
-         Abra uma, toque em "caderno, página N" e compare com o original: texto, figuras, alternativas e a
-         alternativa verde (gabarito). Se estiver igual, toque em **"Está certa: liberar"**. Se tiver erro,
+         Abra uma: em cima está a imagem da questão no caderno do INEP, embaixo como fica no site. Compare
+         texto, figuras, alternativas e a alternativa verde (gabarito). Leva uns 15 segundos por questão. Se estiver igual, toque em **"Está certa: liberar"**. Se tiver erro,
          anote o ano e o número.
       2. Com o Claude, numa conversa nova: "leia o PROXIMOS-PASSOS.md e corrija as questões em revisão com
          erro: (lista)" ou "revise o próximo lote de 10 questões em revisão de 2025". Ele usa

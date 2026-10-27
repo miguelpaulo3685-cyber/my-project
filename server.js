@@ -1354,7 +1354,9 @@ app.get('/api/admin/revisao', exigirModerador, async (req, res) => {
     const pagina = new Map(PROVAS_DO_INEP.map(q => [`${q.ano}:${q.numero}:${q.lingua || ''}`, q]));
     res.json({ questoes: rows.map(q => {
       const p = pagina.get(`${q.ano}:${q.numero}:${q.lingua || ''}`) || {};
-      return { ...q, caderno: p.dia ? `${CADERNOS_DO_INEP[q.ano][p.dia]}#page=${p.pagina}` : null, pagina: p.pagina };
+      const chave = `${q.ano}-${q.numero}${q.lingua ? '-' + q.lingua : ''}`;
+      return { ...q, caderno: p.dia ? `${CADERNOS_DO_INEP[q.ano][p.dia]}#page=${p.pagina}` : null, pagina: p.pagina,
+        original: `${correio.SITE_URL.replace(/\/$/, '')}/img/revisao/${chave}.jpg` };
     }) });
   } catch (erro) {
     console.error('Erro ao listar questões em revisão:', erro.message);
