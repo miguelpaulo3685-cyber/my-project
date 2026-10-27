@@ -60,3 +60,14 @@ test('questão incompleta: só a pergunta, ou cita figura que não veio', () => 
   assert.ok(!questaoIncompleta(`${longo} para que se dê a percepção da imagem.`, 2009, 37));
   assert.ok(questaoIncompleta(`${longo} para que se dê a percepção da imagem.`, 2009, 38));
 });
+
+test('2024 e 2025: anuladas, em revisão fora do sorteio e todas com 5 alternativas e gabarito', () => {
+  const p2 = require('../provas');
+  assert.ok(p2.foiAnulada(2024, 129) && p2.foiAnulada(2025, 174));
+  assert.match(p2.questaoCompletaSql('q.contexto'), /NOT COALESCE\(q\.em_revisao, FALSE\)/);
+  for (const q of p2.PROVAS_DO_INEP) {
+    assert.strictEqual(q.alternativas.length, 5, `${q.ano}-${q.numero}`);
+    assert.ok(q.alternativas.every(Boolean) && [0, 1, 2, 3, 4].includes(q.correta), `${q.ano}-${q.numero}`);
+    assert.ok(!/\{fig/.test(q.contexto), `figura sem trocar em ${q.ano}-${q.numero}`);
+  }
+});

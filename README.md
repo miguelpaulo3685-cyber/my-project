@@ -1,6 +1,6 @@
 # M&M Estudos
 
-Plataforma gratuita para treinar com questões reais do ENEM (2009–2023), com contas,
+Plataforma gratuita para treinar com questões reais do ENEM (2009–2025), com contas,
 progresso salvo na conta, nível de dificuldade medido pelas respostas e um feed de estudos.
 
 - **Site:** `index.html`, publicado pelo GitHub Pages a partir da branch `master`
@@ -293,3 +293,15 @@ vídeos gravados por vocês) e põem cada reel nela pelo botão 📺 ao lado do 
 episódio (em branco, vira o último). Quem tem conta vê "Continuar assistindo" com o próximo episódio:
 um reel conta como visto depois de 8 s tocando. Vídeos de outros canais continuam só incorporados
 do YouTube ou do TikTok, nunca baixados.
+
+## Provas de 2024 e 2025
+
+A api.enem.dev vai só até 2023. As provas de 2024 e 2025 foram tiradas dos cadernos azuis do INEP com as
+ferramentas de `ferramentas-inep/` e ficam em `questoes-inep/ANO.json` (figuras em `img/questoes/`). O servidor
+grava tudo a cada início, junto com `questoes-manuais.json`. Gabarito oficial do INEP; anuladas ficam de fora.
+
+Questões com figura, fórmula ou desenho nas alternativas que ainda não foram conferidas entram com
+`em_revisao`: ficam no banco, mas não caem no treino, no simulado, no desafio nem na Arena. Elas aparecem em
+Configurações → Administração → Questões em revisão, com a página do caderno para comparar e o botão
+"Está certa: liberar" (`POST /api/admin/revisao/:id/liberar`). Liberada continua liberada mesmo se o arquivo
+ainda disser `em_revisao`.

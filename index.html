@@ -1995,6 +1995,13 @@
     .colecao button.raro { box-shadow: inset 0 0 0 1px #6fb3e0; }
     .colecao button.epico { box-shadow: inset 0 0 0 1px #c49be8; }
     .colecao button.convite { box-shadow: inset 0 0 0 1px #3fae6a; }
+    .item-revisao { border: 1px solid var(--borda); border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
+    .item-revisao summary { cursor: pointer; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .item-revisao .enunciado { margin: 10px 0; font-size: .92rem; }
+    .item-revisao img { max-width: 100%; }
+    .alts-revisao { list-style: none; padding: 0; margin: 0 0 10px; }
+    .alts-revisao li { padding: 4px 6px; border-radius: 6px; }
+    .alts-revisao li.certa { background: rgba(34, 197, 94, .15); }
     .erro-admin span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .erro-admin b { font-weight: 600; font-size: .88rem; overflow-wrap: anywhere; }
     .erro-admin small { color: var(--texto-fraco); }
@@ -2712,7 +2719,7 @@
     <div class="cabecalho-secao">
       <h1>Treinar <button class="botao-ajuda" onclick="abrirAjuda('treinar')" aria-label="Como funciona o treino">?</button>
         <button class="vivo" id="vivo-treinar" onclick="abrirComunidade('agora')" title="Ver a comunidade" hidden></button></h1>
-      <p>Questões reais do ENEM, de 2009 a 2023.</p>
+      <p>Questões reais do ENEM, de 2009 a 2025.</p>
     </div>
 
     <div id="aviso-topo"></div>
@@ -8491,16 +8498,44 @@ async function desenharPainelAdmin() {
     <div class="provas-admin">${d.provas.anos.map(a => {
       const completo = a.dia1 >= total && a.dia2 >= total;
       return `<div class="${completo ? '' : 'incompleto'}"><b>${a.ano}</b><small>Dia 1: ${a.dia1} · Dia 2: ${a.dia2}</small>
-        ${completo ? '<span>✓</span>' : `<button class="acao discreta pequena" onclick="buscarAno(${a.ano}, this)">Buscar o que falta</button>`}</div>`;
+        ${completo ? '<span>✓</span>' : a.ano >= 2024 ? '<small>do caderno do INEP</small>' : `<button class="acao discreta pequena" onclick="buscarAno(${a.ano}, this)">Buscar o que falta</button>`}</div>`;
     }).join('')}</div>
     <p class="pista">As questões vêm da api.enem.dev. Se depois de buscar ainda faltar, é porque a fonte não tem essas questões
       (o aviso mostra quais). Dá para cadastrar essas à mão logo abaixo, copiando do caderno do INEP.</p>
+    <div id="admin-revisao"></div>
     <div class="rotulo-modal">Questões que faltam</div>
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
   desenharMensagensDenunciadas();
   desenharCrescimento();
   desenharErrosAdmin();
+  desenharRevisao();
+}
+
+// Questões de 2024 e 2025 tiradas dos cadernos do INEP que ainda não foram conferidas.
+// Compare com a página do caderno: se estiver igual, "Está certa" libera para os alunos.
+let revisao = [];
+async function desenharRevisao() {
+  const alvo = document.getElementById('admin-revisao');
+  try { revisao = (await api('/api/admin/revisao')).questoes; } catch (e) { alvo.innerHTML = ''; return; }
+  if (!revisao.length) { alvo.innerHTML = ''; return; }
+  alvo.innerHTML = `<div class="rotulo-modal">Questões em revisão (${revisao.length})</div>
+    <p class="pista">Abra o caderno na página indicada e compare texto, figuras, alternativas e gabarito.
+      Se estiver igual, toque em "Está certa": a questão passa a cair no treino e no simulado.</p>
+    ${revisao.map(q => `<details class="item-revisao" id="rev-${q.id}"><summary><b>${q.ano} · Questão ${q.numero}${q.lingua ? ` (${q.lingua === 'ingles' ? 'inglês' : 'espanhol'})` : ''}</b>
+      ${q.caderno ? `<a href="${escapar(q.caderno)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">caderno, página ${q.pagina}</a>` : ''}</summary>
+      <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
+      <ol class="alts-revisao">${(typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : q.alternativas).map((a, i) =>
+        `<li class="${i === q.correta ? 'certa' : ''}"><b>${LETRAS[i]}</b> ${formatarEnunciado(a)}</li>`).join('')}</ol>
+      <button class="acao pequena" onclick="liberarQuestao(${q.id})">Está certa: liberar</button></details>`).join('')}`;
+}
+
+async function liberarQuestao(id) {
+  try { avisoSim((await postar(`/api/admin/revisao/${id}/liberar`)).message); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  document.getElementById('rev-' + id)?.remove();
+  revisao = revisao.filter(q => q.id !== id);
+  const rotulo = document.querySelector('#admin-revisao .rotulo-modal');
+  if (rotulo) rotulo.textContent = `Questões em revisão (${revisao.length})`;
 }
 
 // Erros do site (erros.js): o servidor junta os iguais e avisa por e-mail.

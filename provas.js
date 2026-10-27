@@ -12,7 +12,7 @@ const ehDeLingua = (ano, n) => (ano >= 2017 ? n <= 5 : ano >= 2010 && n >= 91 &&
 
 // Anuladas pelo INEP (gabarito "X" nos microdados): não têm resposta certa e
 // nenhuma fonte as tem, então não contam como faltando.
-const ANULADAS = new Set(['2009:101']);
+const ANULADAS = new Set(['2009:101', '2024:129', '2025:123', '2025:132', '2025:174']);
 const foiAnulada = (ano, n) => ANULADAS.has(`${ano}:${n}`);
 
 // A fonte às vezes grava uma questão de língua sem dizer o idioma (2020 Q5,
@@ -64,7 +64,9 @@ const MINIMO_DE_TEXTO = 220;
 
 // Conferidas no caderno do INEP: a regra acima as pega ("percepção da imagem",
 // pergunta curta), mas estão inteiras. As transcritas do INEP também.
-const CONFERIDAS = require('./questoes-manuais.json').map(q => [q.ano, q.numero]).concat([
+// Provas que nenhuma fonte tem, extraídas dos cadernos do INEP (questoes-inep/ANO.json).
+const PROVAS_DO_INEP = [2024, 2025].map(ano => require(`./questoes-inep/${ano}.json`)).flat();
+const CONFERIDAS = require('./questoes-manuais.json').concat(PROVAS_DO_INEP).map(q => [q.ano, q.numero]).concat([
   [2009, 37], [2010, 11], [2010, 26], [2010, 128], [2010, 133], [2010, 139], [2011, 74], [2011, 152],
   [2012, 23], [2012, 125], [2012, 170], [2014, 50], [2014, 107], [2015, 86], [2017, 18], [2017, 38],
   [2017, 82], [2017, 86], [2017, 108], [2017, 128], [2018, 79], [2019, 9], [2019, 15], [2020, 54],
@@ -83,13 +85,14 @@ function questaoIncompleta(contexto, ano, numero) {
 const questaoCompletaSql = (coluna = 'contexto') => {
   const tabela = coluna.includes('.') ? coluna.slice(0, coluna.lastIndexOf('.') + 1) : '';
   const conferidas = CONFERIDAS.map(([a, n]) => `(${a},${n})`).join(',');
-  return `(${coluna} LIKE '%![](%' OR (${tabela}ano, ${tabela}numero) IN (${conferidas})` +
-    ` OR (length(${coluna}) >= ${MINIMO_DE_TEXTO} AND ${coluna} !~* '\\y(${ANTES_DA_PALAVRA}) (${PALAVRAS_VISUAIS})s?\\y'))`;
+  // Questão "em revisão" (extraída do caderno e ainda não conferida) fica fora do sorteio.
+  return `(NOT COALESCE(${tabela}em_revisao, FALSE) AND (${coluna} LIKE '%![](%' OR (${tabela}ano, ${tabela}numero) IN (${conferidas})` +
+    ` OR (length(${coluna}) >= ${MINIMO_DE_TEXTO} AND ${coluna} !~* '\\y(${ANTES_DA_PALAVRA}) (${PALAVRAS_VISUAIS})s?\\y')))`;
 };
 
 const semRepetir = questoes => [...new Map(questoes.map(q => [`${numeroDaQuestao(q)}|${q.language || ''}`, q])).values()];
 
 module.exports = {
   numeroDaQuestao, ehDeLingua, foiAnulada, linguaPeloTexto, completarLinguas, pastasQueFaltam, semRepetir,
-  questaoIncompleta, questaoCompletaSql
+  questaoIncompleta, questaoCompletaSql, PROVAS_DO_INEP
 };

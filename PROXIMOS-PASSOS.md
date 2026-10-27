@@ -28,8 +28,23 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
       pela imagem da página. Agora são 93 em `questoes-manuais.json`; figuras em `img/questoes/`.
       Como baixar os PDFs do INEP: o servidor deles não manda o certificado intermediário, então é
       preciso juntar o da RNP (`secure.globalsign.com/cacert/rnpicpedugr46ovtlsca2025.crt`) ao `--cacert`.
-- [ ] **Provas de 2024 e 2025** (e a de 2026 quando o INEP publicar). Ver se a api.enem.dev já tem;
-      senão, pelos PDFs.
+- [~] **Provas de 2024 e 2025** tiradas dos cadernos do INEP (27/10): 360 questões no site, das quais
+      **243 já liberadas** e **117 "em revisão"** (com figura, fórmula ou desenho nas alternativas, ainda não
+      conferidas). Anuladas: 2024-129 e 2025-123, 132 e 174. Ficaram **de fora** 6 questões com alternativas em
+      grade de gráficos: 2024-127, 161, 168 e 174; 2025-138 e 169. Ferramentas em `ferramentas-inep/`.
+
+      **Passo a passo para pôr as que sobram:**
+      1. Pelo site (sem gastar limite do Claude): Configurações → Administração → **Questões em revisão**.
+         Abra uma, toque em "caderno, página N" e compare com o original: texto, figuras, alternativas e a
+         alternativa verde (gabarito). Se estiver igual, toque em **"Está certa: liberar"**. Se tiver erro,
+         anote o ano e o número.
+      2. Com o Claude, numa conversa nova: "leia o PROXIMOS-PASSOS.md e corrija as questões em revisão com
+         erro: (lista)" ou "revise o próximo lote de 10 questões em revisão de 2025". Ele usa
+         `ferramentas-inep/` (precisa liberar na rede `download.inep.gov.br` e `secure.globalsign.com`).
+      3. As 6 de fora: Administração → **Questões que faltam** → cadastrar à mão (o formulário aceita imagem
+         em cada alternativa), copiando do caderno na página certa. Ou pedir ao Claude para recortar as
+         alternativas.
+      4. Prova de 2026: quando o INEP publicar, repetir as ferramentas (ver `ferramentas-inep/LEIA-ME.md`).
 - [ ] **Resolução comentada**, ao menos das questões mais erradas.
 
 ### 2. Segurança e LGPD

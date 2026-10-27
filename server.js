@@ -12,7 +12,7 @@ const correio = require('./email');
 const tri = require('./tri');
 const imagens = require('./imagens');
 const crescimento = require('./crescimento');
-const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir, questaoCompletaSql } = require('./provas');
+const { numeroDaQuestao, ehDeLingua, foiAnulada, completarLinguas, pastasQueFaltam, semRepetir, questaoCompletaSql, PROVAS_DO_INEP } = require('./provas');
 
 // Sem a variável no Render a URL virava "undefined/v1/..." e toda busca falhava.
 const ENEM_API = (process.env.ENEM_API_BASE || 'https://api.enem.dev').replace(/\/$/, '');
@@ -696,7 +696,7 @@ app.get('/api/simulado', async (req, res) => {
       linhas.forEach((q, i) => { q.numero = i; });
     } else {
       ({ rows: linhas } = await pool.query(
-        'SELECT * FROM questoes WHERE ano = $1 AND disciplina = ANY($2::text[])', [ano, disciplinas]
+        'SELECT * FROM questoes WHERE ano = $1 AND disciplina = ANY($2::text[]) AND NOT em_revisao', [ano, disciplinas]
       ));
     }
     const questoes = disciplinas.flatMap(d => montarArea(linhas, d, lingua)).map(limparQuestao);
@@ -714,7 +714,7 @@ app.get('/api/simulado', async (req, res) => {
 async function contarProvas() {
   // Conta do mesmo jeito que o simulado monta a prova (com inglês), para o
   // número mostrado ser o número de questões que o aluno vai ver.
-  const { rows } = await pool.query('SELECT id, ano, disciplina, lingua, numero FROM questoes WHERE ano IS NOT NULL');
+  const { rows } = await pool.query('SELECT id, ano, disciplina, lingua, numero FROM questoes WHERE ano IS NOT NULL AND NOT em_revisao');
   const anos = ANOS_DISPONIVEIS.map(ano => {
     const doAno = rows.filter(r => r.ano === ano);
     const dia = n => DIAS_DO_SIMULADO[n].reduce((t, d) => t + montarArea(doAno, d, 'ingles').length, 0);
@@ -820,10 +820,13 @@ function prepararQuestao(q) {
   };
 }
 
-const ANOS_DISPONIVEIS = [
+// A api.enem.dev tem de 2009 a 2023; 2024 e 2025 vêm dos cadernos do INEP (questoes-inep/).
+const ANOS_DA_FONTE = [
   2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016,
   2017, 2018, 2019, 2020, 2021, 2022, 2023
 ];
+const ANOS_DO_INEP = [2024, 2025];
+const ANOS_DISPONIVEIS = [...ANOS_DA_FONTE, ...ANOS_DO_INEP];
 
 // Grava ou corrige cada questão. A que já existe é atualizada no lugar (o id
 // não muda, então respostas, comentários e TRI continuam valendo); antes de
@@ -882,7 +885,7 @@ async function corrigirProvasUmaVez() {
   const feitos = new Set((await pool.query(
     `SELECT chave FROM configuracoes WHERE chave LIKE $1`, [`${VERSAO_DA_CORRECAO}:%`])).rows.map(r => r.chave));
   let mexeu = false;
-  for (const ano of ANOS_DISPONIVEIS) {
+  for (const ano of ANOS_DA_FONTE) {
     const chave = `${VERSAO_DA_CORRECAO}:${ano}`;
     if (feitos.has(chave)) continue;
     try {
@@ -1054,8 +1057,8 @@ app.post('/api/admin/tri', exigirAdmin, async (req, res) => {
 app.post(['/api/carregar-ano/:ano', '/api/admin/carregar-ano/:ano'], (req, res, next) =>
   (req.path.startsWith('/api/admin/') ? exigirModerador : exigirAdmin)(req, res, next), async (req, res) => {
   const ano = Number(req.params.ano);
-  if (!ANOS_DISPONIVEIS.includes(ano)) {
-    return res.status(400).json({ error: `Ano invalido. Disponiveis: ${ANOS_DISPONIVEIS.join(', ')}` });
+  if (!ANOS_DA_FONTE.includes(ano)) {
+    return res.status(400).json({ error: `Ano invalido. Disponiveis: ${ANOS_DA_FONTE.join(', ')}` });
   }
 
   try {
@@ -1105,7 +1108,7 @@ app.get('/api/estatisticas', async (req, res) => {
 // Sorteia um ano e um trecho da prova e grava o que for novo. Chamada direto
 // pelo cron, sem passar por HTTP, para não precisar da chave de admin.
 async function atualizarCache() {
-  const ano = ANOS_DISPONIVEIS[Math.floor(Math.random() * ANOS_DISPONIVEIS.length)];
+  const ano = ANOS_DA_FONTE[Math.floor(Math.random() * ANOS_DA_FONTE.length)];
   console.log(`🔄 Buscando questões do ENEM ${ano}...`);
 
   const response = await axios.get(
@@ -1313,22 +1316,23 @@ app.get('/api/questoes-imagens/:id', async (req, res) => {
 // Cadastra (ou corrige) uma questão copiada do caderno do INEP. Fica com o
 // mesmo título que a api.enem.dev usaria: se um dia a fonte tiver a questão,
 // a busca atualiza esta mesma linha em vez de duplicar.
-async function salvarQuestaoManual({ ano, numero, lingua, contexto, alternativas, correta }) {
+async function salvarQuestaoManual({ ano, numero, lingua, contexto, alternativas, correta, em_revisao = false }) {
   const titulo = `Questão ${numero} - ENEM ${ano}${lingua ? ` (${NOME_DA_LINGUA[lingua]})` : ''}`;
+  // Liberada pela Administração continua liberada, mesmo que o arquivo ainda diga "em revisão".
   await pool.query(
-    `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, numero, lingua)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `INSERT INTO questoes (disciplina, titulo, contexto, alternativas, correta, ano, numero, lingua, em_revisao)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
      ON CONFLICT (titulo) DO UPDATE SET disciplina = EXCLUDED.disciplina, contexto = EXCLUDED.contexto,
        alternativas = EXCLUDED.alternativas, correta = EXCLUDED.correta, ano = EXCLUDED.ano, numero = EXCLUDED.numero,
-       lingua = EXCLUDED.lingua, updated_at = NOW()`,
-    [areaPeloNumero(ano, numero), titulo, contexto, JSON.stringify(alternativas), correta, ano, numero, lingua]);
+       lingua = EXCLUDED.lingua, em_revisao = questoes.em_revisao AND EXCLUDED.em_revisao, updated_at = NOW()`,
+    [areaPeloNumero(ano, numero), titulo, contexto, JSON.stringify(alternativas), correta, ano, numero, lingua, Boolean(em_revisao)]);
   return titulo;
 }
 
 // Questões que nenhuma fonte tem, transcritas dos cadernos do INEP para
 // questoes-manuais.json (as figuras ficam em img/questoes, no GitHub Pages).
 async function gravarQuestoesManuais() {
-  const lista = require('./questoes-manuais.json');
+  const lista = require('./questoes-manuais.json').concat(PROVAS_DO_INEP);
   for (const q of lista) await salvarQuestaoManual(q);
   if (lista.length) {
     await aplicarTri();
@@ -1336,6 +1340,39 @@ async function gravarQuestoesManuais() {
   }
   console.log(`📝 ${lista.length} questões transcritas do INEP gravadas`);
 }
+
+// ---------- questões em revisão (2024 e 2025, extraídas dos cadernos) ----------
+// A lista mostra a questão como o aluno vai ver e a página do caderno do INEP para comparar.
+const CADERNOS_DO_INEP = {
+  2024: { 1: 'https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D1_CD1.pdf', 2: 'https://download.inep.gov.br/enem/provas_e_gabaritos/2024_PV_impresso_D2_CD7.pdf' },
+  2025: { 1: 'https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D1_CD1.pdf', 2: 'https://download.inep.gov.br/enem/provas_e_gabaritos/2025_PV_impresso_D2_CD7.pdf' }
+};
+app.get('/api/admin/revisao', exigirModerador, async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      `SELECT id, ano, numero, lingua, contexto, alternativas, correta FROM questoes WHERE em_revisao ORDER BY ano, numero, lingua NULLS FIRST`);
+    const pagina = new Map(PROVAS_DO_INEP.map(q => [`${q.ano}:${q.numero}:${q.lingua || ''}`, q]));
+    res.json({ questoes: rows.map(q => {
+      const p = pagina.get(`${q.ano}:${q.numero}:${q.lingua || ''}`) || {};
+      return { ...q, caderno: p.dia ? `${CADERNOS_DO_INEP[q.ano][p.dia]}#page=${p.pagina}` : null, pagina: p.pagina };
+    }) });
+  } catch (erro) {
+    console.error('Erro ao listar questões em revisão:', erro.message);
+    res.status(500).json({ error: 'Não consegui carregar agora.' });
+  }
+});
+
+app.post('/api/admin/revisao/:id/liberar', exigirModerador, async (req, res) => {
+  try {
+    const r = await pool.query('UPDATE questoes SET em_revisao = FALSE WHERE id = $1 AND em_revisao RETURNING titulo', [Number(req.params.id) || 0]);
+    if (!r.rowCount) return res.status(404).json({ error: 'Essa questão não está em revisão.' });
+    console.log(`✅ ${r.rows[0].titulo} liberada pela Administração (usuário ${req.usuario.id})`);
+    res.json({ message: 'Questão liberada: já pode cair no treino e no simulado.' });
+  } catch (erro) {
+    console.error('Erro ao liberar questão:', erro.message);
+    res.status(500).json({ error: 'Não consegui liberar agora.' });
+  }
+});
 
 app.post('/api/admin/questoes', exigirModerador, async (req, res) => {
   const c = req.body || {};
@@ -1430,7 +1467,7 @@ app.post('/api/posts/:id/restaurar', exigirModerador, async (req, res) => {
 });
 
 // ================== CRON JOBS ==================
-// Todas as provas de 2009 a 2023 já estão no banco; uma busca por dia basta
+// Todas as provas de 2009 a 2023 da api.enem.dev já estão no banco; uma busca por dia basta
 // para pegar alguma questão que tenha faltado, sem acordar o Neon toda hora.
 cron.schedule('0 5 * * *', async () => {
   console.log('⏰ Cron: Atualizando cache automático...');

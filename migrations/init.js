@@ -675,6 +675,10 @@ async function runMigrations() {
     `);
     console.log('✅ Séries de reels');
 
+    // Questões extraídas dos cadernos do INEP que ainda não foram conferidas.
+    await pool.query(`ALTER TABLE questoes ADD COLUMN IF NOT EXISTS em_revisao BOOLEAN NOT NULL DEFAULT FALSE`);
+    console.log('✅ Questões em revisão');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (
