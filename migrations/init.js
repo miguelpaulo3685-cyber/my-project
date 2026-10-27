@@ -652,6 +652,22 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela de erros do site');
 
+    // Canais do YouTube que o servidor confere sozinho atrás de Shorts novos (canais.js).
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS reels_canais (
+        id SERIAL PRIMARY KEY,
+        canal_id VARCHAR(24) NOT NULL UNIQUE,
+        nome VARCHAR(100) NOT NULL,
+        area VARCHAR(12),
+        tipo VARCHAR(12) NOT NULL DEFAULT 'dica',
+        direto BOOLEAN NOT NULL DEFAULT FALSE,
+        desde TIMESTAMP NOT NULL DEFAULT NOW(),
+        ultima_busca TIMESTAMP,
+        ultimo_erro VARCHAR(200),
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+
     // Reels em série: episódios numerados e o que cada pessoa já assistiu.
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reels_series (

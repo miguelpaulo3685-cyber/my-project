@@ -1210,6 +1210,7 @@ app.get('/api/posts', async (req, res) => {
 require('./perfis')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./simulados')(app, { pool, auth, limitar, exigirLogin });
 require('./reels')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
+require('./canais')(app, { pool, exigirModerador });
 require('./social')(app, { pool, auth, limitar, exigirLogin });
 require('./discussao')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./desafio')(app, { pool, auth, limitar, exigirLogin });
@@ -1520,6 +1521,11 @@ const server = app.listen(PORT, () => {
     await gravarQuestoesManuais().catch(err => console.error('❌ Erro ao gravar as questões transcritas:', err.message));
     await corrigirProvasUmaVez().catch(err => console.error('❌ Erro ao corrigir as provas:', err.message));
   }, 2000);
+  // Shorts novos dos canais automáticos dos Reels: um minuto depois de ligar e de 3 em 3 horas.
+  const canais = require('./canais');
+  const buscarCanais = () => canais.buscarNovos(pool).catch(err => console.error('❌ Erro nos canais automáticos:', err.message));
+  setTimeout(buscarCanais, 60 * 1000).unref();
+  setInterval(buscarCanais, canais.INTERVALO).unref();
 });
 
 // Graceful shutdown

@@ -1825,6 +1825,8 @@
       .cena-texto p { margin: 0 auto; }
     }
     /* versão do computador: fundo escuro e partículas (só com mouse, tela larga e sem pedir menos movimento) */
+    .linha-canal { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--borda); }
+    .linha-canal small { display: block; color: var(--texto-fraco); font-size: .78rem; }
     .pc-historia, .pc-rodape { display: none; }
     html.pc-3d #entrada { background: #232227; }
     html.pc-3d #entrada .entrada-serra, html.pc-3d #historia { display: none; }
@@ -6903,7 +6905,7 @@ async function desenharSeries() {
     </div></article>`;
   alvo.innerHTML = `${d.continuar.length ? `<h2 class="titulo-series">Continuar assistindo</h2>
       <div class="grade-series">${d.continuar.map(s => cartao(s, true)).join('')}</div>` : ''}
-    <h2 class="titulo-series">Séries ${moderadorReels ? '<button class="acao discreta pequena" onclick="editarSerie(null)">＋ Nova série</button>' : ''}</h2>
+    <h2 class="titulo-series">Séries ${moderadorReels ? '<button class="acao discreta pequena" onclick="editarSerie(null)">＋ Nova série</button> <button class="acao discreta pequena" onclick="abrirCanais()">📡 Canais automáticos</button>' : ''}</h2>
     ${d.series.length ? `<div class="grade-series">${d.series.map(s => cartao(s, false)).join('')}</div>`
       : '<div class="vazio"><span class="cara">📺</span>As primeiras séries estão chegando: aulas em episódios curtos, na ordem certa.</div>'}
     ${usuarioLogado ? '' : '<p class="pista">Entre na sua conta para o site lembrar em que episódio você parou.</p>'}`;
@@ -6953,6 +6955,68 @@ async function apagarSerie(id, botao) {
   try { await api(`/api/reels/series/${id}`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
   botao.closest('.fundo-modal').remove();
   desenharSeries();
+}
+
+// Administração: canais do YouTube que o servidor confere sozinho atrás de Shorts novos.
+async function abrirCanais() {
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<div class="modal form-serie">
+    <div class="modal-topo"><h2>📡 Canais automáticos</h2><button type="button" class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <p class="pista">De 3 em 3 horas o site confere estes canais do YouTube. Cada Short novo entra na fila de aprovação dos Reels,
+      ou direto no ar se o canal for de confiança. Só YouTube: o TikTok não deixa conferir sozinho.</p>
+    <div class="lista-canais"><div class="vazio"><span class="cara">⏳</span>Carregando…</div></div>
+    <form onsubmit="adicionarCanal(event)">
+      <label>Link do canal<input name="link" required placeholder="https://www.youtube.com/@nomedocanal"></label>
+      <label>Os vídeos são<select name="tipo"><option value="resolucao">Resoluções de questões</option><option value="dica">Dicas</option></select></label>
+      <label>Área<select name="area"><option value="">Várias</option>${Object.entries(NOME_AREA_REEL).map(([v, n]) => `<option value="${v}">${n}</option>`).join('')}</select></label>
+      <label class="caixa"><input type="checkbox" name="direto"> Publicar direto, sem passar pela fila (só para canal de confiança)</label>
+      <div class="botoes-visita"><button class="acao" type="submit">Adicionar canal</button>
+        <button class="acao discreta" type="button" onclick="buscarCanaisAgora(this)">Buscar agora</button></div>
+    </form>
+    <div class="recado-serie"></div></div>`;
+  document.body.appendChild(fundo);
+  desenharCanais();
+}
+
+async function desenharCanais() {
+  const alvo = document.querySelector('.lista-canais');
+  if (!alvo) return;
+  let d;
+  try { d = await api('/api/reels/canais'); } catch (e) {
+    alvo.innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return;
+  }
+  alvo.innerHTML = d.canais.length ? d.canais.map(c => `<div class="linha-canal">
+      <div><b>${escapar(c.nome)}</b><small>${c.tipo === 'resolucao' ? 'Resoluções' : 'Dicas'}${c.area ? ` · ${escapar(NOME_AREA_REEL[c.area] || '')}` : ''}
+        · ${c.direto ? 'direto no ar' : 'pela fila'} · ${plural(c.reels, 'reel', 'reels')}${c.ultimo_erro ? ` · ⚠️ ${escapar(c.ultimo_erro)}` : ''}</small></div>
+      <button class="acao discreta pequena" onclick="removerCanal(${c.id})">Remover</button></div>`).join('')
+    : '<p class="pista">Nenhum canal ainda. Comece por canais de professores de cursinho que postam Shorts de questões do ENEM.</p>';
+}
+
+async function adicionarCanal(ev) {
+  ev.preventDefault();
+  const f = ev.target, recado = f.closest('.modal').querySelector('.recado-serie'), botao = f.querySelector('[type=submit]');
+  botao.disabled = true; recado.innerHTML = '<div class="recado">Procurando o canal…</div>';
+  try {
+    const r = await api('/api/reels/canais', { method: 'POST', body: JSON.stringify({ link: f.link.value, tipo: f.tipo.value, area: f.area.value || null, direto: f.direto.checked }) });
+    recado.innerHTML = `<div class="recado bom">${escapar(r.message)}</div>`;
+    f.reset(); desenharCanais();
+  } catch (e) { recado.innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; }
+  botao.disabled = false;
+}
+
+async function removerCanal(id) {
+  if (!await confirmar('Parar de buscar vídeos deste canal? Os que já entraram continuam no site.', { sim: 'Remover', perigo: true })) return;
+  try { await api(`/api/reels/canais/${id}`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharCanais();
+}
+
+async function buscarCanaisAgora(botao) {
+  const recado = botao.closest('.modal').querySelector('.recado-serie');
+  botao.disabled = true; recado.innerHTML = '<div class="recado">Conferindo os canais…</div>';
+  try { const r = await api('/api/reels/canais/buscar', { method: 'POST' }); recado.innerHTML = `<div class="recado bom">${escapar(r.message)}</div>`; desenharCanais(); }
+  catch (e) { recado.innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; }
+  botao.disabled = false;
 }
 
 // Administração: pôr um reel numa série, com o número do episódio.

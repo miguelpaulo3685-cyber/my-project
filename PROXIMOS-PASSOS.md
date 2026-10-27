@@ -91,6 +91,9 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 - [x] Primeira visita guiada: 5 questões com dicas e a nota TRI no fim.
 - [x] Reels em série: episódios numerados, "continuar assistindo", selo "Original M&M".
       Falta vocês criarem as primeiras séries (Reels → 📺 Séries → ＋ Nova série; 📺 em cada vídeo).
+- [x] Reels automáticos (27/10): Reels → 📺 Séries → 📡 Canais automáticos. Cola o link de um canal do YouTube
+      e o servidor confere de 3 em 3 horas (feed público, sem chave); Shorts novos vão para a fila de aprovação,
+      ou direto no ar se marcar o canal como de confiança. TikTok não tem feed público: esses continuam à mão.
 - [ ] Teste de 7 dias com amigos (anotar tudo que der errado ou confundir).
 
 ### 5. Por último (combinado em 27/10: depois do conteúdo das questões)
