@@ -1799,14 +1799,27 @@
       stroke-dasharray: 1200; stroke-dashoffset: calc(1200 - min(1, var(--p) * 1.8) * 1200); }
     .pena { transform: translate(calc(40px + min(1, var(--p) * 1.8) * 320px), calc(170px + sin(var(--p) * 40rad) * 6px)); }
     .cena-fim { min-height: 60vh; }
+    /* seta própria (só com mouse): segue o cursor com atraso; os desenhos inclinam e podem ser arrastados */
+    .seta-cursor { position: fixed; left: 0; top: 0; width: 30px; height: 30px; pointer-events: none; z-index: 400;
+      opacity: 0; transition: opacity .2s, width .2s, height .2s; filter: drop-shadow(0 3px 6px rgba(0,0,0,.45)); }
+    html.com-mouse #entrada .historia { cursor: none; }
+    html.com-mouse .seta-cursor.visivel { opacity: 1; }
+    .seta-cursor.sobre { width: 40px; height: 40px; }
+    .seta-cursor.segurando path { fill: #f2c94c; }
+    .arte-caixa { width: 100%; max-width: 520px; justify-self: center; transition: transform .5s cubic-bezier(.2,.9,.3,1.3); will-change: transform; }
+    .cena-livro .arte-caixa { max-width: 460px; }
+    .arte-caixa .arte { max-width: none; }
+    html.com-mouse .arte-caixa { cursor: none; }
+    .arte-caixa.arrastando { transition: none; }
     @media (max-width: 760px) {
       .cena { grid-template-columns: 1fr; text-align: center; min-height: 92vh; gap: 10px; }
-      .cena .arte { max-width: 340px; }
+      .cena .arte, .arte-caixa { max-width: 340px; }
       .cena-texto p { margin: 0 auto; }
     }
     /* quem pediu menos movimento vê tudo pronto e parado */
     @media (prefers-reduced-motion: reduce) {
       .cena { --p: 1 !important; }
+      .arte-caixa { transform: none !important; }
       .planeta, .pano, .seta-rolar, .gota { animation: none !important; }
     }
 
@@ -2349,6 +2362,7 @@
     <!-- História de entrada: rolando, cada área do ENEM sai das páginas do livro. -->
     <div class="historia" id="historia">
       <button class="pular-historia" onclick="pularHistoria()">Pular para entrar ↓</button>
+      <svg class="seta-cursor" id="seta-cursor" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 3 L27 15 L16 17.5 L11 28 Z" fill="#fff" stroke="#111" stroke-width="2" stroke-linejoin="round"/></svg>
 
       <section class="cena cena-livro" aria-label="M&amp;M Estudos">
         <svg class="arte livro" viewBox="0 0 400 260" aria-hidden="true">
@@ -4670,6 +4684,59 @@ const historia = (() => {
       removeEventListener('resize', pedir);
     }
   };
+})();
+
+// Seta própria e desenhos que reagem ao mouse (no celular, a rolagem segue normal).
+(() => {
+  // cada desenho ganha uma caixa: o mouse mexe na caixa, a rolagem continua mexendo no desenho
+  document.querySelectorAll('#historia .cena .arte').forEach(a => {
+    const c = document.createElement('div'); c.className = 'arte-caixa'; a.replaceWith(c); c.appendChild(a);
+  });
+  if (!matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.documentElement.classList.add('com-mouse');
+  let x = innerWidth / 2, y = innerHeight / 2, sx = x, sy = y, ligado = false, arraste = null;
+  const seta = () => document.getElementById('seta-cursor');
+  function quadro() {
+    if (!document.documentElement.classList.contains('com-entrada')) { ligado = false; return; }
+    sx += (x - sx) * .22; sy += (y - sy) * .22;
+    const s = seta(); if (s) s.style.transform = `translate(${sx - 4}px, ${sy - 3}px)`;
+    requestAnimationFrame(quadro);
+  }
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    x = e.clientX; y = e.clientY;
+    const s = seta(); if (!s) return;
+    const naHistoria = !!e.target.closest?.('#historia');
+    s.classList.toggle('visivel', naHistoria);
+    const arte = e.target.closest?.('.arte-caixa');
+    s.classList.toggle('sobre', !!arte);
+    if (arraste) {
+      arraste.el.style.transform = `translate(${x - arraste.x0}px, ${y - arraste.y0}px) rotate(${(x - arraste.x0) / 18}deg)`;
+    } else if (arte) {
+      // inclina na direção do mouse
+      const r = arte.getBoundingClientRect();
+      const dx = (x - r.left) / r.width - .5, dy = (y - r.top) / r.height - .5;
+      arte.style.transform = `perspective(700px) rotateY(${dx * 16}deg) rotateX(${-dy * 16}deg) translate(${dx * 14}px, ${dy * 14}px)`;
+    }
+    if (!ligado && document.documentElement.classList.contains('com-entrada')) { ligado = true; requestAnimationFrame(quadro); }
+  }, { passive: true });
+  addEventListener('pointerdown', e => {
+    const arte = e.pointerType === 'mouse' && e.target.closest?.('.arte-caixa');
+    if (!arte) return;
+    e.preventDefault();
+    arraste = { el: arte, x0: e.clientX, y0: e.clientY };
+    arte.classList.add('arrastando'); seta()?.classList.add('segurando');
+  });
+  const soltar = () => {
+    if (!arraste) return;
+    arraste.el.classList.remove('arrastando'); arraste.el.style.transform = '';  // volta ao lugar com mola
+    arraste = null; seta()?.classList.remove('segurando');
+  };
+  addEventListener('pointerup', soltar); addEventListener('pointercancel', soltar);
+  document.addEventListener('pointerout', e => {
+    const arte = e.target.closest?.('.arte-caixa');
+    if (arte && !arte.contains(e.relatedTarget) && !arraste) arte.style.transform = '';
+  });
 })();
 
 function pularHistoria() {
