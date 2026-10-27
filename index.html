@@ -4981,7 +4981,9 @@ const pc3d = (() => {
   let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [0, 0], pAtual = [5, 5];
   const caixa = () => document.getElementById('entrada');
   const el = id => document.getElementById(id);
-  const ativo = () => matchMedia('(pointer: fine) and (min-width: 900px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // computador = algum mouse e tela larga (?entrada=pc força, para testar)
+  const ativo = () => /[?&]entrada=pc/.test(location.search) || matchMedia('(any-pointer: fine) and (min-width: 820px)').matches;
+  const calmo = matchMedia('(prefers-reduced-motion: reduce)');
 
   function iniciarGL() {
     const c = el('pc-canvas');
@@ -5075,7 +5077,8 @@ const pc3d = (() => {
     pAtual[0] += (pAlvo[0] - pAtual[0]) * .12; pAtual[1] += (pAlvo[1] - pAtual[1]) * .12;
     const fora = Math.abs(pAlvo[0]) > 2, seg = ms / 1000;
     const calma = Math.max(0, Math.min(1, (ULTIMA - .5 - f) * 2));       // a moldura fica parada
-    const alvoRot = fora ? [0, Math.sin(seg * .3) * .15] : [-pAtual[1] * .22, pAtual[0] * .45 + Math.sin(seg * .3) * .05];
+    const balanco = calmo.matches ? 0 : 1;
+    const alvoRot = fora ? [0, Math.sin(seg * .3) * .15 * balanco] : [-pAtual[1] * .22, pAtual[0] * .45 + Math.sin(seg * .3) * .05 * balanco];
     rotAtual[0] += (alvoRot[0] * calma - rotAtual[0]) * .06; rotAtual[1] += (alvoRot[1] * calma - rotAtual[1]) * .06;
 
     const a = Math.min(ULTIMA, Math.floor(f)), t = f - a;
@@ -5181,7 +5184,7 @@ const historia = (() => {
   document.querySelectorAll('#historia .cena .arte').forEach(a => {
     const c = document.createElement('div'); c.className = 'arte-caixa'; a.replaceWith(c); c.appendChild(a);
   });
-  if (!matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!matchMedia('(any-pointer: fine)').matches) return;
   document.documentElement.classList.add('com-mouse');
   let x = innerWidth / 2, y = innerHeight / 2, sx = x, sy = y, ligado = false, arraste = null, rastro = [];
   const seta = () => document.getElementById('seta-cursor');
