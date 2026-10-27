@@ -1824,6 +1824,41 @@
       .cena .arte, .arte-caixa { max-width: 340px; }
       .cena-texto p { margin: 0 auto; }
     }
+    /* versão do computador: fundo escuro e partículas (só com mouse, tela larga e sem pedir menos movimento) */
+    .pc-historia, .pc-rodape { display: none; }
+    html.pc-3d #entrada { background: #232227; }
+    html.pc-3d #entrada .entrada-serra, html.pc-3d #historia { display: none; }
+    html.pc-3d .pc-historia { display: block; }
+    html.pc-3d .pular-historia { position: fixed; top: 18px; right: 22px; margin: 0; float: none; z-index: 6;
+      background: transparent; border-color: rgba(255,255,255,.25); font-weight: 500; color: #ddd; }
+    .pc-canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+    .pc-carregando { position: fixed; inset: 0; display: grid; place-items: center; z-index: 4; color: #d8d8d8;
+      font: 400 14px var(--fonte); letter-spacing: .08em; pointer-events: none; transition: opacity .6s; }
+    .pc-carregando.pronto { opacity: 0; }
+    .pc-t { position: fixed; z-index: 2; margin: 0; color: #e8e8e8; opacity: 0; pointer-events: none; font-family: var(--fonte);
+      font-weight: 400; letter-spacing: -.01em; will-change: opacity, transform; }
+    .pc-nome { top: 50%; font-size: 20px; margin-top: -14px; }
+    .pc-esq { left: 5vw; }
+    .pc-dir { right: 5vw; text-align: right; }
+    .pc-dica { bottom: 28px; left: 0; right: 0; text-align: center; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #9a9a9a; }
+    .pc-texto { top: 44%; max-width: 380px; font-size: 15px; line-height: 1.5; }
+    .pc-meio { left: 58vw; top: 62%; }
+    .pc-circulo { left: 50%; top: 50%; width: var(--d, 700px); height: var(--d, 700px); margin: calc(var(--d, 700px) / -2) 0 0 calc(var(--d, 700px) / -2); overflow: visible; }
+    .pc-circulo text { fill: #e8e8e8; font: 400 26px var(--fonte); letter-spacing: .02em; }
+    .pc-marca { left: 0; top: 0; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+    .pc-anel { width: 38px; height: 38px; border-radius: 50%; box-shadow: inset 0 0 0 1px #e8e8e8; margin: -19px 0 0 -19px; }
+    .pc-rotulo { top: 28px; left: 5vw; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: #8d8d8d; }
+    .pc-area { bottom: 9vh; left: 0; right: 0; text-align: center; font-size: 18px; }
+    .pc-canto { bottom: 9vh; font-size: 11px; color: #8d8d8d; letter-spacing: .04em; }
+    html.pc-3d #entrada-form { z-index: 3; min-height: 100vh; }
+    html.pc-3d .entrada-cartao { grid-template-columns: 1fr; max-width: 470px; margin: 0 auto; min-height: 0; background: rgba(35,34,39,.55);
+      border: 0; box-shadow: none; border-radius: 0; animation: none; }
+    html.pc-3d .lado-arte { display: none; }
+    html.pc-3d .pc-rodape { display: flex; justify-content: space-between; position: absolute; left: 5vw; right: 5vw; bottom: 22px;
+      font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #8d8d8d; }
+    html.pc-3d .pc-rodape a { color: inherit; text-decoration: none; }
+    html.pc-3d.com-mouse #entrada, html.pc-3d.com-mouse #entrada * { cursor: none; }
+    html.pc-3d.com-mouse #entrada input, html.pc-3d.com-mouse #entrada textarea { cursor: text; }
     /* quem pediu menos movimento vê tudo pronto e parado */
     @media (prefers-reduced-motion: reduce) {
       .cena { --p: 1 !important; }
@@ -2368,9 +2403,9 @@
     </svg>
 
     <!-- História de entrada: rolando, cada área do ENEM sai das páginas do livro. -->
+    <button class="pular-historia" onclick="pularHistoria()">Pular para entrar ↓</button>
+    <div class="seta-cursor" id="seta-cursor" aria-hidden="true"><canvas></canvas><div class="seta-cabeca"></div></div>
     <div class="historia" id="historia">
-      <button class="pular-historia" onclick="pularHistoria()">Pular para entrar ↓</button>
-      <div class="seta-cursor" id="seta-cursor" aria-hidden="true"><canvas></canvas><div class="seta-cabeca"></div></div>
 
       <section class="cena cena-livro" aria-label="M&amp;M Estudos">
         <svg class="arte livro" viewBox="0 0 400 260" aria-hidden="true">
@@ -2464,6 +2499,34 @@
           <span class="seta-rolar" aria-hidden="true">↓</span></div>
       </section>
     </div>
+    <!-- No computador: uma nuvem de partículas que vira livro, globo, Brasil e os ícones de cada área. -->
+    <div class="pc-historia" id="pc-historia">
+      <canvas class="pc-canvas" id="pc-canvas" aria-hidden="true"></canvas>
+      <div class="pc-carregando" id="pc-carregando" aria-hidden="true">0%</div>
+      <p class="pc-t pc-nome pc-esq" data-e="0">M&amp;M Estudos</p>
+      <p class="pc-t pc-nome pc-dir" data-e="0">Estudos para o ENEM</p>
+      <p class="pc-t pc-dica" data-e="0">Role para descer</p>
+      <p class="pc-t pc-texto pc-esq" data-e="1">Questões reais do ENEM, de 2009 a 2025. Você resolve, vê a resolução comentada e descobre a sua nota TRI.</p>
+      <svg class="pc-t pc-circulo" data-e="2" viewBox="0 0 1000 1000" aria-hidden="true">
+        <path id="pc-arco-cima" d="M 60,500 A 440,440 0 0 1 940,500" fill="none"/>
+        <path id="pc-arco-baixo" d="M 60,500 A 440,440 0 0 0 940,500" fill="none"/>
+        <text><textPath href="#pc-arco-cima" startOffset="50%" text-anchor="middle">Estude de qualquer lugar</textPath></text>
+        <text dominant-baseline="hanging"><textPath href="#pc-arco-baixo" startOffset="50%" text-anchor="middle">No celular ou no computador</textPath></text>
+      </svg>
+      <p class="pc-t pc-marca" data-e="3" id="pc-marca"><span class="pc-anel"></span>Feito no Brasil</p>
+      <p class="pc-t pc-texto pc-meio" data-e="4">Não é só decorar: você treina com a dificuldade oficial do INEP, vê onde erra e melhora a cada simulado.</p>
+      <p class="pc-t pc-rotulo" data-e="5" data-ate="9">Áreas do ENEM</p>
+      <p class="pc-t pc-area" data-e="5">Matemática</p>
+      <p class="pc-t pc-area" data-e="6">Ciências da Natureza</p>
+      <p class="pc-t pc-area" data-e="7">História</p>
+      <p class="pc-t pc-area" data-e="8">Geografia</p>
+      <p class="pc-t pc-area" data-e="9">Linguagens e Redação</p>
+      <p class="pc-t pc-canto pc-esq" data-e="5" data-ate="9">45 questões por área</p>
+      <p class="pc-t pc-canto pc-dir" data-e="5" data-ate="9">2009 — 2025</p>
+      <p class="pc-t pc-texto pc-esq" data-e="10">E tem muito mais: simulados, Arena, Reels e redações corrigidas pela comunidade.</p>
+      <p class="pc-t pc-texto pc-esq" data-e="11">Feito por dois estudantes, Miguel e Matheus, para quem vai fazer o ENEM.</p>
+      <div class="pc-espaco" id="pc-espaco"></div>
+    </div>
     <div class="entrada-miolo" id="entrada-form">
       <div class="entrada-cartao">
         <div class="lado-form">
@@ -2538,6 +2601,7 @@
         <button class="sem-conta" onclick="continuarSemConta()">Continuar sem conta →</button>
         <small><a href="termos.html">Termos de Uso</a> · <a href="privacidade.html">Privacidade</a></small>
       </div>
+      <div class="pc-rodape"><span>M&amp;M Estudos · © 2026</span><a href="privacidade.html">Este site respeita sua privacidade. Quer saber mais?</a></div>
     </div>
   </div>
 
@@ -4636,10 +4700,426 @@ function abrirFormularioConta(modo, mostrar) {
 }
 
 // Aberta de dentro do site (Entrar, Criar conta): vai direto ao formulário, sem a história.
+// ---------- entrada no computador: partículas que mudam de forma com a rolagem ----------
+// Cada etapa é uma forma (livro, globo, Brasil, ícones das áreas...). Rolar troca de uma
+// para a outra; o mouse gira a forma, empurra e acende os pontos perto dele.
+const pc3d = (() => {
+  const N = 26000, POEIRA = 600;
+  const R = Math.random;
+  const gauss = () => (R() + R() + R() - 1.5) / 1.5;
+  const rotX = (p, a) => [p[0], p[1] * Math.cos(a) - p[2] * Math.sin(a), p[1] * Math.sin(a) + p[2] * Math.cos(a)];
+  const rotY = (p, a) => [p[0] * Math.cos(a) + p[2] * Math.sin(a), p[1], -p[0] * Math.sin(a) + p[2] * Math.cos(a)];
+  let poeira = null;
+
+  // gera N pontos; os primeiros são uma poeira fixa espalhada pela tela, igual em todas as formas
+  function gerar(fn) {
+    if (!poeira) poeira = Array.from({ length: POEIRA }, () => [(R() * 2 - 1) * 2.2, (R() * 2 - 1) * 1.2, (R() * 2 - 1) * .8]);
+    const a = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      const p = i < POEIRA ? poeira[i] : fn(i);
+      a[i * 3] = p[0]; a[i * 3 + 1] = p[1]; a[i * 3 + 2] = p[2];
+    }
+    return a;
+  }
+
+  // desenho 2D (num canvas) vira pontos: miolo nas duas faces e borda mais cheia
+  function deDesenho(desenhar, escala, prof) {
+    const T = 256, c = document.createElement('canvas'); c.width = c.height = T;
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; desenhar(g, T);
+    const d = g.getImageData(0, 0, T, T).data, cheio = (x, y) => d[(y * T + x) * 4 + 3] > 128;
+    const miolo = [], borda = [];
+    for (let y = 1; y < T - 1; y++) for (let x = 1; x < T - 1; x++) {
+      if (!cheio(x, y)) continue;
+      miolo.push(x, y);
+      if (!cheio(x + 1, y) || !cheio(x - 1, y) || !cheio(x, y + 1) || !cheio(x, y - 1)) borda.push(x, y);
+    }
+    if (miolo.length < 400) return null;
+    return gerar(() => {
+      const naBorda = R() < .4, arr = naBorda ? borda : miolo, k = Math.floor(R() * arr.length / 2) * 2;
+      const x = (arr[k] + R() - T / 2) / (T / 2) * escala, y = -(arr[k + 1] + R() - T / 2) / (T / 2) * escala;
+      return [x, y, naBorda ? (R() * 2 - 1) * prof : (R() < .5 ? -1 : 1) * prof];
+    });
+  }
+
+  const nuvem = () => gerar(() => [gauss() * 2.2, gauss() * 1.3, gauss() * 1.2]);
+
+  function livro() {
+    return gerar(() => {
+      const r = R(), s = R() < .5 ? -1 : 1;
+      let p;
+      const folha = (u, v, camada) => [s * (.03 + u * (.92 - camada * .03)), v * (.62 - camada * .02),
+        .22 * Math.sin(Math.min(1, u * 1.8) * Math.PI / 2) - .12 - camada * .1];
+      if (r < .5) {                       // página aberta, com linhas de texto
+        let u = R(), v = R() * 2 - 1;
+        if (R() < .4) { v = Math.round(v * 8) / 8 * .86 + (R() - .5) * .012; u = .12 + R() * (.55 + .2 * Math.abs(Math.sin(v * 13))); }
+        p = folha(u, v, 0);
+      } else if (r < .7) {                // pilha de folhas: borda de fora, de cima e de baixo
+        const L = R(), q = R();
+        p = q < .5 ? folha(1, R() * 2 - 1, L) : folha(R(), q < .75 ? -1 : 1, L);
+      } else if (r < .8) {                // capa, atrás
+        p = [s * R() * .98, (R() * 2 - 1) * .66, -.24 + .06 * Math.sin(R() * Math.PI)];
+      } else {                            // folhas virando no ar
+        const th = [.3, .62, 2.6][Math.floor(R() * 3)], u = R(), v = R() * 2 - 1;
+        p = [Math.cos(th) * u * .9, v * .6, -.1 + Math.sin(th) * u * .9 - .12 * Math.sin(u * Math.PI)];
+      }
+      p = rotX(p, -.62);
+      return [p[0] * .95, p[1] * .95 - .2, p[2] * .95 - .25];
+    });
+  }
+
+  function fatias() {
+    const n = 16, Rr = .78;
+    return gerar(() => {
+      const j = Math.floor(R() * n), y = -Rr + (j + .5) * 2 * Rr / n, rr = Math.sqrt(Rr * Rr - y * y), a = R() * Math.PI * 2;
+      const k = R() < .7 ? rr * (.9 + .1 * R()) : rr * Math.sqrt(R());
+      return rotX([Math.cos(a) * k + Math.sin(j * 2.3) * .09, y + (j >= n / 2 ? .08 : -.02), Math.sin(a) * k], .3);
+    });
+  }
+
+  function globo() {
+    return gerar(() => {
+      let u = R() * 2 - 1, a = R() * Math.PI * 2;
+      const q = R();
+      if (q < .12) u = Math.round(u * 4) / 4;                         // paralelos
+      else if (q < .24) a = Math.round(a / (Math.PI / 6)) * Math.PI / 6;  // meridianos
+      const k = Math.sqrt(1 - u * u), r = .72 * (R() < .9 ? 1 : Math.cbrt(R()));
+      return [Math.cos(a) * k * r, u * r, Math.sin(a) * k * r];
+    });
+  }
+
+  // contorno do Brasil (longitude, latitude), simplificado
+  const BRASIL = [[-60.7,5.2],[-59.8,4.4],[-57.9,4.0],[-55.9,2.5],[-54.0,2.2],[-51.6,4.2],[-50.4,1.8],[-49.9,1.0],[-48.5,-1.2],
+    [-47.3,-0.6],[-45.3,-1.3],[-44.3,-2.5],[-41.8,-2.9],[-39.9,-2.8],[-38.5,-3.7],[-37.2,-4.7],[-35.4,-5.2],[-34.8,-7.1],
+    [-35.1,-9.0],[-36.4,-10.5],[-37.4,-11.6],[-38.5,-13.0],[-39.0,-15.0],[-39.2,-17.7],[-39.7,-19.6],[-40.9,-21.6],[-42.0,-22.9],
+    [-43.2,-23.0],[-44.7,-23.3],[-46.3,-24.0],[-47.9,-25.1],[-48.6,-26.4],[-48.7,-28.5],[-50.2,-30.9],[-52.1,-32.2],[-53.4,-33.7],
+    [-53.5,-32.6],[-55.6,-31.0],[-57.6,-30.2],[-56.0,-28.5],[-54.6,-27.3],[-53.8,-27.1],[-54.6,-25.6],[-54.3,-24.0],[-55.4,-23.9],
+    [-55.8,-22.3],[-57.9,-22.1],[-58.1,-20.1],[-57.6,-18.0],[-58.4,-16.3],[-60.2,-16.2],[-60.4,-13.7],[-62.2,-13.1],[-63.9,-12.5],
+    [-65.3,-11.0],[-66.6,-9.9],[-68.6,-11.0],[-70.6,-11.0],[-70.5,-9.5],[-72.7,-9.4],[-73.9,-7.3],[-73.1,-5.8],[-72.9,-5.2],
+    [-70.6,-4.2],[-69.9,-4.2],[-69.4,-1.2],[-69.8,1.7],[-67.8,1.9],[-66.9,1.2],[-65.5,0.7],[-64.0,1.8],[-63.4,3.9],[-62.0,4.1]];
+  const MAPA = (lon, lat) => [(lon + 53.5) * .043, (lat + 14) * .043];
+  function brasil() {
+    const pol = BRASIL.map(([a, b]) => MAPA(a, b));
+    const dentro = (x, y) => {
+      let c = false;
+      for (let i = 0, j = pol.length - 1; i < pol.length; j = i++) {
+        const [xi, yi] = pol[i], [xj, yj] = pol[j];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+      }
+      return c;
+    };
+    return gerar(() => {
+      if (R() < .22) {                    // borda
+        const i = Math.floor(R() * pol.length), [a, b] = pol[i], [c, d] = pol[(i + 1) % pol.length], t = R();
+        return [a + (c - a) * t + (R() - .5) * .012, b + (d - b) * t + (R() - .5) * .012, (R() - .5) * .03];
+      }
+      for (;;) {
+        const x = -.95 + R() * 1.85, y = -.9 + R() * 1.75;
+        if (dentro(x, y)) return [x, y, (R() - .5) * .05];
+      }
+    });
+  }
+
+  function fita() {
+    return gerar(() => {
+      const s = R() * 2 - 1, fio = R() < .5 ? 0 : 1, phi = s * Math.PI * 1.6 + fio * Math.PI;
+      const t = R() < .45 ? (R() < .5 ? -1 : 1) * (.9 + .1 * R()) : R() * 2 - 1, w = .26;
+      return [s * 2.1, s * .55 + .08 * Math.sin(s * 4 + fio) + Math.cos(phi) * t * w, .1 * Math.sin(s * 3) + Math.sin(phi) * t * w];
+    });
+  }
+
+  function parabola() {   // sela (z = x² - y²) em malha, que gira com o mouse
+    return gerar(() => {
+      let a, b;
+      if (R() < .75) {
+        const k = Math.floor(R() * 13) / 12 * 2 - 1, q = R() * 2 - 1;
+        if (R() < .5) { a = k; b = q; } else { a = q; b = k; }
+      } else { a = R() * 2 - 1; b = R() * 2 - 1; }
+      const p = rotX(rotY([a * .9, (a * a - b * b) * .45, b * .9], .75), .45);
+      return [p[0] * 1.05, p[1] * 1.05 - .05, p[2] * 1.05];
+    });
+  }
+
+  function sistema() {
+    const orbitas = [.36, .5, .66, .84, 1.04, 1.26];
+    const planetas = [[.36, .5, .03], [.5, 2.4, .045], [.66, 4.1, .05], [.84, 5.6, .035], [1.04, 1.2, .1], [1.26, 3.3, .08]];
+    return gerar(() => {
+      const r = R();
+      let p;
+      if (r < .24) {                     // sol
+        const u = R() * 2 - 1, a = R() * Math.PI * 2, k = Math.sqrt(1 - u * u), rr = .2 * (R() < .8 ? 1 : Math.cbrt(R()));
+        p = [Math.cos(a) * k * rr, u * rr, Math.sin(a) * k * rr];
+      } else if (r < .62) {              // órbitas
+        const o = orbitas[Math.floor(R() * orbitas.length)], a = R() * Math.PI * 2;
+        p = [Math.cos(a) * o, (R() - .5) * .006, Math.sin(a) * o];
+      } else {                           // planetas (o último com anel)
+        const j = Math.floor(R() * planetas.length), [o, ang, raio] = planetas[j];
+        const cx = Math.cos(ang) * o, cz = Math.sin(ang) * o;
+        if (j === 5 && R() < .45) {
+          const a = R() * Math.PI * 2, rr = raio * (1.5 + R() * .6);
+          p = rotX([cx + Math.cos(a) * rr, 0, cz + Math.sin(a) * rr], 0);
+        } else {
+          const u = R() * 2 - 1, a = R() * Math.PI * 2, k = Math.sqrt(1 - u * u);
+          p = [cx + Math.cos(a) * k * raio, u * raio, cz + Math.sin(a) * k * raio];
+        }
+      }
+      return rotX(p, .45);
+    });
+  }
+
+  // cavalo do xadrez, de perfil
+  const cavaleiro = () => deDesenho((g, T) => {
+    g.scale(T / 100, T / 100);
+    g.beginPath();
+    [[31,80],[35,63],[41,51],[31,53],[21,57],[15,53],[13,47],[22,37],[29,27],[33,17],[37,9],[42,14],[46,8],[52,14],
+      [62,18],[72,30],[78,46],[78,62],[74,80]].forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
+    g.closePath(); g.fill();
+    g.fillRect(24, 80, 52, 7); g.fillRect(17, 88, 66, 8);
+    g.globalCompositeOperation = 'destination-out';
+    g.beginPath(); g.arc(44, 26, 2.6, 0, Math.PI * 2); g.fill();
+  }, .95, .1) || globo();
+
+  function vulcao() {
+    return gerar(() => {
+      const r = R();
+      let p;
+      if (r < .66) {                     // encosta
+        const h = Math.pow(R(), .75), a = R() * Math.PI * 2;
+        const rad = .1 + (1 - h) * .95 + .035 * Math.sin(a * 7 + h * 9) * (1 - h);
+        p = [Math.cos(a) * rad, -.75 + h * .95, Math.sin(a) * rad];
+      } else if (r < .74) {              // boca da cratera
+        const a = R() * Math.PI * 2, rad = .1 + R() * .05;
+        p = [Math.cos(a) * rad, .2 + (R() - .5) * .02, Math.sin(a) * rad];
+      } else {                           // fumaça e lava subindo
+        const k = R(), y = .22 + k * .85, abre = .04 + k * .32;
+        p = [gauss() * abre + Math.sin(k * 5) * .08, y, gauss() * abre * .7];
+      }
+      p = rotX(p, .28);
+      return [p[0], p[1] - .05, p[2]];
+    });
+  }
+
+  const letras = () => deDesenho((g, T) => {
+    g.font = `700 ${T * .62}px Georgia, "Times New Roman", serif`;
+    g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.fillText('Aa', T / 2, T * .5);
+    g.fillRect(T * .2, T * .78, T * .6, T * .025);
+  }, 1.05, .09) || globo();
+
+  function arcos() {
+    return gerar(() => {
+      const x = R() * 4.4 - 2.2, fio = R() < .6 ? 0 : 1;
+      const y = -.62 + .52 * Math.abs(Math.cos((x + fio * .32) * Math.PI / .95));
+      return rotX([x, y + (R() - .5) * .03, (R() * 2 - 1) * .22 - fio * .3], .2);
+    });
+  }
+
+  function galaxia() {
+    return gerar(() => {
+      let p;
+      if (R() < .14) {
+        const u = R() * 2 - 1, a = R() * Math.PI * 2, k = Math.sqrt(1 - u * u), rr = .14 * Math.cbrt(R());
+        p = [Math.cos(a) * k * rr, u * rr * .6, Math.sin(a) * k * rr];
+      } else {
+        const braco = Math.floor(R() * 2), rr = .08 + Math.pow(R(), .7) * 1.1;
+        const a = rr * 5 + braco * Math.PI + gauss() * .35 * (1 - rr * .4), abre = .04 + .08 * rr;
+        p = [Math.cos(a) * rr + gauss() * abre, gauss() * .03 * (1.2 - rr), Math.sin(a) * rr + gauss() * abre];
+      }
+      return rotX(p, .75);
+    });
+  }
+
+  // moldura em volta do cartão de entrar (em unidades da tela: a altura inteira vale 2)
+  function moldura(cx, cy, w, h) {
+    const e = .07;
+    return gerar(() => {
+      const per = 2 * (w + h), d = R() * per;
+      let x, y;
+      if (d < w) { x = cx - w / 2 + d; y = cy + h / 2 - R() * e; }
+      else if (d < 2 * w) { x = cx - w / 2 + (d - w); y = cy - h / 2 + R() * e; }
+      else if (d < 2 * w + h) { x = cx - w / 2 + R() * e; y = cy - h / 2 + (d - 2 * w); }
+      else { x = cx + w / 2 - R() * e; y = cy - h / 2 + (d - 2 * w - h); }
+      return [x, y, (R() - .5) * .04];
+    });
+  }
+
+  const FORMAS = [livro, fatias, globo, brasil, fita, parabola, sistema, cavaleiro, vulcao, letras, arcos, galaxia];
+  const ULTIMA = FORMAS.length;             // a moldura do cartão
+  const VS = `
+    attribute vec3 aDe; attribute vec3 aPara; attribute vec4 aSorte;
+    uniform float uMix, uTempo, uAspecto, uPx; uniform vec2 uRot, uPonteiro;
+    varying float vA;
+    vec3 girar(vec3 p, vec2 r) {
+      float cy = cos(r.y), sy = sin(r.y);
+      p = vec3(p.x * cy + p.z * sy, p.y, -p.x * sy + p.z * cy);
+      float cx = cos(r.x), sx = sin(r.x);
+      return vec3(p.x, p.y * cx - p.z * sx, p.y * sx + p.z * cx);
+    }
+    void main() {
+      float m = clamp(uMix * 1.5 - aSorte.x * .5, 0., 1.);
+      m = m * m * (3. - 2. * m);
+      vec3 p = mix(aDe, aPara, m);
+      p += (aSorte.yzw - .5) * .9 * sin(m * 3.14159);
+      p += .008 * vec3(sin(uTempo * 1.1 + aSorte.x * 40.), cos(uTempo * .9 + aSorte.y * 40.), sin(uTempo * .7 + aSorte.z * 40.));
+      p = girar(p, uRot);
+      float persp = 3. / (3. - clamp(p.z, -3., 2.4));
+      vec2 tela = vec2(p.x * persp / uAspecto, p.y * persp);
+      vec2 d = (tela - uPonteiro) * vec2(uAspecto, 1.);
+      float perto = smoothstep(.26, 0., length(d));
+      tela += normalize(d + 1e-5) * perto * .05 / vec2(uAspecto, 1.);
+      gl_Position = vec4(tela, 0., 1.);
+      gl_PointSize = uPx * (.7 + aSorte.y * 1.1) * persp * (1. + perto * .8);
+      vA = (.22 + .5 * aSorte.z) * (1. + perto * 1.8) * clamp(persp - .2, .3, 1.3);
+    }`;
+  const FS = `
+    precision mediump float; varying float vA;
+    void main() {
+      float a = smoothstep(.5, .1, length(gl_PointCoord - .5)) * vA;
+      gl_FragColor = vec4(vec3(.95) * a, a);
+    }`;
+
+  let gl, prog, loc = {}, bufs = [], bufNuvem, pronto = false, ligado = false, raf = 0, dpr = 1, W = 0, H = 0;
+  let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [0, 0], pAtual = [5, 5];
+  const caixa = () => document.getElementById('entrada');
+  const el = id => document.getElementById(id);
+  const ativo = () => matchMedia('(pointer: fine) and (min-width: 900px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function iniciarGL() {
+    const c = el('pc-canvas');
+    gl = c.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' });
+    if (!gl) return false;
+    const sh = (tipo, src) => { const s = gl.createShader(tipo); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, FS));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
+    gl.useProgram(prog);
+    ['aDe', 'aPara', 'aSorte'].forEach(n => { loc[n] = gl.getAttribLocation(prog, n); gl.enableVertexAttribArray(loc[n]); });
+    ['uMix', 'uTempo', 'uAspecto', 'uPx', 'uRot', 'uPonteiro'].forEach(n => { loc[n] = gl.getUniformLocation(prog, n); });
+    const sorte = new Float32Array(N * 4); for (let i = 0; i < sorte.length; i++) sorte[i] = R();
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, sorte, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(loc.aSorte, 4, gl.FLOAT, false, 0, 0);
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
+    return true;
+  }
+  const subir = dados => { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, dados, gl.STATIC_DRAW); return b; };
+
+  // a moldura acompanha o tamanho do cartão quando a página chega ao fim
+  function refazerMoldura() {
+    const cartao = document.querySelector('#entrada-form .entrada-cartao');
+    if (!cartao || !gl) return;
+    const cx0 = caixa(), fim = cx0.scrollHeight - cx0.clientHeight;
+    const r = cartao.getBoundingClientRect(), topo = r.top + cx0.scrollTop - fim, u = H / 2, folga = 26;
+    const dados = moldura((r.left + r.width / 2 - W / 2) / u, -(topo + r.height / 2 - H / 2) / u, (r.width + folga * 2) / u, (r.height + folga * 2) / u);
+    if (bufs[ULTIMA]) gl.deleteBuffer(bufs[ULTIMA]);
+    bufs[ULTIMA] = subir(dados);
+  }
+
+  function medir() {
+    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    const c = el('pc-canvas'); c.width = W * dpr; c.height = H * dpr;
+    el('pc-espaco').style.height = `${ULTIMA * 100}vh`;
+    if (gl) { gl.viewport(0, 0, c.width, c.height); if (pronto) refazerMoldura(); }
+    const circ = document.querySelector('.pc-circulo');
+    if (circ) circ.style.setProperty('--d', `${(.72 * H / 2 * 1.02 + 30) / .44}px`);
+  }
+
+  // as formas são montadas aos poucos, mostrando a porcentagem
+  function montar() {
+    const carregando = el('pc-carregando');
+    bufNuvem = subir(nuvem());
+    let i = 0;
+    const passo = () => {
+      if (i < FORMAS.length) {
+        bufs[i] = subir(FORMAS[i]()); i++;
+        carregando.textContent = `${Math.round(i / FORMAS.length * 100)}%`;
+        return setTimeout(passo, 0);
+      }
+      pronto = true; medir(); carregando.classList.add('pronto');
+    };
+    passo();
+  }
+
+  const onPonteiro = e => { pAlvo = [e.clientX / W * 2 - 1, -(e.clientY / H * 2 - 1)]; };
+  const onSair = () => { pAlvo = [5, 5]; };
+
+  function textos() {
+    document.querySelectorAll('#pc-historia .pc-t').forEach(t => {
+      const k = +t.dataset.e, k2 = t.dataset.ate ? +t.dataset.ate : k;
+      const op = Math.max(0, Math.min(1, (f - (k - .2)) / .15, ((k2 + .62) - f) / .15));
+      t.style.opacity = op.toFixed(3);
+      const sobe = (1 - op) * 14;
+      if (t.classList.contains('pc-circulo')) t.style.transform = `scale(${.96 + op * .04})`;
+      else if (!t.classList.contains('pc-marca')) t.style.transform = `translateY(${sobe}px)`;
+    });
+    // o anel do "Feito no Brasil" fica em cima de Brasília, girando junto com o mapa
+    const marca = el('pc-marca');
+    if (marca && marca.style.opacity !== '0') {
+      let [x, y] = MAPA(-47.9, -15.8), z = 0;
+      const cy = Math.cos(rotAtual[1]), sy = Math.sin(rotAtual[1]);
+      [x, z] = [x * cy + z * sy, -x * sy + z * cy];
+      const cx = Math.cos(rotAtual[0]), sx = Math.sin(rotAtual[0]);
+      [y, z] = [y * cx - z * sx, y * sx + z * cx];
+      const persp = 3 / (3 - z);
+      marca.style.transform = `translate(${W / 2 + x * persp * H / 2}px, ${H / 2 - y * persp * H / 2}px)`;
+    }
+  }
+
+  function quadro(ms) {
+    raf = requestAnimationFrame(quadro);
+    if (!pronto) return;
+    const c = caixa(), fim = Math.max(1, c.scrollHeight - c.clientHeight);
+    const alvo = Math.min(ULTIMA, c.scrollTop / fim * ULTIMA);
+    f += (alvo - f) * .09;
+    if (Math.abs(alvo - f) < .0005) f = alvo;
+    intro = Math.min(1, intro + 1 / 100);
+    pAtual[0] += (pAlvo[0] - pAtual[0]) * .12; pAtual[1] += (pAlvo[1] - pAtual[1]) * .12;
+    const fora = Math.abs(pAlvo[0]) > 2, seg = ms / 1000;
+    const calma = Math.max(0, Math.min(1, (ULTIMA - .5 - f) * 2));       // a moldura fica parada
+    const alvoRot = fora ? [0, Math.sin(seg * .3) * .15] : [-pAtual[1] * .22, pAtual[0] * .45 + Math.sin(seg * .3) * .05];
+    rotAtual[0] += (alvoRot[0] * calma - rotAtual[0]) * .06; rotAtual[1] += (alvoRot[1] * calma - rotAtual[1]) * .06;
+
+    const a = Math.min(ULTIMA, Math.floor(f)), t = f - a;
+    let de = bufs[a], para = bufs[Math.min(ULTIMA, a + 1)], mix = Math.max(0, (t - .55) / .45);
+    if (intro < 1 && f < .55) { de = bufNuvem; para = bufs[0]; mix = intro; }
+    if (a >= ULTIMA) { de = para = bufs[ULTIMA]; mix = 0; }
+    gl.bindBuffer(gl.ARRAY_BUFFER, de); gl.vertexAttribPointer(loc.aDe, 3, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, para); gl.vertexAttribPointer(loc.aPara, 3, gl.FLOAT, false, 0, 0);
+    gl.uniform1f(loc.uMix, mix); gl.uniform1f(loc.uTempo, seg);
+    gl.uniform1f(loc.uAspecto, W / H); gl.uniform1f(loc.uPx, 1.5 * dpr);
+    gl.uniform2f(loc.uRot, rotAtual[0], rotAtual[1]);
+    gl.uniform2f(loc.uPonteiro, fora ? 9 : pAtual[0], fora ? 9 : pAtual[1]);
+    gl.clearColor(.137, .133, .153, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.POINTS, 0, N);
+    textos();
+  }
+
+  return {
+    // devolve true quando a versão do computador assumiu a entrada
+    ligar() {
+      if (!ativo()) { document.documentElement.classList.remove('pc-3d'); return false; }
+      if (ligado) return true;
+      if (!gl && !iniciarGL()) return false;
+      document.documentElement.classList.add('pc-3d');
+      ligado = true;
+      medir();
+      if (!bufNuvem) montar();
+      addEventListener('resize', medir); addEventListener('pointermove', onPonteiro, { passive: true });
+      document.addEventListener('pointerleave', onSair);
+      raf = requestAnimationFrame(quadro);
+      return true;
+    },
+    desligar() {
+      if (!ligado) return;
+      ligado = false; cancelAnimationFrame(raf);
+      removeEventListener('resize', medir); removeEventListener('pointermove', onPonteiro);
+      document.removeEventListener('pointerleave', onSair);
+    },
+  };
+})();
+
 function abrirEntrada() {
   document.documentElement.classList.add('com-entrada');
-  livroEmPontos.ligar();
-  historia.ligar();
+  if (!pc3d.ligar()) { livroEmPontos.ligar(); historia.ligar(); }
   requestAnimationFrame(() => document.getElementById('entrada-form').scrollIntoView());
 }
 
@@ -4647,6 +5127,7 @@ function fecharEntrada() {
   document.documentElement.classList.remove('com-entrada');
   livroEmPontos.desligar();
   historia.desligar();
+  pc3d.desligar();
 }
 // ---------- história de entrada: o quanto cada cena já foi rolada vira --p (0 a 1) ----------
 const historia = (() => {
@@ -4744,7 +5225,7 @@ const historia = (() => {
     if (e.pointerType !== 'mouse') return;
     x = e.clientX; y = e.clientY;
     const s = seta(); if (!s) return;
-    const naHistoria = !!e.target.closest?.('#historia');
+    const naHistoria = !!e.target.closest?.('#entrada');
     s.classList.toggle('visivel', naHistoria);
     const arte = e.target.closest?.('.arte-caixa');
     s.classList.toggle('sobre', !!e.target.closest?.('a, button'));
@@ -9927,7 +10408,7 @@ carregarProgresso();
 desenharTudo();
 // Prepara o formulário da tela de entrada (se ela estiver aparecendo, já fica pronta).
 abrirConta('entrar', false);
-if (document.documentElement.classList.contains('com-entrada')) { livroEmPontos.ligar(); historia.ligar(); }
+if (document.documentElement.classList.contains('com-entrada') && !pc3d.ligar()) { livroEmPontos.ligar(); historia.ligar(); }
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
 window.addEventListener('load', () => {
   verificarAPI(); carregarGoogle(); registrarServiceWorker(); desenharConviteApp();

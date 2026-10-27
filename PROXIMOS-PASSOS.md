@@ -70,6 +70,11 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
       saem as áreas (parábolas, sistema solar, castelo com cavaleiros, vulcão em erupção, pena escrevendo
       "Redação nota mil"), até o formulário. Sem biblioteca externa (a CSP do site não deixa); "Pular para
       entrar"; quem usa "reduzir movimento" vê tudo parado. Aberta de dentro do site, vai direto ao formulário.
+- [x] Entrada no computador igual à referência (27/10): fundo escuro e 26 mil partículas (WebGL, sem biblioteca)
+      que viram livro, esfera em fatias, globo, mapa do Brasil, fita, sela (Matemática), sistema solar, cavalo
+      do xadrez (História), vulcão (Geografia), "Aa" (Linguagens), arcos, galáxia e, no fim, a moldura do
+      cartão de entrar. O mouse gira a forma, empurra e acende os pontos; o cursor é um ponto de luz com rastro.
+      Só com mouse e tela de 900px ou mais; no celular continua a versão com as montanhas.
 - [ ] Novo estilo visual (se ainda quiserem): um só, testado em todas as telas.
 
 ## Já feito recentemente
