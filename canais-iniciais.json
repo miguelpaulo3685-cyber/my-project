@@ -1,1 +1,10 @@
-[]
+[
+  { "link": "https://youtube.com/@pedroassaad", "tipo": "dica", "direto": true },
+  { "link": "https://youtube.com/@universonarrado", "tipo": "dica", "area": "natureza", "direto": true },
+  { "link": "https://youtube.com/@sandrocuriodicasdemat", "tipo": "dica", "area": "matematica", "direto": true },
+  { "link": "https://youtube.com/@cienciatododia", "tipo": "dica", "area": "natureza", "direto": true },
+  { "link": "https://youtube.com/@deboraaladim", "tipo": "dica", "area": "humanas", "direto": true },
+  { "link": "https://youtube.com/@bemfacilnareal", "tipo": "dica", "direto": true },
+  { "link": "https://youtube.com/@marcosvasconcellos", "tipo": "dica", "direto": true },
+  { "link": "https://youtube.com/@tinocandotv", "tipo": "dica", "direto": true }
+]
