@@ -41,7 +41,7 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 ### 2. Segurança e LGPD
 - [x] Mensagens só de quem a pessoa segue, por padrão.
 - [x] Cadastro confirma 13 anos ou mais.
-- [ ] Revisar a Política de Privacidade (incluir as mensagens diretas).
+- [x] Revisar a Política de Privacidade (mensagens diretas, Arena, 13 anos) — branch `politica-mensagens`, falta o "sim" para publicar.
 - [ ] Pesquisar o nome "M&M" no INPI (risco de conflito com a marca do chocolate).
 
 ### 3. Infraestrutura (Miguel e Matheus)
