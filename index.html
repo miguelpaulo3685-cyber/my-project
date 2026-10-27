@@ -1963,6 +1963,9 @@
     .colecao button.raro { box-shadow: inset 0 0 0 1px #6fb3e0; }
     .colecao button.epico { box-shadow: inset 0 0 0 1px #c49be8; }
     .colecao button.convite { box-shadow: inset 0 0 0 1px #3fae6a; }
+    .erro-admin span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .erro-admin b { font-weight: 600; font-size: .88rem; overflow-wrap: anywhere; }
+    .erro-admin small { color: var(--texto-fraco); }
     /* Painel de crescimento (Administração) */
     .grafico-dias { display: flex; align-items: flex-end; gap: 2px; height: 110px; padding: 6px 0;
       border-bottom: 1px solid var(--borda); }
@@ -2887,6 +2890,31 @@
 const API_URL = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? 'http://localhost:3000'
   : 'https://enem-api-cbo6.onrender.com';
+
+// Aviso automático de erros: um erro no navegador de quem usa vai para o
+// servidor (até 5 por visita, sem repetir), que avisa os administradores.
+// Só a mensagem, a linha do código e a tela aberta: nada da pessoa.
+(() => {
+  const enviados = new Set();
+  const mandar = (mensagem, onde) => {
+    const m = String(mensagem || '').slice(0, 300);
+    if (!m || enviados.has(m) || enviados.size >= 5) return;
+    enviados.add(m);
+    const aberta = document.querySelector('main.pagina:not(.escondido)');
+    try {
+      fetch(`${API_URL}/api/erros`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mensagem: m, onde: String(onde || '').slice(0, 200), tela: aberta ? aberta.id.replace('tela-', '') : '' }) }).catch(() => {});
+    } catch (e) { /* aviso de erro nunca pode dar erro */ }
+  };
+  window.addEventListener('error', e => {
+    if (!e.message) return; // imagem ou script que não carregou: não é defeito do código
+    mandar(e.message, `${(e.filename || '').split('/').pop().split('?')[0]}:${e.lineno || 0}`);
+  });
+  window.addEventListener('unhandledrejection', e => {
+    const r = e.reason;
+    mandar(r && r.message ? r.message : String(r), r && r.stack ? (String(r.stack).split('\n')[1] || '').trim().split('/').pop() : '');
+  });
+})();
 
 const SEM_SERVIDOR = 'Não consegui falar com o servidor. Ele pode estar acordando (leva até 1 minuto) ou fora do ar. Tente de novo daqui a pouco.';
 
@@ -8209,6 +8237,7 @@ async function desenharPainelAdmin() {
       ${numero(n.aparelhos_com_avisos, 'aparelhos com avisos')}
     </div>
     <p class="pista">"Voltaram em 2+ dias" é o número mais importante: mostra quem criou o hábito.</p>
+    <div id="admin-erros"></div>
     <div id="admin-crescimento"></div>
     <div class="rotulo-modal">Moderação</div>
     ${moderar.length ? moderar.map(([q, texto, acao]) => `<div class="linha-aviso"><span><b>${q}</b> ${texto}</span>
@@ -8228,6 +8257,28 @@ async function desenharPainelAdmin() {
   desenharFaltando();
   desenharMensagensDenunciadas();
   desenharCrescimento();
+  desenharErrosAdmin();
+}
+
+// Erros do site (erros.js): o servidor junta os iguais e avisa por e-mail.
+async function desenharErrosAdmin() {
+  const alvo = document.getElementById('admin-erros');
+  let d;
+  try { d = await api('/api/admin/erros'); } catch (e) { alvo.innerHTML = ''; return; }
+  const recentes = d.erros.filter(e => Date.now() - new Date(e.ultima_vez) < 7 * 86400000);
+  alvo.innerHTML = `<div class="rotulo-modal">Erros do site ${recentes.length ? `(${recentes.length} na semana)` : ''}</div>
+    ${d.erros.length ? `${d.erros.map(e => `<div class="linha-aviso erro-admin"><span>
+        <b>${e.origem === 'site' ? '🖥️' : '⚙️'} ${escapar(e.mensagem)}</b>
+        <small>${e.onde ? `${escapar(e.onde)} · ` : ''}${plural(e.vezes, 'vez', 'vezes')} · última ${tempoAtras(e.ultima_vez)}</small></span></div>`).join('')}
+      <p class="pista">⚙️ = servidor, 🖥️ = navegador de quem usa. Depois de corrigir, limpe a lista: se o erro voltar, vocês são avisados de novo.</p>
+      <button class="acao discreta pequena" onclick="limparErrosAdmin()">Marcar todos como resolvidos</button>`
+      : '<p class="pista">Nenhum erro registrado 👍 Se aparecer um novo, vocês recebem e-mail e aviso no celular.</p>'}`;
+}
+
+async function limparErrosAdmin() {
+  if (!await confirmar('Tirar todos os erros da lista? Os que voltarem a acontecer aparecem de novo.', { sim: 'Limpar' })) return;
+  try { await api('/api/admin/erros', { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharErrosAdmin();
 }
 
 // Crescimento: só números somados, sem nome de ninguém.
@@ -9151,6 +9202,10 @@ function abrirPeloLink(abrir) {
   if (tipo === 'reels') return irPara('reels');
   if (tipo === 'treinar') return irPara('treinar');
   if (tipo === 'arena') return abrirArena();
+  if (tipo === 'admin' && usuarioLogado && usuarioLogado.admin) {
+    abrirConta('logado');
+    return setTimeout(() => document.getElementById('painel-admin').scrollIntoView({ behavior: 'smooth' }), 600);
+  }
   if (tipo === 'conversa' && id) return abrirConversa(id);
 }
 

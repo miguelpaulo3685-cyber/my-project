@@ -637,6 +637,21 @@ async function runMigrations() {
     `);
     console.log('✅ Origem das contas e convites');
 
+    // Aviso automático de erros (erros.js): um registro por tipo de erro.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS erros_site (
+        id SERIAL PRIMARY KEY,
+        chave VARCHAR(32) UNIQUE NOT NULL,
+        origem VARCHAR(10) NOT NULL,
+        mensagem VARCHAR(300) NOT NULL,
+        onde VARCHAR(200),
+        vezes INT NOT NULL DEFAULT 1,
+        primeira_vez TIMESTAMP DEFAULT NOW(),
+        ultima_vez TIMESTAMP DEFAULT NOW()
+      );
+    `);
+    console.log('✅ Tabela de erros do site');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

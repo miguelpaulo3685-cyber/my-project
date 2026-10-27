@@ -33,6 +33,26 @@ const pool = new Pool({
   connectionTimeoutMillis: 20000,
 });
 
+// Aviso automático de erros (erros.js): tudo que vai para console.error, e
+// os erros do navegador, ficam guardados e os administradores são avisados.
+const vigiaDeErros = require('./erros').criarVigia(pool, { avisarAdmins: avisarAdminsDeErros });
+vigiaDeErros.vigiarConsole();
+setInterval(() => vigiaDeErros.gravar(), require('./erros').INTERVALO_GRAVAR).unref();
+
+async function avisarAdminsDeErros({ titulo, linhas }) {
+  const { rows } = await pool.query('SELECT id, username, email, COALESCE(email_verificado, FALSE) AS ok FROM usuarios WHERE admin');
+  const texto = `${linhas.map(l => correio.escaparHtml(l)).join('<br>')}<br><br>A lista completa está em Configurações → Administração → Erros do site.`;
+  for (const a of rows) {
+    require('./avisos').enviarPush(pool, a.id, { titulo: `⚠️ ${titulo}`, corpo: linhas[0], abrir: 'admin', tag: 'erros' }).catch(() => {});
+    if (a.ok) {
+      correio.enviar(a.email, correio.montar({
+        nome: a.username, titulo: `⚠️ M&M Estudos: ${titulo}`, texto, botao: 'Abrir a administração',
+        link: `${correio.SITE_URL}?abrir=admin`, rodape: 'Você recebe este aviso porque é administrador. No máximo um a cada 3 horas.'
+      })).catch(erro => console.log('Alerta de erros não enviado por e-mail:', erro.message));
+    }
+  }
+}
+
 // O Render fica na frente do servidor como proxy: sem isto, req.ip seria o
 // IP do proxy e todos os freios tratariam o site inteiro como uma pessoa só.
 app.set('trust proxy', 1);
@@ -1193,6 +1213,7 @@ require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador 
 require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./crescimento')(app, { pool, exigirModerador });
+require('./erros').registrarRotasDeErros(app, { pool, vigia: vigiaDeErros, limitar, auth, exigirModerador });
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });
@@ -1429,6 +1450,8 @@ cron.schedule('0 4 * * *', async () => {
     await pool.query(`DELETE FROM atividades WHERE created_at < NOW() - INTERVAL '30 days'`);
     await pool.query(`DELETE FROM sala_mensagens WHERE created_at < NOW() - INTERVAL '1 day'`);
     await pool.query(`DELETE FROM presenca WHERE visto_em < NOW() - INTERVAL '2 days'`);
+    // Erro que não acontece há 30 dias já foi resolvido (ou não importa mais).
+    await pool.query(`DELETE FROM erros_site WHERE ultima_vez < NOW() - INTERVAL '30 days'`);
   } catch (erro) {
     console.error('❌ Erro ao limpar sessões:', erro.message);
   }

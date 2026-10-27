@@ -14,12 +14,22 @@ permissions: {}
 jobs:
   visitar:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - name: Chamar /api/health
         run: |
-          codigo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 https://enem-api-cbo6.onrender.com/api/health || echo "000")
-          echo "Resposta: HTTP $codigo"
-          # 401 = a versão nova (com mensagens) está no ar; 404 = o Render ainda roda a antiga.
-          novo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://enem-api-cbo6.onrender.com/api/mensagens/nao-lidas || echo "000")
-          echo "Rota de mensagens: HTTP $novo"
+          # Duas tentativas: acordando, o Render pode levar até 1 minuto.
+          for tentativa in 1 2; do
+            codigo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 https://enem-api-cbo6.onrender.com/api/health || echo "000")
+            echo "Tentativa $tentativa: HTTP $codigo"
+            [ "$codigo" = "200" ] && break
+            sleep 20
+          done
+          # 401 = a versão com o aviso de erros está no ar; 404 = o Render ainda roda uma antiga.
+          novo=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 https://enem-api-cbo6.onrender.com/api/admin/erros || echo "000")
+          echo "Rota de erros: HTTP $novo"
+          # Fora do ar: o robô falha e o GitHub manda e-mail para o dono do repositório.
+          if [ "$codigo" != "200" ]; then
+            echo "::error::O servidor não respondeu (HTTP $codigo). Confira o Render."
+            exit 1
+          fi
