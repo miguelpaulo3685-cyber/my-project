@@ -679,6 +679,17 @@ async function runMigrations() {
     await pool.query(`ALTER TABLE questoes ADD COLUMN IF NOT EXISTS em_revisao BOOLEAN NOT NULL DEFAULT FALSE`);
     console.log('✅ Questões em revisão');
 
+    // Resolução comentada de cada questão (resolucoes.js).
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS resolucoes (
+        questao_id INT PRIMARY KEY REFERENCES questoes(id) ON DELETE CASCADE,
+        texto TEXT NOT NULL,
+        autor_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+    console.log('✅ Resoluções comentadas');
+
     // Tabela de histórico de cache
     await pool.query(`
       CREATE TABLE IF NOT EXISTS cache_log (

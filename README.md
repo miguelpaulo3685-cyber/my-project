@@ -71,6 +71,8 @@ uma tabela ou coluna que o código espera.
 | `GET /api/reels/series` (séries, com "continuar assistindo" para quem tem conta) / `GET /api/reels?serie=ID` (episódios em ordem) | livre |
 | `POST /api/reels/:id/assistido` | login (o site chama depois de 8 s do vídeo tocando) |
 | `POST /api/reels/series`, `PUT` e `DELETE /api/reels/series/:id`, `PUT /api/reels/:id/serie` (`serie_id`, `episodio`) | administrador |
+| `GET /api/questoes/:id/resolucao` | livre (resolução comentada, depois de responder) |
+| `PUT /api/admin/resolucoes/:id` (`texto`; vazio apaga), `GET /api/admin/mais-erradas` | administrador |
 | `POST /api/erros` (erro do navegador: mensagem, linha e tela) | livre, com freio |
 | `GET` e `DELETE /api/admin/erros` | administrador |
 | `GET /api/admin/crescimento` (cadastros por dia, quem voltou em 7 dias, origem e convites, só números somados) | administrador |

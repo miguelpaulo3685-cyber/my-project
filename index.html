@@ -1995,6 +1995,10 @@
     .colecao button.raro { box-shadow: inset 0 0 0 1px #6fb3e0; }
     .colecao button.epico { box-shadow: inset 0 0 0 1px #c49be8; }
     .colecao button.convite { box-shadow: inset 0 0 0 1px #3fae6a; }
+    .resolucao { margin: 12px 0; border: 1px solid var(--borda); border-radius: 12px; padding: 10px 14px; background: var(--superficie); }
+    .resolucao summary { cursor: pointer; font-weight: 700; }
+    .resolucao .enunciado { margin: 10px 0; }
+    .form-serie textarea { width: 100%; }
     .item-revisao { border: 1px solid var(--borda); border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
     .item-revisao summary { cursor: pointer; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .item-revisao .enunciado { margin: 10px 0; font-size: .92rem; }
@@ -4206,10 +4210,9 @@ function responder(escolhida) {
       <div class="linha">${r.linha}</div>
     </div>
     <div class="nota-gabarito">
-      <strong>Resposta correta: alternativa ${letra}</strong> — destacada em verde.<br>
-      A explicação de cada alternativa ainda não está disponível: a fonte das questões
-      fornece o gabarito, mas não a justificativa.
+      <strong>Resposta correta: alternativa ${letra}</strong> — destacada em verde.
     </div>
+    <div id="resolucao-questao"></div>
     <div class="botoes-pos-resposta">
       ${botaoDiscussao(q.id, '💬 Ver discussão')}
       <button class="acao" onclick="proximaQuestao()">
@@ -4218,6 +4221,48 @@ function responder(escolhida) {
     </div>`;
 
   document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  carregarResolucao(q.id);
+}
+
+// ---------- resolução comentada (aparece depois de responder) ----------
+async function carregarResolucao(id) {
+  const alvo = document.getElementById('resolucao-questao');
+  if (!alvo) return;
+  let r = null;
+  try { r = (await api(`/api/questoes/${id}/resolucao`)).resolucao; } catch (e) { /* sem rede: segue sem */ }
+  if (questaoAtual && questaoAtual.id !== id) return;
+  const admin = usuarioLogado && usuarioLogado.admin;
+  alvo.innerHTML = r ? `<details class="resolucao"><summary>📘 Ver resolução comentada</summary>
+      <div class="enunciado">${formatarEnunciado(r.texto)}</div>
+      ${admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Editar resolução</button>` : ''}</details>`
+    : admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Escrever resolução comentada</button>` : '';
+  alvo.dataset.texto = r ? r.texto : '';
+}
+
+function editarResolucao(id, texto) {
+  const atual = texto !== undefined ? texto : (document.getElementById('resolucao-questao')?.dataset.texto || '');
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<form class="modal form-serie" onsubmit="salvarResolucao(event, ${id})">
+    <div class="modal-topo"><h2>Resolução comentada</h2><button type="button" class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <p class="pista">Explique o caminho até a resposta, em passos curtos, e por que as outras alternativas estão erradas.
+      Aceita **negrito** e _itálico_. Deixe vazio para apagar.</p>
+    <textarea name="texto" rows="12" maxlength="6000">${escapar(atual)}</textarea>
+    <button class="acao" type="submit" style="margin-top:10px">Salvar</button>
+    <div class="recado-serie"></div></form>`;
+  document.body.appendChild(fundo);
+}
+
+async function salvarResolucao(ev, id) {
+  ev.preventDefault();
+  const f = ev.target;
+  try {
+    const d = await api(`/api/admin/resolucoes/${id}`, { method: 'PUT', body: JSON.stringify({ texto: f.texto.value }) });
+    f.closest('.fundo-modal').remove();
+    avisoSim(d.message);
+    if (questaoAtual && questaoAtual.id === id) carregarResolucao(id);
+    if (document.getElementById('admin-erradas')) desenharMaisErradas();
+  } catch (e) { f.querySelector('.recado-serie').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; }
 }
 
 // Manda a resposta para o servidor, que usa o conjunto de todas para medir a
@@ -8505,6 +8550,7 @@ async function desenharPainelAdmin() {
     <p class="pista">As questões vêm da api.enem.dev. Se depois de buscar ainda faltar, é porque a fonte não tem essas questões
       (o aviso mostra quais). Dá para cadastrar essas à mão logo abaixo, copiando do caderno do INEP.</p>
     <div id="admin-revisao"></div>
+    <div id="admin-erradas"></div>
     <div class="rotulo-modal">Questões que faltam</div>
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
@@ -8512,6 +8558,26 @@ async function desenharPainelAdmin() {
   desenharCrescimento();
   desenharErrosAdmin();
   desenharRevisao();
+  desenharMaisErradas();
+}
+
+// As questões que os alunos mais erram: as primeiras a ganhar resolução comentada.
+let maisErradas = [];
+async function desenharMaisErradas() {
+  const alvo = document.getElementById('admin-erradas');
+  let d;
+  try { d = await api('/api/admin/mais-erradas'); } catch (e) { alvo.innerHTML = ''; return; }
+  maisErradas = d.questoes;
+  alvo.innerHTML = `<div class="rotulo-modal">Mais erradas (${d.com_resolucao} questões já têm resolução)</div>
+    ${maisErradas.length ? `<p class="pista">Comece por estas. Abra, confira a questão e escreva a resolução comentada.</p>
+    ${maisErradas.map(q => `<details class="item-revisao"><summary><b>${q.ano} · Questão ${q.numero}</b>
+        <span>${q.acerto}% de acerto · ${q.respostas} respostas</span> ${q.resolucao ? '✅' : ''}</summary>
+      <div class="enunciado">${formatarEnunciado(q.contexto || '')}</div>
+      <ol class="alts-revisao">${(typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : q.alternativas).map((a, i) =>
+        `<li class="${i === q.correta ? 'certa' : ''}"><b>${LETRAS[i]}</b> ${formatarEnunciado(a)}</li>`).join('')}</ol>
+      <button class="acao pequena" onclick="editarResolucao(${q.id}, maisErradas.find(x => x.id === ${q.id}).resolucao || '')">
+        ${q.resolucao ? '✏️ Editar resolução' : '✏️ Escrever resolução'}</button></details>`).join('')}`
+    : '<p class="pista">Ainda não há questões com 10 ou mais respostas.</p>'}`;
 }
 
 // Questões de 2024 e 2025 tiradas dos cadernos do INEP que ainda não foram conferidas.

@@ -33,7 +33,12 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
       recorte do caderno no enunciado e nas alternativas; 8 com alternativas em desenho fora do padrão
       (2024-127, 161, 168, 172 e 174; 2025-130, 138 e 169) aparecem inteiras como imagem, e os botões dizem
       "Alternativa A (na imagem acima)". Ferramentas em `ferramentas-inep/` (também para a prova de 2026).
-- [ ] **Resolução comentada**, ao menos das questões mais erradas.
+- [~] **Resolução comentada** (27/10): o aluno vê "📘 Ver resolução comentada" depois de responder.
+      Administradores escrevem no próprio site: no botão "✏️ Escrever resolução" que aparece na questão
+      respondida, ou em Administração → **Mais erradas** (as 40 com menor % de acerto, com ✅ nas que já têm).
+      10 já escritas (2024-93, 95, 97, 99, 114, 116, 139, 150, 152 e 153) em `resolucoes.json`.
+      Para o Claude escrever mais: copie a lista "Mais erradas" (ano e número) e peça "escreva as resoluções
+      destas questões em resolucoes.json". O arquivo nunca apaga o que foi escrito pelo site.
 
 ### 2. Segurança e LGPD
 - [x] Mensagens só de quem a pessoa segue, por padrão.
