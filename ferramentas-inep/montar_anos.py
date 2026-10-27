@@ -9,6 +9,8 @@ revisadas = set('2024-1-ingles 2024-3-ingles 2024-5-ingles 2024-21 2024-25 2024-
 ORIGINAL = json.load(open(f'{S}/original.json')) if os.path.exists(f'{S}/original.json') else {}
 ORIGINAL.pop('2024-172', None); ORIGINAL.pop('2025-130', None)  # alternativas em linha / circuitos: ficam em revisão
 if os.path.exists(f'{S}/liberar.json'): revisadas |= set(json.load(open(f'{S}/liberar.json')))
+INTEIRAS = json.load(open(f'{S}/inteiras.json')) if os.path.exists(f'{S}/inteiras.json') else {}
+revisadas |= set(INTEIRAS)
 ANULADAS = {'2024-129', '2025-123', '2025-132', '2025-174'}
 os.makedirs(f'{REPO}/questoes-inep', exist_ok=True)
 resumo = {}
@@ -22,7 +24,7 @@ for ano in (2024, 2025):
             q = {**q, **rev.get(k, {})}
             n = q['numero']
             if f'{ano}-{n}' in ANULADAS: continue
-            if not q['achou_alternativas']: fora.append(k); continue
+            if not q['achou_alternativas'] and k not in INTEIRAS: fora.append(k); continue
             gab = g.get(f"{n}-{q['lingua']}" if q['lingua'] else str(n))
             if gab not in list('ABCDE'): fora.append(k); continue
             def figura(nome):
@@ -30,7 +32,11 @@ for ano in (2024, 2025):
                 if not os.path.exists(orig): raise SystemExit(f'figura faltando: {nome}')
                 shutil.copy(orig, f'{REPO}/img/questoes/{nome}.jpg')
                 return f'![]({IMG}/{nome}.jpg)'
-            if k in ORIGINAL:
+            if k in INTEIRAS:
+                # alternativas em desenho fora do padrão: a questão inteira do caderno, com as letras
+                contexto = '\n\n'.join(f'![]({IMG}/{n}.jpg)' for n in INTEIRAS[k])
+                alts = [f'Alternativa {L} (na imagem acima)' for L in 'ABCDE']
+            elif k in ORIGINAL:
                 # enunciado e alternativas recortados do caderno (questões com fórmula difícil)
                 usa = lambda t: re.sub(r'!\[\]\([^)]*/([^/)]+)\.jpg\)', lambda m: figura(m.group(1)), t)
                 contexto = usa(ORIGINAL[k]['contexto']); alts = [usa(a) for a in ORIGINAL[k]['alternativas']]

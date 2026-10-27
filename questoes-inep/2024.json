@@ -2097,6 +2097,22 @@
  },
  {
   "ano": 2024,
+  "numero": 127,
+  "lingua": null,
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-127-inteira1.jpg)",
+  "alternativas": [
+   "Alternativa A (na imagem acima)",
+   "Alternativa B (na imagem acima)",
+   "Alternativa C (na imagem acima)",
+   "Alternativa D (na imagem acima)",
+   "Alternativa E (na imagem acima)"
+  ],
+  "correta": 4,
+  "pagina": 12,
+  "dia": 2
+ },
+ {
+  "ano": 2024,
   "numero": 128,
   "lingua": null,
   "contexto": "Placas solares comuns dependem de dias ensolarados para gerar energia. Mas podemos gerar eletricidade com a ajuda de gotas de chuva, revestindo placas solares com uma fina camada de grafeno. Os íons dissociados a partir da água da chuva (Am⁺ e Bⁿ⁻) tornam a combinação grafeno e água da chuva um par perfeito para geração de energia. O processo requer apenas uma camada de grafeno para que grande quantidade de elétrons (e⁻) se movimente ao longo da superfície.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-128.jpg)\n\nTANG, Q. et al. A Solar Cell that is Triggered by Sun and Rain. **Angewandte Chemie International Edition**, n. 55, 2016 (adaptado).\n\nAo produzir eletricidade em dias chuvosos, o grafeno",
@@ -2609,6 +2625,22 @@
  },
  {
   "ano": 2024,
+  "numero": 161,
+  "lingua": null,
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-161-inteira1.jpg)",
+  "alternativas": [
+   "Alternativa A (na imagem acima)",
+   "Alternativa B (na imagem acima)",
+   "Alternativa C (na imagem acima)",
+   "Alternativa D (na imagem acima)",
+   "Alternativa E (na imagem acima)"
+  ],
+  "correta": 1,
+  "pagina": 23,
+  "dia": 2
+ },
+ {
+  "ano": 2024,
   "numero": 162,
   "lingua": null,
   "contexto": "Uma imobiliária iniciou uma campanha de divulgação para promover a venda de apartamentos que podem ser pagos em 100 parcelas mensais. O valor da primeira delas é fixado no momento da compra, com o pagamento dessa primeira parcela. A partir da segunda parcela, o valor é determinado pela aplicação de um acréscimo percentual fixo ao valor da parcela anterior. Como atrativo, a imobiliária fará o pagamento de todas as parcelas correspondentes ao mês de aniversário do comprador.\n\nUm cliente, que faz aniversário no mês de maio, decidiu comprar um desses apartamentos por meio do financiamento oferecido pela imobiliária, e pretende escolher o mês mais adequado para realizar essa compra, de modo que o valor total dos pagamentos seja o menor possível.\n\nQual é o mês que esse cliente deverá escolher para realizar a compra do apartamento?",
@@ -2705,6 +2737,22 @@
  },
  {
   "ano": 2024,
+  "numero": 168,
+  "lingua": null,
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-168-inteira1.jpg)",
+  "alternativas": [
+   "Alternativa A (na imagem acima)",
+   "Alternativa B (na imagem acima)",
+   "Alternativa C (na imagem acima)",
+   "Alternativa D (na imagem acima)",
+   "Alternativa E (na imagem acima)"
+  ],
+  "correta": 0,
+  "pagina": 26,
+  "dia": 2
+ },
+ {
+  "ano": 2024,
   "numero": 169,
   "lingua": null,
   "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-169-orig1.jpg)",
@@ -2755,18 +2803,17 @@
   "ano": 2024,
   "numero": 172,
   "lingua": null,
-  "contexto": "Um aeroporto disponibiliza o serviço de transporte gratuito entre seus dois terminais utilizando os ônibus A e B, que partem simultaneamente, de hora em hora, de terminais diferentes. A distância entre os terminais é de 9 000 metros, e o percurso total dos ônibus, de um terminal ao outro, é monitorado por um sistema de cinco câmeras que cobrem diferentes partes do trecho, conforme o esquema.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-172.jpg)\n\nO alcance de cada uma das cinco câmeras é:\n\n1\n• câmera I: do percurso;\n5\n\n3\n• câmera II: do percurso;\n10\n\n1\n• câmera III: do percurso;\n10\n\n1\n• câmera IV: do percurso;\n10\n\n3\n• câmera V: do percurso.\n10\n\nEm determinado horário, o ônibus A parte do terminal 1 e realiza o percurso total com velocidade constante de 250 m/min; enquanto o ônibus B, que parte do terminal 2, realiza o percurso total com velocidade constante de 150 m/min.\n\nQual câmera registra o momento em que os ônibus A e B se encontram?",
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-172-inteira1.jpg)",
   "alternativas": [
-   "I",
-   "II",
-   "III",
-   "IV",
-   "V"
+   "Alternativa A (na imagem acima)",
+   "Alternativa B (na imagem acima)",
+   "Alternativa C (na imagem acima)",
+   "Alternativa D (na imagem acima)",
+   "Alternativa E (na imagem acima)"
   ],
   "correta": 3,
   "pagina": 28,
-  "dia": 2,
-  "em_revisao": true
+  "dia": 2
  },
  {
   "ano": 2024,
@@ -2781,6 +2828,22 @@
    "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-173-altE.jpg)"
   ],
   "correta": 0,
+  "pagina": 29,
+  "dia": 2
+ },
+ {
+  "ano": 2024,
+  "numero": 174,
+  "lingua": null,
+  "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2024-174-inteira1.jpg)",
+  "alternativas": [
+   "Alternativa A (na imagem acima)",
+   "Alternativa B (na imagem acima)",
+   "Alternativa C (na imagem acima)",
+   "Alternativa D (na imagem acima)",
+   "Alternativa E (na imagem acima)"
+  ],
+  "correta": 2,
   "pagina": 29,
   "dia": 2
  },

@@ -28,15 +28,11 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
       pela imagem da página. Agora são 93 em `questoes-manuais.json`; figuras em `img/questoes/`.
       Como baixar os PDFs do INEP: o servidor deles não manda o certificado intermediário, então é
       preciso juntar o da RNP (`secure.globalsign.com/cacert/rnpicpedugr46ovtlsca2025.crt`) ao `--cacert`.
-- [x] **Provas de 2024 e 2025** tiradas dos cadernos do INEP (27/10): **358 questões liberadas**.
-      As de matemática e ciências com fórmula usam o recorte do próprio caderno (enunciado e alternativas),
-      fiel ao original. Anuladas: 2024-129 e 2025-123, 132 e 174. Ferramentas em `ferramentas-inep/`.
-      Faltam 8, todas com alternativas em desenho fora do padrão:
-      - **Em revisão** (Administração → Questões em revisão, com a imagem do caderno e o botão
-        "Está certa: liberar"): 2024-172 (alternativas em linha) e 2025-130 (circuitos).
-      - **De fora** (cadastrar em Administração → Questões que faltam, o formulário aceita imagem em cada
-        alternativa, ou pedir ao Claude para recortar): 2024-127, 161, 168 e 174; 2025-138 e 169.
-      - Prova de 2026: quando o INEP publicar, repetir as ferramentas (`ferramentas-inep/LEIA-ME.md`).
+- [x] **Provas de 2024 e 2025 completas** (27/10), tiradas dos cadernos do INEP: 184 questões de 2024 e
+      182 de 2025 (todas, menos as anuladas 2024-129 e 2025-123, 132 e 174). As de fórmula difícil usam o
+      recorte do caderno no enunciado e nas alternativas; 8 com alternativas em desenho fora do padrão
+      (2024-127, 161, 168, 172 e 174; 2025-130, 138 e 169) aparecem inteiras como imagem, e os botões dizem
+      "Alternativa A (na imagem acima)". Ferramentas em `ferramentas-inep/` (também para a prova de 2026).
 - [ ] **Resolução comentada**, ao menos das questões mais erradas.
 
 ### 2. Segurança e LGPD
