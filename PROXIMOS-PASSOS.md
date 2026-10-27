@@ -66,9 +66,10 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - [ ] Teste de 7 dias com amigos (anotar tudo que der errado ou confundir).
 
 ### 5. Por último (combinado em 27/10: depois do conteúdo das questões)
-- [ ] Tela de login com animações estilo Awwwards (GSAP): abertura animada, fundo com
-      profundidade, botões magnéticos, transição ao entrar. Leve no celular, respeitando
-      "reduzir movimento", no máximo 1-2 s e dá para pular.
+- [x] Página de entrada com rolagem (27/10), inspirada em ingrassiadaniel.it: um livro se abre e, rolando,
+      saem as áreas (parábolas, sistema solar, castelo com cavaleiros, vulcão em erupção, pena escrevendo
+      "Redação nota mil"), até o formulário. Sem biblioteca externa (a CSP do site não deixa); "Pular para
+      entrar"; quem usa "reduzir movimento" vê tudo parado. Aberta de dentro do site, vai direto ao formulário.
 - [ ] Novo estilo visual (se ainda quiserem): um só, testado em todas as telas.
 
 ## Já feito recentemente

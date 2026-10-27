@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://www.youtube-nocookie.com">
   <link rel="preconnect" href="https://i.ytimg.com">
   <link rel="dns-prefetch" href="https://www.tiktok.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap">
   <style>
     /* ===================== TEMAS ===================== */
     :root {
@@ -1747,6 +1747,68 @@
     html.com-entrada body { overflow: hidden; }
 
     .entrada-serra { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    /* ---------- história de entrada (rolagem) ---------- */
+    .historia { position: relative; color: #f4f1ea; }
+    .pular-historia { position: sticky; top: 12px; float: right; margin: 12px 14px 0 0; z-index: 5; background: rgba(0,0,0,.45);
+      color: #fff; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; padding: 8px 14px; font: 600 .85rem Inter, sans-serif; cursor: pointer; backdrop-filter: blur(6px); }
+    .cena { --p: 0; min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 24px;
+      max-width: 1080px; margin: 0 auto; padding: 40px 20px; clear: both; }
+    .cena-livro, .cena-fim { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .cena .arte { width: 100%; max-width: 520px; justify-self: center; overflow: visible; }
+    .cena-texto { opacity: calc(var(--p) * 3 - .3); transform: translateY(calc((1 - min(1, var(--p) * 2.5)) * 30px)); }
+    .cena-livro .cena-texto, .cena-fim .cena-texto { opacity: 1; transform: none; }
+    .cena-texto h1 { font: 700 clamp(2rem, 5vw, 3.4rem)/1.05 Fraunces, Georgia, serif; margin: 10px 0; }
+    .cena-texto h2 { font: 700 clamp(1.6rem, 4vw, 2.6rem)/1.1 Fraunces, Georgia, serif; margin: 6px 0 10px; }
+    .cena-texto p { font-size: 1.05rem; line-height: 1.55; color: #e2ddd2; max-width: 420px; }
+    .cena-livro .cena-texto p, .cena-fim .cena-texto p { margin: 0 auto; }
+    .cena-texto .area { display: inline-block; font: 800 .78rem Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--cor); background: rgba(0,0,0,.35); padding: 5px 10px; border-radius: 999px; }
+    .seta-rolar { display: inline-block; margin-top: 18px; font-size: 1.6rem; animation: rolar 1.6s ease-in-out infinite; }
+    @keyframes rolar { 50% { transform: translateY(8px); opacity: .5; } }
+    /* livro: as páginas se abrem a partir da lombada */
+    .livro { max-width: 460px; }
+    .pagina-esq { transform-origin: 200px 140px; transform: scaleX(calc(.08 + min(1, var(--p) * 2.2) * .92)); }
+    .pagina-dir { transform-origin: 200px 140px; transform: scaleX(calc(.08 + min(1, var(--p) * 2.2) * .92)); }
+    .livro-brilho { opacity: min(1, var(--p) * 2); }
+    .faiscas { transform: translateY(calc(var(--p) * -60px)); opacity: min(1, var(--p) * 3); }
+    /* matemática: as curvas se desenham */
+    .traco { stroke-dasharray: 1; stroke-dashoffset: calc(1 - min(1, var(--p) * 2)); }
+    .traco.t2 { stroke-dashoffset: calc(1 - min(1, max(0, var(--p) * 2 - .3))); }
+    .traco.t3 { stroke-dashoffset: calc(1 - min(1, max(0, var(--p) * 2 - .5))); }
+    .formula { font: 600 22px Fraunces, Georgia, serif; fill: #fff; opacity: calc(var(--p) * 3 - 1); }
+    .ponto { transform: translateX(calc((var(--p) - .5) * 260px)); }
+    /* natureza: o sistema gira e cresce */
+    .sistema { transform: scale(calc(.55 + min(1, var(--p) * 2) * .45)) rotate(calc((1 - min(1, var(--p) * 2)) * -40deg)); transform-origin: 50% 50%; }
+    .planeta { transform-origin: 200px 150px; animation: orbita linear infinite; }
+    .p1 { animation-duration: 6s; } .p2 { animation-duration: 10s; } .p3 { animation-duration: 15s; } .p4 { animation-duration: 24s; }
+    @keyframes orbita { to { transform: rotate(360deg); } }
+    /* história: castelo sobe e cavaleiros avançam */
+    .castelo { transform: translateY(calc((1 - min(1, var(--p) * 2)) * 80px)); }
+    .c1 { transform: translateX(calc((min(1, var(--p) * 2) - 1) * 160px)); }
+    .c2 { transform: translateX(calc((1 - min(1, var(--p) * 2)) * 160px)); }
+    .pano { transform-origin: 199px 56px; animation: tremula 1.4s ease-in-out infinite; }
+    @keyframes tremula { 50% { transform: scaleX(.85) skewY(4deg); } }
+    /* geografia: o vulcão entra em erupção */
+    .vulcao { transform: translateY(calc((1 - min(1, var(--p) * 2)) * 60px)); }
+    .escorre { stroke-dasharray: 1; stroke-dashoffset: calc(1 - min(1, max(0, var(--p) * 2.2 - .4))); }
+    .fumaca { opacity: min(1, var(--p) * 2); transform: translateY(calc(var(--p) * -40px)); }
+    .gota { animation: gota 1.6s ease-out infinite; }
+    @keyframes gota { from { transform: translate(0, 0); opacity: 1; } to { transform: translate(var(--dx), 120px); opacity: 0; } }
+    /* linguagens: a pena escreve */
+    .escrita { font: 600 58px Caveat, 'Segoe Script', cursive; fill: none; stroke: #f6e7cf; stroke-width: 1.4;
+      stroke-dasharray: 1200; stroke-dashoffset: calc(1200 - min(1, var(--p) * 1.8) * 1200); }
+    .pena { transform: translate(calc(40px + min(1, var(--p) * 1.8) * 320px), calc(170px + sin(var(--p) * 40rad) * 6px)); }
+    .cena-fim { min-height: 60vh; }
+    @media (max-width: 760px) {
+      .cena { grid-template-columns: 1fr; text-align: center; min-height: 92vh; gap: 10px; }
+      .cena .arte { max-width: 340px; }
+      .cena-texto p { margin: 0 auto; }
+    }
+    /* quem pediu menos movimento vê tudo pronto e parado */
+    @media (prefers-reduced-motion: reduce) {
+      .cena { --p: 1 !important; }
+      .planeta, .pano, .seta-rolar, .gota { animation: none !important; }
+    }
 
     .entrada-miolo {
       position: relative; min-height: 100%;
@@ -2284,7 +2346,103 @@
       <rect width="1440" height="900" filter="url(#granulado)" opacity=".16"/>
     </svg>
 
-    <div class="entrada-miolo">
+    <!-- História de entrada: rolando, cada área do ENEM sai das páginas do livro. -->
+    <div class="historia" id="historia">
+      <button class="pular-historia" onclick="pularHistoria()">Pular para entrar ↓</button>
+
+      <section class="cena cena-livro" aria-label="M&amp;M Estudos">
+        <svg class="arte livro" viewBox="0 0 400 260" aria-hidden="true">
+          <g class="livro-brilho"><circle cx="200" cy="120" r="110" fill="url(#brilho-livro)"/></g>
+          <defs><radialGradient id="brilho-livro"><stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></radialGradient></defs>
+          <g class="pagina-esq"><path d="M200 60 Q140 40 60 52 L60 222 Q140 210 200 230 Z" fill="#f4ead3" stroke="#3a2f22" stroke-width="3"/>
+            <path d="M85 85 H175 M85 105 H175 M85 125 H165 M85 145 H175 M85 165 H150" stroke="#b8a888" stroke-width="3" stroke-linecap="round"/></g>
+          <g class="pagina-dir"><path d="M200 60 Q260 40 340 52 L340 222 Q260 210 200 230 Z" fill="#fbf4e2" stroke="#3a2f22" stroke-width="3"/>
+            <path d="M225 85 H315 M225 105 H315 M225 125 H305 M225 145 H315 M225 165 H290" stroke="#b8a888" stroke-width="3" stroke-linecap="round"/></g>
+          <path d="M200 60 V230" stroke="#3a2f22" stroke-width="3"/>
+          <g class="faiscas">
+            <circle cx="150" cy="40" r="5" fill="#4a7fe0"/><circle cx="250" cy="34" r="6" fill="#17a97a"/>
+            <circle cx="120" cy="70" r="4" fill="#d9568c"/><circle cx="285" cy="68" r="5" fill="#e8893a"/><circle cx="200" cy="22" r="4" fill="#f2c94c"/>
+          </g>
+        </svg>
+        <div class="cena-texto">
+          <h1>Todo o ENEM cabe num livro.</h1>
+          <p>Role para abrir.</p>
+          <span class="seta-rolar" aria-hidden="true">↓</span>
+        </div>
+      </section>
+
+      <section class="cena" style="--cor:#4a7fe0">
+        <svg class="arte" viewBox="0 0 400 300" aria-hidden="true">
+          <path d="M20 250 H385 M60 285 V15" stroke="#9fb6e6" stroke-width="2" opacity=".6"/>
+          <path class="traco" pathLength="1" d="M70 30 Q200 470 330 30" stroke="#4a7fe0" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path class="traco t2" pathLength="1" d="M40 245 Q200 -90 360 245" stroke="#7fa6ff" stroke-width="4" fill="none" stroke-linecap="round" stroke-dasharray="0"/>
+          <path class="traco t3" pathLength="1" d="M40 200 C140 200 160 60 360 40" stroke="#f2c94c" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <circle class="ponto" cx="200" cy="250" r="8" fill="#fff"/>
+          <text class="formula" x="245" y="120">y = ax² + bx + c</text>
+        </svg>
+        <div class="cena-texto"><span class="area">Matemática</span><h2>Funções, gráficos e geometria</h2>
+          <p>As parábolas deixam de assustar quando você treina com as questões que mais caem.</p></div>
+      </section>
+
+      <section class="cena" style="--cor:#17a97a">
+        <svg class="arte sistema" viewBox="0 0 400 300" aria-hidden="true">
+          <g class="orbitas" fill="none" stroke="#5fd3a8" stroke-opacity=".35">
+            <circle cx="200" cy="150" r="55"/><circle cx="200" cy="150" r="85"/><circle cx="200" cy="150" r="115"/><circle cx="200" cy="150" r="140"/>
+          </g>
+          <circle cx="200" cy="150" r="30" fill="#f6c343"/><circle cx="200" cy="150" r="40" fill="#f6c343" opacity=".25"/>
+          <g class="planeta p1"><circle cx="255" cy="150" r="7" fill="#c9a27a"/></g>
+          <g class="planeta p2"><circle cx="285" cy="150" r="10" fill="#4fa3ff"/></g>
+          <g class="planeta p3"><circle cx="315" cy="150" r="8" fill="#e5633b"/></g>
+          <g class="planeta p4"><circle cx="340" cy="150" r="15" fill="#e8c38f"/><ellipse cx="340" cy="150" rx="24" ry="6" fill="none" stroke="#d4a86a" stroke-width="3"/></g>
+        </svg>
+        <div class="cena-texto"><span class="area">Ciências da Natureza</span><h2>Do átomo ao sistema solar</h2>
+          <p>Física, Química e Biologia com a dificuldade oficial do INEP em cada questão.</p></div>
+      </section>
+
+      <section class="cena" style="--cor:#d9568c">
+        <svg class="arte" viewBox="0 0 400 300" aria-hidden="true">
+          <path class="castelo" d="M60 260 V150 H80 V135 H95 V150 H110 V135 H125 V150 H145 V110 H160 V95 H175 V110 H190 V95 H205 V110 H220 V95 H235 V110 H250 V150 H270 V135 H285 V150 H300 V135 H315 V150 H335 V260 Z" fill="#3a2a3a"/>
+          <path d="M180 260 V215 Q197 195 215 215 V260 Z" fill="#1d141d"/>
+          <g class="bandeira"><path d="M197 95 V45" stroke="#3a2a3a" stroke-width="4"/><path class="pano" d="M199 47 Q220 40 240 50 Q220 58 199 66 Z" fill="#d9568c"/></g>
+          <g class="cavaleiro c1"><path d="M40 270 l18-30 h40 l12-18 8 6 -8 22 v20 h-8 v-15 h-30 v15 h-8 v-15 l-8 15 z" fill="#d9568c"/>
+            <circle cx="72" cy="214" r="9" fill="#d9568c"/><path d="M68 222 v18 M80 205 l26 -34" stroke="#d9568c" stroke-width="5" stroke-linecap="round"/></g>
+          <g class="cavaleiro c2"><path d="M360 270 l-18-30 h-40 l-12-18 -8 6 8 22 v20 h8 v-15 h30 v15 h8 v-15 l8 15 z" fill="#f08cb7"/>
+            <circle cx="328" cy="214" r="9" fill="#f08cb7"/><path d="M332 222 v18 M320 205 l-26 -34" stroke="#f08cb7" stroke-width="5" stroke-linecap="round"/></g>
+        </svg>
+        <div class="cena-texto"><span class="area">História</span><h2>Reinos, revoluções e o Brasil</h2>
+          <p>Contexto histórico com textos e imagens de verdade, como no ENEM.</p></div>
+      </section>
+
+      <section class="cena" style="--cor:#e5633b">
+        <svg class="arte vulcao" viewBox="0 0 400 300" aria-hidden="true">
+          <g class="fumaca"><circle cx="200" cy="70" r="22" fill="#8a8a8a" opacity=".5"/><circle cx="225" cy="50" r="28" fill="#9a9a9a" opacity=".4"/><circle cx="185" cy="38" r="20" fill="#aaa" opacity=".35"/></g>
+          <g class="lava" id="lava"></g>
+          <path d="M40 280 L165 105 Q200 92 235 105 L360 280 Z" fill="#5a4636"/>
+          <path d="M165 105 Q200 92 235 105 L222 130 Q200 120 178 130 Z" fill="#e5633b"/>
+          <path class="escorre" d="M195 122 Q190 170 175 200 Q168 220 172 240" stroke="#ff8a3d" stroke-width="7" fill="none" stroke-linecap="round" pathLength="1"/>
+          <path class="escorre e2" d="M210 122 Q218 160 232 190" stroke="#ff8a3d" stroke-width="6" fill="none" stroke-linecap="round" pathLength="1"/>
+        </svg>
+        <div class="cena-texto"><span class="area">Geografia</span><h2>A Terra em movimento</h2>
+          <p>Relevo, clima e sociedade em mapas, gráficos e charges.</p></div>
+      </section>
+
+      <section class="cena" style="--cor:#e8893a">
+        <svg class="arte" viewBox="0 0 400 300" aria-hidden="true">
+          <path d="M30 90 H370 M30 150 H370 M30 210 H370" stroke="#e9d6b5" stroke-width="2"/>
+          <text class="escrita" x="40" y="170">Redação nota mil</text>
+          <g class="pena"><path d="M0 0 C 20 -60 70 -110 110 -130 C 90 -90 60 -40 8 6 Z" fill="#fff4e2" stroke="#e8893a" stroke-width="3"/>
+            <path d="M0 0 L 70 -95" stroke="#e8893a" stroke-width="2"/><path d="M0 0 l-6 10" stroke="#3a2f22" stroke-width="4" stroke-linecap="round"/></g>
+        </svg>
+        <div class="cena-texto"><span class="area">Linguagens e Redação</span><h2>Ler bem para escrever melhor</h2>
+          <p>Interpretação, literatura, inglês ou espanhol, e redações corrigidas pela comunidade.</p></div>
+      </section>
+
+      <section class="cena cena-fim">
+        <div class="cena-texto"><h2>Pronto para começar?</h2><p>É grátis. Crie sua conta e descubra sua nota TRI em 10 minutos.</p>
+          <span class="seta-rolar" aria-hidden="true">↓</span></div>
+      </section>
+    </div>
+    <div class="entrada-miolo" id="entrada-form">
       <div class="entrada-cartao">
         <div class="lado-form">
           <div class="marca-entrada">
@@ -4455,15 +4613,67 @@ function abrirFormularioConta(modo, mostrar) {
   if (mostrar) abrirEntrada();
 }
 
+// Aberta de dentro do site (Entrar, Criar conta): vai direto ao formulário, sem a história.
 function abrirEntrada() {
   document.documentElement.classList.add('com-entrada');
-  document.getElementById('entrada').scrollTop = 0;
   livroEmPontos.ligar();
+  historia.ligar();
+  requestAnimationFrame(() => document.getElementById('entrada-form').scrollIntoView());
 }
 
 function fecharEntrada() {
   document.documentElement.classList.remove('com-entrada');
   livroEmPontos.desligar();
+  historia.desligar();
+}
+// ---------- história de entrada: o quanto cada cena já foi rolada vira --p (0 a 1) ----------
+const historia = (() => {
+  let ligada = false, pedido = 0;
+  const caixa = () => document.getElementById('entrada');
+  function atualizar() {
+    pedido = 0;
+    const alto = caixa().clientHeight;
+    document.querySelectorAll('#historia .cena').forEach(c => {
+      const r = c.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (alto - r.top) / (alto + r.height * .6)));
+      c.style.setProperty('--p', p.toFixed(3));
+    });
+  }
+  const pedir = () => { if (!pedido) pedido = requestAnimationFrame(atualizar); };
+  function gotasDeLava() {
+    const g = document.getElementById('lava');
+    if (!g || g.childElementCount) return;
+    for (let i = 0; i < 14; i++) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', 192 + Math.random() * 16); c.setAttribute('cy', 100); c.setAttribute('r', 3 + Math.random() * 4);
+      c.setAttribute('fill', ['#ff8a3d', '#ffc14d', '#e5633b'][i % 3]); c.setAttribute('class', 'gota');
+      c.style.setProperty('--dx', `${(Math.random() - .5) * 160}px`);
+      c.style.animationDelay = `${(i * .11).toFixed(2)}s`;
+      c.style.transformBox = 'fill-box';
+      g.appendChild(c);
+    }
+    // a lava sobe antes de cair
+    g.setAttribute('transform', 'translate(0,-60)');
+  }
+  return {
+    ligar() {
+      if (ligada) return;
+      ligada = true;
+      gotasDeLava();
+      caixa().addEventListener('scroll', pedir, { passive: true });
+      addEventListener('resize', pedir);
+      atualizar();
+    },
+    desligar() {
+      ligada = false;
+      caixa().removeEventListener('scroll', pedir);
+      removeEventListener('resize', pedir);
+    }
+  };
+})();
+
+function pularHistoria() {
+  document.getElementById('entrada-form').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
 
 // Olho do campo de senha: mostra o que foi digitado, para ninguém errar a
@@ -9610,7 +9820,7 @@ carregarProgresso();
 desenharTudo();
 // Prepara o formulário da tela de entrada (se ela estiver aparecendo, já fica pronta).
 abrirConta('entrar', false);
-if (document.documentElement.classList.contains('com-entrada')) livroEmPontos.ligar();
+if (document.documentElement.classList.contains('com-entrada')) { livroEmPontos.ligar(); historia.ligar(); }
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
 window.addEventListener('load', () => {
   verificarAPI(); carregarGoogle(); registrarServiceWorker(); desenharConviteApp();
