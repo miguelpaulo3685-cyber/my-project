@@ -24,16 +24,10 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 ## Pendências para lançar (em ordem)
 
 ### 1. Conteúdo
-- [ ] **48 questões incompletas** (vieram da fonte sem texto de apoio ou figura). Faltam os PDFs do
-      INEP, caderno AZUL:
-      2014 dia 1 (65, 70, 75, 77) · 2014 dia 2 (107, 139, 144-146, 149, 152, 154, 156, 159, 163, 164,
-      167, 171, 173, 175, 178-180) · 2016 dia 2 (137, 146, 147, 150, 156, 159, 160, 163, 165, 167, 174,
-      175, 179) · 2013 dia 2 (138, 139, 166, 171) · 2017 dia 2 (175, 179, 180) · 2012 dia 2 (138, 156) ·
-      2010 dia 2 (100) · 2019 dia 2 (146) · 2020 dia 2, prova IMPRESSA (160) · 2021 dia 2 (108).
-      Como foi feito com as outras 33: texto tirado do PDF (`pdftotext -bbox-layout`), figuras
-      recortadas com `pdftoppm` para `img/questoes/ANO-NUM.jpg`, entrada em `questoes-manuais.json`
-      (gabarito e alternativas vêm do banco). Questões transcritas contam como completas
-      (`provas.js`, lista CONFERIDAS).
+- [x] **48 questões incompletas** transcritas dos cadernos AZUIS do INEP (27/10), conferidas uma a uma
+      pela imagem da página. Agora são 93 em `questoes-manuais.json`; figuras em `img/questoes/`.
+      Como baixar os PDFs do INEP: o servidor deles não manda o certificado intermediário, então é
+      preciso juntar o da RNP (`secure.globalsign.com/cacert/rnpicpedugr46ovtlsca2025.crt`) ao `--cacert`.
 - [ ] **Provas de 2024 e 2025** (e a de 2026 quando o INEP publicar). Ver se a api.enem.dev já tem;
       senão, pelos PDFs.
 - [ ] **Resolução comentada**, ao menos das questões mais erradas.

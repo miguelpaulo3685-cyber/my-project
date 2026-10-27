@@ -1,5 +1,19 @@
 [
   {
+    "ano": 2010,
+    "numero": 100,
+    "lingua": null,
+    "contexto": "Na busca constante pela sua evolução, o ser humano vem alternando a sua maneira de pensar, de sentir e de criar. Nas últimas décadas do século XVIII e no início do século XIX, os artistas criaram obras em que predominam o equilíbrio e a simetria de formas e cores, imprimindo um estilo caracterizado pela imagem da respeitabilidade, da sobriedade, do concreto e do civismo. Esses artistas misturaram o passado ao presente, retratando os personagens da nobreza e da burguesia, além de cenas míticas e histórias cheias de vigor.\n\nRAZOUK, J. J. (Org.). **Histórias reais e belas nas telas.** Posigraf: 2003.\n\nAtualmente, os artistas apropriam-se de desenhos, charges, grafismo e até de ilustrações de livros para compor obras em que se misturam personagens de diferentes épocas, como na seguinte imagem:",
+    "alternativas": [
+      "![](https://enem.dev/2010/questions/100/a1ca9a6c-9da7-4279-a70d-14e34cff4656.jpg)",
+      "![](https://enem.dev/2010/questions/100/6cda2bf3-9c32-4651-a2c4-8200b73727d1.jpg)",
+      "![](https://enem.dev/2010/questions/100/bf9cdbd5-e66c-4a1f-b4ce-2de19213214b.jpg)",
+      "![](https://enem.dev/2010/questions/100/a666d33f-4b54-4edb-a91c-67b7a15f5055.jpg)",
+      "![](https://enem.dev/2010/questions/100/3f6fed9e-14d8-46a4-b15b-91f7b75d4e5f.jpg)"
+    ],
+    "correta": 2
+  },
+  {
     "ano": 2011,
     "numero": 95,
     "lingua": "ingles",
@@ -28,6 +42,34 @@
     "correta": 2
   },
   {
+    "ano": 2012,
+    "numero": 138,
+    "lingua": null,
+    "contexto": "José, Carlos e Paulo devem transportar em suas bicicletas uma certa quantidade de laranjas. Decidiram dividir o trajeto a ser percorrido em duas partes, sendo que ao final da primeira parte eles redistribuiriam a quantidade de laranjas que cada um carregava dependendo do cansaço de cada um. Na primeira parte do trajeto José, Carlos e Paulo dividiram as laranjas na proporção 6 : 5 : 4, respectivamente. Na segunda parte do trajeto José, Carlos e Paulo dividiram as laranjas na proporção 4 : 4 : 2, respectivamente.\n\nSabendo-se que um deles levou 50 laranjas a mais no segundo trajeto, qual a quantidade de laranjas que José, Carlos e Paulo, nessa ordem, transportaram na segunda parte do trajeto?",
+    "alternativas": [
+      "600, 550, 350",
+      "300, 300, 150",
+      "300, 250, 200",
+      "200, 200, 100",
+      "100, 100, 50"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2012,
+    "numero": 156,
+    "lingua": null,
+    "contexto": "Certo vendedor tem seu salário mensal calculado da seguinte maneira: ele ganha um valor fixo de R$ 750,00, mais uma comissão de R$ 3,00 para cada produto vendido. Caso ele venda mais de 100 produtos, sua comissão passa a ser de R$ 9,00 para cada produto vendido, a partir do 101º produto vendido.\n\nCom essas informações, o gráfico que melhor representa a relação entre salário e o número de produtos vendidos é",
+    "alternativas": [
+      "![](https://enem.dev/2012/questions/156/4e2c0e03-b523-4518-aaef-fb4734e8ad69.png)",
+      "![](https://enem.dev/2012/questions/156/f19a221b-7715-49be-a78c-0554583108f7.png)",
+      "![](https://enem.dev/2012/questions/156/35d71a7f-1928-470f-b151-e475785e7579.png)",
+      "![](https://enem.dev/2012/questions/156/7ab9d513-032b-4753-81cc-95bcd632fb4d.png)",
+      "![](https://enem.dev/2012/questions/156/0df218fe-bdcd-42f6-8188-5cc32405b48e.png)"
+    ],
+    "correta": 4
+  },
+  {
     "ano": 2013,
     "numero": 71,
     "lingua": null,
@@ -38,6 +80,370 @@
       "2,7 mL",
       "4,0 mL",
       "6,7 mL"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2013,
+    "numero": 138,
+    "lingua": null,
+    "contexto": "Um banco solicitou aos seus clientes a criação de uma senha pessoal de seis dígitos, formada somente por algarismos de 0 a 9, para acesso à conta corrente pela internet.\n\nEntretanto, um especialista em sistemas de segurança eletrônica recomendou à direção do banco recadastrar seus usuários, solicitando, para cada um deles, a criação de uma nova senha com seis dígitos, permitindo agora o uso das 26 letras do alfabeto, além dos algarismos de 0 a 9. Nesse novo sistema, cada letra maiúscula era considerada distinta de sua versão minúscula. Além disso, era proibido o uso de outros tipos de caracteres.\n\nUma forma de avaliar uma alteração no sistema de senhas é a verificação do coeficiente de melhora, que é a razão do novo número de possibilidades de senhas em relação ao antigo.\n\nO coeficiente de melhora da alteração recomendada é",
+    "alternativas": [
+      "![](https://enem.dev/2013/questions/138/5d194d75-3537-44ca-a717-a3a797eab3be.bmp)",
+      "![](https://enem.dev/2013/questions/138/a67a68da-6453-497a-8e78-0c33a1c20fb5.bmp)",
+      "![](https://enem.dev/2013/questions/138/2854e931-9b7c-441c-9652-567df9eee479.bmp)",
+      "![](https://enem.dev/2013/questions/138/aaa5d51e-8cdf-479e-bc3e-a1d2332e4d55.bmp)",
+      "![](https://enem.dev/2013/questions/138/e3ac6ce3-9ba0-4cf0-b0d7-bdc11bca203c.bmp)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2013,
+    "numero": 139,
+    "lingua": null,
+    "contexto": "Uma torneira não foi fechada corretamente e ficou pingando, da meia-noite às seis horas da manhã, com a frequência de uma gota a cada três segundos. Sabe-se que cada gota d’água tem volume de 0,2 mL.\n\nQual foi o valor mais aproximado do total de água desperdiçada nesse período, em litros?",
+    "alternativas": [
+      "0,2",
+      "1,2",
+      "1,4",
+      "12,9",
+      "64,8"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2013,
+    "numero": 166,
+    "lingua": null,
+    "contexto": "Em setembro de 1987, Goiânia foi palco do maior acidente radioativo ocorrido no Brasil, quando uma amostra de césio-137, removida de um aparelho de radioterapia abandonado, foi manipulada inadvertidamente por parte da população. A meia-vida de um material radioativo é o tempo necessário para que a massa desse material se reduza à metade. A meia-vida do césio-137 é 30 anos e a quantidade restante de massa de um material radioativo, após t anos, é calculada pela expressão M(t) = A · (2,7)ᵏᵗ, onde A é a massa inicial e k é uma constante negativa.\n\nConsidere 0,3 como aproximação para log₁₀ 2.\n\nQual o tempo necessário, em anos, para que uma quantidade de massa do césio-137 se reduza a 10% da quantidade inicial?",
+    "alternativas": [
+      "27",
+      "36",
+      "50",
+      "54",
+      "100"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2013,
+    "numero": 171,
+    "lingua": null,
+    "contexto": "Na aferição de um novo semáforo, os tempos são ajustados de modo que, em cada ciclo completo (verde-amarelo-vermelho), a luz amarela permaneça acesa por 5 segundos, e o tempo em que a luz verde permaneça acesa seja igual a 2/3 do tempo em que a luz vermelha fique acesa. A luz verde fica acesa, em cada ciclo, durante X segundos e cada ciclo dura Y segundos.\n\nQual é a expressão que representa a relação entre X e Y?",
+    "alternativas": [
+      "5X − 3Y + 15 = 0",
+      "5X − 2Y + 10 = 0",
+      "3X − 3Y + 15 = 0",
+      "3X − 2Y + 15 = 0",
+      "3X − 2Y + 10 = 0"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 65,
+    "lingua": null,
+    "contexto": "A forma das moléculas, como representadas no papel, nem sempre é planar. Em um determinado fármaco, a molécula contendo um grupo não planar é biologicamente ativa, enquanto moléculas contendo substituintes planares são inativas.\n\nO grupo responsável pela bioatividade desse fármaco é",
+    "alternativas": [
+      "![](https://enem.dev/2014/questions/65/a4137bfb-c853-4a14-913b-a98b7b61a017.png)",
+      "![](https://enem.dev/2014/questions/65/a49ceb57-72cd-446e-a70d-71001bc9594d.png)",
+      "![](https://enem.dev/2014/questions/65/65d62c42-c830-4a69-a5f5-5778f55507f1.png)",
+      "![](https://enem.dev/2014/questions/65/f4c89421-78f1-4667-97e1-9966c978d6bc.png)",
+      "![](https://enem.dev/2014/questions/65/591a492e-5806-4574-bf95-72849dd6ee86.png)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2014,
+    "numero": 70,
+    "lingua": null,
+    "contexto": "Visando minimizar impactos ambientais, a legislação brasileira determina que resíduos químicos lançados diretamente no corpo receptor tenham pH entre 5,0 e 9,0. Um resíduo líquido aquoso gerado em um processo industrial tem concentração de íons hidroxila igual a 1,0 × 10⁻¹⁰ mol/L. Para atender a legislação, um químico separou as seguintes substâncias, disponibilizadas no almoxarifado da empresa: CH₃COOH, Na₂SO₄, CH₃OH, K₂CO₃ e NH₄Cl.\n\nPara que o resíduo possa ser lançado diretamente no corpo receptor, qual substância poderia ser empregada no ajuste do pH?",
+    "alternativas": [
+      "CH₃COOH",
+      "Na₂SO₄",
+      "CH₃OH",
+      "K₂CO₃",
+      "NH₄Cl"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2014,
+    "numero": 75,
+    "lingua": null,
+    "contexto": "Um pesquisador percebe que o rótulo de um dos vidros em que guarda um concentrado de enzimas digestivas está ilegível. Ele não sabe qual enzima o vidro contém, mas desconfia de que seja uma protease gástrica, que age no estômago digerindo proteínas. Sabendo que a digestão no estômago é ácida e no intestino é básica, ele monta cinco tubos de ensaio com alimentos diferentes, adiciona o concentrado de enzimas em soluções com pH determinado e aguarda para ver se a enzima age em algum deles.\n\nO tubo de ensaio em que a enzima deve agir para indicar que a hipótese do pesquisador está correta é aquele que contém",
+    "alternativas": [
+      "Cubo de batata em solução com pH = 9.",
+      "Pedaço de carne em solução com pH = 5.",
+      "Clara de ovo cozida em solução com pH = 9.",
+      "Porção de macarrão em solução com pH = 5.",
+      "Bolinha de manteiga em solução com pH = 9."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 77,
+    "lingua": null,
+    "contexto": "O estudo de compostos orgânicos permite aos analistas definir propriedades físicas e químicas responsáveis pelas características de cada substância descoberta. Um laboratório investiga moléculas quirais cuja cadeia carbônica seja insaturada, heterogênea e ramificada.\n\nA fórmula que se enquadra nas características da molécula investigada é",
+    "alternativas": [
+      "CH₃–(CH)₂–CH(OH)–CO–NH–CH₃.",
+      "CH₃–(CH)₂–CH(CH₃)–CO–NH–CH₃.",
+      "CH₃–(CH)₂–CH(CH₃)–CO–NH₂.",
+      "CH₃–CH₂–CH(CH₃)–CO–NH–CH₃.",
+      "C₆H₅–CH₂–CO–NH–CH₃."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 139,
+    "lingua": null,
+    "contexto": "Um carpinteiro fabrica portas retangulares maciças, feitas de um mesmo material. Por ter recebido de seus clientes pedidos de portas mais altas, aumentou sua altura em 1/8, preservando suas espessuras. A fim de manter o custo com o material de cada porta, precisou reduzir a largura.\n\nA razão entre a largura da nova porta e a largura da porta anterior é",
+    "alternativas": [
+      "1/8",
+      "7/8",
+      "8/7",
+      "8/9",
+      "9/8"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2014,
+    "numero": 144,
+    "lingua": null,
+    "contexto": "Um sinalizador de trânsito tem o formato de um cone circular reto. O sinalizador precisa ser revestido externamente com adesivo fluorescente, desde sua base (base do cone) até a metade de sua altura, para sinalização noturna. O responsável pela colocação do adesivo precisa fazer o corte do material de maneira que a forma do adesivo corresponda exatamente à parte da superfície lateral a ser revestida.\n\nQual deverá ser a forma do adesivo?",
+    "alternativas": [
+      "![](https://enem.dev/2014/questions/144/44526171-b101-4a97-acc1-054ba72d0fa7.png)",
+      "![](https://enem.dev/2014/questions/144/a2d14544-a249-440f-b625-70e5ac48098c.png)",
+      "![](https://enem.dev/2014/questions/144/1cb65586-4441-4648-95ca-f2d2d2219c50.png)",
+      "![](https://enem.dev/2014/questions/144/d9792780-c879-4c1d-921c-dd1b1ac88884.png)",
+      "![](https://enem.dev/2014/questions/144/fda755b2-ba2a-4f7f-84a5-6a29fb07e1e0.png)"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2014,
+    "numero": 145,
+    "lingua": null,
+    "contexto": "Um professor, depois de corrigir as provas de sua turma, percebeu que várias questões estavam muito difíceis. Para compensar, decidiu utilizar uma função polinomial f, de grau menor que 3, para alterar as notas x da prova para notas y = f(x), da seguinte maneira:\n\n• A nota zero permanece zero.\n• A nota 10 permanece 10.\n• A nota 5 passa a ser 6.\n\nA expressão da função y = f(x) a ser utilizada pelo professor é",
+    "alternativas": [
+      "![](https://enem.dev/2014/questions/145/fb982b59-0d4c-4072-a3f3-0d07ba073215.png)",
+      "![](https://enem.dev/2014/questions/145/b3e30fe0-d8fb-4cca-abc7-8d2723b68bcc.png)",
+      "![](https://enem.dev/2014/questions/145/e22c424c-ede8-4fc6-9030-a7293c0164df.png)",
+      "![](https://enem.dev/2014/questions/145/f987fd5b-b6b5-44ae-a434-054759e16220.png)",
+      "![](https://enem.dev/2014/questions/145/764cd798-3b7c-4607-9287-1364cfc323dc.png)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2014,
+    "numero": 146,
+    "lingua": null,
+    "contexto": "Durante a Segunda Guerra Mundial, para decifrarem as mensagens secretas, foi utilizada a técnica de decomposição em fatores primos. Um número N é dado pela expressão 2ˣ · 5ʸ · 7ᶻ, na qual x, y e z são números inteiros não negativos. Sabe-se que N é múltiplo de 10 e não é múltiplo de 7.\n\nO número de divisores de N, diferentes de N, é",
+    "alternativas": [
+      "x · y · z",
+      "(x + 1) · (y + 1)",
+      "x · y · z − 1",
+      "(x + 1) · (y + 1) · z",
+      "(x + 1) · (y + 1) · (z + 1) − 1"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2014,
+    "numero": 149,
+    "lingua": null,
+    "contexto": "Um _show_ especial de Natal teve 45 000 ingressos vendidos. Esse evento ocorrerá em um estádio de futebol que disponibilizará 5 portões de entrada, com 4 catracas eletrônicas por portão. Em cada uma dessas catracas, passará uma única pessoa a cada 2 segundos. O público foi igualmente dividido pela quantidade de portões e catracas, indicados no ingresso para o _show_, para a efetiva entrada no estádio. Suponha que todos aqueles que compraram ingressos irão ao _show_ e que todos passarão pelos portões e catracas eletrônicas indicados.\n\nQual é o tempo mínimo para que todos passem pelas catracas?",
+    "alternativas": [
+      "1 hora.",
+      "1 hora e 15 minutos.",
+      "5 horas.",
+      "6 horas.",
+      "6 horas e 15 minutos."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 152,
+    "lingua": null,
+    "contexto": "Uma organização não governamental divulgou um levantamento de dados realizado em algumas cidades brasileiras sobre saneamento básico. Os resultados indicam que somente 36% do esgoto gerado nessas cidades é tratado, o que mostra que 8 bilhões de litros de esgoto sem nenhum tratamento são lançados todos os dias nas águas.\n\nUma campanha para melhorar o saneamento básico nessas cidades tem como meta a redução da quantidade de esgoto lançado nas águas diariamente, sem tratamento, para 4 bilhões de litros nos próximos meses.\n\nSe o volume de esgoto gerado permanecer o mesmo e a meta dessa campanha se concretizar, o percentual de esgoto tratado passará a ser",
+    "alternativas": [
+      "72%",
+      "68%",
+      "64%",
+      "54%",
+      "18%"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 154,
+    "lingua": null,
+    "contexto": "Boliche é um jogo em que se arremessa uma bola sobre uma pista para atingir dez pinos, dispostos em uma formação de base triangular, buscando derrubar o maior número de pinos. A razão entre o total de vezes em que o jogador derruba todos os pinos e o número de jogadas determina seu desempenho.\n\nEm uma disputa entre cinco jogadores, foram obtidos os seguintes resultados:\n\nJogador I – Derrubou todos os pinos 50 vezes em 85 jogadas.\nJogador II – Derrubou todos os pinos 40 vezes em 65 jogadas.\nJogador III – Derrubou todos os pinos 20 vezes em 65 jogadas.\nJogador IV – Derrubou todos os pinos 30 vezes em 40 jogadas.\nJogador V – Derrubou todos os pinos 48 vezes em 90 jogadas.\n\nQual desses jogadores apresentou maior desempenho?",
+    "alternativas": [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "V"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2014,
+    "numero": 156,
+    "lingua": null,
+    "contexto": "O condomínio de um edifício permite que cada proprietário de apartamento construa um armário em sua vaga de garagem. O projeto da garagem, na escala 1 : 100, foi disponibilizado aos interessados já com as especificações das dimensões do armário, que deveria ter o formato de um paralelepípedo retângulo reto, com dimensões, no projeto, iguais a 3 cm, 1 cm e 2 cm.\n\nO volume real do armário, em centímetros cúbicos, será",
+    "alternativas": [
+      "6.",
+      "600.",
+      "6 000.",
+      "60 000.",
+      "6 000 000."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2014,
+    "numero": 159,
+    "lingua": null,
+    "contexto": "Uma pessoa possui um espaço retangular de lados 11,5 m e 14 m no quintal de sua casa e pretende fazer um pomar doméstico de maçãs. Ao pesquisar sobre o plantio dessa fruta, descobriu que as mudas de maçã devem ser plantadas em covas com uma única muda e com espaçamento mínimo de 3 metros entre elas e entre elas e as laterais do terreno. Ela sabe que conseguirá plantar um número maior de mudas em seu pomar se dispuser as covas em filas alinhadas paralelamente ao lado de maior extensão.\n\nO número máximo de mudas que essa pessoa poderá plantar no espaço disponível é",
+    "alternativas": [
+      "4.",
+      "8.",
+      "9.",
+      "12.",
+      "20."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2014,
+    "numero": 163,
+    "lingua": null,
+    "contexto": "Um cliente de uma videolocadora tem o hábito de alugar dois filmes por vez. Quando os devolve, sempre pega outros dois filmes e assim sucessivamente. Ele soube que a videolocadora recebeu alguns lançamentos, sendo 8 filmes de ação, 5 de comédia e 3 de drama e, por isso, estabeleceu uma estratégia para ver todos esses 16 lançamentos. Inicialmente alugará, em cada vez, um filme de ação e um de comédia. Quando se esgotarem as possibilidades de comédia, o cliente alugará um filme de ação e um de drama, até que todos os lançamentos sejam vistos e sem que nenhum filme seja repetido.\n\nDe quantas formas distintas a estratégia desse cliente poderá ser posta em prática?",
+    "alternativas": [
+      "![](https://enem.dev/2014/questions/163/d5d5048f-7ee3-40c6-b96b-ba9980dc7d05.png)",
+      "![](https://enem.dev/2014/questions/163/41b3be85-5bb9-46db-9a3b-867bd95c514a.png)",
+      "![](https://enem.dev/2014/questions/163/c02a3e9d-3cd7-4b47-91d5-d99aa1ee7b5d.png)",
+      "![](https://enem.dev/2014/questions/163/2940ac08-b920-4111-9d2c-1d107c65df28.png)",
+      "![](https://enem.dev/2014/questions/163/17d5d462-0b07-4324-9f98-61f36a9f808c.png)"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 164,
+    "lingua": null,
+    "contexto": "O psicólogo de uma empresa aplica um teste para analisar a aptidão de um candidato a determinado cargo. O teste consiste em uma série de perguntas cujas respostas devem ser verdadeiro ou falso e termina quando o psicólogo fizer a décima pergunta ou quando o candidato der a segunda resposta errada. Com base em testes anteriores, o psicólogo sabe que a probabilidade de o candidato errar uma resposta é 0,20.\n\nA probabilidade de o teste terminar na quinta pergunta é",
+    "alternativas": [
+      "0,02048.",
+      "0,08192.",
+      "0,24000.",
+      "0,40960.",
+      "0,49152."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 167,
+    "lingua": null,
+    "contexto": "Uma empresa farmacêutica produz medicamentos em pílulas, cada uma na forma de um cilindro com uma semiesfera com o mesmo raio do cilindro em cada uma de suas extremidades. Essas pílulas são moldadas por uma máquina programada para que os cilindros tenham sempre 10 mm de comprimento, adequando o raio de acordo com o volume desejado.\n\nUm medicamento é produzido em pílulas com 5 mm de raio. Para facilitar a deglutição, deseja-se produzir esse medicamento diminuindo o raio para 4 mm, e, por consequência, seu volume. Isso exige a reprogramação da máquina que produz essas pílulas.\n\nUse 3 como valor aproximado para π.\n\nA redução do volume da pílula, em milímetros cúbicos, após a reprogramação da máquina, será igual a",
+    "alternativas": [
+      "168.",
+      "304.",
+      "306.",
+      "378.",
+      "514."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2014,
+    "numero": 171,
+    "lingua": null,
+    "contexto": "Uma ponte precisa ser dimensionada de forma que possa ter três pontos de sustentação. Sabe-se que a carga máxima suportada pela ponte será de 12 t. O ponto de sustentação central receberá 60% da carga da ponte, e o restante da carga será distribuído igualmente entre os outros dois pontos de sustentação.\n\nNo caso de carga máxima, as cargas recebidas pelos três pontos de sustentação serão, respectivamente,",
+    "alternativas": [
+      "1,8 t; 8,4 t; 1,8 t.",
+      "3,0 t; 6,0 t; 3,0 t.",
+      "2,4 t; 7,2 t; 2,4 t.",
+      "3,6 t; 4,8 t; 3,6 t.",
+      "4,2 t; 3,6 t; 4,2 t."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2014,
+    "numero": 173,
+    "lingua": null,
+    "contexto": "A maior piscina do mundo, registrada no livro _Guiness_, está localizada no Chile, em San Alfonso del Mar, cobrindo um terreno de 8 hectares de área.\n\nSabe-se que 1 hectare corresponde a 1 hectômetro quadrado.\n\nQual é o valor, em metros quadrados, da área coberta pelo terreno da piscina?",
+    "alternativas": [
+      "8",
+      "80",
+      "800",
+      "8 000",
+      "80 000"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2014,
+    "numero": 175,
+    "lingua": null,
+    "contexto": "Os vidros para veículos produzidos por certo fabricante têm transparências entre 70% e 90%, dependendo do lote fabricado. Isso significa que, quando um feixe luminoso incide no vidro, uma parte entre 70% e 90% da luz consegue atravessá-lo. Os veículos equipados com vidros desse fabricante terão instaladas, nos vidros das portas, películas protetoras cuja transparência, dependendo do lote fabricado, estará entre 50% e 70%. Considere que uma porcentagem P da intensidade da luz, proveniente de uma fonte externa, atravessa o vidro e a película.\n\nDe acordo com as informações, o intervalo das porcentagens que representam a variação total possível de P é",
+    "alternativas": [
+      "[35 ; 63].",
+      "[40 ; 63].",
+      "[50 ; 70].",
+      "[50 ; 90].",
+      "[70 ; 90]."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2014,
+    "numero": 178,
+    "lingua": null,
+    "contexto": "Diariamente, uma residência consome 20 160 Wh. Essa residência possui 100 células solares retangulares (dispositivos capazes de converter a luz solar em energia elétrica) de dimensões 6 cm × 8 cm. Cada uma das tais células produz, ao longo do dia, 24 Wh por centímetro de diagonal. O proprietário dessa residência quer produzir, por dia, exatamente a mesma quantidade de energia que sua casa consome.\n\nQual deve ser a ação desse proprietário para que ele atinja o seu objetivo?",
+    "alternativas": [
+      "Retirar 16 células.",
+      "Retirar 40 células.",
+      "Acrescentar 5 células.",
+      "Acrescentar 20 células.",
+      "Acrescentar 40 células."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2014,
+    "numero": 179,
+    "lingua": null,
+    "contexto": "Uma pessoa compra semanalmente, numa mesma loja, sempre a mesma quantidade de um produto que custa R$ 10,00 a unidade. Como já sabe quanto deve gastar, leva sempre R$ 6,00 a mais do que a quantia necessária para comprar tal quantidade, para o caso de eventuais despesas extras. Entretanto, um dia, ao chegar à loja, foi informada de que o preço daquele produto havia aumentado 20%. Devido a esse reajuste, concluiu que o dinheiro levado era a quantia exata para comprar duas unidades a menos em relação à quantidade habitualmente comprada.\n\nA quantia que essa pessoa levava semanalmente para fazer a compra era",
+    "alternativas": [
+      "R$ 166,00.",
+      "R$ 156,00.",
+      "R$ 84,00.",
+      "R$ 46,00.",
+      "R$ 24,00."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2014,
+    "numero": 180,
+    "lingua": null,
+    "contexto": "Um executivo sempre viaja entre as cidades A e B, que estão localizadas em fusos horários distintos. O tempo de duração da viagem de avião entre as duas cidades é de 6 horas. Ele sempre pega um voo que sai de A às 15h e chega à cidade B às 18h (respectivos horários locais).\n\nCerto dia, ao chegar à cidade B, soube que precisava estar de volta à cidade A, no máximo, até as 13h do dia seguinte (horário local de A).\n\nPara que o executivo chegue à cidade A no horário correto e admitindo que não haja atrasos, ele deve pegar um voo saindo da cidade B, em horário local de B, no máximo à(s)",
+    "alternativas": [
+      "16h.",
+      "10h.",
+      "7h.",
+      "4h.",
+      "1h."
     ],
     "correta": 3
   },
@@ -448,6 +854,230 @@
     "correta": 4
   },
   {
+    "ano": 2016,
+    "numero": 137,
+    "lingua": null,
+    "contexto": "Em uma empresa de móveis, um cliente encomenda um guarda-roupa nas dimensões 220 cm de altura, 120 cm de largura e 50 cm de profundidade. Alguns dias depois, o projetista, com o desenho elaborado na escala 1 : 8, entra em contato com o cliente para fazer sua apresentação. No momento da impressão, o profissional percebe que o desenho não caberia na folha de papel que costumava usar. Para resolver o problema, configurou a impressora para que a figura fosse reduzida em 20%.\n\nA altura, a largura e a profundidade do desenho impresso para a apresentação serão, respectivamente,",
+    "alternativas": [
+      "22,00 cm, 12,00 cm e 5,00 cm.",
+      "27,50 cm, 15,00 cm e 6,25 cm.",
+      "34,37 cm, 18,75 cm e 7,81 cm.",
+      "35,20 cm, 19,20 cm e 8,00 cm.",
+      "44,00 cm, 24,00 cm e 10,00 cm."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 146,
+    "lingua": null,
+    "contexto": "Uma pessoa comercializa picolés. No segundo dia de certo evento ela comprou 4 caixas de picolés, pagando R$ 16,00 a caixa com 20 picolés para revendê-los no evento. No dia anterior, ela havia comprado a mesma quantidade de picolés, pagando a mesma quantia, e obtendo um lucro de R$ 40,00 (obtido exclusivamente pela diferença entre o valor de venda e o de compra dos picolés) com a venda de todos os picolés que possuía.\n\nPesquisando o perfil do público que estará presente no evento, a pessoa avalia que será possível obter um lucro 20% maior do que o obtido com a venda no primeiro dia do evento.\n\nPara atingir seu objetivo, e supondo que todos os picolés disponíveis foram vendidos no segundo dia, o valor de venda de cada picolé, no segundo dia, deve ser",
+    "alternativas": [
+      "R$ 0,96",
+      "R$ 1,00",
+      "R$ 1,40",
+      "R$ 1,50",
+      "R$ 1,56"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2016,
+    "numero": 147,
+    "lingua": null,
+    "contexto": "O tênis é um esporte em que a estratégia de jogo a ser adotada depende, entre outros fatores, de o adversário ser canhoto ou destro.\n\nUm clube tem um grupo de 10 tenistas, sendo que 4 são canhotos e 6 são destros. O técnico do clube deseja realizar uma partida de exibição entre dois desses jogadores, porém, não poderão ser ambos canhotos.\n\nQual o número de possibilidades de escolha dos tenistas para a partida de exibição?",
+    "alternativas": [
+      "![](https://enem.dev/2016/questions/147/b312c7db-dd7d-4633-af66-83c020de8340.png)",
+      "![](https://enem.dev/2016/questions/147/6eea6a39-3b2d-4b06-8f22-3fb8b3354049.png)",
+      "![](https://enem.dev/2016/questions/147/e5274b9d-58c1-47d8-80c4-9ba8ea7db58f.png)",
+      "![](https://enem.dev/2016/questions/147/9ed4324a-682b-4a89-b93b-ce8035218bc6.png)",
+      "![](https://enem.dev/2016/questions/147/3f06a01b-fdec-4bb2-affb-45cf27b74bfd.png)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 150,
+    "lingua": null,
+    "contexto": "Para a construção de isolamento acústico numa parede cuja área mede 9 m², sabe-se que, se a fonte sonora estiver a 3 m do plano da parede, o custo é de R$ 500,00. Nesse tipo de isolamento, a espessura do material que reveste a parede é inversamente proporcional ao quadrado da distância até a fonte sonora, e o custo é diretamente proporcional ao volume do material do revestimento.\n\nUma expressão que fornece o custo para revestir uma parede de área A (em metro quadrado), situada a D metros da fonte sonora, é",
+    "alternativas": [
+      "![](https://enem.dev/2016/questions/150/d98b4a6b-0f17-4c11-a265-5d349d907c4e.png)",
+      "![](https://enem.dev/2016/questions/150/5eb36277-7f4b-4c1d-a3fd-68a26c9401e5.png)",
+      "![](https://enem.dev/2016/questions/150/7ee2ec8a-740e-4cf4-a8da-b1e661261059.png)",
+      "![](https://enem.dev/2016/questions/150/ba2ff490-2587-496a-9dce-5f8ea60661bd.png)",
+      "![](https://enem.dev/2016/questions/150/9eebb46b-522f-45a2-96f3-469420638079.png)"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2016,
+    "numero": 156,
+    "lingua": null,
+    "contexto": "Para garantir a segurança de um grande evento público que terá início às 4 h da tarde, um organizador precisa monitorar a quantidade de pessoas presentes em cada instante. Para cada 2 000 pessoas se faz necessária a presença de um policial. Além disso, estima-se uma densidade de quatro pessoas por metro quadrado de área de terreno ocupado. Às 10 h da manhã, o organizador verifica que a área de terreno já ocupada equivale a um quadrado com lados medindo 500 m. Porém, nas horas seguintes, espera-se que o público aumente a uma taxa de 120 000 pessoas por hora até o início do evento, quando não será mais permitida a entrada de público.\n\nQuantos policiais serão necessários no início do evento para garantir a segurança?",
+    "alternativas": [
+      "360",
+      "485",
+      "560",
+      "740",
+      "860"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2016,
+    "numero": 159,
+    "lingua": null,
+    "contexto": "Um posto de saúde registrou a quantidade de vacinas aplicadas contra febre amarela nos últimos cinco meses:\n\n• 1º mês: 21;\n• 2º mês: 22;\n• 3º mês: 25;\n• 4º mês: 31;\n• 5º mês: 21.\n\nNo início do primeiro mês, esse posto de saúde tinha 228 vacinas contra febre amarela em estoque. A política de reposição do estoque prevê a aquisição de novas vacinas, no início do sexto mês, de tal forma que a quantidade inicial em estoque para os próximos meses seja igual a 12 vezes a média das quantidades mensais dessas vacinas aplicadas nos últimos cinco meses.\n\nPara atender essas condições, a quantidade de vacinas contra febre amarela que o posto de saúde deve adquirir no início do sexto mês é",
+    "alternativas": [
+      "156",
+      "180",
+      "192",
+      "264",
+      "288"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2016,
+    "numero": 160,
+    "lingua": null,
+    "contexto": "Uma liga metálica sai do forno a uma temperatura de 3 000 °C e diminui 1% de sua temperatura a cada 30 min.\n\nUse 0,477 como aproximação para log₁₀(3) e 1,041 como aproximação para log₁₀(11).\n\nO tempo decorrido, em hora, até que a liga atinja 30 °C é mais próximo de",
+    "alternativas": [
+      "22",
+      "50",
+      "100",
+      "200",
+      "400"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2016,
+    "numero": 163,
+    "lingua": null,
+    "contexto": "Densidade absoluta (d) é a razão entre a massa de um corpo e o volume por ele ocupado. Um professor propôs à sua turma que os alunos analisassem a densidade de três corpos: dA, dB, dC. Os alunos verificaram que o corpo A possuía 1,5 vez a massa do corpo B e esse, por sua vez, tinha 3/4 da massa do corpo C. Observaram, ainda, que o volume do corpo A era o mesmo do corpo B e 20% maior do que o volume do corpo C.\n\nApós a análise, os alunos ordenaram corretamente as densidades desses corpos da seguinte maneira",
+    "alternativas": [
+      "dB < dA < dC",
+      "dB = dA < dC",
+      "dC < dB = dA",
+      "dB < dC < dA",
+      "dC < dB < dA"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2016,
+    "numero": 165,
+    "lingua": null,
+    "contexto": "Sob a orientação de um mestre de obras, João e Pedro trabalharam na reforma de um edifício. João efetuou reparos na parte hidráulica nos andares 1, 3, 5, 7, e assim sucessivamente, de dois em dois andares. Pedro trabalhou na parte elétrica nos andares 1, 4, 7, 10, e assim sucessivamente, de três em três andares. Coincidentemente, terminaram seus trabalhos no último andar. Na conclusão da reforma, o mestre de obras informou, em seu relatório, o número de andares do edifício. Sabe-se que, ao longo da execução da obra, em exatamente 20 andares, foram realizados reparos nas partes hidráulica e elétrica por João e Pedro.\n\nQual é o número de andares desse edifício?",
+    "alternativas": [
+      "40",
+      "60",
+      "100",
+      "115",
+      "120"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2016,
+    "numero": 167,
+    "lingua": null,
+    "contexto": "Um túnel deve ser lacrado com uma tampa de concreto. A seção transversal do túnel e a tampa de concreto têm contornos de um arco de parábola e mesmas dimensões. Para determinar o custo da obra, um engenheiro deve calcular a área sob o arco parabólico em questão. Usando o eixo horizontal no nível do chão e o eixo de simetria da parábola como eixo vertical, obteve a seguinte equação para a parábola:\n\ny = 9 − x², sendo x e y medidos em metros.\n\nSabe-se que a área sob uma parábola como esta é igual a 2/3 da área do retângulo cujas dimensões são, respectivamente, iguais à base e à altura da entrada do túnel.\n\nQual é a área da parte frontal da tampa de concreto, em metro quadrado?",
+    "alternativas": [
+      "18",
+      "20",
+      "36",
+      "45",
+      "54"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2016,
+    "numero": 174,
+    "lingua": null,
+    "contexto": "Um paciente necessita de reidratação endovenosa feita por meio de cinco frascos de soro durante 24 h. Cada frasco tem um volume de 800 mL de soro. Nas primeiras quatro horas, deverá receber 40% do total a ser aplicado. Cada mililitro de soro corresponde a 12 gotas.\n\nO número de gotas por minuto que o paciente deverá receber após as quatro primeiras horas será",
+    "alternativas": [
+      "16",
+      "20",
+      "24",
+      "34",
+      "40"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2016,
+    "numero": 175,
+    "lingua": null,
+    "contexto": "É comum os artistas plásticos se apropriarem de entes matemáticos para produzirem, por exemplo, formas e imagens por meio de manipulações. Um artista plástico, em uma de suas obras, pretende retratar os diversos polígonos obtidos pelas intersecções de um plano com uma pirâmide regular de base quadrada.\n\nSegundo a classificação dos polígonos, quais deles são possíveis de serem obtidos pelo artista plástico?",
+    "alternativas": [
+      "Quadrados, apenas",
+      "Triângulos e quadrados, apenas",
+      "Triângulos, quadrados e trapézios, apenas",
+      "Triângulos, quadrados, trapézios e quadriláteros irregulares, apenas.",
+      "Triângulos, quadrados, trapézios, quadriláteros irregulares e pentágonos, apenas."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2016,
+    "numero": 179,
+    "lingua": null,
+    "contexto": "Diante da hipótese do comprometimento da qualidade da água retirada do volume morto de alguns sistemas hídricos, os técnicos de um laboratório decidiram testar cinco tipos de filtros de água.\n\nDentre esses, os quatro com melhor desempenho serão escolhidos para futura comercialização.\n\nNos testes, foram medidas as massas de agentes contaminantes, em miligrama, que não são capturados por cada filtro em diferentes períodos, em dia, como segue:\n\n• Filtro 1 (F1): 18 mg em 6 dias;\n• Filtro 2 (F2): 15 mg em 3 dias;\n• Filtro 3 (F3): 18 mg em 4 dias;\n• Filtro 4 (F4): 6 mg em 3 dias;\n• Filtro 5 (F5): 3 mg em 2 dias.\n\nAo final, descarta-se o filtro com a maior razão entre a medida da massa de contaminantes não capturados e o número de dias, o que corresponde ao de pior desempenho.\n\nDisponível em: www.redebrasilatual.com.br. Acesso em: 12 jul. 2015 (adaptado).\n\nO filtro descartado é o",
+    "alternativas": [
+      "F1.",
+      "F2.",
+      "F3.",
+      "F4.",
+      "F5."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2017,
+    "numero": 175,
+    "lingua": null,
+    "contexto": "Numa avenida existem 10 semáforos. Por causa de uma pane no sistema, os semáforos ficaram sem controle durante uma hora, e fixaram suas luzes unicamente em verde ou vermelho. Os semáforos funcionam de forma independente; a probabilidade de acusar a cor verde é de 2/3 e a de acusar a cor vermelha é de 1/3. Uma pessoa percorreu a pé toda essa avenida durante o período da pane, observando a cor da luz de cada um desses semáforos.\n\nQual a probabilidade de que esta pessoa tenha observado exatamente um sinal na cor verde?",
+    "alternativas": [
+      "![](https://enem.dev/2017/questions/175/76855355-588b-40de-adfa-78c67373b3cd.png)",
+      "![](https://enem.dev/2017/questions/175/f0b54cb7-a0b0-4661-a2e2-afda4b8d2135.png)",
+      "![](https://enem.dev/2017/questions/175/b7396163-6b89-41cf-b08b-473d800ef585.png)",
+      "![](https://enem.dev/2017/questions/175/486162c7-f43b-49a2-9476-dddf8af7bdf4.png)",
+      "![](https://enem.dev/2017/questions/175/744d3069-d18a-4930-9697-45171bee53b2.png)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2017,
+    "numero": 179,
+    "lingua": null,
+    "contexto": "Um morador de uma região metropolitana tem 50% de probabilidade de atrasar-se para o trabalho quando chove na região; caso não chova, sua probabilidade de atraso é de 25%. Para um determinado dia, o serviço de meteorologia estima em 30% a probabilidade da ocorrência de chuva nessa região.\n\nQual é a probabilidade de esse morador se atrasar para o serviço no dia para o qual foi dada a estimativa de chuva?",
+    "alternativas": [
+      "0,075",
+      "0,150",
+      "0,325",
+      "0,600",
+      "0,800"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2017,
+    "numero": 180,
+    "lingua": null,
+    "contexto": "Às 17 h 15 min começa uma forte chuva, que cai com intensidade constante. Uma piscina em forma de um paralelepípedo retângulo, que se encontrava inicialmente vazia, começa a acumular a água da chuva e, às 18 horas, o nível da água em seu interior alcança 20 cm de altura. Nesse instante, é aberto o registro que libera o escoamento da água por um ralo localizado no fundo dessa piscina, cuja vazão é constante. Às 18 h 40 min a chuva cessa e, nesse exato instante, o nível da água na piscina baixou para 15 cm.\n\nO instante em que a água dessa piscina terminar de escoar completamente está compreendido entre",
+    "alternativas": [
+      "19 h 30 min e 20 h 10 min.",
+      "19 h 20 min e 19 h 30 min.",
+      "19 h 10 min e 19 h 20 min.",
+      "19 h e 19 h 10 min.",
+      "18 h 40 min e 19 h."
+    ],
+    "correta": 3
+  },
+  {
     "ano": 2018,
     "numero": 62,
     "lingua": null,
@@ -518,6 +1148,20 @@
     "correta": 4
   },
   {
+    "ano": 2019,
+    "numero": 146,
+    "lingua": null,
+    "contexto": "O serviço de meteorologia de uma cidade emite relatórios diários com a previsão do tempo. De posse dessas informações, a prefeitura emite três tipos de alertas para a população:\n\n• Alerta cinza: deverá ser emitido sempre que a previsão do tempo estimar que a temperatura será inferior a 10 °C, e a umidade relativa do ar for inferior a 40%;\n• Alerta laranja: deverá ser emitido sempre que a previsão do tempo estimar que a temperatura deve variar entre 35 °C e 40 °C, e a umidade relativa do ar deve ficar abaixo de 30%;\n• Alerta vermelho: deverá ser emitido sempre que a previsão do tempo estimar que a temperatura será superior a 40 °C, e a umidade relativa do ar for inferior a 25%.\n\nUm resumo da previsão do tempo nessa cidade, para um período de 15 dias, foi apresentado no gráfico.\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2019-146.jpg)\n\nDecorridos os 15 dias de validade desse relatório, um funcionário percebeu que, no período a que se refere o gráfico, foram emitidos os seguintes alertas:\n\n• Dia 1: alerta cinza;\n• Dia 12: alerta laranja;\n• Dia 13: alerta vermelho.\n\nEm qual(is) desses dias o(s) aviso(s) foi(ram) emitido(s) corretamente?",
+    "alternativas": [
+      "1.",
+      "12.",
+      "1 e 12.",
+      "1 e 13.",
+      "1, 12 e 13."
+    ],
+    "correta": 0
+  },
+  {
     "ano": 2020,
     "numero": 144,
     "lingua": null,
@@ -530,6 +1174,20 @@
       "1 × 10⁻³"
     ],
     "correta": 1
+  },
+  {
+    "ano": 2020,
+    "numero": 160,
+    "lingua": null,
+    "contexto": "Um motociclista planeja realizar uma viagem cujo destino fica a 500 km de sua casa. Sua moto consome 5 litros de gasolina para cada 100 km rodados, e o tanque da moto tem capacidade para 22 litros. Pelo mapa, observou que no trajeto da viagem o último posto disponível para reabastecimento, chamado Estrela, fica a 80 km do seu destino. Ele pretende partir com o tanque da moto cheio e planeja fazer somente duas paradas para reabastecimento, uma na ida e outra na volta, ambas no posto Estrela. No reabastecimento para a viagem de ida, deve considerar também combustível suficiente para se deslocar por 200 km no seu destino.\n\nA quantidade mínima de combustível, em litro, que esse motociclista deve reabastecer no posto Estrela na viagem de ida, que seja suficiente para fazer o segundo reabastecimento, é",
+    "alternativas": [
+      "13.",
+      "14.",
+      "17.",
+      "18.",
+      "21."
+    ],
+    "correta": 2
   },
   {
     "ano": 2020,
@@ -572,6 +1230,20 @@
       "Ressignificação das heranças religiosas."
     ],
     "correta": 1
+  },
+  {
+    "ano": 2021,
+    "numero": 108,
+    "lingua": null,
+    "contexto": "TEXTO I\n\nNo cordel intitulado _Senhor dos Anéis_, de autoria de Gonçalo Ferreira da Silva, lê-se a sextilha:\n\nA distância em relação\nAo nosso planeta amado\nPouco menos que a do Sol\nEle está distanciado\nE menos denso que a água\nQuando no normal estado\n\nMEDEIROS, A.; AGRA, J. T. M. A astronomia na literatura de cordel. **Física na Escola**, n. 1, abr. 2010 (fragmento).\n\nTEXTO II\n\nDistâncias médias dos planetas ao Sol e suas densidades médias\n\n![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2021-108.jpg)\n\n**Características dos planetas.** Disponível em: www.astronoo.com. Acesso em: 8 nov. 2019 (adaptado).\n\nConsiderando os versos da sextilha e as informações da tabela, a qual planeta o cordel faz referência?",
+    "alternativas": [
+      "Mercúrio",
+      "Júpiter",
+      "Urano",
+      "Saturno",
+      "Netuno"
+    ],
+    "correta": 3
   },
   {
     "ano": 2023,
