@@ -98,7 +98,10 @@ const ORIGENS_PERMITIDAS = (process.env.ORIGENS_PERMITIDAS ||
 
 // Pedidos sem Origin (curl, o próprio servidor) não passam pelo navegador,
 // e CORS não se aplica a eles.
-app.use(cors({ origin: (origem, ok) => ok(null, !origem || ORIGENS_PERMITIDAS.includes(origem)) }));
+app.use(cors({ origin: (origem, ok) => ok(null, !origem || ORIGENS_PERMITIDAS.includes(origem)), exposedHeaders: ['X-Agora'] }));
+// A hora do servidor em toda resposta: o relógio das salas de estudo usa ela,
+// porque o relógio de cada celular pode estar alguns minutos diferente.
+app.use((req, res, next) => { res.set('X-Agora', String(Date.now())); next(); });
 app.use(morgan('combined'));
 // Perfil e publicações levam uma foto (até ~450 KB, em base64); o resto da
 // API continua com o limite pequeno.

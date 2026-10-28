@@ -162,7 +162,13 @@ function novoCodigo() {
 
 const enviar = (res, dados) => { try { res.write(`data: ${JSON.stringify(dados)}\n\n`); } catch (e) { /* conexão caiu */ } };
 const conectados = sala => [...sala.jogadores.values()].filter(j => j.conexoes.size > 0);
-const ordenar = sala => [...sala.jogadores.values()].sort((a, b) => b.pontos - a.pontos || a.entrou - b.entrou);
+// Desempate: mais acertos; depois menos tempo somado nas questões que acertou;
+// por último, quem entrou primeiro na sala.
+const acertosDe = j => Object.values(j.respostas).filter(r => r.acertou).length;
+const tempoDosAcertos = j => Object.values(j.respostas).reduce((t, r) => t + (r.acertou ? r.segundos : 0), 0);
+const compararJogadores = (a, b) => b.pontos - a.pontos || acertosDe(b) - acertosDe(a)
+  || tempoDosAcertos(a) - tempoDosAcertos(b) || a.entrou - b.entrou;
+const ordenar = sala => [...sala.jogadores.values()].sort(compararJogadores);
 
 function questaoPublica(sala, comGabarito) {
   const q = sala.questoes[sala.rodada];
@@ -632,6 +638,6 @@ function registrarArena(app, { pool, auth, limitar, exigirLogin, cortes, enviarP
 
 module.exports = registrarArena;
 Object.assign(module.exports, {
-  tempoDaQuestao, tempoDeLeitura, pontosDoAcerto, xpDaPartida, sortearItem, destaquesDaPartida, vitoriasPessoais,
+  tempoDaQuestao, tempoDeLeitura, pontosDoAcerto, compararJogadores, xpDaPartida, sortearItem, destaquesDaPartida, vitoriasPessoais,
   ITENS, ITEM_POR_ID, XP_ARENA, AREAS, salas
 });

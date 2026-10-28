@@ -3236,6 +3236,7 @@ const AREAS = [
 ];
 
 const CHAVE_TOKEN = 'mm_token';
+const CHAVE_USUARIO = 'mm_usuario'; // cópia da conta, para a tela abrir já logada
 const CHAVE_TEMA = 'mm_tema';
 const CHAVE_PROGRESSO = 'mm_progresso';
 // Sem conta, cada resposta fica aqui para o servidor calcular a nota TRI.
@@ -3263,7 +3264,11 @@ function formatarEnunciado(texto) {
     .replace(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/g, '<img src="$1" alt="Imagem da questão" loading="lazy">')
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     // Itálico das fontes (_Título do livro_), sem mexer em sublinhados de links.
-    .replace(/(^|[\s(“"])_([^_\n<>]{2,200}?)_(?=[\s.,;:)”"!?]|$)/g, '$1<em>$2</em>');
+    .replace(/(^|[\s(“"])_([^_\n<>]{2,200}?)_(?=[\s.,;:)”"!?]|$)/g, '$1<em>$2</em>')
+    // Índice, expoente e quebra de linha que vêm escritos como HTML em algumas questões.
+    .replace(/&lt;(\/?)(sub|sup|br)\s*\/?&gt;/gi, '<$1$2>')
+    // Escapes do Markdown (\[ \] \_ \*): mostra só o caractere.
+    .replace(/\\([[\]_*#()\\])/g, '$1');
 }
 
 function guardar(chave, valor) {
@@ -3858,6 +3863,7 @@ function irPara(tela) {
   document.getElementById('btn-perfil').classList.toggle('ativo', ['perfil', 'config'].includes(tela));
   document.getElementById('aba-arena').classList.toggle('ativa', tela === 'arena');
   if (tela !== 'arena') sairDaTelaArena();
+  talvezAtualizarSino();
   if (tela !== 'mensagens') pararConversa();
   if (tela !== 'comunidade') { clearTimeout(slider.relogio); pararSlide(); }
   modoFoco(['questao', 'prova'].includes(tela));
@@ -4063,7 +4069,7 @@ function desenharAreas() {
     return `
       <article class="area">
         <div class="figuras" aria-hidden="true">${a.figuras.map(([img, foco], i) =>
-          `<img src="img/areas/${img.includes('.') ? img : img + '.jpg'}" alt="" loading="lazy" decoding="async"
+          `<img ${i === inicio ? 'src' : 'data-src'}="img/areas/${img.includes('.') ? img : img + '.jpg'}" alt="" loading="lazy" decoding="async"
                 ${i === inicio ? 'class="ativa"' : ''} style="--foco:${foco}">`).join('')}</div>
         <div class="area-topo">
           <div>
@@ -4094,12 +4100,15 @@ function girarFiguras(card) {
   const figuras = [...card.querySelectorAll('.figuras img')];
   if (figuras.length < 2) return;
   let relogio = null;
+  // Só a figura da vez vem logo; as outras baixam quando o mouse passa em cima
+  // (no celular não tem mouse, e elas nunca são baixadas).
+  const carregar = () => figuras.forEach(f => { if (f.dataset.src) { f.src = f.dataset.src; delete f.dataset.src; } });
   const proxima = () => {
     const i = figuras.findIndex(f => f.classList.contains('ativa'));
     figuras[i].classList.remove('ativa');
     figuras[(i + 1) % figuras.length].classList.add('ativa');
   };
-  card.addEventListener('mouseenter', () => { relogio = setInterval(proxima, 3000); });
+  card.addEventListener('mouseenter', () => { carregar(); relogio = setInterval(proxima, 3000); });
   card.addEventListener('mouseleave', () => { clearInterval(relogio); proxima(); });
 }
 
@@ -4150,7 +4159,7 @@ let timerCronometro = null;
 let mostrouDica = false;
 
 // ---------- cronômetro ----------
-function formatarTempo(segundos) {
+function tempoCurto(segundos) {
   const m = Math.floor(segundos / 60);
   const s = segundos % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
@@ -4161,7 +4170,7 @@ function iniciarCronometro() {
   timerCronometro = setInterval(() => {
     if (!bloco) return;
     const seg = Math.floor((Date.now() - bloco.inicio) / 1000);
-    document.getElementById('cronometro').textContent = formatarTempo(seg);
+    document.getElementById('cronometro').textContent = tempoCurto(seg);
   }, 1000);
 }
 
@@ -4563,7 +4572,7 @@ function mostrarResultado() {
 
   document.getElementById('res-nota').innerHTML =
     `${percentual}%<small class="${percentual >= 50 ? 'subiu' : 'desceu'}">${acertos}/${total}</small>`;
-  document.getElementById('res-tempo').textContent = formatarTempo(media);
+  document.getElementById('res-tempo').textContent = tempoCurto(media);
 
   document.getElementById('res-aviso').textContent =
     'A nota TRI usa o mesmo cálculo do ENEM, com os parâmetros oficiais do INEP para cada questão: ' +
@@ -5517,6 +5526,7 @@ async function concluirEntrada(dados, mensagem) {
   historicoSim = null; // o histórico de simulados passa a vir da conta
   guardar(CHAVE_TOKEN, dados.token);
   usuarioLogado = dados.usuario;
+  guardar(CHAVE_USUARIO, JSON.stringify(usuarioLogado));
   desenharPerfil();
   await sincronizarProgresso();
   recadoConta(mensagem, 'bom');
@@ -5660,6 +5670,7 @@ async function excluirConta(evento) {
 function esquecerConta() {
   historicoSim = null;
   guardar(CHAVE_TOKEN, null);
+  guardar(CHAVE_USUARIO, null);
   usuarioLogado = null;
   desenharPerfil();
   carregarProgresso(); // volta ao progresso de quem usa sem conta
@@ -5677,19 +5688,32 @@ async function sair() {
   esquecerConta();
 }
 
-async function restaurarSessao() {
+// A conta aparece na hora com os dados guardados da última visita; o servidor
+// confirma em seguida. Servidor acordando (sem resposta ou erro 5xx) não
+// desloga ninguém (só 401/403 desloga): tenta de novo a cada 5 s, por até 1 minuto.
+async function restaurarSessao(tentativa = 0) {
   if (!ler(CHAVE_TOKEN)) { desenharPerfil(); await buscarNotasTri(); return; }
-  try {
-    const r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() });
-    if (r.ok) usuarioLogado = (await r.json()).usuario;
-    else {
-      // Sessão vencida: a pessoa volta para a tela de entrada.
-      guardar(CHAVE_TOKEN, null);
-      let pulou = false;
-      try { pulou = sessionStorage.getItem('mm_sem_conta'); } catch (e) {}
-      if (!pulou) abrirConta('entrar');
-    }
-  } catch (e) {}
+  if (!usuarioLogado) {
+    try { usuarioLogado = JSON.parse(ler(CHAVE_USUARIO)); } catch (e) { usuarioLogado = null; }
+    if (usuarioLogado) desenharPerfil();
+  }
+  let r = null;
+  try { r = await fetch(`${API_URL}/api/auth/eu`, { headers: cabecalhoAuth() }); } catch (e) { /* sem resposta */ }
+  if (r && r.ok) {
+    usuarioLogado = (await r.json()).usuario;
+    guardar(CHAVE_USUARIO, JSON.stringify(usuarioLogado));
+  } else if (r && (r.status === 401 || r.status === 403)) {
+    // Sessão vencida: a pessoa volta para a tela de entrada.
+    guardar(CHAVE_TOKEN, null); guardar(CHAVE_USUARIO, null);
+    usuarioLogado = null;
+    let pulou = false;
+    try { pulou = sessionStorage.getItem('mm_sem_conta'); } catch (e) {}
+    if (!pulou) abrirConta('entrar');
+  } else {
+    if (tentativa < 12) setTimeout(() => restaurarSessao(tentativa + 1), 5000);
+    if (!usuarioLogado) desenharPerfil();
+    return;
+  }
   desenharPerfil();
   await sincronizarProgresso();
 }
@@ -7760,11 +7784,18 @@ function iniciarSino() {
   clearInterval(relogioSino);
   if (!usuarioLogado) return;
   atualizarSino();
-  relogioSino = setInterval(() => { if (document.visibilityState === 'visible') atualizarSino(); }, 120000);
+  relogioSino = setInterval(() => { if (document.visibilityState === 'visible') atualizarSino(); }, 30000);
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && usuarioLogado) atualizarSino(); });
 
+// Trocar de tela também confere (no máximo a cada 15 s), para o aviso aparecer sem recarregar.
+let ultimoSino = 0;
+function talvezAtualizarSino() {
+  if (usuarioLogado && Date.now() - ultimoSino > 15000) atualizarSino();
+}
+
 async function atualizarSino() {
+  ultimoSino = Date.now();
   atualizarSeloMensagens();
   try {
     const r = await fetch(`${API_URL}/api/notificacoes/contagem`, { headers: cabecalhoAuth() });
@@ -8227,8 +8258,15 @@ const mmss = ms => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math
 const horaDeBrasilia = () => new Date(Date.now() - 3 * 3600000).getUTCHours();
 const comunidadeNaTela = () => !document.getElementById('tela-comunidade').classList.contains('escondido');
 
+// Diferença entre o relógio do servidor e o deste celular (vem em toda resposta da API).
+let diferencaDoServidor = 0;
+const agoraNoServidor = () => Date.now() + diferencaDoServidor;
+
 async function api(rota, opcoes = {}) {
+  const pediu = Date.now();
   const r = await fetch(`${API_URL}${rota}`, { ...opcoes, headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() } });
+  const agoraServidor = Number(r.headers.get('X-Agora'));
+  if (agoraServidor) diferencaDoServidor = agoraServidor - (pediu + Date.now()) / 2;
   const dados = await r.json().catch(() => ({}));
   // 404 sem mensagem: a rota ainda não chegou ao servidor (atualização em andamento).
   if (!r.ok) throw { daApi: dados.error || (r.status === 404 ? 'Essa parte acabou de ser atualizada e o servidor ainda está terminando de ligar. Tente de novo em alguns minutos.' : undefined) };
@@ -8248,7 +8286,7 @@ function mostrarXp(texto) {
 
 // Mesmo pomodoro para todo mundo: 25 min de foco e 5 de pausa, começando
 // na hora cheia e na meia hora (o servidor faz a mesma conta).
-function faseLocal(t = Date.now()) {
+function faseLocal(t = agoraNoServidor()) {
   const inicio = Math.floor(t / CICLO_MS) * CICLO_MS;
   const foco = t - inicio < FOCO_MS;
   return { ciclo: inicio / CICLO_MS, inicio, foco, resta: inicio + (foco ? FOCO_MS : CICLO_MS) - t, total: foco ? FOCO_MS : CICLO_MS - FOCO_MS };
@@ -9838,7 +9876,17 @@ function sairDaTelaArena() {
 function fecharConexaoArena() {
   if (arena.conexao) arena.conexao.abort();
   arena.conexao = null;
+  clearInterval(arena.vigia);
 }
+
+// O celular corta a conexão em silêncio quando o navegador vai para o fundo
+// (por exemplo, para mandar o convite no WhatsApp). O servidor manda um sinal a
+// cada 20 s: sem nada por 45 s, ou ao voltar para o site, reconecta e recebe a
+// sala como ela está agora.
+function reconectarArena() {
+  if (arena.codigo && arena.conexao) conectarArena(arena.codigo, true);
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reconectarArena(); });
 
 async function desenharInicioArena() {
   modoFoco(false);
@@ -10000,12 +10048,16 @@ async function entrarNaArenaDaNoite() {
   } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); desenharArenaDaNoite(); }
 }
 
-function conectarArena(codigo) {
+function conectarArena(codigo, deNovo = false) {
   fecharConexaoArena();
-  arena.codigo = codigo; arena.estado = null; arena.chave = null; arena.bauAberto = false; arena.vistos = new Set();
+  if (!deNovo) {
+    arena.codigo = codigo; arena.estado = null; arena.chave = null; arena.bauAberto = false; arena.vistos = new Set();
+    document.getElementById('conteudo-arena').innerHTML = '<div class="vazio">Entrando na sala…</div>';
+  }
   const ctrl = new AbortController();
   arena.conexao = ctrl;
-  document.getElementById('conteudo-arena').innerHTML = '<div class="vazio">Entrando na sala…</div>';
+  arena.ultimoSinal = Date.now();
+  arena.vigia = setInterval(() => { if (Date.now() - arena.ultimoSinal > 45000) reconectarArena(); }, 5000);
   (async () => {
     try {
       const r = await fetch(`${API_URL}/api/arena/salas/${codigo}/eventos`, { headers: cabecalhoAuth(), signal: ctrl.signal });
@@ -10020,6 +10072,7 @@ function conectarArena(codigo) {
       for (;;) {
         const { value, done } = await leitor.read();
         if (done) break;
+        arena.ultimoSinal = Date.now();
         buf += dec.decode(value, { stream: true });
         let i;
         while ((i = buf.indexOf('\n\n')) >= 0) {
@@ -10035,7 +10088,7 @@ function conectarArena(codigo) {
     if (arena.conexao !== ctrl || ctrl.signal.aborted) return;
     arena.tentativas++;
     if (arena.tentativas > 8) return arenaAcabou('Perdi a conexão com a sala. Confira a internet e entre de novo.');
-    setTimeout(() => { if (arena.conexao === ctrl) conectarArena(codigo); }, Math.min(10000, 1000 * arena.tentativas));
+    setTimeout(() => { if (arena.conexao === ctrl) conectarArena(codigo, true); }, Math.min(10000, 1000 * arena.tentativas));
   })();
 }
 
@@ -10362,6 +10415,7 @@ const AJUDA = {
     '<b>Crie uma sala</b> e mande o código de 6 números para os amigos, ou <b>entre</b> com o código de alguém.',
     'Primeiro aparece o texto da questão para ler com calma. Depois abrem as alternativas e o relógio começa.',
     '<b>Acertar vale 600 pontos</b>, e responder rápido dá até mais 400. Acertos seguidos dão bônus 🔥. Errar não tira pontos.',
+    '<b>Empate em pontos?</b> Ganha quem acertou mais questões; se ainda empatar, quem foi mais rápido somando o tempo das que acertou.',
     'No fim todo mundo ganha XP e abre um baú com um emblema. As questões que você errou voltam em 2 dias para a revanche.',
     'Todo dia às 19h30 tem a <b>Arena da noite</b>, aberta para toda a comunidade.'
   ]],

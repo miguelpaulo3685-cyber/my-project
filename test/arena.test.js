@@ -69,3 +69,14 @@ test('vitórias pessoais: todo mundo sai com alguma coisa', () => {
   const zero = a.vitoriasPessoais(jogador(4, 'Duda', 0, 4, 4), { anterior: { partidas: 2, vitorias: 0, recorde_pontos: 500, recorde_sequencia: 1 }, total: 2, jogadores: 4 });
   assert.strictEqual(zero.length, 1);
 });
+
+test('arena: empate em pontos vai para quem acertou mais e, depois, para quem foi mais rápido nos acertos', () => {
+  const j = (pontos, respostas, entrou) => ({ pontos, respostas, entrou });
+  const certa = segundos => ({ acertou: true, segundos }), errada = segundos => ({ acertou: false, segundos });
+  const maisAcertos = j(1000, [certa(9), certa(9)], 2), menosAcertos = j(1000, [certa(1), errada(1)], 1);
+  assert.ok(a.compararJogadores(maisAcertos, menosAcertos) < 0);
+  const rapido = j(1000, [certa(4), certa(5)], 2), lento = j(1000, [certa(8), certa(9)], 1);
+  assert.ok(a.compararJogadores(rapido, lento) < 0);
+  assert.ok(a.compararJogadores(j(1000, [], 1), j(1000, [], 2)) < 0, 'tudo igual: quem entrou primeiro');
+  assert.ok(a.compararJogadores(j(900, [certa(1)], 1), j(1000, [certa(9)], 2)) > 0, 'pontos vêm antes de tudo');
+});

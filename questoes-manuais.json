@@ -1300,5 +1300,103 @@
       "I6."
     ],
     "correta": 4
+  },
+  {
+    "ano": 2011,
+    "numero": 180,
+    "lingua": null,
+    "contexto": "Uma indústria fabrica um único tipo de produto e sempre vende tudo o que produz. O custo total para fabricar uma quantidade _q_ de produtos é dado por uma função, simbolizada por CT, enquanto o faturamento que a empresa obtém com a venda da quantidade _q_ também é uma função, simbolizada por FT. O lucro total (LT) obtido pela venda da quantidade q de produtos é dado pela expressão LT(q) = FT(q) – CT(q).\n\nConsiderando-se as funções FT(q) = 5q e CT(q) = 2q + 12 como faturamento e custo, qual a quantidade mínima de produtos que a indústria terá de fabricar para não ter prejuízo?",
+    "alternativas": [
+      "0",
+      "1",
+      "3",
+      "4",
+      "5"
+    ],
+    "correta": 3
+  },
+  {
+    "ano": 2013,
+    "numero": 64,
+    "lingua": null,
+    "contexto": "Uma das etapas do tratamento da água é a desinfecção, sendo a cloração o método mais empregado. Esse método consiste na dissolução do gás cloro numa solução sob pressão e sua aplicação na água a ser desinfectada. As equações das reações químicas envolvidas são:\n\nCl2(g) + 2 H2O (l) ⇌ HClO (aq) + H3O+ (aq) + Cl− (aq)\n\nHClO (aq) + H2O (l) ⇌  H3O+(aq) + ClO−(aq)      pKa= − log Ka= 7,53\n\nA ação desinfetante é controlada pelo ácido hipocloroso, que possui um potencial de desinfecção cerca de 80 vezes superior ao ânion hipoclorito. O pH do meio é importante, porque influencia na extensão com que o ácido hipocloroso se ioniza.\n\nPara que a desinfecção seja mais efetiva, o pH da água a ser tratada deve estar mais próximo de",
+    "alternativas": [
+      "0",
+      "5",
+      "7",
+      "9",
+      "14"
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2016,
+    "numero": 47,
+    "lingua": null,
+    "contexto": "A usina de Itaipu é uma das maiores hidrelétricas do mundo em geração de energia. Com 20 unidades geradoras e 14 000 MW de potência total instalada, apresenta uma queda de 118,4 m e vazão nominal de 690 m³/s por unidade geradora. O cálculo da potência teórica leva em conta a altura da massa de água represada pela barragem, a gravidade local (10 m/s²) e a densidade da água (1 000 kg/m³). A diferença entre a potência teórica e a instalada é a potência não aproveitada.\n\nDisponível em: www.itaipu.gov.br. Acesso em: 11 maio 2013 (adaptado).\n\nQual é a potência, em MW, não aproveitada em cada unidade geradora de Itaipu?",
+    "alternativas": [
+      "0",
+      "1,18",
+      "116,96",
+      "816,96",
+      "13 183,04"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2011,
+    "numero": 71,
+    "lingua": null,
+    "contexto": "Os biocombustíveis de primeira geração são derivados da soja, milho e cana-de-açúcar e sua produção ocorre através da fermentação. Biocombustíveis derivados de material celulósico ou biocombustíveis de segunda geração — coloquialmente chamados de “gasolina de capim” — são aqueles produzidos a partir de resíduos de madeira (serragem, por exemplo), talos de milho, palha de trigo ou capim de crescimento rápido e se apresentam como uma alternativa para os problemas enfrentados pelos de primeira geração, já que as matérias-primas são baratas e abundantes.\n\nDALE, B. E.; HUBER, G. W. Gasolina de capim e outros vegetais. Ago. 2009, nº 87 (adaptado).\n\nO texto mostra um dos pontos de vista a respeito do uso dos biocombustíveis na atualidade, os quais",
+    "alternativas": [
+      "São matrizes energéticas com menor carga de poluição para o ambiente e podem propiciar a geração de novos empregos, entretanto, para serem oferecidos com baixo custo, a tecnologia da degradação da celulose nos biocombustíveis de segunda geração deve ser extremamente eficiente.",
+      "Oferecem múltiplas dificuldades, pois a produção é de alto custo, sua implantação não gera empregos, e deve-se ter cuidado com o risco ambiental, pois eles oferecem os mesmos riscos que o uso de combustíveis fósseis.",
+      "Sendo de segunda geração, são produzidos por uma tecnologia que acarreta problemas sociais, sobretudo decorrente do fato de a matéria-prima ser abundante e facilmente encontrada, o que impede a geração de novos empregos.",
+      "Sendo de primeira e segunda geração, são produzidos por tecnologias que devem passar por uma avaliação criteriosa quanto ao uso, pois uma enfrenta o problema da falta de espaço para plantio da matéria-prima e a outra impede a geração de novas fontes de emprego.",
+      "Podem acarretar sérios problemas econômicos e sociais, pois a substituição do uso de petróleo afeta negativamente toda uma cadeia produtiva na medida em que exclui diversas fontes de emprego nas refinarias, postos de gasolina e no transporte de petróleo e gasolina."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2018,
+    "numero": 69,
+    "lingua": null,
+    "contexto": "São Paulo, 10 de janeiro de 1979.  \nExmo. Sr. Presidente Ernesto Geisel.  \nConsiderando as instruções dadas por V. S. de que sejam negados os passaportes aos senhores Francisco Julião, Miguel Arraes, Leonel Brizola, Luis Prestes, Paulo Schilling, Gregório Bezerra, Márcio Moreira Alves  \ne Paulo Freire. Considerando que, desde que nasci, me identifico plenamente com a pele, a cor dos cabelos, a cultura, o sorriso, as aspirações, a história e o sangue destes oito senhores. Considerando tudo isto, por imperativo de minha  \nconsciência, venho por meio desta devolver o passaporte que, negado a eles, me foi concedido pelos órgãos competentes de seu governo.\n\nCarta do cartunista Henrique de Souza Fiiho, conhecido como Henfíi. In: HENFIL. **Cartas da mãe**. Rio de Janeiro: Codecri, 1981 (adaptado).\n\nNo referido contexto histórico, a manifestação do cartunista Henfil expressava uma crítica ao(à)",
+    "alternativas": [
+      "Censura moral das produções culturais.",
+      "Limite do processo de distensão política.",
+      "Interferência militar de países estrangeiros.",
+      "Representação social das agremiações partidárias.",
+      "Impedimento de eleição das assembleias estaduais."
+    ],
+    "correta": 1
+  },
+  {
+    "ano": 2018,
+    "numero": 73,
+    "lingua": null,
+    "contexto": "**TEXTO I**  \nQuando um exército atravessa montanhas, florestas, zonas de precipícios, ou marcha ao longo de desfiladeiros, alagadiços ou pântanos, ou qualquer outro terreno onde a deslocação é árdua, está em terreno difícil. O terreno onde é apertado e a sua saída é tortuosa e onde uma pequena força inimiga pode atacar a minha, embora maior, é cercado.\n\nTZU, S. **A arte da guerra**. São Paulo: Martin Claret, 2001\n\nTEXTO II  \nO objetivo principal era encontrar e matar Osama Bin Laden. Onde ele se esconde? Não podemos esquecer a dificuldade de ocupação do país, que possui um relevo montanhoso, cheio de cavernas, onde fica fácil, para quem está acostumado com esse relevo, esconder-se.\n\nOLIVEIRA, M. G.; SANTOS, M. S. **Ásia**: uma visão histórica, política e econômica do continente. Rio de Janeiro: E-Papers, 2009 (adaptado).\n\nAs situações apresentadas atestam a importância da relação entre a topografia e o(a)",
+    "alternativas": [
+      "Construção de vias terrestres.",
+      "Preservação do meio ambiente.",
+      "Emprego de armamentos sofisticados.",
+      "Intimidação contínua da população local.",
+      "Domínio cognitivo da configuração espacial."
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2019,
+    "numero": 124,
+    "lingua": null,
+    "contexto": "Uma das técnicas de reciclagem química do polímero PET \\[poli(tereftalato de etileno)\\] gera o tereftalato de metila e o etanodiol, conforme o esquema de reação, e ocorre por meio de uma reação de transesterificação.\n\n![](https://enem.dev/2019/questions/124/24b5f137-a249-4cc7-aad5-0cfb8b5c94f9.png)\n\nO composto A, representado no esquema de reação, é o:",
+    "alternativas": [
+      "Metano.",
+      "Metanol.",
+      "Éter metílico.",
+      "Ácido etanoico.",
+      "Anidrido etanoico."
+    ],
+    "correta": 1
   }
 ]
