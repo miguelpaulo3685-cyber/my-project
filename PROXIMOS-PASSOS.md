@@ -34,6 +34,12 @@ Em 28/10 também: "Ache a sua turma" logo depois de criar a conta (escola e curs
 fala do diferencial ("Ninguém passa no ENEM sozinho") e a Comunidade ficou em duas partes: **Minha turma** (primeiros
 passos, dupla, colegas com 🤝 para convidar) e **Hoje na comunidade** (metas, comemorar, quem chegou, feed); Reels no fim.
 Saiu o quadro "Pessoas para seguir" (repetia colegas e quem chegou). Cuidado combinado: não encher o site de função.
+A conexão não se limita à escola: 🔍 "Encontrar pessoas" no topo da Comunidade (busca pelo nome; sem nome, sugere
+quem quer o mesmo curso e mora na mesma cidade/estado, de qualquer escola), cidade e estado opcionais no perfil, e o
+"Para comemorar" inclui o grupo do curso. Três níveis: escola (quem você conhece), curso (quem quer o mesmo) e todos.
+
+**Parada em 28/10.** Próximo passo combinado: lançar na escola antiga (todos no mesmo dia, com o mesmo nome de
+escola) e medir quem volta em 7 dias e quem cria laço (dupla, seguir, boas-vindas). Antes de divulgar: Render pago.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
 
 ## FASE FINAL (decidido em 27/10): nada de função nova (exceção: o diferencial acima)

@@ -16,3 +16,12 @@ test('acolhimento: escola é opcional, com limite de tamanho', () => {
   assert.ok(lerEscola('!!').erro);
   assert.ok(lerEscola(42).erro);
 });
+
+test('acolhimento: cidade e estado são opcionais e o estado precisa ser uma sigla válida', () => {
+  const { lerCidade } = require('../acolhimento');
+  assert.deepStrictEqual(lerCidade(undefined, undefined), {});
+  assert.deepStrictEqual(lerCidade('  São  Paulo ', 'sp'), { cidade: 'São Paulo', uf: 'SP' });
+  assert.deepStrictEqual(lerCidade('', ''), { cidade: null, uf: null });
+  assert.ok(lerCidade('x', 'XX').erro);
+  assert.ok(lerCidade('x'.repeat(61), 'SP').erro);
+});

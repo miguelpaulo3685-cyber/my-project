@@ -35,11 +35,66 @@ function lerEscola(valor) {
   return { mudou: true, escola, chave };
 }
 
+const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+
+// Cidade e estado, os dois opcionais. Estado só com a sigla certa.
+function lerCidade(cidade, uf) {
+  const r = {};
+  if (cidade !== undefined) {
+    if (cidade !== null && typeof cidade !== 'string') return { erro: 'Cidade inválida.' };
+    const c = (cidade || '').trim().replace(/\s+/g, ' ');
+    if (c.length > 60) return { erro: 'O nome da cidade pode ter até 60 caracteres.' };
+    r.cidade = c || null;
+  }
+  if (uf !== undefined) {
+    const u = typeof uf === 'string' ? uf.trim().toUpperCase() : '';
+    if (u && !UFS.includes(u)) return { erro: 'Escolha um estado da lista.' };
+    r.uf = u || null;
+  }
+  return r;
+}
+
 function registrarAcolhimento(app, { pool, auth, limitar, exigirLogin }) {
   const porConta = req => `u${req.usuario.id}`;
   const freioBoasVindas = limitar(auth.criarFreio(60, 60 * 60 * 1000), 'Muitas boas-vindas em pouco tempo. Espere um pouco 🙂', porConta);
   const idValido = v => { const n = Number(v); return Number.isInteger(n) && n > 0 ? n : null; };
   const pessoa = r => ({ id: r.id, nome: r.nome, foto: imagens.urlAssinada(r.foto_id) });
+
+  // 🔍 Encontrar pessoas: pelo nome; sem nome, quem quer o mesmo curso e mora na
+  // mesma cidade ou estado, de qualquer escola.
+  app.get('/api/pessoas', exigirLogin, async (req, res) => {
+    const eu = req.usuario.id;
+    const busca = typeof req.query.q === 'string' ? req.query.q.trim().slice(0, 40) : '';
+    try {
+      const minha = (await pool.query(
+        `SELECT u.cidade, u.uf, u.escola_chave,
+                ARRAY(SELECT m.grupo_id FROM grupo_membros m JOIN grupos g ON g.id = m.grupo_id WHERE m.usuario_id = u.id AND g.tipo = 'objetivo') AS grupos
+           FROM usuarios u WHERE u.id = $1`, [eu])).rows[0] || {};
+      const { rows } = await pool.query(
+        `SELECT * FROM (SELECT u.id, u.username AS nome, u.foto_id, u.escola, u.cidade, u.uf, u.ultimo_acesso,
+                EXISTS (SELECT 1 FROM seguidores s WHERE s.seguidor_id = $1 AND s.seguido_id = u.id) AS sigo,
+                (SELECT g.nome FROM grupo_membros m JOIN grupos g ON g.id = m.grupo_id
+                  WHERE m.usuario_id = u.id AND g.tipo = 'objetivo' AND m.grupo_id = ANY($3::int[]) LIMIT 1) AS mesmo_curso,
+                (SELECT g.nome FROM grupo_membros m JOIN grupos g ON g.id = m.grupo_id
+                  WHERE m.usuario_id = u.id AND g.tipo = 'objetivo' ORDER BY m.created_at LIMIT 1) AS curso,
+                (u.cidade IS NOT NULL AND lower(u.cidade) = lower($4) AND u.uf IS NOT DISTINCT FROM $5) AS mesma_cidade,
+                (u.uf IS NOT NULL AND u.uf = $5) AS mesmo_uf
+           FROM usuarios u
+          WHERE u.id <> $1 AND ${SEM_BLOQUEIO}
+            AND ($2 = '' OR lower(u.username) LIKE '%' || lower($2) || '%')) p
+          WHERE $2 <> '' OR p.mesmo_curso IS NOT NULL OR p.mesma_cidade OR p.mesmo_uf OR p.ultimo_acesso > NOW() - INTERVAL '7 days'
+          ORDER BY p.sigo, (p.mesmo_curso IS NOT NULL AND p.mesma_cidade) DESC, (p.mesmo_curso IS NOT NULL) DESC, p.mesma_cidade DESC,
+                   p.mesmo_uf DESC, p.ultimo_acesso DESC NULLS LAST
+          LIMIT 20`, [eu, busca.replace(/[%_\\]/g, ''), minha.grupos || [], minha.cidade || '', minha.uf || null]);
+      res.json({ pessoas: rows.map(r => ({ ...pessoa(r), sigo: r.sigo,
+        motivo: r.mesmo_curso && r.mesma_cidade ? `Também quer ${r.mesmo_curso} · ${r.cidade}` : r.mesmo_curso ? `Também quer ${r.mesmo_curso}`
+          : r.mesma_cidade ? `Também é de ${r.cidade}` : r.mesmo_uf ? `Também é de ${r.uf}`
+          : [r.curso, r.cidade ? `${r.cidade}${r.uf ? ` - ${r.uf}` : ''}` : r.uf].filter(Boolean).join(' · ') || 'Estudando por aqui' })) });
+    } catch (erro) {
+      console.error('Erro na busca de pessoas:', erro.message);
+      res.status(500).json({ error: 'Não consegui buscar agora.' });
+    }
+  });
 
   // Sugestões para o campo de escola: os nomes que mais gente já escreveu.
   app.get('/api/escolas', exigirLogin, async (req, res) => {
@@ -152,3 +207,4 @@ function registrarAcolhimento(app, { pool, auth, limitar, exigirLogin }) {
 module.exports = registrarAcolhimento;
 module.exports.chaveDaEscola = chaveDaEscola;
 module.exports.lerEscola = lerEscola;
+module.exports.lerCidade = lerCidade;

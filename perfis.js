@@ -7,7 +7,7 @@
 
 const imagens = require('./imagens');
 const { notificarSeguidores } = require('./social');
-const { lerEscola } = require('./acolhimento');
+const { lerEscola, lerCidade } = require('./acolhimento');
 
 const DENUNCIAS_PARA_ESCONDER = 3;
 const MAXIMO_DE_PUBLICACOES = 60; // por pessoa: o banco grátis tem pouco espaço
@@ -65,7 +65,7 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
     const dono = Boolean(eu && eu.id === id);
     try {
       const perfil = await pool.query(
-        `SELECT u.id, u.username, COALESCE(u.bio, '') AS bio, u.escola, u.foto_id, u.created_at,
+        `SELECT u.id, u.username, COALESCE(u.bio, '') AS bio, u.escola, u.cidade, u.uf, u.foto_id, u.created_at,
                 (SELECT COUNT(*)::int FROM respostas r WHERE r.usuario_id = u.id) AS questoes,
                 (SELECT COUNT(*)::int FROM respostas r WHERE r.usuario_id = u.id AND r.acertou) AS acertos,
                 (SELECT COUNT(*)::int FROM seguidores s WHERE s.seguido_id = u.id) AS seguidores,
@@ -88,7 +88,7 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
 
       res.json({
         perfil: {
-          id: u.id, nome: u.username, bio: u.bio, escola: u.escola, foto: urlDaImagem(u.foto_id), desde: u.created_at,
+          id: u.id, nome: u.username, bio: u.bio, escola: u.escola, cidade: u.cidade, uf: u.uf, foto: urlDaImagem(u.foto_id), desde: u.created_at,
           questoes: u.questoes, acerto: u.questoes ? Math.round(100 * u.acertos / u.questoes) : null,
           publicacoes: pubs.rowCount, meu: dono,
           seguidores: u.seguidores, seguindo: u.seguindo, sigo: u.sigo
@@ -118,6 +118,8 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
     }
     const escola = lerEscola(req.body?.escola);
     if (escola.erro) return res.status(400).json({ error: escola.erro });
+    const lugar = lerCidade(req.body?.cidade, req.body?.uf);
+    if (lugar.erro) return res.status(400).json({ error: lugar.erro });
     try {
       const atual = await pool.query('SELECT foto_id FROM usuarios WHERE id = $1', [req.usuario.id]);
       let fotoId = atual.rows[0]?.foto_id ?? null;
@@ -132,6 +134,8 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
         'UPDATE usuarios SET bio = COALESCE($1, bio), foto_id = $2, updated_at = NOW() WHERE id = $3',
         [bio === undefined ? null : bio.trim(), fotoId, req.usuario.id]
       );
+      if ('cidade' in lugar) await pool.query('UPDATE usuarios SET cidade = $1 WHERE id = $2', [lugar.cidade, req.usuario.id]);
+      if ('uf' in lugar) await pool.query('UPDATE usuarios SET uf = $1 WHERE id = $2', [lugar.uf, req.usuario.id]);
       if (escola.mudou) await pool.query('UPDATE usuarios SET escola = $1, escola_chave = $2 WHERE id = $3', [escola.escola, escola.chave, req.usuario.id]);
       if (antiga && antiga !== fotoId) await apagarImagem(antiga);
       res.json({ message: 'Perfil salvo.', foto: urlDaImagem(fotoId) });

@@ -656,6 +656,8 @@ async function runMigrations() {
     await pool.query(`
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS escola VARCHAR(80);
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS escola_chave VARCHAR(80);
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS cidade VARCHAR(60);
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS uf CHAR(2);
       CREATE INDEX IF NOT EXISTS idx_usuarios_escola ON usuarios (escola_chave) WHERE escola_chave IS NOT NULL;
       CREATE TABLE IF NOT EXISTS boas_vindas (
         novo_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,

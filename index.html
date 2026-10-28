@@ -1851,6 +1851,18 @@
     .titulo-parte:first-of-type { margin-top: 6px; }
     .botoes-colega { display: flex; gap: 6px; justify-content: center; }
     .botoes-colega .acao { margin: 0; }
+    .lupa { margin-left: auto; font-size: 1rem; }
+    .linha-cidade { display: flex; gap: 8px; }
+    .linha-cidade input { flex: 1; }
+    .linha-cidade select { width: 86px; }
+    .lista-pessoas { max-height: 60vh; overflow-y: auto; margin-top: 8px; }
+    .linha-pessoa { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--borda); }
+    .linha-pessoa .autor-link { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+    .linha-pessoa small { color: var(--texto-fraco); font-size: .8rem; }
+    .linha-pessoa .acao { margin: 0; }
+    .linha-pessoa .bolha-autor { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; }
+    .linha-pessoa .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
     .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
     .linha-escola { display: flex; gap: 8px; }
     .linha-escola input { flex: 1; margin: 0; }
@@ -2945,6 +2957,9 @@
       <label class="campo-modal" for="perfil-escola">Escola <small>(opcional: para achar seus colegas)</small></label>
       <input class="entrada-modal" id="perfil-escola" maxlength="80" list="lista-escolas" autocomplete="off" placeholder="Ex.: Colégio Estadual São José" oninput="sugerirEscolas(this)">
       <datalist id="lista-escolas"></datalist>
+      <label class="campo-modal" for="perfil-cidade">Cidade e estado <small>(opcional: para achar gente perto)</small></label>
+      <div class="linha-cidade"><input class="entrada-modal" id="perfil-cidade" maxlength="60" placeholder="Ex.: Campinas">
+        <select class="entrada-modal" id="perfil-uf" aria-label="Estado"><option value="">UF</option></select></div>
       <button class="acao" id="salvar-perfil" style="width:100%;margin-top:16px;padding:13px" onclick="salvarPerfil()">Salvar</button>
       <div id="recado-perfil"></div>
     </div>
@@ -3091,7 +3106,8 @@
   <main class="pagina escondido" id="tela-comunidade">
     <div class="cabecalho-secao">
       <h1>Comunidade <button class="botao-ajuda" onclick="abrirAjuda('comunidade')" aria-label="Como funciona a comunidade">?</button>
-        <span class="vivo" id="vivo-comunidade" hidden></span></h1>
+        <span class="vivo" id="vivo-comunidade" hidden></span>
+        <button class="btn-icone lupa" onclick="abrirBuscaPessoas()" aria-label="Encontrar pessoas" title="Encontrar pessoas">🔍</button></h1>
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
     <div class="subabas" id="subabas-comunidade"></div>
@@ -7482,7 +7498,7 @@ function desenharPaginaPerfil() {
         </div>
       </div>
     </div>
-    ${u.escola ? `<p class="perfil-escola">🏫 ${escapar(u.escola)}</p>` : ''}
+    ${u.escola || u.cidade || u.uf ? `<p class="perfil-escola">${[u.escola ? `🏫 ${escapar(u.escola)}` : '', u.cidade || u.uf ? `📍 ${escapar([u.cidade, u.uf].filter(Boolean).join(' - '))}` : ''].filter(Boolean).join(' · ')}</p>` : ''}
     <p class="perfil-bio">${escapar(u.bio)}</p>
     ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button>
         <button class="acao discreta" onclick="abrirConversa(${u.id})">💬 Mensagem</button>
@@ -7684,6 +7700,10 @@ function abrirEdicaoPerfil() {
   fotoPerfilNova = undefined;
   document.getElementById('perfil-bio').value = perfilAberto.perfil.bio;
   document.getElementById('perfil-escola').value = perfilAberto.perfil.escola || '';
+  const uf = document.getElementById('perfil-uf');
+  if (uf.options.length < 2) uf.insertAdjacentHTML('beforeend', UFS.map(u => `<option>${u}</option>`).join(''));
+  document.getElementById('perfil-cidade').value = perfilAberto.perfil.cidade || '';
+  uf.value = perfilAberto.perfil.uf || '';
   document.getElementById('recado-perfil').innerHTML = '';
   desenharFotoEdicao();
   abrirModal('modal-editar-perfil');
@@ -7708,7 +7728,8 @@ function removerFotoPerfil() {
 
 async function salvarPerfil() {
   const botao = document.getElementById('salvar-perfil');
-  const corpo = { bio: document.getElementById('perfil-bio').value.trim(), escola: document.getElementById('perfil-escola').value.trim() || null };
+  const corpo = { bio: document.getElementById('perfil-bio').value.trim(), escola: document.getElementById('perfil-escola').value.trim() || null,
+    cidade: document.getElementById('perfil-cidade').value.trim() || null, uf: document.getElementById('perfil-uf').value || null };
   if (fotoPerfilNova !== undefined) corpo.foto = fotoPerfilNova;
   botao.disabled = true;
   botao.textContent = 'Salvando…';
@@ -8760,6 +8781,42 @@ async function comemorar(id, emoji, botao) {
     await postar(`/api/atividades/${id}/reagir`, { emoji });
     linha.querySelector('.botoes-conquista').innerHTML = '<span class="pista">Comemorado 🎉</span>';
   } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); linha.querySelectorAll('.botoes-conquista button').forEach(b => { b.disabled = false; }); }
+}
+
+// ---------- 🔍 encontrar pessoas ----------
+const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
+function abrirBuscaPessoas() {
+  if (!usuarioLogado) return abrirConta('criar');
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.onclick = e => { if (e.target === fundo) fundo.remove(); };
+  fundo.innerHTML = `<div class="modal busca-pessoas" role="dialog" aria-label="Encontrar pessoas">
+    <div class="modal-topo"><h2>Encontrar pessoas</h2><button type="button" class="btn-sair" onclick="this.closest('.fundo-modal').remove()" aria-label="Fechar">✕</button></div>
+    <input class="entrada-modal" type="search" placeholder="Buscar pelo nome" maxlength="40" autocomplete="off" oninput="buscarPessoas(this.value)">
+    <p class="pista" id="dica-busca">Gente que quer o mesmo curso e mora perto de você, de qualquer escola.</p>
+    <div class="lista-pessoas" id="achar-pessoas"><div class="vazio">Carregando…</div></div></div>`;
+  document.body.appendChild(fundo);
+  fundo.querySelector('input').focus();
+  buscarPessoas('');
+}
+
+let relogioBusca = null;
+function buscarPessoas(texto) {
+  clearTimeout(relogioBusca);
+  relogioBusca = setTimeout(async () => {
+    const alvo = document.getElementById('achar-pessoas');
+    if (!alvo) return;
+    const q = texto.trim();
+    document.getElementById('dica-busca').hidden = Boolean(q);
+    let d;
+    try { d = await api(`/api/pessoas?q=${encodeURIComponent(q)}`); } catch (e) {
+      alvo.innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return;
+    }
+    alvo.innerHTML = d.pessoas.length ? d.pessoas.map(p => `<div class="linha-pessoa">${bolha(p)}
+        <button class="autor-link" onclick="this.closest('.fundo-modal').remove(); abrirPerfil(${p.id})"><b>${escapar(p.nome)}</b><small>${escapar(p.motivo)}</small></button>
+        <button class="acao pequena${p.sigo ? ' discreta' : ''}" onclick="seguirSugestao(${p.id}, this)">${p.sigo ? 'Seguindo ✓' : 'Seguir'}</button></div>`).join('')
+      : `<div class="vazio">${q ? 'Ninguém com esse nome por aqui ainda.' : 'Coloque seu curso e sua cidade no perfil para ver sugestões.'}</div>`;
+  }, 250);
 }
 
 let relogioEscolas = null;

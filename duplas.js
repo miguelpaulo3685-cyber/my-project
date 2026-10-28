@@ -197,6 +197,8 @@ function registrarDuplas(app, { pool, auth, limitar, exigirLogin }) {
             AND NOT EXISTS (SELECT 1 FROM atividades_reacoes r WHERE r.atividade_id = a.id AND r.usuario_id = $1)
             AND (EXISTS (SELECT 1 FROM seguidores s WHERE s.seguidor_id = $1 AND s.seguido_id = u.id)
                  OR (u.escola_chave IS NOT NULL AND u.escola_chave = (SELECT escola_chave FROM usuarios WHERE id = $1))
+                 OR EXISTS (SELECT 1 FROM grupo_membros a JOIN grupo_membros b ON b.grupo_id = a.grupo_id JOIN grupos g ON g.id = a.grupo_id
+                             WHERE a.usuario_id = $1 AND b.usuario_id = u.id AND g.tipo = 'objetivo')
                  OR EXISTS (SELECT 1 FROM duplas d WHERE d.status = 'ativa' AND ((d.convidou_id = $1 AND d.convidado_id = u.id) OR (d.convidado_id = $1 AND d.convidou_id = u.id))))
           ORDER BY a.created_at DESC LIMIT 6`, [eu, TIPOS_DE_CONQUISTA]);
       res.json({ conquistas: rows.map(a => ({ id: a.id, tipo: a.tipo, texto: a.texto, alvo_id: a.alvo_id, created_at: a.created_at,
