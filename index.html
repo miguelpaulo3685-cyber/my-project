@@ -259,6 +259,7 @@
     .barra-area { height: 4px; background: var(--superficie-2); overflow: hidden; }
     .barra-area i { display: block; height: 100%; transition: width .5s ease; }
 
+    .area-rodape.so-botao { border-top: 0; padding-top: 0; justify-content: flex-end; background: transparent; }
     .area-rodape {
       border-top: 1px solid var(--borda);
       background: var(--superficie-2);
@@ -3053,8 +3054,8 @@
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
     <div class="subabas" id="subabas-comunidade"></div>
-    <div id="faixa-reels"></div>
     <div class="atalhos-inicio atalhos-comunidade" id="atalhos-comunidade"></div>
+    <div id="faixa-reels"></div>
     <div id="conteudo-comunidade"></div>
   </main>
 
@@ -4071,17 +4072,17 @@ function desenharAreas() {
           </div>
           <div class="emblema" style="background:${a.cor}1f;color:${a.cor}">${a.icone}</div>
         </div>
-        <div class="barra-area">
-          <i style="width:${p.feitas ? taxa : 0}%;background:${a.cor}"></i>
+        ${p.feitas ? `<div class="barra-area">
+          <i style="width:${taxa}%;background:${a.cor}"></i>
         </div>
         <div class="area-rodape">
           <div class="metrica"><b>${p.feitas}</b><span>Feitas</span></div>
-          <div class="metrica"><b>${p.feitas ? taxa + '%' : '—'}</b><span>Acerto</span></div>
+          <div class="metrica"><b>${taxa}%</b><span>Acerto</span></div>
           <button class="acao" onclick="abrirMateria('${a.id}')">Treinar</button>
         </div>
         <div class="tri-area" title="Estimativa com a mesma TRI do ENEM e os parâmetros oficiais do INEP. Conta só a primeira resposta de cada questão.">
           ${linhaTri(notasTri[a.id])}
-        </div>
+        </div>` : `<div class="area-rodape so-botao"><button class="acao" onclick="abrirMateria('${a.id}')">Treinar</button></div>`}
       </article>`;
   }).join('');
   document.querySelectorAll('#grade-areas .area').forEach(girarFiguras);
@@ -8021,17 +8022,16 @@ async function desenharCartaoDesafio() {
 async function desenharAtalhoArena() {
   const alvo = document.getElementById('atalho-arena');
   if (!alvo) return;
-  let detalhe = 'Questões ao vivo com os amigos. Crie uma sala ou entre com um código.';
-  let titulo = 'Arena';
+  let detalhe = '', titulo = '';
   if (usuarioLogado) {
     try {
       const [eu, ag] = await Promise.all([api('/api/arena/eu'), api('/api/arena/agenda')]);
       const hora = new Date(ag.comeca_em).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
       if (ag.aberta) { titulo = 'Arena da noite: aberta!'; detalhe = `${plural(ag.jogadores, 'pessoa esperando', 'pessoas esperando')}. Começa às ${hora}.`; }
       else if (eu.revanche) { titulo = 'Arena · revanche'; detalhe = `${plural(eu.revanche, 'questão que você errou voltou', 'questões que você errou voltaram')}. Agora você sabe?`; }
-      else detalhe = `Jogue com os amigos ou na Arena da noite, todo dia às ${hora}.`;
-    } catch (e) { /* fica o texto padrão */ }
+    } catch (e) { /* sem novidade, o atalho não aparece */ }
   }
+  if (!titulo) { alvo.innerHTML = ''; return; }
   alvo.innerHTML = `<button class="atalho-inicio" onclick="abrirArena()"><span class="icone">⚡</span>
     <span><b>${escapar(titulo)}</b><small>${escapar(detalhe)}</small></span></button>`;
 }
@@ -8374,9 +8374,6 @@ async function desenharFaixaReels() {
   irParaSlide(0);
 }
 
-// Vídeo do YouTube começa sozinho, sem som (o navegador só deixa assim); TikTok espera o toque.
-const slideSozinho = i => slider.lista[i] && slider.lista[i].plataforma !== 'tiktok'
-  && !matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function irParaSlide(i) {
   const n = slider.lista.length;
@@ -8387,8 +8384,7 @@ function irParaSlide(i) {
   if (!trilho) return;
   trilho.style.transform = `translateX(-${slider.i * 100}%)`;
   document.querySelectorAll('.bolinhas-slide button').forEach((b, k) => b.setAttribute('aria-current', String(k === slider.i)));
-  if (slideSozinho(slider.i)) tocarSlide(slider.i, true);
-  else agendarSlide();
+  agendarSlide();
 }
 const passarSlide = direcao => irParaSlide(slider.i + direcao);
 
@@ -8495,7 +8491,7 @@ async function desenharAgora() {
       <section>${htmlAtividades()}</section>
       <aside class="lado-agora">${htmlMeuProgresso()}
         <section class="painel"><div class="titulo-bloco"><b>Pessoas para seguir</b></div><div class="sugestoes" id="sugestoes"><span class="pista">Carregando…</span></div></section>
-        ${htmlMiniSalas()}${htmlMiniPerguntas()}</aside>
+      </aside>
     </div>`;
   carregarSugestoes();
 }
@@ -8702,25 +8698,7 @@ function htmlMeuProgresso() {
       <small>${s.hoje ? 'Hoje já conta! Volte amanhã para continuar.' : s.dias ? 'Estude hoje para não perder a sequência!' : 'Responda uma questão para começar a sua.'}</small></div></div>
     <div class="nivel"><b>Nível ${p.nivel} · ${escapar(p.titulo)}</b><span>${p.xp} / ${p.xp_do_proximo} XP</span></div>
     <div class="barra-xp"><i style="width:${pct}%"></i></div>
-    <div class="selos">${p.selos.map(x => `<span class="selo-conquista${x.tem ? '' : ' bloqueado'}" title="${escapar(x.nome)}${x.tem ? '' : ' (ainda não)'}">${x.emoji}</span>`).join('')}</div>
-    <p class="pista">Ajudar vale mais: +5 XP por pergunta que você responde, +25 se for a melhor. Pomodoro completo na sala: +10.</p>
-  </section>`;
-}
-
-function htmlMiniSalas() {
-  const salas = [...agora.salas].sort((a, b) => b.presentes - a.presentes).slice(0, 4);
-  return `<section class="painel"><div class="titulo-bloco"><b>Salas ao vivo</b><button class="link-bloco" onclick="trocarAbaComunidade('salas')">Ver todas</button></div>
-    <div class="mini-salas">${salas.map(s => `<button class="mini-sala" onclick="entrarNaSala('${s.id}')"><span>${s.emoji}</span><b>${escapar(s.nome)}</b>
-      <small class="${s.presentes ? 'tem' : ''}">${s.presentes ? `${s.presentes} agora` : 'vazia'}</small></button>`).join('')}</div></section>`;
-}
-
-function htmlMiniPerguntas() {
-  const ps = agora.perguntas_sem_resposta || [];
-  return `<section class="painel"><div class="titulo-bloco"><b>Alguém precisa de ajuda</b>
-      <button class="link-bloco" onclick="filtroPerguntas.filtro = 'sem_resposta'; trocarAbaComunidade('perguntas')">Ver todas</button></div>
-    ${ps.length ? ps.map(p => `<button class="mini-pergunta" onclick="abrirPergunta(${p.id})">${escapar(p.titulo)}
-        <small>${escapar(NOME_AREA_PERGUNTA[p.area] || '')} · ${escapar(p.autor)} · ${tempoAtras(p.created_at)}</small></button>`).join('')
-      : '<p class="pista" style="margin:0">Nenhuma pergunta sem resposta 👏 Tem uma dúvida? <button class="link-bloco" onclick="abrirPerguntar()">Pergunte</button></p>'}
+    ${p.selos.some(x => x.tem) ? `<div class="selos">${p.selos.filter(x => x.tem).map(x => `<span class="selo-conquista" title="${escapar(x.nome)}">${x.emoji}</span>`).join('')}</div>` : ''}
   </section>`;
 }
 
@@ -9711,7 +9689,7 @@ function desenharConviteApp() {
   if (!alvo) return;
   const dispensou = Number(ler(CHAVE_CONVITE_APP) || 0) > Date.now() - 14 * 86400000;
   const daPraInstalar = pedidoInstalar || (ehIphone() && !noApp());
-  if (noApp() || dispensou || !daPraInstalar) { alvo.innerHTML = ''; return; }
+  if (noApp() || dispensou || !daPraInstalar || totais().feitas < 10) { alvo.innerHTML = ''; return; }
   alvo.innerHTML = `<section class="convite-app">
     <img src="img/icone-192.png" alt="" width="44" height="44">
     <div><b>Instale o M&M Estudos ${matchMedia('(pointer: coarse)').matches ? 'no celular' : 'no computador'}</b>
