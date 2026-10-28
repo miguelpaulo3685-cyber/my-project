@@ -1219,6 +1219,7 @@ require('./discussao')(app, { pool, auth, limitar, exigirLogin, exigirModerador 
 require('./desafio')(app, { pool, auth, limitar, exigirLogin });
 require('./grupos')(app, { pool, auth, limitar, exigirLogin });
 require('./comunidade')(app, { pool, auth, limitar, exigirLogin });
+require('./acolhimento')(app, { pool, auth, limitar, exigirLogin });
 require('./perguntas')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador });

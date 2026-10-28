@@ -652,6 +652,19 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela de erros do site');
 
+    // Acolhimento (acolhimento.js): escola no perfil e boas-vindas para quem chega.
+    await pool.query(`
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS escola VARCHAR(80);
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS escola_chave VARCHAR(80);
+      CREATE INDEX IF NOT EXISTS idx_usuarios_escola ON usuarios (escola_chave) WHERE escola_chave IS NOT NULL;
+      CREATE TABLE IF NOT EXISTS boas_vindas (
+        novo_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        quem_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (novo_id, quem_id)
+      );
+    `);
+
     // Canais do YouTube que o servidor confere sozinho atrás de Shorts novos (canais.js).
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reels_canais (

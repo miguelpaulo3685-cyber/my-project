@@ -21,7 +21,15 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   (padrão "só quem eu sigo", bloquear, denunciar, sem links, limites por dia); site a partir de 13 anos.
 - Respostas em português, simples e diretas.
 
-## FASE FINAL (decidido em 27/10): nada de função nova
+## O DIFERENCIAL (decidido em 28/10)
+
+A conexão entre os alunos é o maior trunfo do site: "Instagram + ENEM com TRI". As pessoas devem se sentir
+acolhidas e fazer amigos. Feito em 28/10 (acolhimento.js): escola no perfil e "colegas da sua escola",
+"👋 Chegou agora" com boas-vindas de um toque (vira notificação), e "quem da sua escola/grupo estudou hoje"
+no Treinar e no fim do bloco. Próximas ideias: dupla de estudo, comemorar conquistas junto.
+Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
+
+## FASE FINAL (decidido em 27/10): nada de função nova (exceção: o diferencial acima)
 
 Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 

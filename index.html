@@ -1826,6 +1826,19 @@
       .cena-texto p { margin: 0 auto; }
     }
     /* versão do computador: fundo escuro e partículas (só com mouse, tela larga e sem pedir menos movimento) */
+    .sugestoes.rolagem { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 4px; scrollbar-width: thin; }
+    .sugestoes.rolagem .sugestao { flex: 0 0 128px; scroll-snap-align: start; }
+    .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
+    .linha-escola { display: flex; gap: 8px; }
+    .linha-escola input { flex: 1; margin: 0; }
+    .linha-escola .acao { margin: 0; }
+    .faixa-junto { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin: 0 0 14px; padding: 12px 16px;
+      border-radius: 14px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font: inherit; font-size: .9rem; cursor: pointer; }
+    .bolhas-junto { display: flex; flex-shrink: 0; }
+    .bolhas-junto .bolha-autor { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      margin-left: -8px; border: 2px solid var(--superficie); background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; font-size: .8rem; }
+    .bolhas-junto .bolha-autor:first-child { margin-left: 0; }
+    .bolhas-junto .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
     .linha-canal { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--borda); }
     .linha-canal small { display: block; color: var(--texto-fraco); font-size: .78rem; }
     .pc-historia, .pc-rodape { display: none; }
@@ -2906,6 +2919,9 @@
       </div>
       <label class="campo-modal" for="perfil-bio">Bio</label>
       <textarea class="entrada-modal" id="perfil-bio" rows="4" maxlength="300" placeholder="Ex.: Rumo à federal 🎯 Foco em Matemática."></textarea>
+      <label class="campo-modal" for="perfil-escola">Escola <small>(opcional: para achar seus colegas)</small></label>
+      <input class="entrada-modal" id="perfil-escola" maxlength="80" list="lista-escolas" autocomplete="off" placeholder="Ex.: Colégio Estadual São José" oninput="sugerirEscolas(this)">
+      <datalist id="lista-escolas"></datalist>
       <button class="acao" id="salvar-perfil" style="width:100%;margin-top:16px;padding:13px" onclick="salvarPerfil()">Salvar</button>
       <div id="recado-perfil"></div>
     </div>
@@ -2983,6 +2999,7 @@
       <div class="atalhos-treino" id="atalhos-treino"></div>
     </section>
 
+    <div id="junto-treinar"></div>
     <div class="atalhos-inicio"><div id="atalho-arena"></div><div id="cartao-desafio"></div></div>
     <div id="convite-app"></div>
 
@@ -3037,6 +3054,7 @@
       </div>
 
       <div id="res-visita"></div>
+      <div id="res-junto"></div>
       <div class="botoes-final">
         <button class="acao" onclick="abrirMateria(materiaAtual)">Novo bloco</button>
         <button class="acao discreta" onclick="irPara('treinar')">Voltar para o início</button>
@@ -3879,6 +3897,7 @@ function irPara(tela) {
   if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') { abaComunidade = 'feed'; desenharSubabas(); abrirFeed(); }
   if (tela === 'comunidade') mostrarComunidade();
+  if (tela === 'treinar') carregarJunto();
   desenharChipSala();
 }
 
@@ -4538,6 +4557,13 @@ function registrarResposta(questaoId, acertou, segundos) {
 // ---------- resultado do bloco ----------
 function mostrarResultado() {
   pararCronometro();
+  // Quem mais estudou hoje: a resposta deste bloco já conta, então pede de novo daqui a pouco.
+  document.getElementById('res-junto').innerHTML = '';
+  if (usuarioLogado) setTimeout(async () => {
+    try { junto = await api('/api/comunidade/junto'); } catch (e) { return; }
+    const alvo = document.getElementById('res-junto');
+    if (alvo) alvo.innerHTML = htmlJunto(junto, 'resultado');
+  }, 1500);
   setTimeout(atualizarMeuProgresso, 1500); // a sequência do dia pode ter começado agora
 
   const total = bloco.respostas.length;
@@ -4633,6 +4659,7 @@ function cabecalhoAuth() {
 
 function desenharPerfil() {
   iniciarSino();
+  carregarJunto();
   iniciarComunidade();
   const botao = document.getElementById('btn-perfil');
   if (usuarioLogado && usuarioLogado.foto) {
@@ -7381,6 +7408,7 @@ function desenharPaginaPerfil() {
         </div>
       </div>
     </div>
+    ${u.escola ? `<p class="perfil-escola">🏫 ${escapar(u.escola)}</p>` : ''}
     <p class="perfil-bio">${escapar(u.bio)}</p>
     ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button>
         <button class="acao discreta" onclick="abrirConversa(${u.id})">💬 Mensagem</button></div>` : ''}
@@ -7580,6 +7608,7 @@ function desenharFotoEdicao() {
 function abrirEdicaoPerfil() {
   fotoPerfilNova = undefined;
   document.getElementById('perfil-bio').value = perfilAberto.perfil.bio;
+  document.getElementById('perfil-escola').value = perfilAberto.perfil.escola || '';
   document.getElementById('recado-perfil').innerHTML = '';
   desenharFotoEdicao();
   abrirModal('modal-editar-perfil');
@@ -7604,7 +7633,7 @@ function removerFotoPerfil() {
 
 async function salvarPerfil() {
   const botao = document.getElementById('salvar-perfil');
-  const corpo = { bio: document.getElementById('perfil-bio').value.trim() };
+  const corpo = { bio: document.getElementById('perfil-bio').value.trim(), escola: document.getElementById('perfil-escola').value.trim() || null };
   if (fotoPerfilNova !== undefined) corpo.foto = fotoPerfilNova;
   botao.disabled = true;
   botao.textContent = 'Salvando…';
@@ -7760,6 +7789,7 @@ async function acaoDiscussao(id, acao) {
 let relogioSino = null;
 const TEXTO_DA_NOTIFICACAO = {
   seguidor: n => `<b>${escapar(n.ator)}</b> começou a seguir você.`,
+  boas_vindas: n => `<b>${escapar(n.ator)}</b> te deu boas-vindas 👋 Que bom ter você aqui!`,
   convite: n => `<b>${escapar(n.ator)}</b> entrou no site pelo seu convite 🤝 ${Number(n.texto) >= 5 ? 'Você já trouxe a turma: emblema 📣 liberado!' : 'Emblema de convite liberado na Arena!'}`,
   resposta: n => `<b>${escapar(n.ator)}</b> respondeu seu comentário: “${escapar(n.texto || '')}”`,
   util: n => `<b>${escapar(n.ator)}</b> achou sua explicação útil 👍`,
@@ -8524,7 +8554,7 @@ async function desenharAgora() {
   }
   if (abaComunidade !== 'agora' || !comunidadeNaTela()) return;
   if (!usuarioLogado || !agora.metas) { alvo.innerHTML = htmlPulsoGrande() + htmlConvite(); return; }
-  alvo.innerHTML = htmlPulsoGrande() + htmlStories() + htmlBoasVindas() + `
+  alvo.innerHTML = htmlPulsoGrande() + htmlStories() + '<div id="bloco-chegaram"></div><div id="bloco-colegas"></div>' + htmlBoasVindas() + `
     <div class="grade-agora">
       <section>${htmlAtividades()}</section>
       <aside class="lado-agora">${htmlMeuProgresso()}
@@ -8532,6 +8562,98 @@ async function desenharAgora() {
       </aside>
     </div>`;
   carregarSugestoes();
+  carregarAcolhimento();
+}
+
+// ---------- acolhimento: quem chegou, colegas da escola, estudando junto ----------
+async function carregarAcolhimento() {
+  const [chegaram, colegas] = await Promise.all([
+    api('/api/comunidade/chegaram').catch(() => null), api('/api/comunidade/colegas').catch(() => null)]);
+  const alvoC = document.getElementById('bloco-chegaram'), alvoE = document.getElementById('bloco-colegas');
+  if (alvoC && chegaram && chegaram.chegaram.length) {
+    alvoC.innerHTML = `<section class="painel"><div class="titulo-bloco"><b>👋 Chegou agora</b></div>
+      <p class="pista" style="margin:4px 0 0">Gente nova por aqui. Uma boa-vinda faz a diferença no primeiro dia.</p>
+      <div class="sugestoes rolagem">${chegaram.chegaram.map(p => `<div class="sugestao">
+        ${bolha(p)}<button class="autor-link" onclick="abrirPerfil(${p.id})"><b>${escapar(p.nome)}</b><small>${escapar(p.motivo)}</small></button>
+        <button class="acao pequena${p.dei ? ' discreta' : ''}" ${p.dei ? 'disabled' : ''} onclick="darBoasVindas(${p.id}, this)">${p.dei ? 'Enviado ✓' : '👋 Boas-vindas'}</button></div>`).join('')}</div></section>`;
+  }
+  if (alvoE && colegas) alvoE.innerHTML = htmlColegas(colegas);
+}
+
+function htmlColegas(d) {
+  if (!d.escola) return `<section class="painel convite-escola"><div class="titulo-bloco"><b>🏫 De qual escola você é?</b></div>
+    <p class="pista" style="margin:4px 0 10px">Diga a sua escola e encontre seus colegas por aqui. Aparece só para quem tem conta.</p>
+    <form class="linha-escola" onsubmit="salvarEscola(event)">
+      <input class="entrada-modal" name="escola" maxlength="80" list="lista-escolas" autocomplete="off" required placeholder="Nome da escola" oninput="sugerirEscolas(this)">
+      <button class="acao" type="submit">Salvar</button></form></section>`;
+  const situacao = c => c.online ? '<i class="ponto-vivo"></i> online' : c.estudou_hoje ? 'estudou hoje' : '';
+  return `<section class="painel"><div class="titulo-bloco"><b>🏫 ${escapar(d.escola)}</b><span class="pista">${plural(d.total, 'colega', 'colegas')}</span></div>
+    ${d.colegas.length ? `<div class="sugestoes rolagem">${d.colegas.slice(0, 12).map(c => `<div class="sugestao">
+        ${bolha(c)}<button class="autor-link" onclick="abrirPerfil(${c.id})"><b>${escapar(c.nome)}</b><small>${situacao(c) || 'colega de escola'}</small></button>
+        <button class="acao pequena${c.sigo ? ' discreta' : ''}" onclick="seguirSugestao(${c.id}, this)">${c.sigo ? 'Seguindo ✓' : 'Seguir'}</button></div>`).join('')}</div>`
+      : `<p class="pista" style="margin:6px 0 0">Ninguém da sua escola por aqui ainda. Chame a turma:
+        <button class="link-bloco" onclick="convidarColegas()">mandar o site no WhatsApp</button></p>`}</section>`;
+}
+
+let relogioEscolas = null;
+function sugerirEscolas(campo) {
+  clearTimeout(relogioEscolas);
+  relogioEscolas = setTimeout(async () => {
+    if (campo.value.trim().length < 2) return;
+    try {
+      const { escolas } = await api(`/api/escolas?q=${encodeURIComponent(campo.value.trim())}`);
+      document.getElementById('lista-escolas').innerHTML = escolas.map(e => `<option value="${escapar(e.nome)}">${plural(e.alunos, 'aluno', 'alunos')}</option>`).join('');
+    } catch (e) { /* sem sugestões, a pessoa digita */ }
+  }, 300);
+}
+
+async function salvarEscola(ev) {
+  ev.preventDefault();
+  const botao = ev.target.querySelector('button');
+  botao.disabled = true;
+  try {
+    await api('/api/perfil', { method: 'PUT', body: JSON.stringify({ escola: ev.target.escola.value.trim() }) });
+    const d = await api('/api/comunidade/colegas');
+    document.getElementById('bloco-colegas').innerHTML = htmlColegas(d);
+    carregarJunto();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); botao.disabled = false; }
+}
+
+async function darBoasVindas(id, botao) {
+  botao.disabled = true;
+  try {
+    await postar(`/api/comunidade/boas-vindas/${id}`);
+    botao.textContent = 'Enviado ✓';
+    botao.classList.add('discreta');
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); botao.disabled = false; }
+}
+
+function convidarColegas() {
+  const link = `${location.origin}${location.pathname}?origem=whatsapp${usuarioLogado ? `&convite=${usuarioLogado.id}` : ''}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(`Bora estudar pro ENEM juntos? Tô usando o M&M Estudos: questões reais com nota TRI e dá pra estudar com a galera. ${link}`)}`, '_blank', 'noopener');
+}
+
+// No Treinar e no fim do bloco: quem da escola e do grupo estudou hoje.
+let junto = null;
+async function carregarJunto() {
+  const alvo = document.getElementById('junto-treinar');
+  if (!alvo) return;
+  if (!usuarioLogado) { alvo.innerHTML = ''; junto = null; return; }
+  try { junto = await api('/api/comunidade/junto'); } catch (e) { return; }
+  alvo.innerHTML = htmlJunto(junto, 'treinar');
+}
+
+function htmlJunto(d, onde) {
+  const turmas = [d && d.escola, d && d.grupo].filter(t => t && t.estudaram_hoje);
+  if (!turmas.length) return '';
+  const t = turmas[0];
+  const nomes = t.pessoas.map(p => escapar(p.nome.split(' ')[0]));
+  const online = t.pessoas.filter(p => p.online).map(p => escapar(p.nome.split(' ')[0]));
+  const quem = t === d.escola ? 'da sua escola' : `do grupo ${escapar(t.nome)}`;
+  const frase = onde === 'resultado'
+    ? `Você e mais ${plural(t.estudaram_hoje, 'pessoa', 'pessoas')} ${quem} treinaram hoje 💪`
+    : `${plural(t.estudaram_hoje, 'pessoa', 'pessoas')} ${quem} ${t.estudaram_hoje === 1 ? 'estudou' : 'estudaram'} hoje${online.length ? ` · ${online.join(', ')} ${online.length === 1 ? 'está' : 'estão'} online agora` : nomes.length ? `: ${nomes.join(', ')}` : ''}`;
+  return `<button class="faixa-junto" onclick="abrirComunidade('agora')"><span class="bolhas-junto">${t.pessoas.map(p => bolha(p)).join('')}</span><span>${frase}</span></button>`;
 }
 
 // Ao lado do título da Comunidade: quantos estão no site agora. Na hora da

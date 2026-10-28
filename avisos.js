@@ -78,6 +78,7 @@ async function enviarPush(pool, usuarioId, { titulo, corpo, abrir, tag }) {
 // (reação, publicação de quem você segue) ficam só no sino: seria barulho demais.
 const AVISO_DA_NOTIFICACAO = {
   seguidor: (ator) => ({ titulo: `${ator} começou a seguir você`, abrir: 'comunidade' }),
+  boas_vindas: (ator) => ({ titulo: `${ator} te deu boas-vindas 👋`, abrir: 'comunidade' }),
   convite: (ator) => ({ titulo: `${ator} entrou no site pelo seu convite 🤝`, abrir: 'arena' }),
   resposta: (ator, n) => ({ titulo: `${ator} respondeu seu comentário`, corpo: n.texto, abrir: `questao:${n.alvoId}` }),
   util: (ator, n) => ({ titulo: `${ator} achou sua explicação útil 👍`, abrir: n.alvoTipo === 'pergunta' ? `pergunta:${n.alvoId}` : `questao:${n.alvoId}` }),

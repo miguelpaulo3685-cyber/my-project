@@ -71,6 +71,7 @@ uma tabela ou coluna que o código espera.
 | `GET /api/reels/series` (séries, com "continuar assistindo" para quem tem conta) / `GET /api/reels?serie=ID` (episódios em ordem) | livre |
 | `POST /api/reels/:id/assistido` | login (o site chama depois de 8 s do vídeo tocando) |
 | `POST /api/reels/series`, `PUT` e `DELETE /api/reels/series/:id`, `PUT /api/reels/:id/serie` (`serie_id`, `episodio`) | administrador |
+| `GET /api/comunidade/colegas`, `GET /api/comunidade/chegaram`, `POST /api/comunidade/boas-vindas/:id`, `GET /api/comunidade/junto`, `GET /api/escolas?q=`; `PUT /api/perfil` aceita `escola` | logado |
 | `GET`/`POST /api/reels/canais` (`link`, `tipo`, `area`, `direto`), `DELETE /api/reels/canais/:id`, `POST /api/reels/canais/buscar`: canais do YouTube conferidos de 3 em 3 horas; Shorts novos entram na fila (ou direto, se `direto`) | administrador |
 | `GET /api/questoes/:id/resolucao` | livre (resolução comentada, depois de responder) |
 | `PUT /api/admin/resolucoes/:id` (`texto`; vazio apaga), `GET /api/admin/mais-erradas` | administrador |
