@@ -26,7 +26,10 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 A conexão entre os alunos é o maior trunfo do site: "Instagram + ENEM com TRI". As pessoas devem se sentir
 acolhidas e fazer amigos. Feito em 28/10 (acolhimento.js): escola no perfil e "colegas da sua escola",
 "👋 Chegou agora" com boas-vindas de um toque (vira notificação), e "quem da sua escola/grupo estudou hoje"
-no Treinar e no fim do bloco. Próximas ideias: dupla de estudo, comemorar conquistas junto.
+no Treinar e no fim do bloco. Também (duplas.js): **dupla de estudo** (convidar pela Comunidade ou pelo perfil,
+aceitar, painel com a meta/sequência/questões de hoje dos dois, "👊 Chamar pra estudar"; ao aceitar, os dois
+passam a se seguir) e **🎉 Para comemorar** (conquistas de 48 h de quem você segue, da escola e da dupla:
+sequência, primeira nota TRI ou recorde +15, Arena, desafio, dupla nova), com 👏/🔥 que avisa quem conquistou.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
 
 ## FASE FINAL (decidido em 27/10): nada de função nova (exceção: o diferencial acima)

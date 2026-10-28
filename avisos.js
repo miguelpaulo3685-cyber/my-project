@@ -79,6 +79,9 @@ async function enviarPush(pool, usuarioId, { titulo, corpo, abrir, tag }) {
 const AVISO_DA_NOTIFICACAO = {
   seguidor: (ator) => ({ titulo: `${ator} começou a seguir você`, abrir: 'comunidade' }),
   boas_vindas: (ator) => ({ titulo: `${ator} te deu boas-vindas 👋`, abrir: 'comunidade' }),
+  dupla_convite: (ator) => ({ titulo: `${ator} quer ser sua dupla de estudo 🤝`, abrir: 'comunidade' }),
+  dupla_aceita: (ator) => ({ titulo: `${ator} aceitou ser sua dupla de estudo 🤝`, abrir: 'comunidade' }),
+  dupla_toque: (ator) => ({ titulo: `${ator} te chamou pra estudar 👊`, abrir: 'comunidade' }),
   convite: (ator) => ({ titulo: `${ator} entrou no site pelo seu convite 🤝`, abrir: 'arena' }),
   resposta: (ator, n) => ({ titulo: `${ator} respondeu seu comentário`, corpo: n.texto, abrir: `questao:${n.alvoId}` }),
   util: (ator, n) => ({ titulo: `${ator} achou sua explicação útil 👍`, abrir: n.alvoTipo === 'pergunta' ? `pergunta:${n.alvoId}` : `questao:${n.alvoId}` }),

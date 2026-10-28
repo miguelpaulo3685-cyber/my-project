@@ -665,6 +665,28 @@ async function runMigrations() {
       );
     `);
 
+    // Dupla de estudo e recordes de TRI que viram conquista (duplas.js).
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS duplas (
+        id SERIAL PRIMARY KEY,
+        convidou_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        convidado_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        status VARCHAR(10) NOT NULL DEFAULT 'pendente',
+        created_at TIMESTAMP DEFAULT NOW(),
+        aceita_em TIMESTAMP,
+        UNIQUE (convidou_id, convidado_id),
+        CHECK (convidou_id <> convidado_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_duplas_convidado ON duplas (convidado_id);
+      CREATE TABLE IF NOT EXISTS tri_recordes (
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        area VARCHAR(20) NOT NULL,
+        nota INT NOT NULL,
+        updated_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (usuario_id, area)
+      );
+    `);
+
     // Canais do YouTube que o servidor confere sozinho atrás de Shorts novos (canais.js).
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reels_canais (

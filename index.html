@@ -1828,6 +1828,20 @@
     /* versão do computador: fundo escuro e partículas (só com mouse, tela larga e sem pedir menos movimento) */
     .sugestoes.rolagem { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 4px; scrollbar-width: thin; }
     .sugestoes.rolagem .sugestao { flex: 0 0 128px; scroll-snap-align: start; }
+    .dupla { display: flex; align-items: stretch; gap: 8px; margin: 12px 0; }
+    .lado-dupla { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding: 12px 8px;
+      border-radius: 14px; background: var(--superficie-2); min-width: 0; }
+    .lado-dupla small { color: var(--texto-fraco); font-size: .78rem; }
+    .lado-dupla .meta-dupla { overflow-wrap: anywhere; }
+    .lado-dupla .bolha-autor, .convite-dupla .bolha-autor, .conquista .bolha-autor { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0; background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; }
+    .lado-dupla .bolha-autor img, .convite-dupla .bolha-autor img, .conquista .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .e-dupla { align-self: center; font-weight: 800; color: var(--texto-fraco); }
+    .convite-dupla, .conquista { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--borda); flex-wrap: wrap; }
+    .convite-dupla span, .conquista > span:nth-child(2) { flex: 1; min-width: 150px; font-size: .9rem; }
+    .convite-dupla .acao { margin: 0; }
+    .botoes-conquista { display: flex; gap: 6px; }
+    .botoes-conquista button { border: 1px solid var(--borda); background: var(--superficie); border-radius: 999px; padding: 6px 12px; font-size: 1rem; cursor: pointer; }
     .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
     .linha-escola { display: flex; gap: 8px; }
     .linha-escola input { flex: 1; margin: 0; }
@@ -7411,7 +7425,8 @@ function desenharPaginaPerfil() {
     ${u.escola ? `<p class="perfil-escola">🏫 ${escapar(u.escola)}</p>` : ''}
     <p class="perfil-bio">${escapar(u.bio)}</p>
     ${!u.meu ? `<div class="perfil-botoes"><button class="acao${u.sigo ? ' discreta' : ''}" onclick="seguirPerfil(${u.id})">${u.sigo ? '✓ Seguindo' : '＋ Seguir'}</button>
-        <button class="acao discreta" onclick="abrirConversa(${u.id})">💬 Mensagem</button></div>` : ''}
+        <button class="acao discreta" onclick="abrirConversa(${u.id})">💬 Mensagem</button>
+        <button class="acao discreta" onclick="convidarDupla(${u.id})">🤝 Dupla de estudo</button></div>` : ''}
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
@@ -7790,6 +7805,9 @@ let relogioSino = null;
 const TEXTO_DA_NOTIFICACAO = {
   seguidor: n => `<b>${escapar(n.ator)}</b> começou a seguir você.`,
   boas_vindas: n => `<b>${escapar(n.ator)}</b> te deu boas-vindas 👋 Que bom ter você aqui!`,
+  dupla_convite: n => `<b>${escapar(n.ator)}</b> quer ser sua dupla de estudo 🤝 Toque para responder.`,
+  dupla_aceita: n => `<b>${escapar(n.ator)}</b> aceitou ser sua dupla de estudo 🤝 Agora vocês se acompanham.`,
+  dupla_toque: n => `<b>${escapar(n.ator)}</b> te chamou pra estudar 👊 Bora?`,
   convite: n => `<b>${escapar(n.ator)}</b> entrou no site pelo seu convite 🤝 ${Number(n.texto) >= 5 ? 'Você já trouxe a turma: emblema 📣 liberado!' : 'Emblema de convite liberado na Arena!'}`,
   resposta: n => `<b>${escapar(n.ator)}</b> respondeu seu comentário: “${escapar(n.texto || '')}”`,
   util: n => `<b>${escapar(n.ator)}</b> achou sua explicação útil 👍`,
@@ -7871,7 +7889,7 @@ function abrirNotificacao(n) {
   if (n.alvo_tipo === 'pergunta' && n.alvo_id) return abrirPergunta(n.alvo_id);
   if (n.tipo === 'correcao_util') return abrirPeloLink('redacoes');
   if (n.alvo_tipo === 'redacao' && n.alvo_id) return abrirRedacao(n.alvo_id);
-  if (n.alvo_tipo === 'atividade') return abrirComunidade('agora');
+  if (n.alvo_tipo === 'atividade' || n.alvo_tipo === 'dupla') return abrirComunidade('agora');
   if (n.alvo_tipo === 'reel') return irPara('reels');
   if (n.alvo_tipo === 'perfil' && n.alvo_id) return abrirPerfil(n.alvo_id);
   if (n.ator_id) return abrirPerfil(n.ator_id);
@@ -8554,7 +8572,7 @@ async function desenharAgora() {
   }
   if (abaComunidade !== 'agora' || !comunidadeNaTela()) return;
   if (!usuarioLogado || !agora.metas) { alvo.innerHTML = htmlPulsoGrande() + htmlConvite(); return; }
-  alvo.innerHTML = htmlPulsoGrande() + htmlStories() + '<div id="bloco-chegaram"></div><div id="bloco-colegas"></div>' + htmlBoasVindas() + `
+  alvo.innerHTML = htmlPulsoGrande() + htmlStories() + '<div id="bloco-dupla"></div><div id="bloco-comemorar"></div><div id="bloco-chegaram"></div><div id="bloco-colegas"></div>' + htmlBoasVindas() + `
     <div class="grade-agora">
       <section>${htmlAtividades()}</section>
       <aside class="lado-agora">${htmlMeuProgresso()}
@@ -8567,6 +8585,8 @@ async function desenharAgora() {
 
 // ---------- acolhimento: quem chegou, colegas da escola, estudando junto ----------
 async function carregarAcolhimento() {
+  carregarDupla();
+  carregarComemorar();
   const [chegaram, colegas] = await Promise.all([
     api('/api/comunidade/chegaram').catch(() => null), api('/api/comunidade/colegas').catch(() => null)]);
   const alvoC = document.getElementById('bloco-chegaram'), alvoE = document.getElementById('bloco-colegas');
@@ -8593,6 +8613,94 @@ function htmlColegas(d) {
         <button class="acao pequena${c.sigo ? ' discreta' : ''}" onclick="seguirSugestao(${c.id}, this)">${c.sigo ? 'Seguindo ✓' : 'Seguir'}</button></div>`).join('')}</div>`
       : `<p class="pista" style="margin:6px 0 0">Ninguém da sua escola por aqui ainda. Chame a turma:
         <button class="link-bloco" onclick="convidarColegas()">mandar o site no WhatsApp</button></p>`}</section>`;
+}
+
+// ---------- dupla de estudo ----------
+async function carregarDupla() {
+  const alvo = document.getElementById('bloco-dupla');
+  if (!alvo) return;
+  let d;
+  try { d = await api('/api/dupla'); } catch (e) { alvo.innerHTML = ''; return; }
+  alvo.innerHTML = htmlDupla(d);
+}
+
+function htmlDupla(d) {
+  if (d.dupla) {
+    const lado = (p, eu) => `<div class="lado-dupla">${bolha(p)}<b>${eu ? 'Você' : escapar(p.nome.split(' ')[0])}${p.online && !eu ? ' <i class="ponto-vivo"></i>' : ''}</b>
+      <small>🔥 ${plural(p.sequencia, 'dia', 'dias')} · ${p.questoes_hoje ? `${p.questoes_hoje} questões hoje` : 'ainda não estudou hoje'}</small>
+      <small class="meta-dupla">${p.meta ? `${p.meta.feito ? '✅' : '🎯'} ${escapar(p.meta.texto)}` : 'sem meta hoje'}</small></div>`;
+    const p = d.dupla.parceiro;
+    return `<section class="painel painel-dupla"><div class="titulo-bloco"><b>🤝 Sua dupla de estudo</b>
+        <button class="link-bloco" onclick="desfazerDupla()">Desfazer</button></div>
+      <div class="dupla">${lado(d.dupla.eu, true)}<span class="e-dupla">+</span>${lado(p, false)}</div>
+      <div class="botoes-visita"><button class="acao pequena" onclick="chamarDupla(this)">👊 Chamar pra estudar</button>
+        <button class="acao discreta pequena" onclick="abrirConversa(${p.id})">💬 Mensagem</button></div></section>`;
+  }
+  const recebidos = d.recebidos.map(c => `<div class="convite-dupla">${bolha(c.de)}<span><b>${escapar(c.de.nome)}</b> quer ser sua dupla de estudo</span>
+      <button class="acao pequena" onclick="responderDupla(${c.id}, 'aceitar')">Aceitar</button>
+      <button class="acao discreta pequena" onclick="responderDupla(${c.id}, 'recusar')">Agora não</button></div>`).join('');
+  const enviados = new Set(d.enviados.map(c => c.para.id));
+  const sugestoes = d.sugestoes.filter(s => !enviados.has(s.id));
+  if (!recebidos && !sugestoes.length && !d.enviados.length) return '';
+  return `<section class="painel"><div class="titulo-bloco"><b>🤝 Dupla de estudo</b></div>
+    ${recebidos}
+    <p class="pista" style="margin:6px 0 0">Estude com alguém que quer o mesmo que você: um acompanha a meta e a sequência do outro, e dá para chamar pra estudar.</p>
+    ${d.enviados.length ? `<p class="pista" style="margin:6px 0 0">Convite enviado para ${d.enviados.map(c => `<b>${escapar(c.para.nome)}</b>`).join(', ')}. Esperando resposta.</p>` : ''}
+    ${sugestoes.length ? `<div class="sugestoes rolagem">${sugestoes.map(s => `<div class="sugestao">
+        ${bolha(s)}<button class="autor-link" onclick="abrirPerfil(${s.id})"><b>${escapar(s.nome)}</b><small>${escapar(s.motivo)}</small></button>
+        <button class="acao pequena" onclick="convidarDupla(${s.id}, this)">🤝 Convidar</button></div>`).join('')}</div>` : ''}</section>`;
+}
+
+async function convidarDupla(id, botao) {
+  if (botao) botao.disabled = true;
+  try {
+    const r = await postar(`/api/dupla/convidar/${id}`);
+    mostrarXp(r.message);
+    carregarDupla();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); if (botao) botao.disabled = false; }
+}
+
+async function responderDupla(id, acao) {
+  try {
+    const r = await postar(`/api/dupla/${id}/${acao}`);
+    if (acao === 'aceitar') mostrarXp(r.message);
+    carregarDupla();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+async function chamarDupla(botao) {
+  botao.disabled = true;
+  try { mostrarXp((await postar('/api/dupla/toque')).message); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+  setTimeout(() => { botao.disabled = false; }, 4000);
+}
+
+async function desfazerDupla() {
+  if (!await confirmar('Desfazer a dupla? Ninguém recebe aviso, e vocês continuam se seguindo.', { sim: 'Desfazer', perigo: true })) return;
+  try { await postar('/api/dupla/desfazer'); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  carregarDupla();
+}
+
+// ---------- comemorar junto ----------
+async function carregarComemorar() {
+  const alvo = document.getElementById('bloco-comemorar');
+  if (!alvo) return;
+  let d;
+  try { d = await api('/api/comunidade/comemorar'); } catch (e) { alvo.innerHTML = ''; return; }
+  if (!d.conquistas.length) { alvo.innerHTML = ''; return; }
+  alvo.innerHTML = `<section class="painel"><div class="titulo-bloco"><b>🎉 Para comemorar</b></div>
+    ${d.conquistas.map(a => `<div class="conquista">${bolha(a.autor)}
+      <span><button class="autor-link" onclick="abrirPerfil(${a.autor.id})"><b>${escapar(a.autor.nome)}</b></button> ${(TEXTO_ATIVIDADE[a.tipo] || (() => 'mandou bem'))(a)}</span>
+      <span class="botoes-conquista">${REACOES.slice(0, 2).map((e, i) => `<button onclick="comemorar(${a.id}, ${i}, this)" aria-label="${NOMES_REACOES[i]}">${e}</button>`).join('')}</span></div>`).join('')}</section>`;
+}
+
+async function comemorar(id, emoji, botao) {
+  const linha = botao.closest('.conquista');
+  linha.querySelectorAll('.botoes-conquista button').forEach(b => { b.disabled = true; });
+  try {
+    await postar(`/api/atividades/${id}/reagir`, { emoji });
+    linha.querySelector('.botoes-conquista').innerHTML = '<span class="pista">Comemorado 🎉</span>';
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); linha.querySelectorAll('.botoes-conquista button').forEach(b => { b.disabled = false; }); }
 }
 
 let relogioEscolas = null;
@@ -8816,6 +8924,9 @@ async function seguirSugestao(id, botao) {
 }
 
 const TEXTO_ATIVIDADE = {
+  tri: a => { const [area, antes] = String(a.texto || '').split('|');
+    return antes ? `subiu a nota TRI de ${escapar(area)} de ${escapar(antes)} para <b>${a.alvo_id}</b> 📈` : `tirou a primeira nota TRI de ${escapar(area)}: <b>${a.alvo_id}</b> 🎯`; },
+  dupla: a => `virou dupla de estudo com <b>${escapar(a.texto || 'alguém')}</b> 🤝`,
   desafio: a => `fez o desafio da semana e acertou <b>${escapar(a.texto)}</b> 🏆`,
   grupo: a => `entrou no grupo <b>${escapar(a.texto)}</b> 🎯`,
   pergunta: a => `perguntou: <button class="alvo" onclick="abrirPergunta(${Number(a.alvo_id)})">“${escapar(a.texto)}”</button>`,
