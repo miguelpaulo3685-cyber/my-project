@@ -30,6 +30,10 @@ no Treinar e no fim do bloco. Também (duplas.js): **dupla de estudo** (convidar
 aceitar, painel com a meta/sequência/questões de hoje dos dois, "👊 Chamar pra estudar"; ao aceitar, os dois
 passam a se seguir) e **🎉 Para comemorar** (conquistas de 48 h de quem você segue, da escola e da dupla:
 sequência, primeira nota TRI ou recorde +15, Arena, desafio, dupla nova), com 👏/🔥 que avisa quem conquistou.
+Em 28/10 também: "Ache a sua turma" logo depois de criar a conta (escola e curso, uma vez só), a entrada (PC e celular)
+fala do diferencial ("Ninguém passa no ENEM sozinho") e a Comunidade ficou em duas partes: **Minha turma** (primeiros
+passos, dupla, colegas com 🤝 para convidar) e **Hoje na comunidade** (metas, comemorar, quem chegou, feed); Reels no fim.
+Saiu o quadro "Pessoas para seguir" (repetia colegas e quem chegou). Cuidado combinado: não encher o site de função.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
 
 ## FASE FINAL (decidido em 27/10): nada de função nova (exceção: o diferencial acima)

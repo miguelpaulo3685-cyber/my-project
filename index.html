@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://accounts.google.com/gsi/style; font-src https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://enem-api-cbo6.onrender.com http://localhost:3000 http://127.0.0.1:3000 https://accounts.google.com/gsi/; frame-src https://accounts.google.com/gsi/ https://www.youtube-nocookie.com https://www.tiktok.com; object-src 'none'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="dark light">
-  <title>M&M Estudos — ENEM</title>
+  <title>M&M Estudos — ENEM com a sua turma</title>
   <!-- App: instalar na tela inicial e receber avisos -->
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0e0d0b">
@@ -1842,6 +1842,15 @@
     .convite-dupla .acao { margin: 0; }
     .botoes-conquista { display: flex; gap: 6px; }
     .botoes-conquista button { border: 1px solid var(--borda); background: var(--superficie); border-radius: 999px; padding: 6px 12px; font-size: 1rem; cursor: pointer; }
+    .chips-turma { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chips-turma input { position: absolute; opacity: 0; pointer-events: none; }
+    .chips-turma span { display: inline-block; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--borda); background: var(--superficie); cursor: pointer; font-size: .9rem; }
+    .chips-turma input:checked + span { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); font-weight: 700; }
+    .chips-turma input:focus-visible + span { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .titulo-parte { font-family: var(--fonte-titulo); font-size: 1.15rem; margin: 22px 0 10px; }
+    .titulo-parte:first-of-type { margin-top: 6px; }
+    .botoes-colega { display: flex; gap: 6px; justify-content: center; }
+    .botoes-colega .acao { margin: 0; }
     .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
     .linha-escola { display: flex; gap: 8px; }
     .linha-escola input { flex: 1; margin: 0; }
@@ -2525,7 +2534,7 @@
       </section>
 
       <section class="cena cena-fim">
-        <div class="cena-texto"><h2>Pronto para começar?</h2><p>É grátis. Crie sua conta e descubra sua nota TRI em 10 minutos.</p>
+        <div class="cena-texto"><h2>Ninguém passa no ENEM sozinho.</h2><p>Ache seus colegas, forme uma dupla de estudo e descubra sua nota TRI. É grátis.</p>
           <span class="seta-rolar" aria-hidden="true">↓</span></div>
       </section>
     </div>
@@ -2534,9 +2543,9 @@
       <canvas class="pc-canvas" id="pc-canvas" aria-hidden="true"></canvas>
       <div class="pc-carregando" id="pc-carregando" aria-hidden="true">0%</div>
       <p class="pc-t pc-nome pc-esq" data-e="0">M&amp;M Estudos</p>
-      <p class="pc-t pc-nome pc-dir" data-e="0">Estudos para o ENEM</p>
+      <p class="pc-t pc-nome pc-dir" data-e="0">Estude com a sua turma</p>
       <p class="pc-t pc-dica" data-e="0">Role para descer</p>
-      <p class="pc-t pc-texto pc-esq" data-e="1">Questões reais do ENEM, de 2009 a 2025. Você resolve, vê a resolução comentada e descobre a sua nota TRI.</p>
+      <p class="pc-t pc-texto pc-esq" data-e="1">Ninguém passa no ENEM sozinho. Aqui você acha seus colegas, forma uma dupla de estudo e comemora cada conquista junto.</p>
       <svg class="pc-t pc-circulo" data-e="2" viewBox="0 0 1000 1000" aria-hidden="true">
         <path id="pc-arco-cima" d="M 60,500 A 440,440 0 0 1 940,500" fill="none"/>
         <path id="pc-arco-baixo" d="M 60,500 A 440,440 0 0 0 940,500" fill="none"/>
@@ -2544,7 +2553,7 @@
         <text dominant-baseline="hanging"><textPath href="#pc-arco-baixo" startOffset="50%" text-anchor="middle">No celular ou no computador</textPath></text>
       </svg>
       <p class="pc-t pc-marca" data-e="3" id="pc-marca"><span class="pc-anel"></span>Feito no Brasil</p>
-      <p class="pc-t pc-texto pc-meio" data-e="4">Não é só decorar: você treina com a dificuldade oficial do INEP, vê onde erra e melhora a cada simulado.</p>
+      <p class="pc-t pc-texto pc-meio" data-e="4">Questões reais do ENEM, de 2009 a 2025, com a nota TRI calculada como no INEP e a resolução comentada.</p>
       <p class="pc-t pc-rotulo" data-e="5" data-ate="9">Áreas do ENEM</p>
       <p class="pc-t pc-area" data-e="5">Matemática</p>
       <p class="pc-t pc-area" data-e="6">Ciências da Natureza</p>
@@ -2553,7 +2562,7 @@
       <p class="pc-t pc-area" data-e="9">Linguagens e Redação</p>
       <p class="pc-t pc-canto pc-esq" data-e="5" data-ate="9">45 questões por área</p>
       <p class="pc-t pc-canto pc-dir" data-e="5" data-ate="9">2009 — 2025</p>
-      <p class="pc-t pc-texto pc-esq" data-e="10">E tem muito mais: simulados, Arena, Reels e redações corrigidas pela comunidade.</p>
+      <p class="pc-t pc-texto pc-esq" data-e="10">Arena ao vivo com os amigos, salas de estudo com pomodoro e redações corrigidas pela comunidade.</p>
       <p class="pc-t pc-texto pc-esq" data-e="11">Feito por dois estudantes, Miguel e Matheus, para quem vai fazer o ENEM.</p>
       <div class="pc-espaco" id="pc-espaco"></div>
     </div>
@@ -2577,7 +2586,7 @@
           </div>
 
           <h1 id="titulo-entrada">Entrar</h1>
-          <p class="sub" id="sub-entrada">Continue para treinar com questões reais do ENEM.</p>
+          <p class="sub" id="sub-entrada">Sua turma está estudando. Bora junto?</p>
 
           <div id="area-google" class="escondido">
             <div id="botao-google"></div>
@@ -3087,8 +3096,8 @@
     </div>
     <div class="subabas" id="subabas-comunidade"></div>
     <div class="atalhos-inicio atalhos-comunidade" id="atalhos-comunidade"></div>
-    <div id="faixa-reels"></div>
     <div id="conteudo-comunidade"></div>
+    <div id="faixa-reels"></div>
   </main>
 
   <!-- ===================== FEED ===================== -->
@@ -4008,6 +4017,57 @@ const DICAS_VISITA = [
   'Passou da metade! Responder com calma vale mais do que correr.',
   'Última! Depois dela sai a sua nota TRI.'
 ];
+
+// ---------- ache a sua turma ----------
+// Logo depois de criar a conta (e uma vez para quem já tinha): escola e curso.
+// É o que liga a pessoa aos colegas, ao grupo do objetivo e às sugestões de dupla.
+const CHAVE_TURMA = 'mm_turma';
+async function talvezPerguntarTurma() {
+  if (!usuarioLogado || ler(CHAVE_TURMA) || document.documentElement.classList.contains('com-entrada')) return false;
+  let perfil, grupos;
+  try { [perfil, grupos] = await Promise.all([api(`/api/perfil/${usuarioLogado.id}`), api('/api/grupos')]); } catch (e) { return false; }
+  const objetivos = grupos.grupos.filter(g => g.tipo === 'objetivo');
+  const temGrupo = objetivos.some(g => g.sou_membro);
+  if (perfil.perfil.escola && temGrupo) { guardar(CHAVE_TURMA, '1'); return false; }
+  if (document.querySelector('.fundo-modal:not(.escondido):not([id])')) return false;
+  const fundo = document.createElement('div');
+  fundo.className = 'fundo-modal';
+  fundo.innerHTML = `<form class="modal turma" onsubmit="salvarTurma(event)">
+    <div class="modal-topo"><h2>Ache a sua turma 👋</h2><button type="button" class="btn-sair" onclick="pularTurma(this)" aria-label="Fechar">✕</button></div>
+    <p>Duas perguntas rápidas para você estudar junto com quem é da sua escola e quer o mesmo que você.</p>
+    ${perfil.perfil.escola ? '' : `<label class="campo-modal" for="turma-escola">Qual é (ou foi) a sua escola?</label>
+      <input class="entrada-modal" id="turma-escola" name="escola" maxlength="80" list="lista-escolas" autocomplete="off" placeholder="Nome da escola" oninput="sugerirEscolas(this)">`}
+    ${temGrupo ? '' : `<p class="campo-modal" style="margin-top:14px">O que você quer cursar?</p>
+      <div class="chips-turma">${objetivos.map(g => `<label><input type="radio" name="grupo" value="${g.id}"><span>${escapar(g.nome)}</span></label>`).join('')}</div>`}
+    <div class="botoes-visita" style="margin-top:16px"><button class="acao" type="submit">Continuar</button>
+      <button class="link-visita" type="button" onclick="pularTurma(this)">Agora não</button></div>
+    <p class="pista">A escola aparece só para quem tem conta. Dá para mudar depois no seu perfil.</p></form>`;
+  document.body.appendChild(fundo);
+  return true;
+}
+
+function fecharTurma(el) {
+  guardar(CHAVE_TURMA, '1');
+  el.closest('.fundo-modal').remove();
+  setTimeout(talvezMostrarVisita, 300);
+  if (!document.getElementById('tela-comunidade').classList.contains('escondido')) mostrarComunidade();
+  carregarJunto();
+}
+const pularTurma = botao => fecharTurma(botao);
+
+async function salvarTurma(ev) {
+  ev.preventDefault();
+  const f = ev.target, botao = f.querySelector('[type=submit]');
+  const escola = f.escola ? f.escola.value.trim() : '';
+  const grupo = f.querySelector('input[name=grupo]:checked');
+  botao.disabled = true;
+  try {
+    if (escola) await api('/api/perfil', { method: 'PUT', body: JSON.stringify({ escola }) });
+    if (grupo) await postar(`/api/grupos/${grupo.value}/entrar`);
+  } catch (e) { botao.disabled = false; return avisoSim(e.daApi || SEM_SERVIDOR); }
+  if (escola || grupo) mostrarXp('Pronto! Agora a sua turma aparece na Comunidade 🤝');
+  fecharTurma(f);
+}
 
 function talvezMostrarVisita() {
   if (ler(CHAVE_VISITA) || totais().feitas > 0) return;
@@ -5481,12 +5541,12 @@ document.addEventListener('keydown', e => {
 
 const MODOS_CONTA = {
   entrar: {
-    titulo: 'Entrar', sub: 'Continue para treinar com questões reais do ENEM.', botao: 'Entrar', carregando: 'Entrando…',
+    titulo: 'Entrar', sub: 'Sua turma está estudando. Bora junto?', botao: 'Entrar', carregando: 'Entrando…',
     campos: ['email', 'senha'], rota: 'login',
     alternar: `Ainda não tem conta?<br><a onclick="abrirConta('criar')">Criar conta</a>`
   },
   criar: {
-    titulo: 'Criar sua conta', sub: 'Leva menos de um minuto, e o seu progresso vai junto para qualquer aparelho.', botao: 'Criar minha conta', carregando: 'Criando…',
+    titulo: 'Criar sua conta', sub: 'Em menos de um minuto você entra, acha seus colegas e começa a treinar com questões reais do ENEM.', botao: 'Criar minha conta', carregando: 'Criando…',
     campos: ['nome', 'email', 'senha', 'aceite'], rota: 'registrar',
     alternar: `Já tem conta? <a onclick="abrirConta('entrar')">Entrar</a>`
   },
@@ -5575,7 +5635,7 @@ async function concluirEntrada(dados, mensagem) {
   try { sala = sessionStorage.getItem('mm_arena_pendente'); sessionStorage.removeItem('mm_arena_pendente'); } catch (e) {}
   setTimeout(() => {
     fecharEntrada();
-    if (sala) abrirArena(sala); else { irPara('treinar'); setTimeout(talvezMostrarVisita, 600); }
+    if (sala) abrirArena(sala); else { irPara('treinar'); setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 600); }
     avisoTopo(mensagem + ' Seu progresso agora fica salvo na conta.', 'bom');
   }, 700);
 }
@@ -8572,23 +8632,28 @@ async function desenharAgora() {
   }
   if (abaComunidade !== 'agora' || !comunidadeNaTela()) return;
   if (!usuarioLogado || !agora.metas) { alvo.innerHTML = htmlPulsoGrande() + htmlConvite(); return; }
-  alvo.innerHTML = htmlPulsoGrande() + htmlStories() + '<div id="bloco-dupla"></div><div id="bloco-comemorar"></div><div id="bloco-chegaram"></div><div id="bloco-colegas"></div>' + htmlBoasVindas() + `
+  // Duas partes: o que é seu (dupla, colegas) e o que está acontecendo hoje.
+  alvo.innerHTML = htmlPulsoGrande()
+    + '<h2 class="titulo-parte">Minha turma</h2>' + htmlBoasVindas() + '<div id="bloco-dupla"></div><div id="bloco-colegas"></div>'
+    + '<h2 class="titulo-parte">Hoje na comunidade</h2>' + htmlStories() + '<div id="bloco-comemorar"></div><div id="bloco-chegaram"></div>' + `
     <div class="grade-agora">
       <section>${htmlAtividades()}</section>
-      <aside class="lado-agora">${htmlMeuProgresso()}
-        <section class="painel"><div class="titulo-bloco"><b>Pessoas para seguir</b></div><div class="sugestoes" id="sugestoes"><span class="pista">Carregando…</span></div></section>
-      </aside>
+      <aside class="lado-agora">${htmlMeuProgresso()}</aside>
     </div>`;
-  carregarSugestoes();
   carregarAcolhimento();
 }
 
 // ---------- acolhimento: quem chegou, colegas da escola, estudando junto ----------
+let idsDosColegas = new Set();
 async function carregarAcolhimento() {
-  carregarDupla();
   carregarComemorar();
-  const [chegaram, colegas] = await Promise.all([
+  const [dupla, chegaram, colegas] = await Promise.all([api('/api/dupla').catch(() => null),
     api('/api/comunidade/chegaram').catch(() => null), api('/api/comunidade/colegas').catch(() => null)]);
+  // Quem já aparece em "colegas" não se repete nas sugestões de dupla: lá tem o 🤝.
+  idsDosColegas = new Set(((colegas && colegas.colegas) || []).slice(0, 12).map(c => c.id));
+  semDupla = Boolean(dupla && !dupla.dupla);
+  const alvoD = document.getElementById('bloco-dupla');
+  if (alvoD && dupla) alvoD.innerHTML = htmlDupla(dupla);
   const alvoC = document.getElementById('bloco-chegaram'), alvoE = document.getElementById('bloco-colegas');
   if (alvoC && chegaram && chegaram.chegaram.length) {
     alvoC.innerHTML = `<section class="painel"><div class="titulo-bloco"><b>👋 Chegou agora</b></div>
@@ -8599,6 +8664,7 @@ async function carregarAcolhimento() {
   }
   if (alvoE && colegas) alvoE.innerHTML = htmlColegas(colegas);
 }
+let semDupla = false;
 
 function htmlColegas(d) {
   if (!d.escola) return `<section class="painel convite-escola"><div class="titulo-bloco"><b>🏫 De qual escola você é?</b></div>
@@ -8610,20 +8676,13 @@ function htmlColegas(d) {
   return `<section class="painel"><div class="titulo-bloco"><b>🏫 ${escapar(d.escola)}</b><span class="pista">${plural(d.total, 'colega', 'colegas')}</span></div>
     ${d.colegas.length ? `<div class="sugestoes rolagem">${d.colegas.slice(0, 12).map(c => `<div class="sugestao">
         ${bolha(c)}<button class="autor-link" onclick="abrirPerfil(${c.id})"><b>${escapar(c.nome)}</b><small>${situacao(c) || 'colega de escola'}</small></button>
-        <button class="acao pequena${c.sigo ? ' discreta' : ''}" onclick="seguirSugestao(${c.id}, this)">${c.sigo ? 'Seguindo ✓' : 'Seguir'}</button></div>`).join('')}</div>`
+        <span class="botoes-colega"><button class="acao pequena${c.sigo ? ' discreta' : ''}" onclick="seguirSugestao(${c.id}, this)">${c.sigo ? 'Seguindo ✓' : 'Seguir'}</button>
+        ${semDupla ? `<button class="acao discreta pequena" onclick="convidarDupla(${c.id}, this)" aria-label="Convidar ${escapar(c.nome)} para dupla de estudo" title="Convidar para dupla de estudo">🤝</button>` : ''}</span></div>`).join('')}</div>`
       : `<p class="pista" style="margin:6px 0 0">Ninguém da sua escola por aqui ainda. Chame a turma:
         <button class="link-bloco" onclick="convidarColegas()">mandar o site no WhatsApp</button></p>`}</section>`;
 }
 
 // ---------- dupla de estudo ----------
-async function carregarDupla() {
-  const alvo = document.getElementById('bloco-dupla');
-  if (!alvo) return;
-  let d;
-  try { d = await api('/api/dupla'); } catch (e) { alvo.innerHTML = ''; return; }
-  alvo.innerHTML = htmlDupla(d);
-}
-
 function htmlDupla(d) {
   if (d.dupla) {
     const lado = (p, eu) => `<div class="lado-dupla">${bolha(p)}<b>${eu ? 'Você' : escapar(p.nome.split(' ')[0])}${p.online && !eu ? ' <i class="ponto-vivo"></i>' : ''}</b>
@@ -8640,7 +8699,7 @@ function htmlDupla(d) {
       <button class="acao pequena" onclick="responderDupla(${c.id}, 'aceitar')">Aceitar</button>
       <button class="acao discreta pequena" onclick="responderDupla(${c.id}, 'recusar')">Agora não</button></div>`).join('');
   const enviados = new Set(d.enviados.map(c => c.para.id));
-  const sugestoes = d.sugestoes.filter(s => !enviados.has(s.id));
+  const sugestoes = d.sugestoes.filter(s => !enviados.has(s.id) && !idsDosColegas.has(s.id)).slice(0, 4);
   if (!recebidos && !sugestoes.length && !d.enviados.length) return '';
   return `<section class="painel"><div class="titulo-bloco"><b>🤝 Dupla de estudo</b></div>
     ${recebidos}
@@ -8656,7 +8715,7 @@ async function convidarDupla(id, botao) {
   try {
     const r = await postar(`/api/dupla/convidar/${id}`);
     mostrarXp(r.message);
-    carregarDupla();
+    carregarAcolhimento();
   } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); if (botao) botao.disabled = false; }
 }
 
@@ -8664,7 +8723,7 @@ async function responderDupla(id, acao) {
   try {
     const r = await postar(`/api/dupla/${id}/${acao}`);
     if (acao === 'aceitar') mostrarXp(r.message);
-    carregarDupla();
+    carregarAcolhimento();
   } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
 }
 
@@ -8678,7 +8737,7 @@ async function chamarDupla(botao) {
 async function desfazerDupla() {
   if (!await confirmar('Desfazer a dupla? Ninguém recebe aviso, e vocês continuam se seguindo.', { sim: 'Desfazer', perigo: true })) return;
   try { await postar('/api/dupla/desfazer'); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
-  carregarDupla();
+  carregarAcolhimento();
 }
 
 // ---------- comemorar junto ----------
@@ -8888,7 +8947,7 @@ function htmlBoasVindas() {
   const feitos = passos.filter(p => p.feito).length;
   const acao = {
     grupo: "feedAtual = 'grupos'; abrirComunidade('feed')",
-    seguir: "document.getElementById('sugestoes').scrollIntoView({ behavior: 'smooth', block: 'center' })",
+    seguir: "(document.getElementById('bloco-colegas').firstElementChild ? document.getElementById('bloco-colegas') : document.getElementById('bloco-chegaram')).scrollIntoView({ behavior: 'smooth', block: 'center' })",
     questao: "irPara('treinar')",
     meta: 'escreverMeta()'
   };
@@ -8898,18 +8957,6 @@ function htmlBoasVindas() {
     <div class="passos-bv">${passos.map((p, i) => `<button class="passo-bv${p.feito ? ' feito' : ''}" ${p.feito ? 'disabled' : `onclick="${acao[p.id]}"`}>
       <span class="marca-passo">${p.feito ? '✓' : i + 1}</span><span><b>${escapar(p.titulo)}</b><small>${escapar(p.detalhe)}</small></span></button>`).join('')}</div>
   </section>`;
-}
-
-async function carregarSugestoes() {
-  const alvo = document.getElementById('sugestoes');
-  if (!alvo) return;
-  try {
-    const { pessoas } = await api('/api/comunidade/sugestoes');
-    alvo.innerHTML = pessoas.length ? pessoas.slice(0, 4).map(p => `<div class="sugestao">
-        ${bolha(p)}<button class="autor-link" onclick="abrirPerfil(${p.id})"><b>${escapar(p.nome)}</b><small>${escapar(p.motivo)}</small></button>
-        <button class="acao pequena" onclick="seguirSugestao(${p.id}, this)">Seguir</button></div>`).join('')
-      : '<span class="pista">Você já segue todo mundo por aqui 🙌</span>';
-  } catch (e) { alvo.innerHTML = ''; }
 }
 
 async function seguirSugestao(id, botao) {
@@ -10760,7 +10807,7 @@ window.addEventListener('load', () => {
   const sessao = restaurarSessao();
   tratarLinkDoEmail(sessao);
   tratarLinkDeAviso(sessao);
-  sessao.then(() => setTimeout(talvezMostrarVisita, 800)).catch(() => {});
+  sessao.then(() => setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 800)).catch(() => {});
 });
 </script>
 </body>

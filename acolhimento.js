@@ -95,7 +95,7 @@ function registrarAcolhimento(app, { pool, auth, limitar, exigirLogin }) {
           ORDER BY n.dei, n.mesma_escola DESC, (n.grupo_comum IS NOT NULL) DESC, n.created_at DESC
           LIMIT 8`, [eu]);
       res.json({ chegaram: rows.map(r => ({ ...pessoa(r), dei: r.dei, recebeu: r.recebeu,
-        motivo: r.mesma_escola ? `Da sua escola${r.escola ? `: ${r.escola}` : ''}` : r.grupo_comum ? `Também quer ${r.grupo_comum}` : 'Chegou esta semana' })) });
+        motivo: r.mesma_escola ? 'Da sua escola' : r.grupo_comum ? `Também quer ${r.grupo_comum}` : 'Chegou esta semana' })) });
     } catch (erro) {
       console.error('Erro ao listar quem chegou:', erro.message);
       res.status(500).json({ error: 'Não consegui carregar agora.' });
