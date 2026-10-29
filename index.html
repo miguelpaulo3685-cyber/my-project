@@ -1863,6 +1863,7 @@
     .linha-pessoa .bolha-autor { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; }
     .linha-pessoa .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .video-questao { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; text-decoration: none; }
     .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
     .linha-escola { display: flex; gap: 8px; }
     .linha-escola input { flex: 1; margin: 0; }
@@ -4601,7 +4602,18 @@ async function carregarResolucao(id) {
       <div class="enunciado">${formatarEnunciado(r.texto)}</div>
       ${admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Editar resolução</button>` : ''}</details>`
     : admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Escrever resolução comentada</button>` : '';
+  alvo.insertAdjacentHTML('beforeend', linkVideoDaQuestao(questaoAtual));
   alvo.dataset.texto = r ? r.texto : '';
+}
+
+// Toda questão ganha um vídeo de explicação: a busca do YouTube já abre na
+// questão certa (quase toda questão do ENEM tem professor resolvendo em vídeo).
+function linkVideoDaQuestao(q) {
+  if (!q || !q.ano || !q.numero) return '';
+  const lingua = q.lingua === 'ingles' ? ' inglês' : q.lingua === 'espanhol' ? ' espanhol' : '';
+  const busca = `ENEM ${q.ano} questão ${q.numero}${lingua} resolução`;
+  return `<a class="acao discreta pequena video-questao" href="https://www.youtube.com/results?search_query=${encodeURIComponent(busca)}"
+    target="_blank" rel="noopener">▶ Ver explicação em vídeo no YouTube</a>`;
 }
 
 function editarResolucao(id, texto) {

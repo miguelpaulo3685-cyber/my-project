@@ -48,6 +48,9 @@ quem quer o mesmo curso e mora na mesma cidade/estado, de qualquer escola), cida
 Os Reels voltaram para logo abaixo dos atalhos da Comunidade (mais à vista), sem tocar sozinhos ali.
 As mudanças de 27 e 28/10 (teste 1, acolhimento, dupla, turma, busca de pessoas) foram pedidas e decididas pelo **Miguel**.
 
+Explicação em vídeo (29/10): depois de responder, toda questão mostra "▶ Ver explicação em vídeo no YouTube", que abre a
+busca "ENEM ANO questão N resolução" (sem custo, vale para as ~3.000). A resolução comentada escrita continua por cima.
+
 **Parada em 28/10.** Próximo passo combinado: lançar na escola antiga (todos no mesmo dia, com o mesmo nome de
 escola) e medir quem volta em 7 dias e quem cria laço (dupla, seguir, boas-vindas). Antes de divulgar: Render pago.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
