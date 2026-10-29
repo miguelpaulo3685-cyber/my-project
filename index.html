@@ -5651,7 +5651,7 @@ async function concluirEntrada(dados, mensagem) {
   try { sala = sessionStorage.getItem('mm_arena_pendente'); sessionStorage.removeItem('mm_arena_pendente'); } catch (e) {}
   setTimeout(() => {
     fecharEntrada();
-    if (sala) abrirArena(sala); else { irPara('treinar'); setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 600); }
+    if (sala) abrirArena(sala); else { irPara('treinar'); abrirNaPaginaCerta(false); setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 600); }
     avisoTopo(mensagem + ' Seu progresso agora fica salvo na conta.', 'bom');
   }, 700);
 }
@@ -10859,9 +10859,21 @@ desenharTudo();
 abrirConta('entrar', false);
 if (document.documentElement.classList.contains('com-entrada') && !pc3d.ligar()) { livroEmPontos.ligar(); historia.ligar(); }
 // restaurarSessao troca o progresso pelo da conta, se houver sessao valida
+// Página inicial: quem chega começa pelo Treinar (as 5 questões e a nota TRI
+// convencem); quem já tem conta e já estudou um pouco abre na Comunidade, no
+// meio da sua turma. Link especial (Arena, e-mail, aviso) manda mais que isso.
+function abrirNaPaginaCerta(linkEspecial) {
+  if (linkEspecial || !usuarioLogado || totais().feitas < 5) return;
+  if (document.getElementById('tela-treinar').classList.contains('escondido')) return; // a pessoa já foi para outro lugar
+  if (document.documentElement.classList.contains('com-entrada') || document.querySelector('.fundo-modal:not(.escondido):not([id])')) return;
+  abrirComunidade('agora');
+}
+
 window.addEventListener('load', () => {
   verificarAPI(); carregarGoogle(); registrarServiceWorker(); desenharConviteApp();
+  const linkEspecial = [...new URLSearchParams(location.search).keys()].some(k => !['origem', 'convite'].includes(k) && !k.startsWith('utm_')) || Boolean(location.hash);
   const sessao = restaurarSessao();
+  sessao.then(() => abrirNaPaginaCerta(linkEspecial)).catch(() => {});
   tratarLinkDoEmail(sessao);
   tratarLinkDeAviso(sessao);
   sessao.then(() => setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 800)).catch(() => {});

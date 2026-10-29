@@ -23,6 +23,13 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 
 ## O DIFERENCIAL (decidido em 28/10)
 
+Nas palavras do Miguel (29/10): "Esse é o maior diferencial do site: a conexão, e os milhares de estudantes que
+podem se apoiar, criar amizades, ter os mesmos sonhos, os laços que podem fazer dentro desse site. Isso não é apenas
+um site, é um modo que as pessoas têm de se incentivar e buscar apoio onde podem." Toda decisão nova passa por aqui.
+
+Página inicial (29/10): quem chega (sem conta ou com menos de 5 questões) abre no Treinar; quem já tem conta e já
+estudou abre na Comunidade, no meio da sua turma. Links de Arena, e-mail e aviso continuam mandando.
+
 A conexão entre os alunos é o maior trunfo do site: "Instagram + ENEM com TRI". As pessoas devem se sentir
 acolhidas e fazer amigos. Feito em 28/10 (acolhimento.js): escola no perfil e "colegas da sua escola",
 "👋 Chegou agora" com boas-vindas de um toque (vira notificação), e "quem da sua escola/grupo estudou hoje"
