@@ -5133,11 +5133,13 @@ const pc3d = (() => {
     }`;
 
   let gl, prog, loc = {}, bufs = [], bufNuvem, pronto = false, ligado = false, raf = 0, dpr = 1, W = 0, H = 0, escala = 1;
+  let devicePixelRatioMax = innerWidth < 700 ? 1.5 : 2;
   let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [0, 0], pAtual = [5, 5];
   const caixa = () => document.getElementById('entrada');
   const el = id => document.getElementById(id);
   // computador = algum mouse e tela larga (?entrada=pc força, para testar)
-  const ativo = () => true;
+  // Celular deitado tem tela baixa demais para as formas e os textos: fica a história das montanhas.
+  const ativo = () => innerHeight >= 480 || innerWidth < innerHeight;
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
 
   function iniciarGL() {
@@ -5166,13 +5168,14 @@ const pc3d = (() => {
     if (!cartao || !gl) return;
     const cx0 = caixa(), fim = cx0.scrollHeight - cx0.clientHeight;
     const r = cartao.getBoundingClientRect(), topo = r.top + cx0.scrollTop - fim, u = H / 2 * escala, folga = W < 700 ? 10 : 26;
-    const dados = moldura((r.left + r.width / 2 - W / 2) / u, -(topo + r.height / 2 - H / 2) / u, (r.width + folga * 2) / u, (r.height + folga * 2) / u);
+    const cabe = r.height + folga * 2 < H * .94;
+    const dados = cabe ? moldura((r.left + r.width / 2 - W / 2) / u, -(topo + r.height / 2 - H / 2) / u, (r.width + folga * 2) / u, (r.height + folga * 2) / u) : nuvem();
     if (bufs[ULTIMA]) gl.deleteBuffer(bufs[ULTIMA]);
     bufs[ULTIMA] = subir(dados);
   }
 
   function medir() {
-    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    dpr = Math.min(devicePixelRatio || 1, devicePixelRatioMax); W = innerWidth; H = innerHeight;
     escala = Math.min(1, (W / H) / 1.05);
     const c = el('pc-canvas'); c.width = W * dpr; c.height = H * dpr;
     el('pc-espaco').style.height = `${ULTIMA * 100}vh`;
@@ -5223,9 +5226,19 @@ const pc3d = (() => {
     }
   }
 
+  let desenhar = 0, amostras = [], ultimoMs = 0, aliviado = false;
+  function talvezAliviar(ms) {
+    if (aliviado || !ultimoMs) { ultimoMs = ms; return; }
+    amostras.push(ms - ultimoMs); ultimoMs = ms;
+    if (amostras.length < 120) return;
+    const media = amostras.reduce((a, b) => a + b, 0) / amostras.length;
+    aliviado = true;
+    if (media > 26) { desenhar = Math.round(N * .5); devicePixelRatioMax = 1; medir(); }
+  }
   function quadro(ms) {
     raf = requestAnimationFrame(quadro);
     if (!pronto) return;
+    talvezAliviar(ms);
     const c = caixa(), fim = Math.max(1, c.scrollHeight - c.clientHeight);
     const alvo = Math.min(ULTIMA, c.scrollTop / fim * ULTIMA);
     f += (alvo - f) * .09;
@@ -5249,7 +5262,7 @@ const pc3d = (() => {
     gl.uniform2f(loc.uRot, rotAtual[0], rotAtual[1]);
     gl.uniform2f(loc.uPonteiro, fora ? 9 : pAtual[0], fora ? 9 : pAtual[1]);
     gl.clearColor(.137, .133, .153, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.POINTS, 0, N);
+    gl.drawArrays(gl.POINTS, 0, desenhar || N);
     textos();
   }
 
