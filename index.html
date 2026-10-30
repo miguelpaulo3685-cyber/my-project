@@ -6282,6 +6282,8 @@ function paginaDoEnem(ano) {
   const info = ano === 'misto' ? { dia1: 90, dia2: 90 } : (anosSim || []).find(a => a.ano === ano) || { dia1: 0, dia2: 0 };
   const ocupado = sim && !sim.entregue;
   const feitos = [1, 2].map(d => ultimoDoDia(ano, d));
+  // A língua estrangeira só entrou no ENEM em 2010.
+  const temLingua = ano === 'misto' || Number(ano) >= 2010;
   const diaCartao = dia => {
     const d = DIAS_SIM[dia];
     const f = feitos[dia - 1];
@@ -6291,7 +6293,7 @@ function paginaDoEnem(ano) {
       : `<button class="acao${f ? ' discreta' : ''}" onclick="comecarSimulado(${dia}, this)" ${ocupado || !info['dia' + dia] ? 'disabled' : ''}>${f ? 'Refazer' : 'Começar'} ${d.nome}</button>`;
     return `<div class="dia-sim">
       <b>${d.nome}</b>
-      <span>${d.sobre}<br>${info['dia' + dia] >= 90 ? '90 questões' : `${info['dia' + dia]} de 90 questões no banco`}${dia === 1 ? ' · 5 de língua estrangeira' : ''}</span>
+      <span>${d.sobre}<br>${info['dia' + dia] >= 90 ? '90 questões' : `${info['dia' + dia]} de 90 questões no banco`}${dia === 1 && temLingua ? ' · 5 de língua estrangeira' : ''}</span>
       <span class="tempo">⏱ ${duracaoTexto(d.minutos)}</span>
       ${f ? `<span class="ultimo">Último resultado: <b>${f.acertos}/${f.total}</b> · ${f.areas.map(a => `${escapar(nomeDaArea(a.area))} ${a.nota ? 'TRI ' + a.nota : a.acertos + '/' + a.total}`).join(' · ')}</span>` : ''}
       ${botao}
@@ -6307,14 +6309,14 @@ function paginaDoEnem(ano) {
     </div>
     ${completo ? resultadoDoEnem(feitos) : ''}
     <div class="dias-sim">${diaCartao(1)}${diaCartao(2)}</div>
-    <div class="opcoes-sim" style="grid-template-columns:1fr">
+    ${temLingua ? `<div class="opcoes-sim" style="grid-template-columns:1fr">
       <div>
         <label>Língua estrangeira (dia 1)</label>
         <div class="chaves" style="max-width:360px">
           ${['ingles', 'espanhol'].map(l => `<button aria-pressed="${escolhaSim.lingua === l}" onclick="escolhaSim.lingua = '${l}'; desenharTelaSim()">${l === 'ingles' ? 'Inglês' : 'Espanhol'}</button>`).join('')}
         </div>
       </div>
-    </div>
+    </div>` : '<p class="pista">O ENEM 2009 não tinha língua estrangeira: ela só entrou na prova em 2010.</p>'}
     <p class="aviso-sim">O tempo é o oficial: 5h30 no dia 1 (já com a redação) e 5h no dia 2. Dá para pausar se precisar de um intervalo.
       O gabarito e a nota TRI aparecem quando você entregar. ${usuarioLogado ? 'O resultado fica salvo na sua conta.' : 'Sem conta, o resultado fica só neste navegador.'}</p>`;
 }
