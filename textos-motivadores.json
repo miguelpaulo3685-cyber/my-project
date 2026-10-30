@@ -310,5 +310,70 @@
     "Cada texto tem: \"texto\" (o texto em si; use \\n para quebrar parágrafo), \"fonte\" (de onde veio, como está no caderno) e, se for imagem, gráfico ou charge, \"imagem\" com o caminho do arquivo (ex.: \"img/redacao/2023-3.png\") e \"descricao\" (o que a imagem mostra, para quem usa leitor de tela).",
     "Copie do caderno oficial no site do INEP. Sempre coloque a fonte.",
     "Ano com \"textos\": [] continua mostrando só o link para o caderno do INEP."
-  ]
+  ],
+  "2024": {
+    "tema": "Desafios para a valorização da herança africana no Brasil",
+    "textos": [
+      {
+        "texto": "Herança – o legado de crenças, conhecimentos, técnicas, costumes, tradições, transmitido por um grupo social de geração para geração; cultura.",
+        "fonte": "HOUAISS, A.; VILLAR, M. S. Dicionário Houaiss da língua portuguesa. Rio de Janeiro: Objetiva, 2009 (adaptado)."
+      },
+      {
+        "texto": "As culturas africanas e afro-brasileiras foram relegadas ao campo do folclore com o propósito de confiná-las ao gueto fossilizado da memória. Folclorizar, nesse caso, é reduzir uma cultura a um conjunto de representações estereotipadas, via de regra, alheias ao contexto que produziu essa cultura.",
+        "fonte": "OLIVEIRA, E. D. A epistemologia da ancestralidade. Entrelugares: revista de sociopoética e abordagens afins, 2009."
+      },
+      {
+        "imagem": "img/redacao/2024-1.jpg",
+        "descricao": "Obra de Rosana Paulino: uma figura negra, amarrada por cordas, puxa um fardo sobre as páginas de um livro aberto. Na página está escrito: \"Capítulo oito. Quando não souberes para onde ir, olha para trás e saiba pelo menos de onde vens. Provérbio africano\".",
+        "fonte": "PAULINO, R. Ainda a lamentar. In: GONÇALVES, A. M. Um defeito de cor: romance. Rio de Janeiro: Record, 2024 (adaptado)."
+      },
+      {
+        "texto": "História afro-brasileira nas escolas: professoras comentam avanços e dificuldades\n\nAs aulas sobre escravidão eram motivo de vergonha para uma professora quando ela estudava em uma escola municipal na zona sul de São Paulo. “Era o meu pior momento na escola”, lembra a ex-aluna. Naquela época, a história da população negra no Brasil era reduzida ao horror do período escravocrata. Não se falava na escola sobre temas como a história e a cultura afro-brasileira, muito menos sobre as grandes personalidades negras do país, como Luiz Gama e Carolina Maria de Jesus.\n\nA pedagoga, que é negra, tem orgulho de oferecer uma experiência diferente da que viveu em sala de aula para seus alunos. Agora os livros infantis levados para as turmas têm protagonistas pretos. Temas como a beleza do cabelo crespo e o combate ao racismo fazem parte do dia a dia da escola.",
+        "fonte": "Disponível em: https://jornal.unesp.br. Acesso em: 3 jun. 2024 (adaptado)."
+      },
+      {
+        "texto": "Histórias para ninar gente grande\nG.R.E.S. Estação Primeira de Mangueira (samba-enredo de 2019)\n\nBrasil, meu nego\nDeixa eu te contar\nA história que a história não conta\nO avesso do mesmo lugar\nNa luta é que a gente se encontra\n\nBrasil, meu dengo\nA Mangueira chegou\nCom versos que o livro apagou\nDesde 1500 tem mais invasão do que descobrimento\nTem sangue retinto pisado\nAtrás do herói emoldurado\nMulheres, tamoios, mulatos\nEu quero um país que não está no retrato\n\nBrasil, o teu nome é Dandara\nE a tua cara é de cariri\nNão veio do céu\nNem das mãos de Isabel\nA liberdade é um dragão no mar de Aracati\n\nSalve os caboclos de julho\nQuem foi de aço nos anos de chumbo\nBrasil, chegou a vez\nDe ouvir as Marias, Mahins, Marielles, malês",
+        "fonte": "Disponível em: www.mangueira.com.br. Acesso em: 30 maio 2024 (fragmento)."
+      },
+      {
+        "texto": "Alunos de escola municipal conhecem pontos do Rio que retratam relação com a África\n\nAlunos admiram grafite de Zumbi dos Palmares na Pedra do Sal. (Foto: Brenno Carvalho / O Globo)",
+        "imagem": "img/redacao/2024-2.jpg",
+        "descricao": "Foto: alunos de uniforme escolar, sentados de costas numa escadaria, olham um grande grafite colorido com o rosto de Zumbi dos Palmares.",
+        "fonte": "Disponível em: www.oglobo.com. Acesso em: 29 maio 2024 (adaptado)."
+      }
+    ]
+  },
+  "2025": {
+    "tema": "Perspectivas acerca do envelhecimento na sociedade brasileira",
+    "textos": [
+      {
+        "texto": "Em 2022, o total de pessoas com 65 anos de idade ou mais no país chegou a 10,9% da população, com alta de 57,4% frente a 2010, quando esse contingente era 7,4% da população. É o que revelam os resultados do universo da população do Brasil desagregada por idade e sexo do Censo Demográfico 2022. “O Estatuto do Idoso define como idoso a pessoa de 60 anos ou mais. O corte de 65 anos ou mais foi utilizado nessa análise para manter comparabilidade internacional e com outras pesquisas que utilizam essa faixa etária, como de mercado de trabalho”, justifica a gerente de Estudos e Análises da Dinâmica Demográfica do IBGE. O aumento da população de 65 anos ou mais e a diminuição da parcela da população de até 14 anos no mesmo período, que passou de 24,1% para 19,8%, evidenciam o franco envelhecimento da população brasileira.",
+        "fonte": "GOMES, I.; BRITTO, V. Censo 2022. Disponível em: https://agenciadenoticias.ibge.gov.br. Acesso em: 21 maio 2025 (adaptado)."
+      },
+      {
+        "texto": "Um movimento na internet, contrário ao pictograma com a bengala para os idosos, iniciou uma campanha para modificar essa imagem. A empreitada coletiva acabou com a elaboração de um novo desenho, uma figura mais altiva, ao lado da inscrição “60+”.",
+        "imagem": "img/redacao/2025-1.jpg",
+        "descricao": "Dois pictogramas lado a lado: à esquerda, o antigo, com uma pessoa curvada apoiada numa bengala; à direita, o novo, com uma pessoa de pé, ereta, e a inscrição 60+.",
+        "fonte": "Disponível em: www12.senado.leg.br. Acesso em: 21 maio 2025."
+      },
+      {
+        "texto": "A velhice é tempo de se retratar consigo mesma, de falar da doença, da sexualidade, do tédio e da liberdade de não se encaixar mais nas expectativas sociais. “A velhice não é doença. É destino”, escreve Rita Lee. Mas ela mesma mostra que esse destino não é sinônimo de mero encaminhamento para o fim — é campo de novas escolhas, inclusive a de desafiar estereótipos reservados para essa fase da vida.\n\nA atriz Fernanda Montenegro, 95 anos, oferece em suas memórias uma síntese luminosa desse gesto de habitar o tempo com dignidade: “A velhice é o tempo em que a vida já foi vivida e, por isso mesmo, pode finalmente ser olhada de frente, sem o pânico do ineditismo”.",
+        "fonte": "Disponível em: https://rascunho.com.br. Acesso em: 17 maio 2025."
+      },
+      {
+        "texto": "Um novo estereótipo: o “velho ativo”, saudável e com recursos pressiona o “velho inativo”, doente e pobre. Nem todos os idosos têm recursos à disposição para aderir a essa corrida.",
+        "imagem": "img/redacao/2025-2.jpg",
+        "descricao": "Gráfico \"Idosos são os principais mantenedores dos lares\", sobre pessoas de 65 a 74 anos: 38% são a principal renda, mas contam com outras rendas; 34% contribuem para os gastos, mas não são os mantenedores principais; 28% sustentam a casa sozinhos.",
+        "fonte": "Disponível em: g1.globo.com. Acesso em: 4 jun. 2025 (adaptado)."
+      },
+      {
+        "texto": "Dona Maria Rita era tão antiga que na casa da filha estavam habituados a ela como a um móvel velho. Ela não era novidade para ninguém. Mas nunca lhe passara pela cabeça que era uma solitária. Só que não tinha nada para fazer. Era um lazer forçado que em certos momentos se tornava lancinante: nada tinha a fazer no mundo. Senão viver como um gato, como um cachorro. Seu ideal era ser dama de companhia de alguma senhora, mas isso nem se usava mais e mesmo ninguém acreditaria nos seus fortes setenta e sete anos, pensariam que era uma fraca. Não fazia nada, fazia só isso: ser velha. Às vezes ficava deprimida: achava que não servia a nada, não servia sequer a Deus.",
+        "fonte": "LISPECTOR, C. Onde estivestes de noite. Rio de Janeiro: Francisco Alves, 1974."
+      },
+      {
+        "texto": "Quem tem direito de viver mais?\n\nO documentário Quantos dias. Quantas noites busca investigar quem, afinal, tem direito a uma vida longa no Brasil. “São inúmeros os marcadores que definem quem vai viver e quem vai sucumbir diante de uma realidade imposta por um sistema bastante perverso”, afirma o diretor do documentário.\n\n“O envelhecimento leva a maioria das pessoas a um declínio funcional. Mas, se você chega aos 75 tendo acumulado desigualdades, principalmente pelo racismo, é muito difícil sobreviver com qualidade de vida”, diz um médico gerontólogo.",
+        "fonte": "Disponível em: g1.globo.com. Acesso em: 10 jun. 2025 (adaptado)."
+      }
+    ]
+  }
 }
