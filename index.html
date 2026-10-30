@@ -457,10 +457,12 @@
     }
     .enunciado img { max-width: 100%; height: auto; border-radius: 10px; margin: 14px 0; }
     .alt img { max-width: 100%; max-height: 220px; height: auto; border-radius: 8px; display: block; }
-    .enunciado mark.grifo { background: rgba(250,204,21,.55); color: inherit; border-radius: 3px; padding: 1px 0; cursor: pointer; }
-    html[data-tema="escuro"] .enunciado mark.grifo { background: rgba(250,204,21,.35); }
-    .enunciado.grifando { cursor: text; }
-    .enunciado.grifando::selection, .enunciado.grifando *::selection { background: rgba(250,204,21,.45); }
+    .enunciado mark.grifo { background: rgba(253,230,138,.6); box-shadow: inset 0 -2px 0 rgba(217,170,40,.45); color: inherit; border-radius: 2px; padding: 1px 0; cursor: pointer; }
+    html[data-tema="escuro"] .enunciado mark.grifo { background: rgba(250,204,21,.22); box-shadow: inset 0 -2px 0 rgba(250,204,21,.5); }
+    .enunciado[data-q] { cursor: text; }
+    .enunciado[data-q]::selection, .enunciado[data-q] *::selection { background: rgba(250,204,21,.35); }
+    .enunciado img { -webkit-user-select: none; user-select: none; }
+    .barra-grifo .pista { margin: 0 auto 0 0; align-self: center; font-size: .8rem; }
     .barra-grifo { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px; }
     .btn-grifo {
       background: var(--superficie-2); border: 1px solid var(--borda); color: var(--texto-fraco);
@@ -477,7 +479,7 @@
       padding: 19px 22px; margin-bottom: 13px;
       font-size: 1rem; line-height: 1.6; text-align: left;
       font-family: inherit; cursor: pointer;
-      user-select: none;
+      user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
       transition: border-color .18s, background .18s, transform .12s;
     }
     .alt:hover:not(:disabled) { border-color: var(--marca); transform: translateX(5px); }
@@ -4384,8 +4386,8 @@ function desenharQuestao() {
   const dica = (mostrouDica || bloco.indice > 0) ? '' : `
     <div class="dica-uso" id="dica-uso">
       <span>💡</span>
-      <span><b>Dica:</b> segure o clique numa alternativa (ou clique com o botão direito)
-      para riscá-la e ir eliminando as que você descartou.</span>
+      <span><b>Dica:</b> arraste o mouse ou o dedo no texto para marcar o que é importante. Segure o clique
+      (ou o dedo) numa alternativa para riscá-la e ir eliminando as que você descartou.</span>
       <button onclick="fecharDica()" title="Fechar">✕</button>
     </div>`;
 
@@ -4413,13 +4415,8 @@ function desenharQuestao() {
     ${passoVisita}
     ${desafio}
     ${dica}
-    <div class="barra-grifo">
-      <button class="btn-grifo${modoGrifo ? ' ligado' : ''}" id="btn-grifo" onclick="alternarGrifo()"
-        title="Com o modo ligado, selecione um trecho do texto para grifar. Toque num grifo para apagar.">✏️ Grifar</button>
-      <button class="btn-grifo" onclick="limparGrifos()" title="Apagar todos os grifos desta questão">Limpar</button>
-    </div>
-    <div class="enunciado${modoGrifo ? ' grifando' : ''}" id="enunciado"
-      onmouseup="grifarSelecao()" ontouchend="setTimeout(grifarSelecao, 0)" onclick="apagarGrifo(event)">${formatarEnunciado(q.contexto)}</div>
+    ${barraGrifo(q.id)}
+    <div class="enunciado" id="enunciado" data-q="${q.id}">${enunciadoComGrifos(q)}</div>
     <div id="lista-alts">${alternativas.map((t, i) => `
       <button class="alt" id="alt-${i}"
         onmousedown="pressionar(event, ${i})" onmouseup="soltar(event, ${i})"
@@ -4436,26 +4433,31 @@ function desenharQuestao() {
 }
 
 // ---------- grifar o texto, como na prova de papel ----------
-let modoGrifo = false;
-try { modoGrifo = localStorage.getItem('mm_grifo') === '1'; } catch (e) {}
+// ---------- marca-texto e alternativas riscadas (Treinar, Simulado e Desafio) ----------
+// Arrastar no texto da questão (mouse ou dedo) marca o trecho; só texto, nunca
+// as imagens. Tocar numa marcação apaga. As marcações e os riscos ficam
+// guardados por questão: trocar de questão ou escolher uma alternativa não apaga.
+const grifosPorQuestao = {};
+const riscadasPorQuestao = {};
+const enunciadoComGrifos = q => grifosPorQuestao[q.id] || formatarEnunciado(q.contexto);
+const barraGrifo = id => `<div class="barra-grifo"><span class="pista">✏️ Arraste no texto para marcar</span>
+  <button class="btn-grifo" onclick="limparGrifos(${id})" title="Apagar as marcações desta questão">Limpar marcações</button></div>`;
+const classeRiscada = (id, i) => (riscadasPorQuestao[id] && riscadasPorQuestao[id].has(i) ? ' riscada' : '');
 
-function alternarGrifo() {
-  modoGrifo = !modoGrifo;
-  guardar('mm_grifo', modoGrifo ? '1' : null);
-  document.getElementById('btn-grifo').classList.toggle('ligado', modoGrifo);
-  document.getElementById('enunciado').classList.toggle('grifando', modoGrifo);
+function guardarGrifos(enunciado) {
+  if (enunciado && enunciado.dataset.q) grifosPorQuestao[enunciado.dataset.q] = enunciado.innerHTML;
 }
 
-// Envolve em <mark> cada pedaço de texto dentro da seleção. Dá para grifar
+// Envolve em <mark> cada pedaço de texto dentro da seleção. Dá para marcar
 // trechos que atravessam negrito, quebras de linha etc., sem estragar o texto.
 function grifarSelecao() {
-  if (!modoGrifo) return;
   const sel = window.getSelection();
-  const enunciado = document.getElementById('enunciado');
-  if (!sel || sel.isCollapsed || !enunciado) return;
+  if (!sel || sel.isCollapsed || !sel.rangeCount) return;
   const range = sel.getRangeAt(0);
-  if (!enunciado.contains(range.commonAncestorContainer)) return;
-
+  const no0 = range.commonAncestorContainer;
+  const enunciado = (no0.nodeType === 1 ? no0 : no0.parentElement).closest('.enunciado[data-q]')
+    || [...document.querySelectorAll('.enunciado[data-q]')].find(e => range.intersectsNode(e));
+  if (!enunciado) return;
   const textos = [];
   const andar = document.createTreeWalker(enunciado, NodeFilter.SHOW_TEXT);
   while (andar.nextNode()) {
@@ -4474,6 +4476,7 @@ function grifarSelecao() {
     marca.appendChild(no);
   }
   sel.removeAllRanges();
+  guardarGrifos(enunciado);
 }
 
 function desfazerGrifo(marca) {
@@ -4483,14 +4486,71 @@ function desfazerGrifo(marca) {
   pai.normalize();
 }
 
-function apagarGrifo(evento) {
-  const marca = evento.target.closest && evento.target.closest('mark.grifo');
-  if (marca && window.getSelection().isCollapsed) desfazerGrifo(marca);
+function limparGrifos(id) {
+  delete grifosPorQuestao[id];
+  document.querySelectorAll(`.enunciado[data-q="${id}"] mark.grifo`).forEach(desfazerGrifo);
 }
 
-function limparGrifos() {
-  document.querySelectorAll('#enunciado mark.grifo').forEach(desfazerGrifo);
+// Mouse: marca ao soltar o botão. Dedo: o celular seleciona com as alças;
+// quando o dedo sai da tela e a seleção para de mudar, vira marcação.
+let dedosNaTela = 0, relogioGrifo = null;
+document.addEventListener('mouseup', e => { if (e.button === 0) setTimeout(grifarSelecao, 0); });
+document.addEventListener('touchstart', () => { dedosNaTela++; clearTimeout(relogioGrifo); }, { passive: true });
+document.addEventListener('touchend', () => { dedosNaTela = Math.max(0, dedosNaTela - 1); agendarGrifo(); }, { passive: true });
+document.addEventListener('touchcancel', () => { dedosNaTela = 0; }, { passive: true });
+let usandoToque = false;
+document.addEventListener('mousedown', () => { usandoToque = false; });
+document.addEventListener('touchstart', () => { usandoToque = true; }, { passive: true });
+document.addEventListener('selectionchange', () => { if (usandoToque && !dedosNaTela) agendarGrifo(); });
+function agendarGrifo() {
+  clearTimeout(relogioGrifo);
+  relogioGrifo = setTimeout(() => { if (!dedosNaTela) grifarSelecao(); }, 700);
 }
+// Tocar numa marcação (sem arrastar) apaga só ela.
+document.addEventListener('click', e => {
+  const marca = e.target.closest && e.target.closest('.enunciado[data-q] mark.grifo');
+  if (!marca || !window.getSelection().isCollapsed) return;
+  const enunciado = marca.closest('.enunciado');
+  desfazerGrifo(marca);
+  guardarGrifos(enunciado);
+});
+
+// Simulado e Desafio: segurar uma alternativa (ou botão direito) risca; tocar
+// numa riscada desfaz o risco. O Treinar tem a mesma coisa com código próprio.
+const ALTS_RISCAVEIS = '#painel-prova .alt[data-q]:not([disabled]), #alts-desafio .alt[data-q]';
+let pressaoAlt = null, riscouAlt = false;
+function alternarRiscoAlt(alt) {
+  const id = alt.dataset.q, i = Number(alt.dataset.i);
+  const set = riscadasPorQuestao[id] || (riscadasPorQuestao[id] = new Set());
+  set.has(i) ? set.delete(i) : set.add(i);
+  alt.classList.toggle('riscada', set.has(i));
+}
+document.addEventListener('pointerdown', e => {
+  const alt = e.target.closest && e.target.closest(ALTS_RISCAVEIS);
+  if (!alt || e.button !== 0) return;
+  riscouAlt = false;
+  alt.classList.add('segurando');
+  pressaoAlt = { alt, relogio: setTimeout(() => { riscouAlt = true; alternarRiscoAlt(alt); if (navigator.vibrate) navigator.vibrate(35); }, 450) };
+});
+const soltarAlt = () => {
+  if (!pressaoAlt) return;
+  clearTimeout(pressaoAlt.relogio);
+  pressaoAlt.alt.classList.remove('segurando');
+  pressaoAlt = null;
+};
+['pointerup', 'pointercancel'].forEach(t => document.addEventListener(t, soltarAlt));
+document.addEventListener('pointerleave', soltarAlt, true);
+// O clique que termina um "segurar" não marca a alternativa; clique numa riscada só tira o risco.
+document.addEventListener('click', e => {
+  const alt = e.target.closest && e.target.closest(ALTS_RISCAVEIS);
+  if (!alt) return;
+  if (riscouAlt) { riscouAlt = false; e.stopPropagation(); e.preventDefault(); return; }
+  if (alt.classList.contains('riscada')) { alternarRiscoAlt(alt); e.stopPropagation(); e.preventDefault(); }
+}, true);
+document.addEventListener('contextmenu', e => {
+  const alt = e.target.closest && e.target.closest(ALTS_RISCAVEIS);
+  if (alt) { e.preventDefault(); alternarRiscoAlt(alt); }
+});
 
 function fecharDica() {
   mostrouDica = true;
@@ -6443,12 +6503,14 @@ function desenharProva() {
       <b>Questão ${sim.atual + 1} <small>de ${total}</small></b>
       <small>${escapar(nomeDaArea(area))}${q.lingua ? ` · ${q.lingua === 'ingles' ? 'Inglês' : 'Espanhol'}` : ''} · ENEM ${escapar(q.ano)}</small>
     </div>
-    <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
+    ${corrigindo ? '' : barraGrifo(q.id)}
+    <div class="enunciado" data-q="${q.id}">${enunciadoComGrifos(q)}</div>
     <div id="lista-alts">${alternativas.map((t, i) => {
       let classe = '';
       if (corrigindo) classe = i === q.correta ? ' gabarito' : (i === minha ? ' errou' : '');
       else if (i === minha) classe = ' escolhida';
-      return `<button class="alt${classe}" ${corrigindo ? 'disabled' : ''} onclick="escolherSim(${i})" aria-pressed="${i === minha}">
+      else classe = classeRiscada(q.id, i);
+      return `<button class="alt${classe}" data-q="${q.id}" data-i="${i}" ${corrigindo ? 'disabled' : ''} onclick="escolherSim(${i})" aria-pressed="${i === minha}">
         <span class="letra">${LETRAS[i] || i + 1}</span><span>${formatarEnunciado(t)}</span></button>`;
     }).join('')}</div>
     ${corrigindo ? `<div class="nota-gabarito" style="margin-top:6px"><strong>Gabarito: ${LETRAS[q.correta]}</strong> ·
@@ -8288,8 +8350,9 @@ function desenharQuestaoDesafio() {
     <div class="painel">
       <div class="cabeca-prova"><b>Questão ${i + 1} <small>de ${total}</small></b>
         <small>${escapar(nomeDaArea(AREA_DA_DISCIPLINA[q.disciplina] || ''))} · ENEM ${escapar(q.ano)}</small></div>
-      <div class="enunciado">${formatarEnunciado(q.contexto)}</div>
-      <div id="alts-desafio">${alternativas.map((t, k) => `<button class="alt${k === minha ? ' escolhida' : ''}" onclick="escolherDesafio(${k})" aria-pressed="${k === minha}">
+      ${barraGrifo(q.id)}
+      <div class="enunciado" data-q="${q.id}">${enunciadoComGrifos(q)}</div>
+      <div id="alts-desafio">${alternativas.map((t, k) => `<button class="alt${k === minha ? ' escolhida' : classeRiscada(q.id, k)}" data-q="${q.id}" data-i="${k}" onclick="escolherDesafio(${k})" aria-pressed="${k === minha}">
         <span class="letra">${LETRAS[k]}</span><span>${formatarEnunciado(t)}</span></button>`).join('')}</div>
       <div class="rodape-prova">
         <button class="acao discreta" onclick="irQuestaoDesafio(${i - 1})" ${i === 0 ? 'disabled' : ''}>← Anterior</button>
