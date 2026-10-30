@@ -53,6 +53,9 @@ busca "ENEM ANO questão N resolução" (sem custo, vale para as ~3.000). A reso
 
 **Combinado em 29/10 (créditos em 52%): depois de terça**, escrever resoluções comentadas das questões de "Mais erradas" (10 a 20 por vez).
 
+Entrada com partículas também no celular (30/10): formas menores na tela em pé, textos em cima e embaixo, metade das
+partículas. A história com as montanhas ficou só para aparelho sem WebGL.
+
 **Parada em 28/10.** Próximo passo combinado: lançar na escola antiga (todos no mesmo dia, com o mesmo nome de
 escola) e medir quem volta em 7 dias e quem cria laço (dupla, seguir, boas-vindas). Antes de divulgar: Render pago.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.

@@ -1910,6 +1910,19 @@
       font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #8d8d8d; }
     html.pc-3d .pc-rodape a { color: inherit; text-decoration: none; }
     html.pc-3d.com-mouse #entrada, html.pc-3d.com-mouse #entrada * { cursor: none; }
+    @media (max-width: 700px) {
+      .pc-nome { font-size: 17px; margin-top: 0; }
+      .pc-nome.pc-esq { top: 12vh; left: 0; right: 0; text-align: center; }
+      .pc-nome.pc-dir { top: auto; bottom: 16vh; left: 0; right: 0; text-align: center; }
+      .pc-texto, .pc-meio { top: auto; bottom: 9vh; left: 7vw; right: 7vw; max-width: none; font-size: 14px; text-align: center; }
+      .pc-circulo text { font-size: 34px; }
+      .pc-area { bottom: 13vh; }
+      .pc-canto { bottom: 8vh; }
+      .pc-marca { font-size: 15px; flex-direction: column; align-items: flex-start; gap: 4px; }
+      .pc-marca .pc-anel { margin: -19px 0 0 -19px; }
+      html.pc-3d .pc-rodape { position: static; flex-direction: column; align-items: center; gap: 6px; margin-top: 18px; text-align: center; }
+      html.pc-3d .entrada-cartao { max-width: calc(100vw - 48px); }
+    }
     html.pc-3d.com-mouse #entrada input, html.pc-3d.com-mouse #entrada textarea { cursor: text; }
     /* quem pediu menos movimento vê tudo pronto e parado */
     @media (prefers-reduced-motion: reduce) {
@@ -4845,7 +4858,8 @@ function abrirFormularioConta(modo, mostrar) {
 // Cada etapa é uma forma (livro, globo, Brasil, ícones das áreas...). Rolar troca de uma
 // para a outra; o mouse gira a forma, empurra e acende os pontos perto dele.
 const pc3d = (() => {
-  const N = 26000, POEIRA = 600;
+  // Celular: metade das partículas, para não pesar.
+  const N = innerWidth < 700 ? 14000 : 26000, POEIRA = innerWidth < 700 ? 350 : 600;
   const R = Math.random;
   const gauss = () => (R() + R() + R() - 1.5) / 1.5;
   const rotX = (p, a) => [p[0], p[1] * Math.cos(a) - p[2] * Math.sin(a), p[1] * Math.sin(a) + p[2] * Math.cos(a)];
@@ -5087,7 +5101,7 @@ const pc3d = (() => {
   const ULTIMA = FORMAS.length;             // a moldura do cartão
   const VS = `
     attribute vec3 aDe; attribute vec3 aPara; attribute vec4 aSorte;
-    uniform float uMix, uTempo, uAspecto, uPx; uniform vec2 uRot, uPonteiro;
+    uniform float uMix, uTempo, uAspecto, uPx, uEscala; uniform vec2 uRot, uPonteiro;
     varying float vA;
     vec3 girar(vec3 p, vec2 r) {
       float cy = cos(r.y), sy = sin(r.y);
@@ -5101,7 +5115,7 @@ const pc3d = (() => {
       vec3 p = mix(aDe, aPara, m);
       p += (aSorte.yzw - .5) * .9 * sin(m * 3.14159);
       p += .008 * vec3(sin(uTempo * 1.1 + aSorte.x * 40.), cos(uTempo * .9 + aSorte.y * 40.), sin(uTempo * .7 + aSorte.z * 40.));
-      p = girar(p, uRot);
+      p = girar(p, uRot) * uEscala;
       float persp = 3. / (3. - clamp(p.z, -3., 2.4));
       vec2 tela = vec2(p.x * persp / uAspecto, p.y * persp);
       vec2 d = (tela - uPonteiro) * vec2(uAspecto, 1.);
@@ -5118,12 +5132,12 @@ const pc3d = (() => {
       gl_FragColor = vec4(vec3(.95) * a, a);
     }`;
 
-  let gl, prog, loc = {}, bufs = [], bufNuvem, pronto = false, ligado = false, raf = 0, dpr = 1, W = 0, H = 0;
+  let gl, prog, loc = {}, bufs = [], bufNuvem, pronto = false, ligado = false, raf = 0, dpr = 1, W = 0, H = 0, escala = 1;
   let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [0, 0], pAtual = [5, 5];
   const caixa = () => document.getElementById('entrada');
   const el = id => document.getElementById(id);
   // computador = algum mouse e tela larga (?entrada=pc força, para testar)
-  const ativo = () => /[?&]entrada=pc/.test(location.search) || matchMedia('(any-pointer: fine) and (min-width: 820px)').matches;
+  const ativo = () => true;
   const calmo = matchMedia('(prefers-reduced-motion: reduce)');
 
   function iniciarGL() {
@@ -5137,7 +5151,7 @@ const pc3d = (() => {
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
     gl.useProgram(prog);
     ['aDe', 'aPara', 'aSorte'].forEach(n => { loc[n] = gl.getAttribLocation(prog, n); gl.enableVertexAttribArray(loc[n]); });
-    ['uMix', 'uTempo', 'uAspecto', 'uPx', 'uRot', 'uPonteiro'].forEach(n => { loc[n] = gl.getUniformLocation(prog, n); });
+    ['uMix', 'uTempo', 'uAspecto', 'uPx', 'uEscala', 'uRot', 'uPonteiro'].forEach(n => { loc[n] = gl.getUniformLocation(prog, n); });
     const sorte = new Float32Array(N * 4); for (let i = 0; i < sorte.length; i++) sorte[i] = R();
     const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, sorte, gl.STATIC_DRAW);
     gl.vertexAttribPointer(loc.aSorte, 4, gl.FLOAT, false, 0, 0);
@@ -5151,7 +5165,7 @@ const pc3d = (() => {
     const cartao = document.querySelector('#entrada-form .entrada-cartao');
     if (!cartao || !gl) return;
     const cx0 = caixa(), fim = cx0.scrollHeight - cx0.clientHeight;
-    const r = cartao.getBoundingClientRect(), topo = r.top + cx0.scrollTop - fim, u = H / 2, folga = 26;
+    const r = cartao.getBoundingClientRect(), topo = r.top + cx0.scrollTop - fim, u = H / 2 * escala, folga = W < 700 ? 10 : 26;
     const dados = moldura((r.left + r.width / 2 - W / 2) / u, -(topo + r.height / 2 - H / 2) / u, (r.width + folga * 2) / u, (r.height + folga * 2) / u);
     if (bufs[ULTIMA]) gl.deleteBuffer(bufs[ULTIMA]);
     bufs[ULTIMA] = subir(dados);
@@ -5159,11 +5173,12 @@ const pc3d = (() => {
 
   function medir() {
     dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    escala = Math.min(1, (W / H) / 1.05);
     const c = el('pc-canvas'); c.width = W * dpr; c.height = H * dpr;
     el('pc-espaco').style.height = `${ULTIMA * 100}vh`;
     if (gl) { gl.viewport(0, 0, c.width, c.height); if (pronto) refazerMoldura(); }
     const circ = document.querySelector('.pc-circulo');
-    if (circ) circ.style.setProperty('--d', `${(.72 * H / 2 * 1.02 + 30) / .44}px`);
+    if (circ) circ.style.setProperty('--d', `${(.72 * escala * H / 2 * 1.02 + 30) / .44}px`);
   }
 
   // as formas são montadas aos poucos, mostrando a porcentagem
@@ -5184,6 +5199,7 @@ const pc3d = (() => {
 
   const onPonteiro = e => { pAlvo = [e.clientX / W * 2 - 1, -(e.clientY / H * 2 - 1)]; };
   const onSair = () => { pAlvo = [5, 5]; };
+  const onSairToque = e => { if (e.pointerType !== 'mouse') onSair(); };
 
   function textos() {
     document.querySelectorAll('#pc-historia .pc-t').forEach(t => {
@@ -5203,7 +5219,7 @@ const pc3d = (() => {
       const cx = Math.cos(rotAtual[0]), sx = Math.sin(rotAtual[0]);
       [y, z] = [y * cx - z * sx, y * sx + z * cx];
       const persp = 3 / (3 - z);
-      marca.style.transform = `translate(${W / 2 + x * persp * H / 2}px, ${H / 2 - y * persp * H / 2}px)`;
+      marca.style.transform = `translate(${W / 2 + x * persp * escala * H / 2}px, ${H / 2 - y * persp * escala * H / 2}px)`;
     }
   }
 
@@ -5229,7 +5245,7 @@ const pc3d = (() => {
     gl.bindBuffer(gl.ARRAY_BUFFER, de); gl.vertexAttribPointer(loc.aDe, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, para); gl.vertexAttribPointer(loc.aPara, 3, gl.FLOAT, false, 0, 0);
     gl.uniform1f(loc.uMix, mix); gl.uniform1f(loc.uTempo, seg);
-    gl.uniform1f(loc.uAspecto, W / H); gl.uniform1f(loc.uPx, 1.5 * dpr);
+    gl.uniform1f(loc.uAspecto, W / H); gl.uniform1f(loc.uPx, 1.5 * dpr); gl.uniform1f(loc.uEscala, escala);
     gl.uniform2f(loc.uRot, rotAtual[0], rotAtual[1]);
     gl.uniform2f(loc.uPonteiro, fora ? 9 : pAtual[0], fora ? 9 : pAtual[1]);
     gl.clearColor(.137, .133, .153, 1); gl.clear(gl.COLOR_BUFFER_BIT);
@@ -5248,7 +5264,7 @@ const pc3d = (() => {
       medir();
       if (!bufNuvem) montar();
       addEventListener('resize', medir); addEventListener('pointermove', onPonteiro, { passive: true });
-      document.addEventListener('pointerleave', onSair);
+      document.addEventListener('pointerleave', onSair); addEventListener('pointerup', onSairToque);
       raf = requestAnimationFrame(quadro);
       return true;
     },
@@ -5256,7 +5272,7 @@ const pc3d = (() => {
       if (!ligado) return;
       ligado = false; cancelAnimationFrame(raf);
       removeEventListener('resize', medir); removeEventListener('pointermove', onPonteiro);
-      document.removeEventListener('pointerleave', onSair);
+      document.removeEventListener('pointerleave', onSair); removeEventListener('pointerup', onSairToque);
     },
   };
 })();
