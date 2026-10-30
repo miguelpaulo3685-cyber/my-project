@@ -1398,5 +1398,103 @@
       "Anidrido etanoico."
     ],
     "correta": 1
+  },
+  {
+    "ano": 2021,
+    "numero": 105,
+    "lingua": null,
+    "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2021-105-inteira1.jpg)",
+    "alternativas": [
+      "Alternativa A (na imagem acima)",
+      "Alternativa B (na imagem acima)",
+      "Alternativa C (na imagem acima)",
+      "Alternativa D (na imagem acima)",
+      "Alternativa E (na imagem acima)"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2023,
+    "numero": 132,
+    "lingua": null,
+    "contexto": "![](https://miguelpaulo3685-cyber.github.io/my-project/img/questoes/2023-132-inteira1.jpg)",
+    "alternativas": [
+      "Alternativa A (na imagem acima)",
+      "Alternativa B (na imagem acima)",
+      "Alternativa C (na imagem acima)",
+      "Alternativa D (na imagem acima)",
+      "Alternativa E (na imagem acima)"
+    ],
+    "correta": 4
+  },
+  {
+    "ano": 2021,
+    "numero": 147,
+    "lingua": null,
+    "contexto": "A Cifra de César é um exemplo de um método de codificação de mensagens usado por Júlio César para se comunicar com seus generais.  \nNo método, cada letra era trocada por uma letra que aparecia no alfabeto um número fixo de casas adiante (ou atrás) de forma cíclica. A seguir temos um exemplo em que cada letra é substituída pela que vem três posições à frente.\n\n![](https://enem.dev/2021/questions/147/114ddf31-06d9-41cf-a588-a987226385e6.png)\n\nPara quebrar um código como esse, a análise de frequências das letras de um texto é uma ferramenta importante.  \nUma análise do texto do romance O guarani, de José de Alencar, que é composto por 491 631 letras, gerou o seguinte gráfico de frequências:\n\n![](https://enem.dev/2021/questions/147/a5256e30-3984-4503-aaa0-41b95d681d71.png)\n\nApós codificar esse texto com a regra do exemplo fornecido, faz-se nova analise de frequência no texto codificado.\nAs quatro letras mais frequentes, em ordem decrescente de frequência, do texto codificado são",
+    "alternativas": [
+      "A, E, O e S.",
+      "D, E, F e G.",
+      "D, H, R e V.",
+      "R, L, B e X.",
+      "X, B, L e P."
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2021,
+    "numero": 175,
+    "lingua": null,
+    "contexto": "Muitos brinquedos que frequentemente são encontrados em praças e parques públicos apresentam formatos de figuras geométricas bidimensionais e tridimensionais. Uma empresa foi contratada para desenvolver uma nova forma de brinquedo. A proposta apresentada pela empresa foi de uma estrutura formada apenas por hastes metálicas, conectadas umas às outras, como apresentado na figura. As hastes de mesma tonalidade e espessura são congruentes.\n\n![](https://enem.dev/2021/questions/175/604fdc09-c098-44f6-9b6f-002210df4c34.png)\n\nCom base na proposta apresentada, quantas figuras geométricas planas de cada tipo são formadas pela união das hastes?",
+    "alternativas": [
+      "12 trapézios isósceles e 12 quadrados.",
+      "24 trapézios isósceles e 12 quadrados.",
+      "12 paralelogramos e 12 quadrados.",
+      "8 trapézios isósceles e 12 quadrados.",
+      "12 trapézios escalenos e 12 retângulos."
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2022,
+    "numero": 144,
+    "lingua": null,
+    "contexto": "Cada número que identifica uma agência bancária tem quatro dígitos: ![](https://enem.dev/2022/questions/144/2c8c344f-3729-4f6b-bbb9-24097d77f58a.jpg),![](https://enem.dev/2022/questions/144/6af5740b-feed-4fd4-bde9-486ad2f96240.jpg),![](https://enem.dev/2022/questions/144/4af33750-a0d5-4acc-abe1-c004f5d8451e.jpg),![](https://enem.dev/2022/questions/144/ea762333-b644-495d-bd01-3c0bf752599a.jpg) mais um dígito verificador ![](https://enem.dev/2022/questions/144/f4712f57-56ec-4a65-9e2e-f7c34f4b775f.jpg).\n\n![](https://enem.dev/2022/questions/144/f88bc2d5-7b64-49cf-bd9d-28ddde048358.jpg)\n\nTodos esses dígitos são números naturais pertencentes ao conjunto {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}. Para a determinação de N5, primeiramente multiplica-se  \nordenadamente os quatro primeiros dígitos do número da agência por 5, 4, 3 e 2, respectivamente, somam-se os resultados e obtém-se S = 5 ![](https://enem.dev/2022/questions/144/981157e8-d269-4be5-8aba-f496109d3f31.jpg)\\+ 4 ![](https://enem.dev/2022/questions/144/89772d85-6273-49c5-95e4-569b4014ca22.jpg)\\+ 3 ![](https://enem.dev/2022/questions/144/164c2b6f-8be5-4ca3-88f7-12fe5a5e872c.jpg)\\+ 2 ![](https://enem.dev/2022/questions/144/ad29c509-a515-4ae6-9d86-451780d68e14.jpg). Posteriormente, encontra-se o resto da divisão de S por 11, denotando por R esse resto. Dessa forma, N5 é a diferença 11 − R.  \nConsidere o número de uma agência bancária cujos quatro primeiros dígitos são 0100.\n\nQual é o dígito verificador N5 dessa agência bancária?",
+    "alternativas": [
+      "0",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "correta": 2
+  },
+  {
+    "ano": 2022,
+    "numero": 166,
+    "lingua": null,
+    "contexto": "Em uma competição de velocidade, diz-se que há uma ultrapassagem quando um veículo que está atrás de outro passa à sua frente, com ambos se deslocando no mesmo sentido. Considere uma competição automobilística entre cinco carros em uma pista com 100 m de comprimento, onde todos largam no mesmo instante e da mesma linha.  \nO gráfico mostra a variação da distância percorrida por cada  \nveículo, em função do tempo, durante toda a competição.\n\n![](https://enem.dev/2022/questions/166/efa5ccf4-a844-4c87-b110-7a675585a779.png)\n\nQual o número de ultrapassagens, após o início da competição, efetuadas pelo veículo que chegou em\núltimo lugar?",
+    "alternativas": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correta": 0
+  },
+  {
+    "ano": 2023,
+    "numero": 114,
+    "lingua": null,
+    "contexto": "Uma equipe de segurança do transporte de uma empresa avalia o comportamento das tensões que aparecem em duas cordas, 1 e 2, usadas para prender uma carga de massa M = 200 kg na carroceria, conforme a ilustração. Quando o caminhão parte do repouso, sua aceleração é constante e igual a 3 m/s2 e, quando ele é freado bruscamente, sua frenagem é constante e igual a 5 m/s2. Em ambas as situações, a carga encontra-se na iminência de movimento, e o sentido do movimento do caminhão está indicado na figura. O coeficiente de atrito estático entre a caixa e c assoalho da carroceria é igual a 0,2. Considere a aceleração da gravidade igual a 10 m/s2, as tensões iniciais nas cordas iguais a zero e as duas cordas ideais.\n\n![](https://enem.dev/2023/questions/114/e245e16d-8a95-4b2e-ab33-6dd299ff9474.png)\n\nNas situações de aceleração e frenagem do caminhão, as tensões nas cordas 1 e 2, em newton, serão",
+    "alternativas": [
+      "Aceleração: T1 = 0 e T2 = 200; frenagem: T1 = 600 e T2 = 0.",
+      "Aceleração: T1 = 0 e T2 = 200; frenagem: T1 = 1 400 e T2 = 0.",
+      "Aceleração: T1 = 0 e T2 = 600; frenagem: T1 = 600 e T2 = 0.",
+      "Aceleração: T1 = 560 e T2 = 0; frenagem: T1 = 0 e T2 = 960.",
+      "Aceleração: T1 = 640 e T2 = 0; frenagem: T1 = 0 e T2 = 1 040."
+    ],
+    "correta": 0
   }
 ]
