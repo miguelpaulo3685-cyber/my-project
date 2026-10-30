@@ -56,6 +56,11 @@ busca "ENEM ANO questão N resolução" (sem custo, vale para as ~3.000). A reso
 Entrada com partículas também no celular (30/10): formas menores na tela em pé, textos em cima e embaixo, metade das
 partículas. A história com as montanhas ficou só para aparelho sem WebGL.
 
+Revisão de questões (30/10): conferidas as 3.193 questões e as 2.069 imagens (nenhuma quebrada, nenhuma faltando,
+só as 5 anuladas de fora); corrigidas 7 de 2021 a 2023 pela prova oficial. Parâmetros TRI de 2024 e 2025 baixados dos
+microdados do INEP (só a tabela ITENS_PROVA, lida direto do ZIP pela internet): 364 de 366 questões ganharam nível e
+passam a contar na nota TRI. Para 2026: o mesmo, quando o INEP publicar os microdados (em geral no ano seguinte).
+
 **Parada em 28/10.** Próximo passo combinado: lançar na escola antiga (todos no mesmo dia, com o mesmo nome de
 escola) e medir quem volta em 7 dias e quem cria laço (dupla, seguir, boas-vindas). Antes de divulgar: Render pago.
 Medir: quantos seguem alguém, entram num grupo ou dão/recebem boas-vindas na 1ª semana, e se esses voltam mais.
