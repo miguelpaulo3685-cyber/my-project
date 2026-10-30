@@ -1863,7 +1863,10 @@
     .linha-pessoa .bolha-autor { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
       flex-shrink: 0; background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; }
     .linha-pessoa .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
-    .video-questao { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; text-decoration: none; }
+    .video-questao { display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 4px; text-decoration: none; color: var(--texto);
+      border: 1px solid var(--borda); background: var(--superficie); border-radius: 999px; padding: 9px 16px; font-weight: 700; font-size: .88rem; }
+    /* Celular pequeno: só o selo da marca, para os ícones do topo caberem numa linha. */
+    @media (max-width: 380px) { .nome-marca { display: none; } }
     .perfil-escola { margin: -6px 0 10px; color: var(--texto-fraco); font-size: .9rem; }
     .linha-escola { display: flex; gap: 8px; }
     .linha-escola input { flex: 1; margin: 0; }
@@ -2300,6 +2303,7 @@
       .indicadores { gap: 7px; }
       .indicadores .btn-icone, .indicadores .avatar { width: 34px; height: 34px; }
       .pagina { padding: 22px 16px 50px; }
+      .barra-bloco { margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
       .cabecalho-secao h1 { font-size: 1.4rem; }
       .grade-areas { grid-template-columns: 1fr; }
       .painel { padding: 20px 17px; }
@@ -2982,7 +2986,7 @@
   <!-- ===================== TOPO ===================== -->
   <header class="topo">
     <div class="topo-interno">
-      <div class="marca"><span class="selo">M</span>M&amp;M <em>Estudos</em></div>
+      <div class="marca"><span class="selo">M</span><span class="nome-marca">M&amp;M <em>Estudos</em></span></div>
 
       <nav class="abas">
         <button class="aba ativa" id="aba-treinar" onclick="irPara('treinar')">
