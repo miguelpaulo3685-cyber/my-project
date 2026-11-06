@@ -5046,7 +5046,24 @@ const pc3d = (() => {
       const p = i < POEIRA ? poeira[i] : fn(i);
       a[i * 3] = p[0]; a[i * 3 + 1] = p[1]; a[i * 3 + 2] = p[2];
     }
-    return a;
+    return emOrdem(a);
+  }
+
+  // Põe os pontos de toda forma na mesma ordem (de baixo para cima e, em cada faixa,
+  // da esquerda para a direita). Assim cada ponto vai para o lugar equivalente da
+  // próxima forma e a troca vira um fluxo, em vez de uma nuvem embaralhada.
+  function emOrdem(a) {
+    const M = N - POEIRA, idx = new Uint32Array(M), FAIXA = 96;
+    for (let k = 0; k < M; k++) idx[k] = POEIRA + k;
+    idx.sort((p, q) => a[p * 3 + 1] - a[q * 3 + 1]);
+    for (let k = 0; k < M; k += FAIXA) idx.subarray(k, Math.min(M, k + FAIXA)).sort((p, q) => a[p * 3] - a[q * 3]);
+    const b = new Float32Array(a.length);
+    b.set(a.subarray(0, POEIRA * 3));
+    for (let k = 0; k < M; k++) {
+      const de = idx[k] * 3, para = (POEIRA + k) * 3;
+      b[para] = a[de]; b[para + 1] = a[de + 1]; b[para + 2] = a[de + 2];
+    }
+    return b;
   }
 
   // desenho 2D (num canvas) vira pontos: miolo nas duas faces e borda mais cheia
@@ -5193,35 +5210,155 @@ const pc3d = (() => {
     });
   }
 
-  // cavalo do xadrez, de perfil
-  const cavaleiro = () => deDesenho((g, T) => {
-    g.scale(T / 100, T / 100);
-    g.beginPath();
-    [[31,80],[35,63],[41,51],[31,53],[21,57],[15,53],[13,47],[22,37],[29,27],[33,17],[37,9],[42,14],[46,8],[52,14],
-      [62,18],[72,30],[78,46],[78,62],[74,80]].forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y));
-    g.closePath(); g.fill();
-    g.fillRect(24, 80, 52, 7); g.fillRect(17, 88, 66, 8);
-    g.globalCompositeOperation = 'destination-out';
-    g.beginPath(); g.arc(44, 26, 2.6, 0, Math.PI * 2); g.fill();
-  }, .95, .1) || globo();
+  // Desenho 2D vira volume: a profundidade cresce com a distância até a borda,
+  // então a peça fica arredondada (como esculpida), não uma placa chapada.
+  // Os sulcos (olho, crina, boca) são apagados do desenho e viram linhas finas.
+  function volumeDeDesenho(desenhar, T = 220) {
+    const c = document.createElement('canvas'); c.width = c.height = T;
+    const g = c.getContext('2d'); g.fillStyle = g.strokeStyle = '#fff'; g.lineCap = g.lineJoin = 'round';
+    desenhar(g, T);
+    const d = g.getImageData(0, 0, T, T).data, dist = new Float32Array(T * T);
+    for (let k = 0; k < T * T; k++) dist[k] = d[k * 4 + 3] > 128 ? 1e9 : 0;
+    const r2 = Math.SQRT2;
+    for (let y = 1; y < T - 1; y++) for (let x = 1; x < T - 1; x++) {
+      const k = y * T + x;
+      if (dist[k]) dist[k] = Math.min(dist[k], dist[k - 1] + 1, dist[k - T] + 1, dist[k - T - 1] + r2, dist[k - T + 1] + r2);
+    }
+    for (let y = T - 2; y > 0; y--) for (let x = T - 2; x > 0; x--) {
+      const k = y * T + x;
+      if (dist[k]) dist[k] = Math.min(dist[k], dist[k + 1] + 1, dist[k + T] + 1, dist[k + T + 1] + r2, dist[k + T - 1] + r2);
+    }
+    const dentro = [], borda = []; let max = 1;
+    for (let k = 0; k < T * T; k++) if (dist[k] > 0 && dist[k] < 1e9) {
+      dentro.push(k); if (dist[k] < 1.6) borda.push(k); if (dist[k] > max) max = dist[k];
+    }
+    if (dentro.length < 400) return null;
+    // devolve um sorteador: [u, v, profundidade de 0 a 1] com u, v de 0 a 100
+    return () => {
+      const naBorda = R() < .42, arr = naBorda ? borda : dentro, k = arr[Math.floor(R() * arr.length)];
+      const u = (k % T + R()) / T * 100, v = (Math.floor(k / T) + R()) / T * 100;
+      const fundo = naBorda ? R() * .25 : Math.sqrt(dist[k] / max);
+      return [u, v, (R() < .5 ? -1 : 1) * fundo];
+    };
+  }
 
+  // Base torneada, como a de uma peça de xadrez de verdade: perfil [altura, raio] girado.
+  const PERFIL_BASE = [[-.95, .43], [-.92, .47], [-.88, .47], [-.85, .44], [-.82, .39], [-.79, .41], [-.76, .41],
+    [-.73, .36], [-.66, .31], [-.58, .29], [-.53, .31], [-.49, .35], [-.46, .35], [-.43, .31], [-.41, .29]];
+  const ANEIS_BASE = [[-.92, .47], [-.88, .47], [-.79, .41], [-.76, .41], [-.49, .35], [-.46, .35]];
+  function pontoDaBase(cx) {
+    const a = R() * Math.PI * 2;
+    if (R() < .22) {                     // frisos: anéis bem marcados
+      const [y, r] = ANEIS_BASE[Math.floor(R() * ANEIS_BASE.length)];
+      return [cx + Math.cos(a) * r, y, Math.sin(a) * r];
+    }
+    // sorteia um trecho do perfil pela área (mais largo = mais pontos)
+    let soma = 0; const pesos = [];
+    for (let k = 1; k < PERFIL_BASE.length; k++) {
+      const [y0, r0] = PERFIL_BASE[k - 1], [y1, r1] = PERFIL_BASE[k];
+      soma += Math.hypot(y1 - y0, r1 - r0) * (r0 + r1); pesos.push(soma);
+    }
+    const alvo = R() * soma; let k = 0; while (pesos[k] < alvo) k++;
+    const [y0, r0] = PERFIL_BASE[k], [y1, r1] = PERFIL_BASE[k + 1], t = R();
+    const r = r0 + (r1 - r0) * t;
+    return [cx + Math.cos(a) * r, y0 + (y1 - y0) * t, Math.sin(a) * r];
+  }
+
+  // cavalo do xadrez: cabeça esculpida (crina, olho, narina, boca) em cima da base torneada
+  let sorteiaCabeca;
+  function cavaleiro() {
+    if (sorteiaCabeca === undefined) sorteiaCabeca = volumeDeDesenho((g, T) => {
+      g.scale(T / 100, T / 100);
+      g.beginPath();
+      g.moveTo(34, 99);
+      g.bezierCurveTo(30, 88, 30, 78, 38, 68);     // peito
+      g.bezierCurveTo(30, 70, 18, 74, 10, 72);     // por baixo do queixo
+      g.bezierCurveTo(4, 71, 2, 64, 4, 58);        // queixo e boca
+      g.bezierCurveTo(6, 52, 10, 46, 14, 40);      // focinho
+      g.bezierCurveTo(19, 32, 25, 24, 32, 18);     // chanfro até a testa
+      g.bezierCurveTo(33, 12, 35, 6, 37, 1);       // frente da orelha
+      g.bezierCurveTo(41, 5, 44, 9, 46, 11);       // trás da orelha
+      g.bezierCurveTo(62, 12, 76, 24, 81, 42);     // topo da crina
+      g.bezierCurveTo(86, 60, 84, 82, 82, 99);     // nuca e pescoço
+      g.closePath(); g.fill();
+      g.globalCompositeOperation = 'destination-out';
+      g.lineWidth = 2.2;
+      g.beginPath(); g.ellipse(27, 29, 3.8, 2.4, -.55, 0, Math.PI * 2); g.fill();          // olho
+      g.beginPath(); g.ellipse(8.5, 51, 2, 1.4, -.9, 0, Math.PI * 2); g.fill();            // narina
+      g.beginPath(); g.moveTo(4, 64.5); g.quadraticCurveTo(10, 66, 17, 63.5); g.stroke();  // boca
+      g.beginPath(); g.moveTo(33, 37); g.bezierCurveTo(41, 46, 41, 56, 34, 63); g.stroke(); // bochecha
+      // crina: mechas inclinadas ao longo do pescoço
+      const crista = [[50, 13], [58, 15], [65, 19], [71, 25], [76, 32], [79, 40], [81.5, 48], [83, 56], [83.5, 64], [83.5, 72], [83, 80]];
+      g.lineWidth = 1.8;
+      crista.forEach(([x, y], k) => {
+        g.beginPath(); g.moveTo(x + .8, y - .8);
+        g.quadraticCurveTo(x - 4, y + 3, x - 9 + k * .2, y + 4 + k * .5); g.stroke();
+      });
+    }, 220);
+    if (!sorteiaCabeca) return globo();
+    const S = 1.12, E = .82, cx = (58 - 46) / 100 * S;   // E: a base menor, para a peça caber na tela
+    return gerar(() => {
+      let p;
+      if (R() < .66) {
+        const [u, v, fundo] = sorteiaCabeca();
+        const larg = .15 * Math.min(1, .55 + v / 100 * .6);   // o pescoço é mais grosso que o focinho
+        p = [(u - 46) / 100 * S, .82 - v / 100 * S, fundo * larg];
+      } else {
+        const b = pontoDaBase(0);
+        p = [cx + b[0] * E, -.3 + (b[1] + .41) * E, b[2] * E];
+      }
+      p = rotY(p, -.22);
+      return rotX(p, .1);
+    });
+  }
+
+  // Vulcão: encostas com sulcos, rios de lava descendo, cratera e uma coluna de fumaça em nuvens.
   function vulcao() {
+    const BOCA = .11, TOPO = .1, PE = -.62, RAIO = .8;
+    const altura = rho => PE + (TOPO - PE) * Math.pow(Math.max(0, (RAIO - rho) / (RAIO - BOCA)), 1.55);
+    const sulco = a => Math.abs(Math.sin(a * 5 + .7)) * .5 + Math.abs(Math.sin(a * 11 + 2.1)) * .3 + Math.abs(Math.sin(a * 19 + .4)) * .2;
+    const naEncosta = (a, rho, sobe = 0) => {
+      const r = rho * (1 + .07 * (sulco(a) - .5) * Math.min(1, (rho - BOCA) * 3));
+      return [Math.cos(a) * r, altura(rho) + sobe, Math.sin(a) * r];
+    };
+    // rios de lava: começam na boca e descem serpenteando
+    const rios = [[.4, 1.3], [1.9, -.8], [3.3, 1.1], [4.6, -1.4], [5.6, .9]];
+    // nuvens da fumaça: posições fixas que sobem e abrem, empurradas pelo vento
+    const nuvens = [];
+    for (let k = 0; k < 18; k++) {
+      const t = k / 17, ang = k * 2.4;
+      nuvens.push([.5 * t * t + Math.cos(ang) * .06 * t, TOPO + .05 + t * .64 - t * t * .08, Math.sin(ang) * .07 * t, .045 + .17 * t]);
+    }
     return gerar(() => {
       const r = R();
       let p;
-      if (r < .66) {                     // encosta
-        const h = Math.pow(R(), .75), a = R() * Math.PI * 2;
-        const rad = .1 + (1 - h) * .95 + .035 * Math.sin(a * 7 + h * 9) * (1 - h);
-        p = [Math.cos(a) * rad, -.75 + h * .95, Math.sin(a) * rad];
-      } else if (r < .74) {              // boca da cratera
-        const a = R() * Math.PI * 2, rad = .1 + R() * .05;
-        p = [Math.cos(a) * rad, .2 + (R() - .5) * .02, Math.sin(a) * rad];
-      } else {                           // fumaça e lava subindo
-        const k = R(), y = .22 + k * .85, abre = .04 + k * .32;
-        p = [gauss() * abre + Math.sin(k * 5) * .08, y, gauss() * abre * .7];
+      if (r < .5) {                        // encosta (mais pontos nos sulcos e perto do topo)
+        let a, rho;
+        do { a = R() * Math.PI * 2; rho = BOCA + (RAIO - BOCA) * Math.pow(R(), R() < .5 ? .5 : 1.3); } while (R() > .45 + .55 * sulco(a));
+        p = naEncosta(a, rho);
+      } else if (r < .55) {                // chão em volta, sumindo
+        const a = R() * Math.PI * 2, rho = RAIO + Math.pow(R(), 2.5) * .55;
+        p = [Math.cos(a) * rho, PE + (R() - .5) * .02, Math.sin(a) * rho];
+      } else if (r < .7) {                 // rios de lava
+        const [a0, curva] = rios[Math.floor(R() * rios.length)], t = Math.pow(R(), .8);
+        const rho = BOCA + (RAIO * .97 - BOCA) * t, a = a0 + Math.sin(t * 3.2) * .22 * curva + (R() - .5) * .025 * (1 + t * 2);
+        p = naEncosta(a, rho, .012);
+      } else if (r < .735) {               // borda da cratera
+        const a = R() * Math.PI * 2, rr = BOCA * (1 + (R() - .5) * .12);
+        p = [Math.cos(a) * rr, TOPO + (R() - .5) * .015, Math.sin(a) * rr];
+      } else if (r < .765) {               // lava brilhando lá dentro
+        const a = R() * Math.PI * 2, rr = BOCA * Math.sqrt(R()) * .9;
+        p = [Math.cos(a) * rr, TOPO - .05 + rr * .3, Math.sin(a) * rr];
+      } else if (r < .985) {               // fumaça em nuvens
+        const n = nuvens[Math.floor(Math.pow(R(), 1.25) * nuvens.length)];
+        const u = R() * 2 - 1, a = R() * Math.PI * 2, k = Math.sqrt(1 - u * u), rr = n[3] * (.75 + R() * .3);
+        p = [n[0] + Math.cos(a) * k * rr, n[1] + u * rr * .8, n[2] + Math.sin(a) * k * rr * .8];
+      } else {                             // brasas voando
+        const a = R() * Math.PI * 2, v = .3 + R() * .45, t = R();
+        p = [Math.cos(a) * v * t * .6, TOPO + v * t * 1.4 - t * t * .7, Math.sin(a) * v * t * .6];
       }
-      p = rotX(p, .28);
-      return [p[0], p[1] - .05, p[2]];
+      p = rotX(p, .3);
+      return [p[0] - .1, p[1] + .08, p[2]];
     });
   }
 
@@ -5285,7 +5422,7 @@ const pc3d = (() => {
       float m = clamp(uMix * 1.5 - aSorte.x * .5, 0., 1.);
       m = m * m * (3. - 2. * m);
       vec3 p = mix(aDe, aPara, m);
-      p += (aSorte.yzw - .5) * .9 * sin(m * 3.14159);
+      p += (aSorte.yzw - .5) * .32 * sin(m * 3.14159);
       p += .008 * vec3(sin(uTempo * 1.1 + aSorte.x * 40.), cos(uTempo * .9 + aSorte.y * 40.), sin(uTempo * .7 + aSorte.z * 40.));
       p = girar(p, uRot) * uEscala;
       float persp = 3. / (3. - clamp(p.z, -3., 2.4));
@@ -5306,7 +5443,7 @@ const pc3d = (() => {
 
   let gl, prog, loc = {}, bufs = [], bufNuvem, pronto = false, ligado = false, raf = 0, dpr = 1, W = 0, H = 0, escala = 1;
   let devicePixelRatioMax = innerWidth < 700 ? 1.5 : 2;
-  let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [0, 0], pAtual = [5, 5];
+  let f = 0, intro = 0, rotAtual = [0, 0], pAlvo = [5, 5], pAtual = [5, 5], ultimoQuadro = 0;
   const caixa = () => document.getElementById('entrada');
   const el = id => document.getElementById(id);
   // computador = algum mouse e tela larga (?entrada=pc força, para testar)
@@ -5356,7 +5493,7 @@ const pc3d = (() => {
     for (let i = 0; i < N; i++) {
       const s0 = sorte2[i * 4], s1 = sorte2[i * 4 + 1], s2 = sorte2[i * 4 + 2], s3 = sorte2[i * 4 + 3], k = i * 3;
       let m = Math.min(1, Math.max(0, mix * 1.5 - s0 * .5)); m = m * m * (3 - 2 * m);
-      const esp = Math.sin(m * Math.PI) * .9;
+      const esp = Math.sin(m * Math.PI) * .32;
       const x = de[k] + (para[k] - de[k]) * m + (s1 - .5) * esp + .008 * Math.sin(seg * 1.1 + s0 * 40);
       const y = de[k + 1] + (para[k + 1] - de[k + 1]) * m + (s2 - .5) * esp;
       const z = de[k + 2] + (para[k + 2] - de[k + 2]) * m + (s3 - .5) * esp;
@@ -5451,15 +5588,17 @@ const pc3d = (() => {
     if (!pronto) return;   // acabou de trocar para a leve: espera as formas novas
     const c = caixa(), fim = Math.max(1, c.scrollHeight - c.clientHeight);
     const alvo = Math.min(ULTIMA, c.scrollTop / fim * ULTIMA);
-    f += (alvo - f) * .09;
+    const dt = Math.min(.1, ultimoQuadro ? (ms - ultimoQuadro) / 1000 : 1 / 60); ultimoQuadro = ms;
+    const suave = rate => 1 - Math.exp(-dt * rate);
+    f += (alvo - f) * suave(5.2);
     if (Math.abs(alvo - f) < .0005) f = alvo;
-    intro = Math.min(1, intro + 1 / 100);
-    pAtual[0] += (pAlvo[0] - pAtual[0]) * .12; pAtual[1] += (pAlvo[1] - pAtual[1]) * .12;
+    intro = Math.min(1, intro + dt / 1.6);
+    pAtual[0] += (pAlvo[0] - pAtual[0]) * suave(7.5); pAtual[1] += (pAlvo[1] - pAtual[1]) * suave(7.5);
     const fora = Math.abs(pAlvo[0]) > 2, seg = ms / 1000;
     const calma = Math.max(0, Math.min(1, (ULTIMA - .5 - f) * 2));       // a moldura fica parada
     const balanco = calmo.matches ? 0 : 1;
     const alvoRot = fora ? [0, Math.sin(seg * .3) * .15 * balanco] : [-pAtual[1] * .22, pAtual[0] * .45 + Math.sin(seg * .3) * .05 * balanco];
-    rotAtual[0] += (alvoRot[0] * calma - rotAtual[0]) * .06; rotAtual[1] += (alvoRot[1] * calma - rotAtual[1]) * .06;
+    rotAtual[0] += (alvoRot[0] * calma - rotAtual[0]) * suave(3.6); rotAtual[1] += (alvoRot[1] * calma - rotAtual[1]) * suave(3.6);
 
     const a = Math.min(ULTIMA, Math.floor(f)), t = f - a;
     let de = bufs[a], para = bufs[Math.min(ULTIMA, a + 1)], mix = Math.max(0, (t - .55) / .45);
