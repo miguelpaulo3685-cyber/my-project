@@ -46,7 +46,8 @@ quem quer o mesmo curso e mora na mesma cidade/estado, de qualquer escola), cida
 "Para comemorar" inclui o grupo do curso. Três níveis: escola (quem você conhece), curso (quem quer o mesmo) e todos.
 
 Os Reels voltaram para logo abaixo dos atalhos da Comunidade (mais à vista), sem tocar sozinhos ali.
-As mudanças de 27 e 28/10 (teste 1, acolhimento, dupla, turma, busca de pessoas) foram pedidas e decididas pelo **Miguel**.
+As mudanças de 27 a 30/10 (teste 1, acolhimento, dupla, turma, busca de pessoas, Comunidade como início, vídeos,
+entrada no celular, revisão das questões, TRI 2024/2025, redação 2024/2025, marca-texto) foram pedidas e decididas pelo **Miguel**.
 
 Explicação em vídeo (29/10): depois de responder, toda questão mostra "▶ Ver explicação em vídeo no YouTube", que abre a
 busca "ENEM ANO questão N resolução" (sem custo, vale para as ~3.000). A resolução comentada escrita continua por cima.
