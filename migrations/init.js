@@ -9,7 +9,8 @@ if (!process.env.DATABASE_URL) {
 }
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  // Igual ao server.js: sslmode explícito, sem o aviso do pg.
+  connectionString: (process.env.DATABASE_URL || '').replace(/([?&]sslmode=)(prefer|require|verify-ca)\b/, '$1verify-full'),
 });
 
 async function runMigrations() {

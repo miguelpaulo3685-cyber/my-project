@@ -5348,6 +5348,7 @@ const pc3d = (() => {
   }
   // Mesmas contas do shader, feitas aqui para poucos pontos.
   function desenhar2D(de, para, mix, seg, fora) {
+    if (!de || !para) return;
     const c = ctx2, u = H / 2, cx = W / 2, cy = H / 2;
     c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.fillStyle = '#232227'; c.fillRect(0, 0, W, H); c.fillStyle = '#f2f2f2';
     const cY = Math.cos(rotAtual[1]), sY = Math.sin(rotAtual[1]), cX = Math.cos(rotAtual[0]), sX = Math.sin(rotAtual[0]);
@@ -5447,6 +5448,7 @@ const pc3d = (() => {
     raf = requestAnimationFrame(quadro);
     if (!pronto) return;
     talvezAliviar(ms);
+    if (!pronto) return;   // acabou de trocar para a leve: espera as formas novas
     const c = caixa(), fim = Math.max(1, c.scrollHeight - c.clientHeight);
     const alvo = Math.min(ULTIMA, c.scrollTop / fim * ULTIMA);
     f += (alvo - f) * .09;

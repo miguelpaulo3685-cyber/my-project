@@ -24,8 +24,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // PostgreSQL Connection Pool (Neon)
+// O pg avisa que 'sslmode=require' vai mudar de sentido na próxima versão.
+// Pedimos com todas as letras o que ele já faz hoje: conferir o certificado.
+function urlDoBanco(url) {
+  return url ? url.replace(/([?&]sslmode=)(prefer|require|verify-ca)\b/, '$1verify-full') : url;
+}
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: urlDoBanco(process.env.DATABASE_URL),
   max: 20,
   idleTimeoutMillis: 30000,
   // No plano gratuito o Neon hiberna e leva alguns segundos para acordar.
@@ -951,9 +956,10 @@ async function buscarNoGithub(ano, pastas) {
 // não mandar, ou tudo se ela estiver fora do ar, vem do GitHub.
 async function buscarProvaInteira(ano) {
   const daApi = [];
-  for (const language of ['ingles', 'espanhol']) {
+  // Em 2009 não tinha língua estrangeira: a api.enem.dev recusa o parâmetro.
+  for (const language of Number(ano) <= 2009 ? [undefined] : ['ingles', 'espanhol']) {
     try { daApi.push(...await buscarNaApi(ano, language)); }
-    catch (erro) { console.error(`⚠️ api.enem.dev não respondeu para ${ano} (${language}): ${erro.message}`); }
+    catch (erro) { console.error(`⚠️ api.enem.dev não respondeu para ${ano}${language ? ` (${language})` : ''}: ${erro.message}`); }
   }
   let todas = semRepetir(completarLinguas(daApi));
   const faltam = pastasQueFaltam(ano, todas);
