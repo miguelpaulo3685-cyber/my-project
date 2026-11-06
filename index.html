@@ -2334,20 +2334,23 @@
       body.modo-foco .toast-sim { bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
     }
 
-    /* Computador: o menu fica numa barra à esquerda, sempre aberta, com ícone e
-       nome de cada aba. No celular continua embaixo. */
+    /* Computador: barra fina à esquerda só com os ícones; passando o mouse,
+       ela abre por cima da página e mostra os nomes. No celular continua embaixo. */
     @media (min-width: 1024px) and (hover: hover) {
-      body { padding-left: 210px; }
+      body { padding-left: 64px; }
       /* Com backdrop-filter no topo, a barra fixa ficaria presa dentro dele. */
       .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
       .abas {
-        position: fixed; left: 0; top: 0; bottom: 0; z-index: 60; margin: 0; width: 210px;
-        flex-direction: column; gap: 6px; padding: 24px 12px; overflow-y: auto;
+        position: fixed; left: 0; top: 0; bottom: 0; z-index: 60; margin: 0; width: 64px;
+        flex-direction: column; gap: 6px; padding: 24px 10px; overflow: hidden;
         background: var(--brilho-topo); backdrop-filter: saturate(170%) blur(14px); -webkit-backdrop-filter: saturate(170%) blur(14px);
-        border-right: 1px solid var(--borda);
+        border-right: 1px solid var(--borda); transition: width .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s;
       }
-      .aba { padding: 12px 14px; gap: 14px; white-space: nowrap; font-size: .98rem; }
-      .aba svg { width: 20px; height: 20px; }
+      .abas:hover, .abas:focus-within { width: 200px; box-shadow: 12px 0 40px rgba(0,0,0,.18); }
+      .aba { padding: 12px 12px; gap: 14px; white-space: nowrap; font-size: .98rem; }
+      .aba svg { width: 20px; height: 20px; flex: 0 0 auto; }
+      .aba .nome-aba { opacity: 0; transition: opacity .2s; }
+      .abas:hover .nome-aba, .abas:focus-within .nome-aba { opacity: 1; }
       body.modo-foco { padding-left: 0; }
       body.modo-foco .abas { display: none; }
     }
