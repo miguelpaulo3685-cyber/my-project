@@ -2338,29 +2338,26 @@
        e as três barrinhas no alto; passando o mouse, ela abre com os nomes
        (como nos serviços de streaming). No celular continua embaixo. */
     @media (min-width: 1024px) and (hover: hover) {
+      body { padding-left: 72px; }
       /* Com backdrop-filter no topo, a barra fixa ficaria presa dentro dele. */
       .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
-      /* Fechado: só as três barrinhas no canto. Com o mouse nelas, o painel desce com as opções. */
       .abas {
-        position: fixed; left: 0; top: 0; z-index: 60; margin: 0; width: 62px; height: 62px;
-        flex-direction: column; gap: 6px; padding: 20px 12px; overflow: hidden; border-radius: 0 0 14px 0;
-        background: transparent; border-right: 1px solid transparent;
-        transition: width .28s cubic-bezier(.2,.8,.2,1), height .32s cubic-bezier(.2,.8,.2,1), background .2s, box-shadow .28s;
+        position: fixed; left: 0; top: 0; bottom: 0; z-index: 60; margin: 0; width: 72px;
+        flex-direction: column; gap: 6px; padding: 18px 12px; overflow: hidden;
+        background: var(--brilho-topo); backdrop-filter: saturate(170%) blur(14px); -webkit-backdrop-filter: saturate(170%) blur(14px);
+        border-right: 1px solid var(--borda); transition: width .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s;
       }
       .abas::before {
-        content: ""; flex: 0 0 auto; width: 22px; height: 16px; margin: 3px 0 24px 8px; opacity: .75; cursor: pointer;
+        content: ""; flex: 0 0 auto; width: 22px; height: 16px; margin: 6px 0 22px 13px; opacity: .7;
         background: linear-gradient(currentColor, currentColor) 0 0 / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) 0 50% / 100% 2px no-repeat,
           linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat; color: var(--texto);
       }
-      .abas:hover, .abas:focus-within {
-        width: 230px; height: 100vh; border-radius: 0; background: var(--superficie); border-right-color: var(--borda);
-        box-shadow: 12px 0 40px rgba(0,0,0,.22);
-      }
-      .aba { padding: 12px 14px; gap: 16px; white-space: nowrap; font-size: .98rem; opacity: 0; pointer-events: none; transform: translateX(-8px);
-        transition: opacity .2s, transform .2s, background .18s, color .18s; }
-      .abas:hover .aba, .abas:focus-within .aba { opacity: 1; pointer-events: auto; transform: none; }
+      .abas:hover, .abas:focus-within { width: 224px; box-shadow: 12px 0 40px rgba(0,0,0,.22); }
+      .aba { padding: 12px 14px; gap: 16px; white-space: nowrap; font-size: .98rem; }
       .aba svg { width: 20px; height: 20px; }
-      .topo-interno { padding-left: 46px; }
+      .aba .nome-aba { opacity: 0; transform: translateX(-6px); transition: opacity .2s, transform .2s; }
+      .abas:hover .nome-aba, .abas:focus-within .nome-aba { opacity: 1; transform: none; }
+      body.modo-foco { padding-left: 0; }
       body.modo-foco .abas { display: none; }
     }
 
