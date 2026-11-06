@@ -4685,12 +4685,15 @@ async function carregarResolucao(id) {
 
 // Toda questão ganha um vídeo de explicação: a busca do YouTube já abre na
 // questão certa (quase toda questão do ENEM tem professor resolvendo em vídeo).
+// Depois de responder: a resolução da questão na busca do YouTube. A numeração
+// do site é a do caderno azul (conferido com os itens oficiais do INEP), e os
+// vídeos de resolução costumam dizer o caderno no título.
 function linkVideoDaQuestao(q) {
   if (!q || !q.ano || !q.numero) return '';
   const lingua = q.lingua === 'ingles' ? ' inglês' : q.lingua === 'espanhol' ? ' espanhol' : '';
-  const busca = `ENEM ${q.ano} questão ${q.numero}${lingua} resolução`;
+  const busca = `ENEM ${q.ano} "questão ${q.numero}" caderno azul${lingua} resolução`;
   return `<a class="acao discreta pequena video-questao" href="https://www.youtube.com/results?search_query=${encodeURIComponent(busca)}"
-    target="_blank" rel="noopener">▶ Ver explicação em vídeo no YouTube</a>`;
+    target="_blank" rel="noopener">▶ Ver resolução em vídeo no YouTube</a>`;
 }
 
 function editarResolucao(id, texto) {
