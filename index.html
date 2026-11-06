@@ -114,6 +114,10 @@
     .marca em { color: var(--marca-texto); font-style: normal; }
 
     .abas { display: flex; gap: 4px; margin-right: auto; }
+    .abas .aba-extra { display: none; }
+    .tipos-feedback { display: flex; gap: 8px; flex-wrap: wrap; }
+    .tipos-feedback label { padding: 6px 12px; border: 1px solid var(--borda); border-radius: 999px; cursor: pointer; font-size: .9rem; }
+    .tipos-feedback input { margin: 0 4px 0 0; }
     .aba {
       background: transparent; border: none; cursor: pointer;
       color: var(--texto-fraco); font-family: inherit;
@@ -2351,6 +2355,10 @@
       .aba svg { width: 20px; height: 20px; flex: 0 0 auto; }
       .aba .nome-aba { opacity: 0; transition: opacity .2s; }
       .abas:hover .nome-aba, .abas:focus-within .nome-aba { opacity: 1; }
+      .abas .aba-extra { display: flex; }
+      #aba-config { margin-top: auto; }
+      /* No computador as configurações ficam no menu, não no perfil. */
+      .config-no-perfil { display: none; }
       body.modo-foco { padding-left: 0; }
       body.modo-foco .abas { display: none; }
     }
@@ -2807,6 +2815,25 @@
     </div>
   </div>
 
+  <!-- Feedback para a equipe -->
+  <div class="fundo-modal escondido" id="modal-feedback" onclick="if (event.target === this) fecharModal('modal-feedback')">
+    <div class="modal" role="dialog" aria-labelledby="titulo-feedback">
+      <div class="modal-topo">
+        <h2 id="titulo-feedback">Feedback</h2>
+        <button class="btn-sair" onclick="fecharModal('modal-feedback')" title="Fechar">✕</button>
+      </div>
+      <p class="pista" style="margin-top:0">Uma ideia, um problema ou um elogio? A gente lê tudo.</p>
+      <div class="tipos-feedback" role="radiogroup" aria-label="Tipo">
+        <label><input type="radio" name="tipo-feedback" value="ideia" checked> 💡 Ideia</label>
+        <label><input type="radio" name="tipo-feedback" value="problema"> 🐞 Problema</label>
+        <label><input type="radio" name="tipo-feedback" value="elogio"> 💛 Elogio</label>
+      </div>
+      <textarea class="caixa-texto" id="texto-feedback" maxlength="1000" placeholder="Escreva aqui…" style="margin:12px 0"></textarea>
+      <div id="recado-feedback"></div>
+      <div style="display:flex;justify-content:flex-end"><button class="acao" id="btn-enviar-feedback" onclick="enviarFeedback()" style="margin:0">Enviar</button></div>
+    </div>
+  </div>
+
   <!-- Discussão de uma questão -->
   <div class="fundo-modal escondido" id="modal-discussao" onclick="if (event.target === this) fecharModal('modal-discussao')">
     <div class="modal larga discussao" role="dialog" aria-labelledby="titulo-discussao">
@@ -3032,6 +3059,16 @@
             <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.9-3.2 3-5 5.5-5s4.6 1.8 5.5 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.2 14.6c2.6-.4 4.6 1.3 5.3 4.4"/>
           </svg><span class="nome-aba">Comunidade</span>
         </button>
+        <button class="aba aba-extra" id="aba-config" onclick="abrirConfiguracoes()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+          </svg><span class="nome-aba">Configurações</span>
+        </button>
+        <button class="aba aba-extra" id="aba-feedback" onclick="abrirFeedback()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/><path d="M8.5 11h7M8.5 14h4"/>
+          </svg><span class="nome-aba">Feedback</span>
+        </button>
       </nav>
 
       <div class="indicadores">
@@ -3242,6 +3279,7 @@
     <div class="cabecalho-secao">
       <h1>Configurações</h1>
       <p>Sua conta, os avisos e a aparência do site.</p>
+      <button class="acao discreta pequena config-no-perfil" onclick="abrirFeedback()">💬 Mandar feedback</button>
     </div>
     <div class="painel config">
       <div class="form-conta" id="painel-logado">
@@ -3960,6 +3998,7 @@ function irPara(tela) {
   document.getElementById('aba-feed').classList.toggle('ativa', ['feed', 'comunidade', 'reels'].includes(tela));
   document.getElementById('btn-perfil').classList.toggle('ativo', ['perfil', 'config'].includes(tela));
   document.getElementById('aba-arena').classList.toggle('ativa', tela === 'arena');
+  document.getElementById('aba-config').classList.toggle('ativa', tela === 'config');
   if (tela !== 'arena') sairDaTelaArena();
   talvezAtualizarSino();
   if (tela !== 'mensagens') pararConversa();
@@ -4878,6 +4917,35 @@ function desenharPerfil() {
 }
 
 // A bolinha do topo é o perfil (como no Instagram); sem conta, abre a entrada.
+function abrirConfiguracoes() {
+  if (usuarioLogado) abrirConta('logado'); else abrirConta('entrar');
+}
+
+function abrirFeedback() {
+  document.getElementById('recado-feedback').innerHTML = '';
+  abrirModal('modal-feedback');
+  document.getElementById('texto-feedback').focus();
+}
+
+async function enviarFeedback() {
+  const campo = document.getElementById('texto-feedback');
+  const recado = document.getElementById('recado-feedback');
+  const texto = campo.value.trim();
+  if (texto.length < 3) { recado.innerHTML = '<p class="pista">Escreva um pouquinho mais.</p>'; return; }
+  const tipo = document.querySelector('input[name="tipo-feedback"]:checked')?.value || 'outro';
+  const tela = (document.querySelector('main.pagina:not(.escondido)')?.id || '').replace('tela-', '');
+  const botao = document.getElementById('btn-enviar-feedback');
+  botao.disabled = true;
+  try {
+    const r = await postar('/api/feedback', { texto, tipo, tela });
+    campo.value = '';
+    fecharModal('modal-feedback');
+    avisoSim(r.message);
+  } catch (e) {
+    recado.innerHTML = `<p class="pista">${escapar(e.daApi || SEM_SERVIDOR)}</p>`;
+  } finally { botao.disabled = false; }
+}
+
 function cliqueNoPerfil() {
   if (usuarioLogado) abrirMeuPerfil(); else abrirConta('entrar');
 }
@@ -7689,7 +7757,7 @@ function desenharPaginaPerfil() {
     ${u.meu ? `<div class="perfil-botoes">
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
-        <button class="acao discreta" onclick="abrirConta('logado')">⚙️ Configurações</button>
+        <button class="acao discreta config-no-perfil" onclick="abrirConta('logado')">⚙️ Configurações</button>
       </div>` : ''}
     <div class="rotulo-galeria">Publicações</div>
     <div class="galeria">${cartoes || `<div class="vazio galeria-vazia"><span class="cara">🖼️</span>
@@ -9949,6 +10017,7 @@ async function desenharPainelAdmin() {
       ${numero(n.aparelhos_com_avisos, 'aparelhos com avisos')}
     </div>
     <p class="pista">"Voltaram em 2+ dias" é o número mais importante: mostra quem criou o hábito.</p>
+    <div id="admin-feedback"></div>
     <div id="admin-erros"></div>
     <div id="admin-crescimento"></div>
     <div class="rotulo-modal">Moderação</div>
@@ -9972,6 +10041,7 @@ async function desenharPainelAdmin() {
   desenharMensagensDenunciadas();
   desenharCrescimento();
   desenharErrosAdmin();
+  desenharFeedbackAdmin();
   desenharRevisao();
   desenharMaisErradas();
 }
@@ -10022,6 +10092,26 @@ async function liberarQuestao(id) {
   revisao = revisao.filter(q => q.id !== id);
   const rotulo = document.querySelector('#admin-revisao .rotulo-modal');
   if (rotulo) rotulo.textContent = `Questões em revisão (${revisao.length})`;
+}
+
+// Feedback (feedback.js): o que as pessoas mandaram pelo menu.
+async function desenharFeedbackAdmin() {
+  const alvo = document.getElementById('admin-feedback');
+  if (!alvo) return;
+  let d;
+  try { d = await api('/api/admin/feedback'); } catch (e) { alvo.innerHTML = ''; return; }
+  const icone = { ideia: '💡', problema: '🐞', elogio: '💛', outro: '💬' };
+  alvo.innerHTML = `<div class="rotulo-modal">Feedback ${d.feedback.length ? `(${d.feedback.length} para ler)` : ''}</div>
+    ${d.feedback.length ? d.feedback.map(f => `<div class="linha-aviso" id="fb-${f.id}"><span>
+        <b>${icone[f.tipo] || '💬'} ${escapar(f.texto)}</b>
+        <small>${f.username ? '@' + escapar(f.username) : 'sem conta'}${f.tela ? ` · em ${escapar(f.tela)}` : ''} · ${tempoAtras(f.created_at)}</small></span>
+        <button class="acao discreta pequena" onclick="marcarFeedbackLido(${f.id})">Lido</button></div>`).join('')
+      : '<p class="pista">Nenhum feedback novo.</p>'}`;
+}
+
+async function marcarFeedbackLido(id) {
+  try { await postar(`/api/admin/feedback/${id}/lido`); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharFeedbackAdmin();
 }
 
 // Erros do site (erros.js): o servidor junta os iguais e avisa por e-mail.

@@ -1230,6 +1230,7 @@ require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador 
 require('./crescimento')(app, { pool, exigirModerador });
 require('./resolucoes')(app, { pool, exigirModerador });
 require('./erros').registrarRotasDeErros(app, { pool, vigia: vigiaDeErros, limitar, auth, exigirModerador });
+require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigirModerador });
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });

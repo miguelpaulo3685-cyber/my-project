@@ -652,6 +652,20 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela de erros do site');
 
+    // Feedback (feedback.js): mensagens para a equipe; quem apaga a conta some do registro.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS feedback (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT REFERENCES usuarios(id) ON DELETE SET NULL,
+        tipo VARCHAR(10) NOT NULL DEFAULT 'outro',
+        texto VARCHAR(1000) NOT NULL,
+        tela VARCHAR(30),
+        lido BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+    `);
+    console.log('✅ Tabela de feedback');
+
     // Acolhimento (acolhimento.js): escola no perfil e boas-vindas para quem chega.
     await pool.query(`
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS escola VARCHAR(80);
