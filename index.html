@@ -2334,6 +2334,33 @@
       body.modo-foco .toast-sim { bottom: calc(22px + env(safe-area-inset-bottom, 0px)); }
     }
 
+    /* Computador: o menu vira uma barra fina no canto esquerdo, só com os ícones
+       e as três barrinhas no alto; passando o mouse, ela abre com os nomes
+       (como nos serviços de streaming). No celular continua embaixo. */
+    @media (min-width: 1024px) and (hover: hover) {
+      body { padding-left: 72px; }
+      /* Com backdrop-filter no topo, a barra fixa ficaria presa dentro dele. */
+      .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
+      .abas {
+        position: fixed; left: 0; top: 0; bottom: 0; z-index: 60; margin: 0; width: 72px;
+        flex-direction: column; gap: 6px; padding: 18px 12px; overflow: hidden;
+        background: var(--brilho-topo); backdrop-filter: saturate(170%) blur(14px); -webkit-backdrop-filter: saturate(170%) blur(14px);
+        border-right: 1px solid var(--borda); transition: width .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s;
+      }
+      .abas::before {
+        content: ""; flex: 0 0 auto; width: 22px; height: 16px; margin: 6px 0 22px 13px; opacity: .7;
+        background: linear-gradient(currentColor, currentColor) 0 0 / 100% 2px no-repeat, linear-gradient(currentColor, currentColor) 0 50% / 100% 2px no-repeat,
+          linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat; color: var(--texto);
+      }
+      .abas:hover, .abas:focus-within { width: 224px; box-shadow: 12px 0 40px rgba(0,0,0,.22); }
+      .aba { padding: 12px 14px; gap: 16px; white-space: nowrap; font-size: .98rem; }
+      .aba svg { width: 20px; height: 20px; }
+      .aba .nome-aba { opacity: 0; transform: translateX(-6px); transition: opacity .2s, transform .2s; }
+      .abas:hover .nome-aba, .abas:focus-within .nome-aba { opacity: 1; transform: none; }
+      body.modo-foco { padding-left: 0; }
+      body.modo-foco .abas { display: none; }
+    }
+
     /* ===================== ESTILO SERRA ===================== */
     /* Escolha em Aparência: o site inteiro no visual da tela de entrada,
        com a serra cinza ao fundo, cartões de vidro e botões pretos. Os
@@ -2994,22 +3021,22 @@
         <button class="aba ativa" id="aba-treinar" onclick="irPara('treinar')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>
-          </svg>Treinar
+          </svg><span class="nome-aba">Treinar</span>
         </button>
         <button class="aba" id="aba-arena" onclick="abrirArena()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12z"/>
-          </svg>Arena
+          </svg><span class="nome-aba">Arena</span>
         </button>
         <button class="aba" id="aba-simulado" onclick="irPara('simulado')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M9 3.5V6h6V3.5M8 11h8M8 14.5h8M8 18h5"/>
-          </svg>Simulado
+          </svg><span class="nome-aba">Simulado</span>
         </button>
         <button class="aba" id="aba-feed" onclick="trocarAbaComunidade('agora')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.9-3.2 3-5 5.5-5s4.6 1.8 5.5 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.2 14.6c2.6-.4 4.6 1.3 5.3 4.4"/>
-          </svg>Comunidade
+          </svg><span class="nome-aba">Comunidade</span>
         </button>
       </nav>
 
@@ -4926,7 +4953,17 @@ function abrirFormularioConta(modo, mostrar) {
 // para a outra; o mouse gira a forma, empurra e acende os pontos perto dele.
 const pc3d = (() => {
   // Celular: metade das partículas, para não pesar.
-  const N = innerWidth < 700 ? 14000 : 26000, POEIRA = innerWidth < 700 ? 350 : 600;
+  // Versão leve (3.000 pontos desenhados sem a placa de vídeo) para aparelho
+  // fraco ou com economia de dados; também entra sozinha se a completa travar.
+  const conexao = navigator.connection || {};
+  let leve = /[?&]entrada=leve/.test(location.search) || conexao.saveData === true
+    || (navigator.deviceMemory && navigator.deviceMemory <= 2) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
+  let N, POEIRA;
+  const definirTamanho = () => {
+    N = leve ? 3000 : innerWidth < 700 ? 14000 : 26000;
+    POEIRA = leve ? 150 : innerWidth < 700 ? 350 : 600;
+  };
+  definirTamanho();
   const R = Math.random;
   const gauss = () => (R() + R() + R() - 1.5) / 1.5;
   const rotX = (p, a) => [p[0], p[1] * Math.cos(a) - p[2] * Math.sin(a), p[1] * Math.sin(a) + p[2] * Math.cos(a)];
@@ -5227,17 +5264,52 @@ const pc3d = (() => {
     gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE);
     return true;
   }
-  const subir = dados => { const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, dados, gl.STATIC_DRAW); return b; };
+  // Na completa, cada forma vai para a placa de vídeo; na leve, fica na memória.
+  const subir = dados => {
+    if (leve) return dados;
+    const b = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, b); gl.bufferData(gl.ARRAY_BUFFER, dados, gl.STATIC_DRAW); return b;
+  };
+  let ctx2 = null, sorte2 = null;
+  function iniciar2D() {
+    leve = true; definirTamanho(); poeira = null; devicePixelRatioMax = 1;
+    let c = el('pc-canvas');
+    if (gl) { const novo = c.cloneNode(); c.replaceWith(novo); c = novo; gl = null; } // um canvas com WebGL não aceita outro contexto
+    ctx2 = c.getContext('2d', { alpha: false });
+    sorte2 = new Float32Array(N * 4); for (let i = 0; i < sorte2.length; i++) sorte2[i] = R();
+    bufs = []; bufNuvem = null; pronto = false;
+  }
+  // Mesmas contas do shader, feitas aqui para poucos pontos.
+  function desenhar2D(de, para, mix, seg, fora) {
+    const c = ctx2, u = H / 2, cx = W / 2, cy = H / 2;
+    c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.fillStyle = '#232227'; c.fillRect(0, 0, W, H); c.fillStyle = '#f2f2f2';
+    const cY = Math.cos(rotAtual[1]), sY = Math.sin(rotAtual[1]), cX = Math.cos(rotAtual[0]), sX = Math.sin(rotAtual[0]);
+    const pxp = cx + pAtual[0] * cx, pyp = cy - pAtual[1] * cy;
+    for (let i = 0; i < N; i++) {
+      const s0 = sorte2[i * 4], s1 = sorte2[i * 4 + 1], s2 = sorte2[i * 4 + 2], s3 = sorte2[i * 4 + 3], k = i * 3;
+      let m = Math.min(1, Math.max(0, mix * 1.5 - s0 * .5)); m = m * m * (3 - 2 * m);
+      const esp = Math.sin(m * Math.PI) * .9;
+      const x = de[k] + (para[k] - de[k]) * m + (s1 - .5) * esp + .008 * Math.sin(seg * 1.1 + s0 * 40);
+      const y = de[k + 1] + (para[k + 1] - de[k + 1]) * m + (s2 - .5) * esp;
+      const z = de[k + 2] + (para[k + 2] - de[k + 2]) * m + (s3 - .5) * esp;
+      const x1 = x * cY + z * sY, z0 = -x * sY + z * cY, y1 = y * cX - z0 * sX, z1 = (y * sX + z0 * cX) * escala;
+      const persp = 3 / (3 - Math.max(-3, Math.min(2.4, z1)));
+      const px = cx + x1 * escala * persp * u, py = cy - y1 * escala * persp * u;
+      const perto = fora ? 0 : Math.max(0, 1 - Math.hypot(px - pxp, py - pyp) / 110);
+      const tam = (.9 + s1 * 1.3) * persp * (1 + perto * .8) * 1.4;
+      c.globalAlpha = Math.min(1, (.35 + .55 * s2) * (1 + perto * 1.6));
+      c.fillRect(px, py, tam, tam);
+    }
+  }
 
   // a moldura acompanha o tamanho do cartão quando a página chega ao fim
   function refazerMoldura() {
     const cartao = document.querySelector('#entrada-form .entrada-cartao');
-    if (!cartao || !gl) return;
+    if (!cartao || !(gl || ctx2)) return;
     const cx0 = caixa(), fim = cx0.scrollHeight - cx0.clientHeight;
     const r = cartao.getBoundingClientRect(), topo = r.top + cx0.scrollTop - fim, u = H / 2 * escala, folga = W < 700 ? 10 : 26;
     const cabe = r.height + folga * 2 < H * .94;
     const dados = cabe ? moldura((r.left + r.width / 2 - W / 2) / u, -(topo + r.height / 2 - H / 2) / u, (r.width + folga * 2) / u, (r.height + folga * 2) / u) : nuvem();
-    if (bufs[ULTIMA]) gl.deleteBuffer(bufs[ULTIMA]);
+    if (bufs[ULTIMA] && !leve) gl.deleteBuffer(bufs[ULTIMA]);
     bufs[ULTIMA] = subir(dados);
   }
 
@@ -5246,7 +5318,8 @@ const pc3d = (() => {
     escala = Math.min(1, (W / H) / 1.05);
     const c = el('pc-canvas'); c.width = W * dpr; c.height = H * dpr;
     el('pc-espaco').style.height = `${ULTIMA * 100}vh`;
-    if (gl) { gl.viewport(0, 0, c.width, c.height); if (pronto) refazerMoldura(); }
+    if (gl) gl.viewport(0, 0, c.width, c.height);
+    if (pronto && (gl || ctx2)) refazerMoldura();
     const circ = document.querySelector('.pc-circulo');
     if (circ) circ.style.setProperty('--d', `${(.72 * escala * H / 2 * 1.02 + 30) / .44}px`);
   }
@@ -5293,14 +5366,14 @@ const pc3d = (() => {
     }
   }
 
-  let desenhar = 0, amostras = [], ultimoMs = 0, aliviado = false;
+  let amostras = [], ultimoMs = 0, aliviado = false;
   function talvezAliviar(ms) {
     if (aliviado || !ultimoMs) { ultimoMs = ms; return; }
     amostras.push(ms - ultimoMs); ultimoMs = ms;
     if (amostras.length < 120) return;
     const media = amostras.reduce((a, b) => a + b, 0) / amostras.length;
     aliviado = true;
-    if (media > 26) { desenhar = Math.round(N * .5); devicePixelRatioMax = 1; medir(); }
+    if (media > 26 && !leve) { iniciar2D(); medir(); montar(); }  // travou: troca para a leve
   }
   function quadro(ms) {
     raf = requestAnimationFrame(quadro);
@@ -5322,6 +5395,7 @@ const pc3d = (() => {
     let de = bufs[a], para = bufs[Math.min(ULTIMA, a + 1)], mix = Math.max(0, (t - .55) / .45);
     if (intro < 1 && f < .55) { de = bufNuvem; para = bufs[0]; mix = intro; }
     if (a >= ULTIMA) { de = para = bufs[ULTIMA]; mix = 0; }
+    if (leve) { desenhar2D(de, para, mix, seg, fora); textos(); return; }
     gl.bindBuffer(gl.ARRAY_BUFFER, de); gl.vertexAttribPointer(loc.aDe, 3, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, para); gl.vertexAttribPointer(loc.aPara, 3, gl.FLOAT, false, 0, 0);
     gl.uniform1f(loc.uMix, mix); gl.uniform1f(loc.uTempo, seg);
@@ -5329,7 +5403,7 @@ const pc3d = (() => {
     gl.uniform2f(loc.uRot, rotAtual[0], rotAtual[1]);
     gl.uniform2f(loc.uPonteiro, fora ? 9 : pAtual[0], fora ? 9 : pAtual[1]);
     gl.clearColor(.137, .133, .153, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.drawArrays(gl.POINTS, 0, desenhar || N);
+    gl.drawArrays(gl.POINTS, 0, N);
     textos();
   }
 
@@ -5338,7 +5412,8 @@ const pc3d = (() => {
     ligar() {
       if (!ativo()) { document.documentElement.classList.remove('pc-3d'); return false; }
       if (ligado) return true;
-      if (!gl && !iniciarGL()) return false;
+      // sem WebGL (ou aparelho fraco), a leve: a mesma entrada, com menos pontos
+      if (!gl && !ctx2 && (leve || !iniciarGL())) iniciar2D();
       document.documentElement.classList.add('pc-3d');
       ligado = true;
       medir();
