@@ -115,6 +115,12 @@
 
     .abas { display: flex; gap: 4px; margin-right: auto; }
     .abas .aba-extra { display: none; }
+    /* Celular e tablet: botões pequenos ganham uma área de toque invisível maior. */
+    @media (pointer: coarse) {
+      .bolinhas-slide button, .botao-ajuda { position: relative; }
+      .bolinhas-slide button::after, .botao-ajuda::after { content: ""; position: absolute; inset: -12px -6px; }
+      .link-bloco, .link-visita, .recado button { min-height: 44px; padding-left: 8px; padding-right: 8px; }
+    }
     .tipos-feedback { display: flex; gap: 8px; flex-wrap: wrap; }
     .tipos-feedback label { padding: 6px 12px; border: 1px solid var(--borda); border-radius: 999px; cursor: pointer; font-size: .9rem; }
     .tipos-feedback input { margin: 0 4px 0 0; }
@@ -8920,8 +8926,9 @@ async function desenharAgora() {
 let idsDosColegas = new Set();
 async function carregarAcolhimento() {
   carregarComemorar();
-  const [dupla, chegaram, colegas] = await Promise.all([api('/api/dupla').catch(() => null),
-    api('/api/comunidade/chegaram').catch(() => null), api('/api/comunidade/colegas').catch(() => null)]);
+  const [dupla, chegaram, colegas, sugeridos] = await Promise.all([api('/api/dupla').catch(() => null),
+    api('/api/comunidade/chegaram').catch(() => null), api('/api/comunidade/colegas').catch(() => null),
+    api('/api/comunidade/sugestoes').catch(() => null)]);
   // Quem já aparece em "colegas" não se repete nas sugestões de dupla: lá tem o 🤝.
   idsDosColegas = new Set(((colegas && colegas.colegas) || []).slice(0, 12).map(c => c.id));
   semDupla = Boolean(dupla && !dupla.dupla);
@@ -8936,6 +8943,16 @@ async function carregarAcolhimento() {
         <button class="acao pequena${p.dei ? ' discreta' : ''}" ${p.dei ? 'disabled' : ''} onclick="darBoasVindas(${p.id}, this)">${p.dei ? 'Enviado ✓' : '👋 Boas-vindas'}</button></div>`).join('')}</div></section>`;
   }
   if (alvoE && colegas) alvoE.innerHTML = htmlColegas(colegas);
+  // Sem colegas de escola, ninguém pode abrir a comunidade e não ver gente: mostra pessoas para seguir.
+  const jaNaTela = new Set([...idsDosColegas, ...((chegaram && chegaram.chegaram) || []).map(p => p.id)]);
+  const paraSeguir = ((sugeridos && sugeridos.pessoas) || []).filter(p => !jaNaTela.has(p.id));
+  if (alvoE && paraSeguir.length && !(colegas && colegas.colegas && colegas.colegas.length)) {
+    alvoE.insertAdjacentHTML('beforeend', `<section class="painel"><div class="titulo-bloco"><b>✨ Gente para seguir</b></div>
+      <p class="pista" style="margin:4px 0 0">Quem está estudando para o ENEM com você. Seguindo, você vê o que a pessoa publica.</p>
+      <div class="sugestoes rolagem">${paraSeguir.map(p => `<div class="sugestao">
+        ${bolha(p)}<button class="autor-link" onclick="abrirPerfil(${p.id})"><b>${escapar(p.nome)}</b><small>${escapar(p.motivo)}</small></button>
+        <button class="acao pequena" onclick="seguirSugestao(${p.id}, this)">Seguir</button></div>`).join('')}</div></section>`);
+  }
 }
 let semDupla = false;
 
