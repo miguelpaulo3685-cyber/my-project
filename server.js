@@ -98,7 +98,7 @@ app.use((req, res, next) => {
 });
 
 const ORIGENS_PERMITIDAS = (process.env.ORIGENS_PERMITIDAS ||
-  'https://miguelpaulo3685-cyber.github.io,http://localhost:3000,http://127.0.0.1:3000'
+  'https://mmestudos.com.br,https://www.mmestudos.com.br,https://miguelpaulo3685-cyber.github.io,http://localhost:3000,http://127.0.0.1:3000'
 ).split(',').map(o => o.trim()).filter(Boolean);
 
 // Pedidos sem Origin (curl, o próprio servidor) não passam pelo navegador,

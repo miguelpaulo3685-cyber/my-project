@@ -4,7 +4,7 @@ const axios = require('axios');
 // Endereço onde o site está publicado. Os links dos e-mails apontam para cá,
 // e nunca para um endereço vindo do navegador: senão alguém poderia pedir a
 // redefinição da senha de outra pessoa com um link para um site falso.
-const SITE_URL = (process.env.SITE_URL || 'https://miguelpaulo3685-cyber.github.io/my-project/').replace(/\/?$/, '/');
+const SITE_URL = (process.env.SITE_URL || 'https://mmestudos.com.br/').replace(/\/?$/, '/');
 
 // O Render define RENDER=true; NODE_ENV pode não ter sido configurado lá.
 const emProducao = process.env.NODE_ENV === 'production' || Boolean(process.env.RENDER);
