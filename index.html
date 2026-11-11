@@ -1530,6 +1530,10 @@
     .textos-motivadores img { max-width: 100%; border-radius: 8px; display: block; margin-bottom: 6px; }
     .textos-motivadores small { display: block; color: var(--texto-fraco); font-size: .74rem; margin-top: 6px; overflow-wrap: anywhere; }
     .opcoes-redacao { display: grid; gap: 16px; }
+    .faixa-corrigir { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 20px; margin-bottom: 14px; flex-wrap: wrap; }
+    .faixa-corrigir span { display: flex; flex-direction: column; gap: 2px; }
+    .faixa-corrigir small { color: var(--texto-fraco); }
+    .faixa-corrigir .acao { margin: 0; }
     .opcao-redacao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 22px; padding: 22px; }
     .opcao-redacao h2 { font-size: 1.15rem; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .opcao-redacao > p { color: var(--texto-fraco); font-size: .92rem; margin: 0 0 14px; }
@@ -10040,18 +10044,12 @@ async function desenharPainelRedacoes() {
   let d;
   try { d = await api('/api/redacoes/painel'); } catch (e) { alvo.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
   if (abaComunidade !== 'redacoes' || telaRedacoes.modo !== 'painel') return;
-  alvo.innerHTML = `<div class="acoes-redacao">
-      <section class="painel">
-        <span class="icone-acao">✍️</span><b>Mandar uma redação</b>
-        <small>Duas pessoas da comunidade corrigem nas 5 competências do ENEM, sem saber quem escreveu.</small>
-        ${d.pode_enviar ? `<button class="acao" onclick="telaRedacoes = { modo: 'escrever' }; desenharRedacoes()">Escrever redação</button>`
-          : `<p class="aviso-redacao">${escapar(d.motivo)}</p>`}
-      </section>
-      <section class="painel">
-        <span class="icone-acao">🧑‍🏫</span><b>Corrigir redações</b>
-        <small>${d.na_fila ? `<b>${plural(d.na_fila, 'redação esperando', 'redações esperando')}</b> · ` : ''}+15 XP por correção. Cada correção libera mais um envio seu.</small>
-        ${d.na_fila ? `<button class="acao" onclick="comecarCorrecao()">Corrigir agora</button>` : '<p class="pista">Nenhuma redação esperando agora. Volte mais tarde!</p>'}
-      </section>
+  // A fila de correção continua aqui: sem quem corrija, ninguém recebe nota.
+  alvo.innerHTML = `<div class="opcoes-redacao" style="margin-bottom:18px">${htmlOpcoesRedacao(false)}</div>
+    ${d.pode_enviar ? '' : `<p class="aviso-redacao" style="margin:0 0 14px">${escapar(d.motivo)}</p>`}
+    <div class="faixa-corrigir painel">
+      <span><b>🧑‍🏫 Corrigir redações</b><small>${d.na_fila ? `${plural(d.na_fila, 'redação esperando', 'redações esperando')} · ` : ''}+15 XP por correção. Cada correção libera mais um envio seu.</small></span>
+      ${d.na_fila ? `<button class="acao" onclick="comecarCorrecao()">Corrigir agora</button>` : '<small class="pista" style="margin:0">Nenhuma esperando agora</small>'}
     </div>
     ${d.correcoes ? `<p class="pista" style="margin:-4px 0 14px">Você já corrigiu ${plural(d.correcoes, 'redação', 'redações')}${d.uteis ? ` e ${plural(d.uteis, 'foi marcada', 'foram marcadas')} como útil 👍` : ''}.</p>` : ''}
     <div class="rotulo-galeria">Suas redações</div>
@@ -10064,8 +10062,14 @@ async function desenharPainelRedacoes() {
 
 // ---------- aba Redação: temas do ENEM e temas para treinar ----------
 function desenharTelaRedacao() {
+  document.getElementById('opcoes-redacao').innerHTML = htmlOpcoesRedacao(true);
+}
+
+// Os dois cartões (Temas do ENEM e Temas para treinar): na aba Redação e no
+// alto das Redações da Comunidade. Na Comunidade não precisa do atalho de volta.
+function htmlOpcoesRedacao(comAtalho) {
   const anos = Object.keys(TEMAS_REDACAO).sort((a, b) => b - a);
-  document.getElementById('opcoes-redacao').innerHTML = `
+  return `
     <section class="opcao-redacao">
       <h2>✍️ Temas do ENEM</h2>
       <p>Escolha um ano, escreva a redação e mande para a comunidade corrigir nas 5 competências.
@@ -10073,7 +10077,7 @@ function desenharTelaRedacao() {
       <div class="lista-temas" id="lista-temas">${anos.map((a, i) => `<button class="tema-ano${i >= 4 ? ' escondido' : ''}" onclick="escreverTemaDoAno('${a}')">
         <span class="ano">${a}</span><span>${escapar(TEMAS_REDACAO[a])}</span></button>`).join('')}</div>
       <button class="link-bloco" style="margin-top:10px" onclick="document.querySelectorAll('#lista-temas .escondido').forEach(t => t.classList.remove('escondido')); this.remove()">Ver todos os ${anos.length} anos</button><br>
-      <button class="acao secundaria" style="margin:14px 0 0" onclick="trocarAbaComunidade('redacoes')">Minhas redações e corrigir as dos outros</button>
+      ${comAtalho ? `<button class="acao secundaria" style="margin:14px 0 0" onclick="trocarAbaComunidade('redacoes')">Minhas redações e corrigir as dos outros</button>` : ''}
     </section>
     <section class="opcao-redacao">
       <h2>🔭 Temas para treinar <span class="selo-breve">Em breve</span></h2>
