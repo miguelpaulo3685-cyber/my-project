@@ -170,6 +170,7 @@ async function identificar(req, res, next) {
         `SELECT u.id, u.username, u.email, u.bio, u.avatar_url,
                 COALESCE(u.email_verificado, FALSE) AS email_verificado,
                 COALESCE(u.admin, FALSE) AS admin,
+                COALESCE(u.professor, FALSE) AS professor,
                 (u.senha_hash IS NOT NULL) AS tem_senha, u.foto_id
            FROM sessoes s
            JOIN usuarios u ON u.id = s.usuario_id
@@ -1241,7 +1242,7 @@ require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigi
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });
-require('./redacoes')(app, { pool, auth, limitar, exigirLogin });
+require('./redacoes')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== ADMINISTRAÇÃO ==================
 // Os números que dizem se o site está funcionando, o que espera moderação e

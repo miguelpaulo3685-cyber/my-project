@@ -1638,6 +1638,12 @@
     .niveis button[aria-pressed="true"] { background: var(--marca); border-color: var(--marca); color: var(--sobre-marca); }
     .descricao-nivel { display: block; font-size: .8rem; margin: 6px 0; min-height: 1.2em; color: var(--texto); }
     .comentario-competencia { min-height: 44px; font-size: .85rem; }
+    .prontos { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 6px; }
+    .prontos button { font: inherit; font-size: .76rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--borda);
+      background: var(--superficie); color: var(--texto-fraco); cursor: pointer; }
+    .prontos button:hover { border-color: var(--marca); color: var(--marca-texto); }
+    .selo-urgente { font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 1px 6px; border-radius: 999px;
+      background: var(--marca-suave); color: var(--marca-texto); margin-left: 6px; }
     .anular { display: flex; gap: 8px; align-items: center; font-size: .85rem; color: var(--texto-fraco); margin: 2px 0 6px; cursor: pointer; }
     .anular input { accent-color: var(--errado); }
     .botoes-ficha { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; flex-wrap: wrap; }
@@ -10114,6 +10120,7 @@ function desenharRedacoes() {
   if (modo === 'ver') return desenharRedacaoCorrigida(telaRedacoes.id);
   if (modo === 'formas') return desenharFormasDeCorrecao();
   if (modo === 'corrigir') return desenharCorrecao();
+  if (modo === 'professor') return desenharFilaDoProfessor();
   return desenharEstatisticasRedacao();
 }
 
@@ -10182,8 +10189,10 @@ async function desenharFormasDeCorrecao() {
         </div>
       </section>
       <section class="opcao-redacao">
-        <h2>${iconeRedacao('professores')} Por professores <span class="selo-breve">Em breve</span></h2>
-        <p>Professores parceiros corrigindo com comentários.</p>
+        <h2>${iconeRedacao('professores')} Por professores ${usuarioLogado.professor ? '' : '<span class="selo-breve">Em breve</span>'}</h2>
+        <p>${usuarioLogado.professor ? 'Você é professor: veja as redações dos alunos da sua escola. A sua correção fecha a nota e leva o selo de professor.'
+          : 'Professores parceiros corrigindo com comentários.'}</p>
+        ${usuarioLogado.professor ? `<div class="botoes-forma"><button class="acao" onclick="abrirRedacoes('professor')">Fila da minha escola</button></div>` : ''}
       </section>
       <section class="opcao-redacao">
         <h2>${iconeRedacao('ia')} Por IA ${iaRedacaoLigada ? '' : '<span class="selo-breve">Em breve</span>'}</h2>
@@ -10281,7 +10290,7 @@ async function desenharRedacaoCorrigida(id, silencioso) {
   // Enquanto a IA corrige, pergunta de novo a cada 5 segundos.
   if (d.ia && d.ia.status === 'corrigindo') relogioIa = setTimeout(() => desenharRedacaoCorrigida(id, true), 5000);
   const { redacao: r, resultado: res } = d;
-  const [rotulo, explicacao] = SITUACAO_REDACAO[res.situacao];
+  const [rotulo, explicacao] = res.professor ? ['✅ Corrigida por professor', 'Nota final: a correção de um professor da sua escola.'] : SITUACAO_REDACAO[res.situacao];
   alvo.innerHTML = `${voltarRedacoes()}
     ${htmlCorrecaoIa(d, r)}
     <div class="redacao-aberta">
@@ -10301,7 +10310,7 @@ async function desenharRedacaoCorrigida(id, silencioso) {
       </section>
     </div>
     <div class="rotulo-galeria" style="margin-top:22px">${d.correcoes.length ? plural(d.correcoes.length, 'correção', 'correções') : 'Nenhuma correção ainda'}</div>
-    ${d.correcoes.map((c, n) => htmlCorrecao(c, n, r.minha, res.situacao === 'corrigida' && d.correcoes.filter(x => !x.oculto).length === 3
+    ${d.correcoes.map((c, n) => htmlCorrecao(c, n, r.minha, !res.professor && res.situacao === 'corrigida' && d.correcoes.filter(x => !x.oculto).length === 3
       && !c.oculto && !res.usadas.includes(d.correcoes.filter(x => !x.oculto).indexOf(c)))).join('')}`;
 }
 
@@ -10340,7 +10349,7 @@ function htmlCorrecao(c, n, minha, foraDaMedia) {
   return `<article class="painel correcao${c.oculto ? ' oculta' : ''}">
     <div class="topo-correcao">${bolha(c.corretor)}
       <div><button class="autor-link" style="font-weight:700" onclick="abrirPerfil(${c.corretor.id})">${escapar(c.corretor.nome)}</button>
-        ${c.corretor.equipe ? '<span class="selo-equipe">equipe</span>' : ''}
+        ${c.professor ? '<span class="selo-equipe">professor</span>' : c.corretor.equipe ? '<span class="selo-equipe">equipe</span>' : ''}
         <small>${n + 1}ª correção · ${tempoAtras(c.created_at)} · corrigiu ${plural(c.corretor.corrigidas, 'redação', 'redações')}</small>
         ${foraDaMedia ? '<small class="fora-da-media">Ficou longe das outras e não entrou na nota final, como no ENEM.</small>' : ''}</div>
       <span class="total-correcao">${c.total}</span></div>
@@ -10348,7 +10357,7 @@ function htmlCorrecao(c, n, minha, foraDaMedia) {
       <div><span>C${i + 1} · ${comp.nome}</span><b>${c.notas[i]}</b>
         <small>${escapar(comp.niveis[NIVEIS_REDACAO.indexOf(c.notas[i])] || '')}</small>
         ${c.comentarios[i] ? `<p>${escapar(c.comentarios[i])}</p>` : ''}</div>`).join('')}</div>`}
-    <div class="geral-correcao"><b>Comentário geral</b><p>${escapar(c.geral)}</p></div>
+    ${c.geral ? `<div class="geral-correcao"><b>Comentário geral</b><p>${escapar(c.geral)}</p></div>` : ''}
     ${minha ? `<div class="acoes-resposta">
       <button class="${c.util ? 'ligado' : ''}" onclick="correcaoUtil(${c.id})">👍 ${c.util ? 'Me ajudou' : 'Esta correção me ajudou'}</button>
       ${c.oculto ? '' : `<button class="leve" onclick="denunciarCorrecao(${c.id})">Denunciar correção</button>`}</div>` : ''}
@@ -10400,6 +10409,9 @@ function desenharCorrecao() {
         ${c.prova ? `<div class="aviso-prova"><b>Prova de corretor · ${c.prova.etapa} de ${c.prova.de}</b>
           Antes de corrigir a redação dos colegas, corrija ${c.prova.de} redações que já têm nota fechada pela comunidade.
           Passa quem chegar perto da nota (até 100 pontos no total e 80 em cada competência). Aqui não precisa escrever comentários.</div>`
+          : c.professor ? `<div class="aviso-prova"><b>Revisão do professor</b>${c.professor.origem
+              ? `As notas já vêm marcadas com ${c.professor.origem === 'ia' ? 'a estimativa da IA' : 'a média da comunidade'}. Ajuste só o que discordar: a sua correção fecha a nota.`
+              : 'Ninguém corrigiu esta ainda. A sua correção fecha a nota.'}</div>`
           : `<small class="pista" style="display:block;margin:0 0 4px">Correção às cegas · ${plural(c.restam, 'redação na fila', 'redações na fila')}</small>`}
         <b class="tema-redacao">${escapar(c.redacao.tema)}</b>
         ${htmlPropostaDoTema(c.redacao.tema)}
@@ -10416,15 +10428,18 @@ function desenharCorrecao() {
             <div class="niveis" role="group" aria-label="Nota da competência ${i + 1}">${NIVEIS_REDACAO.map(n =>
               `<button type="button" aria-pressed="${c.notas[i] === n}" onclick="darNota(${i}, ${n})">${n}</button>`).join('')}</div>
             <small class="descricao-nivel" id="descricao-${i}">${c.notas[i] === null ? 'Escolha a nota.' : comp.niveis[NIVEIS_REDACAO.indexOf(c.notas[i])]}</small>
+            ${c.professor ? `${c.professor.comunidade.length ? `<small class="pista" style="display:block;margin:6px 0 0">Comunidade: ${c.professor.comunidade.map(x => x.notas[i]).join(' e ')}</small>` : ''}
+              <div class="prontos">${COMENTARIOS_PRONTOS[i].map((t, k) => `<button type="button" onclick="comentarioPronto(${i}, ${k})">${t}</button>`).join('')}</div>` : ''}
             ${c.prova ? '' : `<textarea class="caixa-texto comentario-competencia" maxlength="600" placeholder="O que melhorar aqui? (opcional)"
               oninput="correcaoAtual.comentarios[${i}] = this.value">${escapar(c.comentarios[i])}</textarea>`}
           </div>`).join('')}
-        ${c.prova ? '' : `<div class="rotulo-modal">Comentário geral</div>
-        <textarea class="caixa-texto" id="geral-correcao" maxlength="2000" required oninput="correcaoAtual.geral = this.value"
+        ${c.prova ? '' : `<div class="rotulo-modal">Comentário geral${c.professor ? ' (opcional)' : ''}</div>
+        <textarea class="caixa-texto" id="geral-correcao" maxlength="2000" ${c.professor ? '' : 'required'} oninput="correcaoAtual.geral = this.value"
           placeholder="O que ficou bom, o que mais pesou na nota e uma dica principal para a próxima. Seja gentil e específico.">${escapar(c.geral || '')}</textarea>`}
         <div class="botoes-ficha">
-          ${c.prova ? '' : `<button type="button" class="acao discreta" onclick="comecarCorrecao([...correcaoAtual.pulados, correcaoAtual.redacao.id])">Pular esta</button>`}
-          <button class="acao" id="botao-correcao">${c.prova ? 'Conferir minhas notas' : 'Enviar correção · +15 XP'}</button>
+          ${c.prova ? '' : c.professor ? `<button type="button" class="acao discreta" onclick="abrirRedacoes('professor')">Voltar à fila</button>`
+            : `<button type="button" class="acao discreta" onclick="comecarCorrecao([...correcaoAtual.pulados, correcaoAtual.redacao.id])">Pular esta</button>`}
+          <button class="acao" id="botao-correcao">${c.prova ? 'Conferir minhas notas' : c.professor ? 'Enviar correção' : 'Enviar correção · +15 XP'}</button>
         </div>
         <button type="button" class="link-bloco" style="margin-top:10px" onclick="denunciarRedacao(${c.redacao.id})">Denunciar redação (ofensiva ou que não é redação)</button>
       </form>
@@ -10451,6 +10466,7 @@ async function enviarCorrecao(evento) {
   const c = correcaoAtual;
   if (!c.anulada && c.notas.some(n => n === null)) return avisoSim('Dê uma nota em cada uma das 5 competências.');
   if (c.prova) return enviarProva(c);
+  if (c.professor) return enviarCorrecaoDoProfessor(c);
   const botao = document.getElementById('botao-correcao');
   botao.disabled = true;
   try {
@@ -10465,6 +10481,102 @@ async function enviarCorrecao(evento) {
     avisoSim(e.daApi || SEM_SERVIDOR);
     botao.disabled = false;
   }
+}
+
+// ---------- ferramenta do professor ----------
+// Comentários prontos de um toque, por competência: entram na caixa de comentário.
+const COMENTARIOS_PRONTOS = [
+  ['Revise a acentuação.', 'Atenção às vírgulas.', 'Cuidado com a concordância.', 'Evite marcas de oralidade.'],
+  ['Faltou repertório de outras áreas.', 'Ligue o repertório ao tema.', 'Não copie os textos motivadores.'],
+  ['Deixe a tese clara na introdução.', 'Aprofunde os argumentos.', 'Organize melhor a ordem das ideias.'],
+  ['Use conectivos entre os parágrafos.', 'Varie os conectivos.', 'Evite repetir as mesmas palavras.'],
+  ['A proposta precisa de agente, ação, meio, finalidade e detalhamento.', 'Faltou detalhar a proposta.', 'Ligue a proposta aos problemas discutidos.']
+];
+function comentarioPronto(i, k) {
+  const frase = COMENTARIOS_PRONTOS[i][k];
+  const atual = correcaoAtual.comentarios[i];
+  if (atual.includes(frase)) return;
+  correcaoAtual.comentarios[i] = (atual.trim() ? atual.trim() + ' ' : '') + frase;
+  const caixa = document.querySelectorAll('.comentario-competencia')[i];
+  if (caixa) caixa.value = correcaoAtual.comentarios[i];
+}
+
+// Fila da escola: as redações dos alunos da escola do professor, urgentes primeiro, sem nomes.
+async function desenharFilaDoProfessor() {
+  const alvo = alvoRedacao();
+  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
+  let d;
+  try { d = await api('/api/professor/fila'); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'professor') return;
+  if (!d.escola) {
+    alvo.innerHTML = `${voltarRedacoes()}<div class="vazio"><span class="cara">🏫</span>Coloque a sua escola no perfil para ver as redações dos seus alunos.</div>`;
+    return;
+  }
+  alvo.innerHTML = `${voltarRedacoes()}
+    <h2 class="titulo-redacao">${iconeRedacao('professores')} ${escapar(d.escola)}</h2>
+    <p class="pista" style="margin:0 0 14px">${d.redacoes.length ? `${plural(d.redacoes.length, 'redação espera', 'redações esperam')} a sua correção. As urgentes vêm primeiro.` : ''}</p>
+    ${d.redacoes.length ? `<div class="lista-redacoes">${d.redacoes.map(r => `<button class="cartao-redacao" onclick="revisarComoProfessor(${r.id})">
+        <span class="nota-redacao previa">${r.nota === null ? '—' : r.nota}<small>${r.nota === null ? '' : 'comunidade'}</small></span>
+        <span><b>${escapar(r.tema)}${r.urgente ? '<span class="selo-urgente">urgente</span>' : ''}</b>
+          <small>${new Date(r.created_at).toLocaleDateString('pt-BR')} · ${r.correcoes ? plural(r.correcoes, 'correção da comunidade', 'correções da comunidade') : 'ninguém corrigiu ainda'}</small></span>
+      </button>`).join('')}</div>`
+      : '<div class="vazio"><span class="cara">🎉</span>Nenhuma redação da sua escola esperando correção.</div>'}`;
+}
+
+async function revisarComoProfessor(id) {
+  telaRedacoes = { modo: 'corrigir' };
+  const alvo = alvoRedacao();
+  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Abrindo a redação…</div>`;
+  let d;
+  try { d = await api(`/api/professor/redacoes/${id}`); }
+  catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'corrigir') return;
+  correcaoAtual = { redacao: d.redacao, notas: d.sugestao.notas.slice(), comentarios: ['', '', '', '', ''], anulada: null, pulados: [], restam: 0, prova: null,
+    professor: { origem: d.sugestao.origem, comunidade: d.comunidade.filter(x => !x.anulada) } };
+  desenharCorrecao();
+  window.scrollTo(0, 0);
+}
+
+// Depois de enviar, abre a próxima da fila (ou volta para a lista vazia).
+async function enviarCorrecaoDoProfessor(c) {
+  const botao = document.getElementById('botao-correcao');
+  botao.disabled = true;
+  try {
+    await postar(`/api/professor/redacoes/${c.redacao.id}/correcao`, {
+      notas: c.anulada ? [0, 0, 0, 0, 0] : c.notas, comentarios: c.comentarios, anulada: c.anulada,
+      geral: document.getElementById('geral-correcao').value
+    });
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); botao.disabled = false; return; }
+  mostrarXp('Correção enviada! O aluno já foi avisado ✍️');
+  let fila = null;
+  try { fila = await api('/api/professor/fila'); } catch (e) { /* volta para a lista */ }
+  if (fila && fila.redacoes.length) return revisarComoProfessor(fila.redacoes[0].id);
+  abrirRedacoes('professor');
+}
+
+// Administração: marcar quem é professor, pelo e-mail da conta.
+async function desenharProfessoresAdmin() {
+  const alvo = document.getElementById('admin-professores');
+  if (!alvo) return;
+  let d;
+  try { d = await api('/api/admin/professores'); } catch (e) { alvo.innerHTML = ''; return; }
+  alvo.innerHTML = `<div class="rotulo-modal">Professores</div>
+    ${d.professores.map(p => `<div class="linha-aviso"><span><b>${escapar(p.nome)}</b> · ${escapar(p.escola || 'sem escola no perfil')} · ${plural(p.corrigidas, 'correção', 'correções')}</span></div>`).join('')
+      || '<p class="pista">Nenhum professor ainda.</p>'}
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+      <input class="entrada-modal" id="email-professor" type="email" placeholder="E-mail da conta do professor" style="flex:1;min-width:200px;margin:0">
+      <button class="acao pequena" style="margin:0" onclick="marcarProfessor(true)">Tornar professor</button>
+      <button class="acao discreta pequena" style="margin:0" onclick="marcarProfessor(false)">Tirar</button>
+    </div>
+    <p class="pista">O professor vê só as redações de quem pôs a mesma escola no perfil, sem o nome do aluno.</p>`;
+}
+async function marcarProfessor(professor) {
+  const email = document.getElementById('email-professor').value;
+  try {
+    const d = await postar('/api/admin/professores', { email, professor });
+    avisoSim(professor ? `${d.nome} agora é professor.` : `${d.nome} não é mais professor.`);
+  } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharProfessoresAdmin();
 }
 
 // Prova de corretor: mostra as suas notas ao lado das da comunidade.
@@ -10533,6 +10645,7 @@ async function desenharPainelAdmin() {
       ${acao ? `<button class="acao discreta pequena" onclick="${acao}">Ver</button>` : ''}</div>`).join('')
       : '<p class="pista">Nada esperando moderação 👍</p>'}
     <div id="admin-mensagens"></div>
+    <div id="admin-professores"></div>
     <div class="rotulo-modal">Provas no banco (de ${total} por dia)</div>
     <div class="provas-admin">${d.provas.anos.map(a => {
       const completo = a.dia1 >= total && a.dia2 >= total;
@@ -10547,6 +10660,7 @@ async function desenharPainelAdmin() {
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
   desenharMensagensDenunciadas();
+  desenharProfessoresAdmin();
   desenharCrescimento();
   desenharErrosAdmin();
   desenharFeedbackAdmin();
