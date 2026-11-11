@@ -18,6 +18,16 @@ const TEM_LINK = /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|br|me|io|gg|app|
 
 const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
 
+// Quem está com as mensagens abertas fica com uma conexão aberta (fluxo de
+// eventos); mensagem nova é avisada na hora, em vez de esperar a próxima consulta.
+const MAX_CONEXOES_POR_PESSOA = 5;
+const ouvintes = new Map(); // usuarioId -> Set de respostas abertas
+function avisarNovaMensagem(paraId, deId) {
+  for (const res of ouvintes.get(paraId) || []) {
+    try { res.write(`data: ${JSON.stringify({ de: deId })}\n\n`); } catch (e) { /* conexão caiu */ }
+  }
+}
+
 function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModerador }) {
   const freioEnviar = limitar(auth.criarFreio(30, 60 * 1000), 'Calma! Muitas mensagens seguidas. Espere um pouco.', req => `m${req.usuario.id}`);
   const freioDia = limitar(auth.criarFreio(300, 24 * 3600 * 1000), 'Você chegou ao limite de mensagens de hoje.', req => `md${req.usuario.id}`);
@@ -82,6 +92,24 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
     }
   });
 
+  // Fluxo de eventos: avisa "chegou mensagem de X" enquanto a tela está aberta.
+  // Fica antes de /api/mensagens/:id para "eventos" não virar um id.
+  app.get('/api/mensagens/eventos', exigirLogin, (req, res) => {
+    const id = req.usuario.id;
+    const minhas = ouvintes.get(id) || ouvintes.set(id, new Set()).get(id);
+    if (minhas.size >= MAX_CONEXOES_POR_PESSOA) return res.status(429).json({ error: 'Muitas abas abertas.' });
+    res.set({ 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
+    res.flushHeaders();
+    res.write(': ok\n\n');
+    minhas.add(res);
+    const batida = setInterval(() => { try { res.write(': ok\n\n'); } catch (e) { /* caiu */ } }, 20000);
+    req.on('close', () => {
+      clearInterval(batida);
+      minhas.delete(res);
+      if (!minhas.size) ouvintes.delete(id);
+    });
+  });
+
   // Uma conversa (as últimas 200) e marca como lidas as que chegaram.
   app.get('/api/mensagens/:id', exigirLogin, async (req, res) => {
     const outro = idValido(req.params.id);
@@ -135,8 +163,10 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
       const { rows } = await pool.query(
         'INSERT INTO mensagens (de_id, para_id, texto) VALUES ($1, $2, $3) RETURNING id, TRUE AS minha, texto, created_at, denunciada',
         [req.usuario.id, outro, texto]);
-      await notificar(pool, { usuarioId: outro, atorId: req.usuario.id, tipo: 'mensagem', alvoTipo: 'conversa', alvoId: req.usuario.id, texto });
       res.status(201).json({ mensagem: rows[0] });
+      avisarNovaMensagem(outro, req.usuario.id);
+      await notificar(pool, { usuarioId: outro, atorId: req.usuario.id, tipo: 'mensagem', alvoTipo: 'conversa', alvoId: req.usuario.id, texto })
+        .catch(erro => console.error('Erro ao notificar mensagem:', erro.message));
     } catch (erro) {
       console.error('Erro ao mandar mensagem:', erro.message);
       res.status(500).json({ error: 'Não consegui mandar agora. Tente de novo.' });
@@ -194,4 +224,4 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
 }
 
 module.exports = registrarMensagens;
-Object.assign(module.exports, { TEM_LINK, QUEM_PODE });
+Object.assign(module.exports, { TEM_LINK, QUEM_PODE, avisarNovaMensagem, ouvintes });

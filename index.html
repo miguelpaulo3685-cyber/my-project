@@ -666,6 +666,7 @@
     }
     .chat-vazio { margin: auto; }
     .msg { align-self: flex-start; max-width: 80%; padding: 8px 12px; border-radius: 16px 16px 16px 4px; background: var(--superficie-2); white-space: pre-wrap; overflow-wrap: anywhere; font-size: .94rem; }
+    .msg.enviando { opacity: .6; }
     .msg.minha { align-self: flex-end; border-radius: 16px 16px 4px 16px; background: var(--marca); color: var(--sobre-marca); }
     .msg small { display: block; font-size: .68rem; opacity: .7; margin-top: 3px; }
     .msg small button { background: none; border: none; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
@@ -4053,7 +4054,7 @@ function irPara(tela) {
   if (tela === 'redacao') desenharTelaRedacao();
   if (tela !== 'arena') sairDaTelaArena();
   talvezAtualizarSino();
-  if (tela !== 'mensagens') pararConversa();
+  if (tela !== 'mensagens') { pararConversa(); fecharFluxoMensagens(); }
   if (tela !== 'comunidade') { clearTimeout(slider.relogio); pararSlide(); }
   modoFoco(['questao', 'prova'].includes(tela));
   document.body.classList.toggle('vendo-reels', tela === 'reels');
@@ -8456,9 +8457,54 @@ async function atualizarSeloMensagens() {
 
 function pararConversa() { clearInterval(relogioConversa); relogioConversa = null; conversaAberta = null; }
 
+// Conexão aberta com o servidor enquanto a tela de mensagens está aberta:
+// quando chega mensagem, ele avisa na hora. A consulta a cada 15 s fica só de reserva.
+let fluxoMensagens = null;
+function abrirFluxoMensagens() {
+  if (fluxoMensagens || !usuarioLogado) return;
+  const ctrl = new AbortController();
+  fluxoMensagens = ctrl;
+  (async () => {
+    try {
+      const r = await fetch(`${API_URL}/api/mensagens/eventos`, { headers: cabecalhoAuth(), signal: ctrl.signal });
+      if (!r.ok) throw new Error();
+      const leitor = r.body.getReader();
+      const dec = new TextDecoder();
+      let buf = '';
+      for (;;) {
+        const { value, done } = await leitor.read();
+        if (done) break;
+        buf += dec.decode(value, { stream: true });
+        let i;
+        while ((i = buf.indexOf('\n\n')) >= 0) {
+          const linha = buf.slice(0, i).split('\n').find(l => l.startsWith('data: '));
+          buf = buf.slice(i + 2);
+          if (linha) chegouMensagem(JSON.parse(linha.slice(6)));
+        }
+      }
+    } catch (e) { /* caiu ou foi fechada */ }
+    if (fluxoMensagens !== ctrl || ctrl.signal.aborted) return;
+    fluxoMensagens = null;
+    // Caiu (celular trocou de rede, servidor reiniciou): tenta de novo se ainda estiver na tela.
+    setTimeout(() => { if (!document.getElementById('tela-mensagens').classList.contains('escondido')) abrirFluxoMensagens(); }, 3000);
+  })();
+}
+function fecharFluxoMensagens() {
+  if (fluxoMensagens) fluxoMensagens.abort();
+  fluxoMensagens = null;
+}
+function chegouMensagem(d) {
+  if (conversaAberta && d.de === conversaAberta) carregarConversa();
+  else if (!conversaAberta) abrirMensagens();
+  else atualizarSeloMensagens();
+}
+
 async function abrirMensagens() {
   if (!usuarioLogado) return abrirConta('entrar');
+  // Voltando de uma conversa: para de atualizá-la, senão ela reaparece por cima da lista.
+  clearInterval(relogioConversa); relogioConversa = null; conversaAberta = null;
   irPara('mensagens');
+  abrirFluxoMensagens();
   const alvo = document.getElementById('conteudo-mensagens');
   alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
   let conversas;
@@ -8477,9 +8523,10 @@ async function abrirMensagens() {
 async function abrirConversa(id) {
   if (!usuarioLogado) return abrirConta('entrar');
   if (conversaAberta !== id) { irPara('mensagens'); conversaAberta = id; }
+  abrirFluxoMensagens();
   await carregarConversa(true);
   clearInterval(relogioConversa);
-  relogioConversa = setInterval(() => { if (document.visibilityState === 'visible') carregarConversa(); }, 6000);
+  relogioConversa = setInterval(() => { if (document.visibilityState === 'visible') carregarConversa(); }, 15000);
 }
 
 async function carregarConversa(primeira) {
@@ -8499,7 +8546,7 @@ async function carregarConversa(primeira) {
       <small>${tempoAtras(m.created_at)}${!m.minha ? (m.denunciada ? ' · denunciada' : ` · <button onclick="denunciarMensagem(${m.id})">denunciar</button>`) : ''}</small></div>`).join('')
     || '<p class="pista chat-vazio">Diga oi! 👋</p>';
   if (lista && !primeira) {
-    if (lista.dataset.n !== String(d.mensagens.length)) { lista.innerHTML = html; lista.dataset.n = d.mensagens.length; }
+    if (lista.dataset.n !== String(d.mensagens.length) || lista.querySelector('.enviando')) { lista.innerHTML = html; lista.dataset.n = d.mensagens.length; }
   } else {
     alvo.innerHTML = `<div class="chat">
       <div class="chat-topo">
@@ -8527,14 +8574,24 @@ async function enviarMensagem(evento) {
   const texto = campo.value.trim();
   if (!texto) return;
   const botao = document.getElementById('chat-enviar');
+  // A mensagem aparece na hora, como "enviando…"; o servidor confirma depois.
+  const lista = document.getElementById('chat-lista');
+  lista.querySelector('.chat-vazio')?.remove();
+  lista.insertAdjacentHTML('beforeend', `<div class="msg minha enviando">${escapar(texto)}<small>enviando…</small></div>`);
+  const provisoria = lista.lastElementChild;
+  lista.scrollTop = lista.scrollHeight;
+  campo.value = '';
   botao.disabled = true;
   try {
     await postar(`/api/mensagens/${conversaAberta}`, { texto });
-    campo.value = '';
     await carregarConversa();
-    const lista = document.getElementById('chat-lista');
-    lista.scrollTop = lista.scrollHeight;
-  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+    const atual = document.getElementById('chat-lista');
+    atual.scrollTop = atual.scrollHeight;
+  } catch (e) {
+    provisoria.remove();
+    if (!campo.value) campo.value = texto;
+    avisoSim(e.daApi || SEM_SERVIDOR);
+  }
   botao.disabled = false;
   campo.focus();
 }
@@ -9738,7 +9795,7 @@ function terminouFoco(f) {
       buscarSala();
       atualizarMeuProgresso();
     } catch (e) { /* o servidor diz quando não valeu; não precisa incomodar */ }
-  }, 4000);
+  }, 3000 + Math.random() * 9000); // todos da sala terminam juntos: o atraso sorteado espalha os pedidos
 }
 
 function bipe() {
