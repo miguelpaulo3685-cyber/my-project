@@ -5,9 +5,11 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 
 ## O projeto
 
-- Site de estudos para o ENEM, de Miguel e Matheus. Lançamento previsto para depois do ENEM 2026
-  (divulgação forte de janeiro a março de 2027, para a turma do ENEM 2027).
-- Site: https://miguelpaulo3685-cyber.github.io/my-project/ (GitHub Pages, arquivo `index.html`).
+- Site de estudos para o ENEM, de Miguel e Matheus (os dois maiores de idade: podem criar contas, assinar
+  contratos, pedir INPI e CNPJ no próprio nome). **Lançamento leve: segunda, 16/11/2026** (amigos, antigo
+  colégio, redes); divulgação forte de janeiro a março de 2027, para a turma do ENEM 2027.
+- Site: **https://mmestudos.com.br** (domínio no registro.br, GitHub Pages com HTTPS, arquivo `index.html`).
+  O endereço antigo (github.io) redireciona. Google Search Console verificado e sitemap enviado (11/11).
 - API: Render (`server.js` e módulos: arena, provas, comunidade, avisos, desafio, tri, mensagens...).
   Banco: Neon (Postgres). As migrações (`migrations/init.js`) rodam sozinhas a cada início do servidor.
 - Testes: `npm test`. O GitHub roda os testes a cada envio para o master.
@@ -93,7 +95,52 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 6. **Lançamento** depois do ENEM 2026; divulgação de janeiro a março de 2027, com links `?origem=...`.
 7. **Prova do ENEM 2026:** quando o INEP publicar cadernos e gabaritos, usar `ferramentas-inep/` para incluir.
 
-## Pendências para lançar (em ordem)
+## LANÇAMENTO (atualizado em 11/11/2026)
+
+Testes de ponta a ponta feitos em 11/11: entrada (e-mail e Google), barra, comunidade, treinar, arena,
+redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
+
+### Até domingo (15/11)
+- [ ] Marcar os erros do painel como resolvidos.
+- [ ] UptimeRobot (grátis): avisar se o site ou a API caírem.
+- [ ] Link `mmestudos.com.br` na bio do Instagram e do TikTok; mensagem de divulgação.
+
+### No dia (16/11)
+- [ ] **Gemini** ("Por que errei?" no Treinar): criar chave em aistudio.google.com e pôr `GEMINI_API_KEY`
+      no Render. Grátis. Opcionais: `GEMINI_MODELO` (padrão gemini-2.5-flash), `EXPLICACAO_LIMITE_DIARIO` (400).
+- [ ] Render pago (~US$ 7/mês), se der.
+- [ ] Acompanhar o painel de erros e o Feedback.
+
+### Depois do lançamento
+1. **Ferramenta do professor** (versão simples, para levar ao colégio): perfil de professor/monitor, fila só
+   da escola com as urgentes primeiro, revisão rápida com as notas da comunidade já preenchidas, comentários
+   prontos de um toque, selo "corrigida por professor". Metas e divisão entre monitores numa segunda fase,
+   ajustando com a professora.
+2. **Correção de redação por IA** (já pronta em `correcao-ia.js`, em "Em breve" até ter chave): pôr
+   `ANTHROPIC_API_KEY` no Render com limite de gasto no console.anthropic.com. Hoje usa Claude Opus 5.5
+   (~US$ 0,06 por redação); para gastar menos, trocar para Claude Haiku 5.5 (~US$ 0,002). Limite: 3 por
+   aluno por dia e `IA_LIMITE_DIARIO` (200) no site. Não usar IA gratuita para redação (textos de menores).
+3. **Registro da marca no INPI** (classe 41, mista). Busca feita em 11/11: ninguém tem "M&M Estudos"; os
+   "M&M"/"MM" da classe 41 são de fotografia, música e jornalismo (ramos diferentes).
+4. **Estatísticas da redação** (o quadrado com esse nome na aba Redação, "Em breve"): ranking de temas pela
+   matemática, testando antes com 2023-2025. É ranking para treino, não previsão garantida.
+5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
+6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
+
+### Feito em 11/11
+- Domínio mmestudos.com.br; prévia do link (og:*); robots.txt, sitemap.xml, canônico.
+- Barra: Comunidade, Arena, Treinar, Simulado, Redação + bolinha do perfil no computador.
+- Vídeo da Comunidade toca sozinho, sem som ("Ativar som").
+- Aba Redação: menu 2x2 (Anos anteriores, Correção, Estatísticas, Minhas redações), ícones de linha;
+  Redações saíram da Comunidade.
+- Mensagens diretas na hora (fluxo de eventos) e aparecendo como "enviando…"; fim do foco nas salas espalha
+  os pedidos ao servidor.
+- "Por que errei?" (Gemini), "Quem vê minhas notas" (todos / só amigos / só eu; padrão só amigos; vale para a
+  nota TRI na comunidade e o ranking do Desafio) e prova de corretor (2 redações com nota fechada antes de
+  corrigir; desligada enquanto houver menos de 3 redações com nota fechada).
+- Simulado: todas as provas completas no banco (menos as anuladas pelo INEP).
+
+## Pendências antigas (de outubro)
 
 ### 1. Conteúdo
 - [x] **48 questões incompletas** transcritas dos cadernos AZUIS do INEP (27/10), conferidas uma a uma
@@ -117,14 +164,14 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
 - [x] Mensagens só de quem a pessoa segue, por padrão.
 - [x] Cadastro confirma 13 anos ou mais.
 - [x] Revisar a Política de Privacidade (mensagens diretas, Arena, 13 anos) — publicado em 27/10/2026.
-- [ ] Pesquisar o nome "M&M" no INPI (risco de conflito com a marca do chocolate).
+- [x] Pesquisar o nome "M&M" no INPI (11/11: liberado para usar; falta pedir o registro).
 
 ### 3. Infraestrutura (Miguel e Matheus)
 - [ ] Conferir as variáveis do Render: BREVO_API_KEY, SITE_URL, SEGREDO_IMAGENS, ADMIN_KEY.
 - [ ] Rodar no Neon o UPDATE que deixa a conta de vocês como admin.
 - [ ] Render pago (~US$ 7/mês) antes de divulgar: o grátis reinicia e as salas da Arena ficam na memória.
-- [ ] Domínio (Hostinger, .com.br): apontar para o GitHub Pages, atualizar SITE_URL e autenticar
-      o domínio no Brevo (para o e-mail não cair no spam).
+- [x] Domínio mmestudos.com.br (registro.br) apontado para o GitHub Pages (11/11); SITE_URL e CORS no código.
+- [ ] Autenticar o domínio no Brevo (para o e-mail não cair no spam).
 - [x] Aviso automático de erros do site (e-mail e celular para os administradores; lista na Administração).
       No primeiro deploy deve chegar um alerta com os erros da api.enem.dev: é esperado, é só limpar a lista.
 
