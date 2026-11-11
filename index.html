@@ -6076,14 +6076,31 @@ async function carregarGoogle() {
   script.async = true;
   script.onload = () => {
     google.accounts.id.initialize({ client_id: clientId, callback: entrarComGoogle, ux_mode: 'popup' });
-    google.accounts.id.renderButton(document.getElementById('botao-google'), {
-      theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with',
-      width: Math.min(360, document.getElementById('area-google').clientWidth || 320), locale: 'pt-BR'
-    });
     googleLigado = true;
-    document.getElementById('area-google').classList.toggle('escondido', !['entrar', 'criar'].includes(modoConta));
+    const area = document.getElementById('area-google');
+    area.classList.toggle('escondido', !['entrar', 'criar'].includes(modoConta));
+    // Redesenha quando a área aparece ou muda de largura (tela de login aberta,
+    // celular girado): assim o botão acompanha a largura dos campos.
+    new ResizeObserver(desenharBotaoGoogle).observe(area);
   };
   document.head.appendChild(script);
+}
+
+// O Google desenha o botão com largura fixa (de 200 a 400 px), então ele só
+// pode ser desenhado com a área visível, para ter a mesma largura dos campos.
+let larguraBotaoGoogle = 0;
+function desenharBotaoGoogle() {
+  const largura = Math.round(document.getElementById('area-google').clientWidth);
+  if (!googleLigado || largura < 1) return;
+  const ajustada = Math.max(200, Math.min(400, largura));
+  if (ajustada === larguraBotaoGoogle) return;
+  larguraBotaoGoogle = ajustada;
+  const botao = document.getElementById('botao-google');
+  botao.innerHTML = '';
+  google.accounts.id.renderButton(botao, {
+    theme: 'filled_black', size: 'large', shape: 'pill', text: 'continue_with', logo_alignment: 'center',
+    width: ajustada, locale: 'pt-BR'
+  });
 }
 
 async function entrarComGoogle(resposta) {
