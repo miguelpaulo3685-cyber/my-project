@@ -1204,7 +1204,7 @@
       padding: 8px 14px; font: inherit; font-size: .88rem; font-weight: 700; cursor: pointer; flex-shrink: 0;
     }
     .voltar-comunidade:hover { border-color: var(--marca); }
-    .atalhos-inicio.atalhos-comunidade { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
+    .atalhos-inicio.atalhos-comunidade { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 16px; }
     @media (max-width: 900px) { .atalhos-inicio.atalhos-comunidade { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .atalhos-comunidade .atalho-inicio { padding: 12px; gap: 10px; height: 100%; }
     @media (max-width: 640px) {
@@ -1529,11 +1529,23 @@
     .textos-motivadores p { white-space: pre-wrap; line-height: 1.6; }
     .textos-motivadores img { max-width: 100%; border-radius: 8px; display: block; margin-bottom: 6px; }
     .textos-motivadores small { display: block; color: var(--texto-fraco); font-size: .74rem; margin-top: 6px; overflow-wrap: anywhere; }
-    .opcoes-redacao { display: grid; gap: 16px; }
-    .faixa-corrigir { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 20px; margin-bottom: 14px; flex-wrap: wrap; }
-    .faixa-corrigir span { display: flex; flex-direction: column; gap: 2px; }
-    .faixa-corrigir small { color: var(--texto-fraco); }
-    .faixa-corrigir .acao { margin: 0; }
+    .menu-redacao { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 520px; }
+    .quadrado-redacao { aspect-ratio: 1 / 1; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+      gap: 4px; padding: 20px; text-align: left; border-radius: 22px; border: 1px solid var(--borda); background: var(--superficie);
+      color: var(--texto); font: inherit; cursor: pointer; transition: border-color .18s, transform .18s; }
+    .quadrado-redacao:hover { border-color: var(--marca); transform: translateY(-2px); }
+    .quadrado-redacao .icone { font-size: 1.7rem; margin-bottom: auto; }
+    .quadrado-redacao b { font-size: 1.05rem; line-height: 1.2; }
+    .quadrado-redacao small { color: var(--texto-fraco); font-size: .82rem; line-height: 1.35; }
+    @media (max-width: 420px) { .quadrado-redacao { padding: 16px; border-radius: 18px; } .quadrado-redacao b { font-size: .95rem; } }
+    .formas-correcao { display: grid; gap: 14px; margin-top: 12px; }
+    .botoes-forma { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .botoes-forma .acao { margin: 0; }
+    .numeros-redacao { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 12px 0 16px; }
+    @media (max-width: 600px) { .numeros-redacao { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .numero-redacao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 16px; padding: 14px; }
+    .numero-redacao b { display: block; font-size: 1.5rem; }
+    .numero-redacao small { color: var(--texto-fraco); font-size: .8rem; }
     .opcao-redacao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 22px; padding: 22px; }
     .opcao-redacao h2 { font-size: 1.15rem; margin: 0 0 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .opcao-redacao > p { color: var(--texto-fraco); font-size: .92rem; margin: 0 0 14px; }
@@ -3096,7 +3108,7 @@
             <rect x="4.5" y="3.5" width="15" height="17" rx="2"/><path d="M9 3.5V6h6V3.5M8 11h8M8 14.5h8M8 18h5"/>
           </svg><span class="nome-aba">Simulado</span>
         </button>
-        <button class="aba" id="aba-redacao" onclick="irPara('redacao')">
+        <button class="aba" id="aba-redacao" onclick="abrirRedacoes()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M15.5 4.5 19.5 8.5 9 19H5v-4z"/><path d="M13.5 6.5l4 4"/><path d="M13 20h7"/>
           </svg><span class="nome-aba">Redação</span>
@@ -3256,9 +3268,9 @@
   <main class="pagina escondido" id="tela-redacao">
     <div class="cabecalho-secao">
       <h1>Redação</h1>
-      <p>Escreva sobre os temas do ENEM e receba a nota da comunidade, do jeito do ENEM.</p>
+      <p>Escreva, receba correção e acompanhe sua evolução.</p>
     </div>
-    <div class="opcoes-redacao" id="opcoes-redacao"></div>
+    <div id="conteudo-redacao"></div>
   </main>
 
   <!-- ===================== SIMULADO ===================== -->
@@ -4055,7 +4067,7 @@ function irPara(tela) {
   document.getElementById('aba-config').classList.toggle('ativa', tela === 'config');
   document.getElementById('aba-perfil').classList.toggle('ativa', tela === 'perfil');
   document.getElementById('aba-redacao').classList.toggle('ativa', tela === 'redacao');
-  if (tela === 'redacao') desenharTelaRedacao();
+  if (tela === 'redacao') desenharRedacoes();
   if (tela !== 'arena') sairDaTelaArena();
   talvezAtualizarSino();
   if (tela !== 'mensagens') { pararConversa(); fecharFluxoMensagens(); }
@@ -9001,8 +9013,8 @@ function abrirComunidade(aba) {
 
 function trocarAbaComunidade(aba) {
   if (aba === 'reels') return irPara('reels');
+  if (aba === 'redacoes') return abrirRedacoes('estatisticas'); // links antigos
   perguntaAberta = null;
-  telaRedacoes = { modo: 'painel' };
   abrirComunidade(aba);
 }
 
@@ -9012,7 +9024,6 @@ function trocarAbaComunidade(aba) {
 const ATALHOS_COMUNIDADE = [
   ['salas', '⏱️', 'Salas de estudo', 'Estudar junto no mesmo relógio'],
   ['perguntas', '🙋', 'Perguntas', 'Tire uma dúvida ou ajude alguém'],
-  ['redacoes', '✍️', 'Redações', 'Mande a sua e corrija a dos outros'],
   ['feed', '👥', 'Grupos', 'Turmas e grupos de estudo']
 ];
 
@@ -9162,7 +9173,6 @@ function mostrarComunidade() {
   desenharSubabas();
   if (abaComunidade === 'salas') return desenharSalas();
   if (abaComunidade === 'perguntas') return perguntaAberta ? abrirPergunta(perguntaAberta) : desenharPerguntas();
-  if (abaComunidade === 'redacoes') return desenharRedacoes();
   desenharAgora();
 }
 
@@ -10022,77 +10032,121 @@ const SITUACAO_REDACAO = {
   discrepante: ['⚖️ Indo para a 3ª correção', 'As duas correções ficaram muito diferentes. Como no ENEM, uma terceira pessoa corrige e a nota final é a média dela com a mais próxima.'],
   corrigida: ['✅ Corrigida', 'Nota final: média das correções, como no ENEM.']
 };
-let telaRedacoes = { modo: 'painel' };   // painel | escrever | ver (id) | corrigir
-let correcaoAtual = null;                // { redacao, notas, comentarios, anulada, pulados }
+let telaRedacoes = { modo: 'menu' };   // menu | temas | escrever | ver (id) | formas | corrigir | estatisticas | treinar
+let correcaoAtual = null;               // { redacao, notas, comentarios, anulada, pulados }
 
-function abrirRedacao(id) { telaRedacoes = { modo: 'ver', id }; abrirComunidade('redacoes'); }
+// A redação mora só na aba Redação: um menu 2x2 e cada quadrado abre a sua parte.
+const alvoRedacao = () => document.getElementById('conteudo-redacao');
+const redacaoNaTela = () => !document.getElementById('tela-redacao').classList.contains('escondido');
+function abrirRedacoes(modo = 'menu', extra = {}) { telaRedacoes = { modo, ...extra }; irPara('redacao'); }
+function abrirRedacao(id) { abrirRedacoes('ver', { id }); }
 
 function desenharRedacoes() {
-  const alvo = document.getElementById('conteudo-comunidade');
-  if (!usuarioLogado) { alvo.innerHTML = htmlConvite('Crie sua conta para mandar sua redação para a comunidade corrigir e ganhar XP corrigindo as dos outros.'); return; }
-  if (telaRedacoes.modo === 'escrever') return desenharEscreverRedacao();
-  if (telaRedacoes.modo === 'ver') return desenharRedacaoCorrigida(telaRedacoes.id);
-  if (telaRedacoes.modo === 'corrigir') return desenharCorrecao();
-  return desenharPainelRedacoes();
+  const modo = telaRedacoes.modo;
+  if (modo === 'menu') return desenharMenuRedacao();
+  if (modo === 'temas') return desenharTemasRedacao();
+  if (modo === 'treinar') return desenharTemasParaTreinar();
+  if (!usuarioLogado) { alvoRedacao().innerHTML = voltarRedacoes() + htmlConvite('Crie sua conta para mandar sua redação para correção e ganhar XP corrigindo as dos outros.'); return; }
+  if (modo === 'escrever') return desenharEscreverRedacao();
+  if (modo === 'ver') return desenharRedacaoCorrigida(telaRedacoes.id);
+  if (modo === 'formas') return desenharFormasDeCorrecao();
+  if (modo === 'corrigir') return desenharCorrecao();
+  return desenharEstatisticasRedacao();
 }
 
-const voltarRedacoes = () => `<button class="link-bloco" onclick="telaRedacoes = { modo: 'painel' }; desenharRedacoes()">← Redações</button>`;
+const voltarRedacoes = () => `<button class="link-bloco" onclick="abrirRedacoes()">← Redação</button>`;
 
-async function desenharPainelRedacoes() {
-  const alvo = document.getElementById('conteudo-comunidade');
-  alvo.innerHTML = '<div class="vazio">Carregando…</div>';
-  let d;
-  try { d = await api('/api/redacoes/painel'); } catch (e) { alvo.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
-  if (abaComunidade !== 'redacoes' || telaRedacoes.modo !== 'painel') return;
-  // A fila de correção continua aqui: sem quem corrija, ninguém recebe nota.
-  alvo.innerHTML = `<div class="opcoes-redacao" style="margin-bottom:18px">${htmlOpcoesRedacao(false)}</div>
-    ${d.pode_enviar ? '' : `<p class="aviso-redacao" style="margin:0 0 14px">${escapar(d.motivo)}</p>`}
-    <div class="faixa-corrigir painel">
-      <span><b>🧑‍🏫 Corrigir redações</b><small>${d.na_fila ? `${plural(d.na_fila, 'redação esperando', 'redações esperando')} · ` : ''}+15 XP por correção. Cada correção libera mais um envio seu.</small></span>
-      ${d.na_fila ? `<button class="acao" onclick="comecarCorrecao()">Corrigir agora</button>` : '<small class="pista" style="margin:0">Nenhuma esperando agora</small>'}
-    </div>
-    ${d.correcoes ? `<p class="pista" style="margin:-4px 0 14px">Você já corrigiu ${plural(d.correcoes, 'redação', 'redações')}${d.uteis ? ` e ${plural(d.uteis, 'foi marcada', 'foram marcadas')} como útil 👍` : ''}.</p>` : ''}
-    <div class="rotulo-galeria">Suas redações</div>
-    ${d.minhas.length ? `<div class="lista-redacoes">${d.minhas.map(r => `<button class="cartao-redacao" onclick="abrirRedacao(${r.id})">
-        <span class="nota-redacao${r.situacao === 'corrigida' ? '' : ' previa'}">${r.nota === null ? '—' : r.nota}<small>${r.situacao === 'corrigida' ? 'nota' : r.nota === null ? '' : 'prévia'}</small></span>
-        <span><b>${escapar(r.tema)}</b><small>${SITUACAO_REDACAO[r.situacao][0]} · ${new Date(r.created_at).toLocaleDateString('pt-BR')}${r.oculto ? ' · escondida por denúncias' : ''}</small></span>
-      </button>`).join('')}</div>`
-      : '<div class="vazio"><span class="cara">📝</span>Você ainda não mandou nenhuma redação. Dica: a do simulado também pode ir para a comunidade corrigir.</div>'}`;
+function desenharMenuRedacao() {
+  const quadrado = (modo, icone, nome, sobre) => `<button class="quadrado-redacao" onclick="abrirRedacoes('${modo}')">
+      <span class="icone">${icone}</span><b>${nome}</b><small>${sobre}</small></button>`;
+  alvoRedacao().innerHTML = `<div class="menu-redacao">
+      ${quadrado('temas', '✍️', 'Anos anteriores', 'Escreva sobre os temas do ENEM')}
+      ${quadrado('formas', '🧑‍🏫', 'Correção', 'Comunidade, professores ou IA')}
+      ${quadrado('estatisticas', '📊', 'Estatísticas', 'Suas notas e correções')}
+      ${quadrado('treinar', '🔭', 'Temas para treinar', 'Em breve')}
+    </div>`;
 }
 
-// ---------- aba Redação: temas do ENEM e temas para treinar ----------
-function desenharTelaRedacao() {
-  document.getElementById('opcoes-redacao').innerHTML = htmlOpcoesRedacao(true);
-}
-
-// Os dois cartões (Temas do ENEM e Temas para treinar): na aba Redação e no
-// alto das Redações da Comunidade. Na Comunidade não precisa do atalho de volta.
-function htmlOpcoesRedacao(comAtalho) {
+function desenharTemasRedacao() {
   const anos = Object.keys(TEMAS_REDACAO).sort((a, b) => b - a);
-  return `
-    <section class="opcao-redacao">
+  alvoRedacao().innerHTML = `${voltarRedacoes()}
+    <section class="opcao-redacao" style="margin-top:12px">
       <h2>✍️ Temas do ENEM</h2>
-      <p>Escolha um ano, escreva a redação e mande para a comunidade corrigir nas 5 competências.
-        A nota vai de 0 a 1000, como no ENEM. A redação não usa TRI: a nota é a soma das competências.</p>
-      <div class="lista-temas" id="lista-temas">${anos.map((a, i) => `<button class="tema-ano${i >= 4 ? ' escondido' : ''}" onclick="escreverTemaDoAno('${a}')">
+      <p>Escolha um ano e escreva. A nota vai de 0 a 1000, como no ENEM: é a soma das 5 competências (a redação não usa TRI).</p>
+      <div class="lista-temas">${anos.map(a => `<button class="tema-ano" onclick="escreverTemaDoAno('${a}')">
         <span class="ano">${a}</span><span>${escapar(TEMAS_REDACAO[a])}</span></button>`).join('')}</div>
-      <button class="link-bloco" style="margin-top:10px" onclick="document.querySelectorAll('#lista-temas .escondido').forEach(t => t.classList.remove('escondido')); this.remove()">Ver todos os ${anos.length} anos</button><br>
-      ${comAtalho ? `<button class="acao secundaria" style="margin:14px 0 0" onclick="trocarAbaComunidade('redacoes')">Minhas redações e corrigir as dos outros</button>` : ''}
-    </section>
-    <section class="opcao-redacao">
+    </section>`;
+}
+
+function desenharTemasParaTreinar() {
+  alvoRedacao().innerHTML = `${voltarRedacoes()}
+    <section class="opcao-redacao" style="margin-top:12px">
       <h2>🔭 Temas para treinar <span class="selo-breve">Em breve</span></h2>
       <p>Um ranking de assuntos com mais chance de cair, montado com matemática a partir dos temas
         dos anos anteriores e da agenda do governo. Serve para escolher o que treinar, não para adivinhar o tema.</p>
     </section>`;
 }
 
+// Correção: pela comunidade (já funciona) e, em breve, por professores e por IA.
+async function desenharFormasDeCorrecao() {
+  const alvo = alvoRedacao();
+  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
+  let d;
+  try { d = await api('/api/redacoes/painel'); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'formas') return;
+  alvo.innerHTML = `${voltarRedacoes()}
+    <div class="formas-correcao">
+      <section class="opcao-redacao">
+        <h2>👥 Pela comunidade</h2>
+        <p>Duas pessoas corrigem a sua redação nas 5 competências, sem saber quem escreveu. Cada correção que você faz libera mais um envio seu (+15 XP).</p>
+        ${d.pode_enviar ? '' : `<p class="aviso-redacao">${escapar(d.motivo)}</p>`}
+        <div class="botoes-forma">
+          <button class="acao" onclick="abrirRedacoes('temas')">Mandar uma redação</button>
+          ${d.na_fila ? `<button class="acao secundaria" onclick="comecarCorrecao()">Corrigir as dos outros (${d.na_fila})</button>`
+            : '<small class="pista" style="margin:0">Nenhuma redação esperando correção agora.</small>'}
+        </div>
+      </section>
+      <section class="opcao-redacao">
+        <h2>🎓 Por professores <span class="selo-breve">Em breve</span></h2>
+        <p>Professores parceiros corrigindo com comentários.</p>
+      </section>
+      <section class="opcao-redacao">
+        <h2>🤖 Por IA <span class="selo-breve">Em breve</span></h2>
+        <p>Uma primeira leitura na hora, com dicas por competência.</p>
+      </section>
+    </div>`;
+}
+
+async function desenharEstatisticasRedacao() {
+  const alvo = alvoRedacao();
+  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
+  let d;
+  try { d = await api('/api/redacoes/painel'); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'estatisticas') return;
+  const notas = d.minhas.filter(r => r.situacao === 'corrigida' && r.nota !== null).map(r => r.nota);
+  const numero = (valor, nome) => `<div class="numero-redacao"><b>${valor}</b><small>${nome}</small></div>`;
+  alvo.innerHTML = `${voltarRedacoes()}
+    <div class="numeros-redacao">
+      ${numero(d.minhas.length, d.minhas.length === 1 ? 'redação enviada' : 'redações enviadas')}
+      ${numero(notas.length ? Math.max(...notas) : '—', 'melhor nota')}
+      ${numero(notas.length ? Math.round(notas.reduce((t, n) => t + n, 0) / notas.length) : '—', 'nota média')}
+      ${numero(d.correcoes || 0, d.correcoes === 1 ? 'correção feita' : 'correções feitas')}
+    </div>
+    ${d.uteis ? `<p class="pista" style="margin:0 0 14px">${plural(d.uteis, 'correção sua foi marcada', 'correções suas foram marcadas')} como útil 👍</p>` : ''}
+    <div class="rotulo-galeria">Suas redações</div>
+    ${d.minhas.length ? `<div class="lista-redacoes">${d.minhas.map(r => `<button class="cartao-redacao" onclick="abrirRedacao(${r.id})">
+        <span class="nota-redacao${r.situacao === 'corrigida' ? '' : ' previa'}">${r.nota === null ? '—' : r.nota}<small>${r.situacao === 'corrigida' ? 'nota' : r.nota === null ? '' : 'prévia'}</small></span>
+        <span><b>${escapar(r.tema)}</b><small>${SITUACAO_REDACAO[r.situacao][0]} · ${new Date(r.created_at).toLocaleDateString('pt-BR')}${r.oculto ? ' · escondida por denúncias' : ''}</small></span>
+      </button>`).join('')}</div>`
+      : '<div class="vazio"><span class="cara">📝</span>Você ainda não mandou nenhuma redação. Dica: a do simulado também pode ir para correção.</div>'}`;
+}
+
 function escreverTemaDoAno(ano) {
-  telaRedacoes = { modo: 'escrever', tema: TEMAS_REDACAO[ano] };
-  abrirComunidade('redacoes');
+  abrirRedacoes('escrever', { tema: TEMAS_REDACAO[ano] });
 }
 
 function desenharEscreverRedacao() {
-  const alvo = document.getElementById('conteudo-comunidade');
+  const alvo = alvoRedacao();
   const anos = Object.keys(TEMAS_REDACAO).sort((a, b) => b - a);
   const escolhido = telaRedacoes.tema || TEMAS_REDACAO[anos[0]];
   alvo.innerHTML = `${voltarRedacoes()}
@@ -10138,11 +10192,11 @@ function enviarRedacaoDoSimulado() {
 }
 
 async function desenharRedacaoCorrigida(id) {
-  const alvo = document.getElementById('conteudo-comunidade');
+  const alvo = alvoRedacao();
   alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
   let d;
   try { d = await api(`/api/redacoes/${id}`); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
-  if (abaComunidade !== 'redacoes' || telaRedacoes.id !== id) return;
+  if (!redacaoNaTela() || telaRedacoes.id !== id) return;
   const { redacao: r, resultado: res } = d;
   const [rotulo, explicacao] = SITUACAO_REDACAO[res.situacao];
   alvo.innerHTML = `${voltarRedacoes()}
@@ -10201,25 +10255,25 @@ async function denunciarCorrecao(id) {
 async function apagarRedacao(id) {
   if (!await confirmar('Apagar esta redação e as correções dela?', { sim: 'Apagar', perigo: true })) return;
   try { await api(`/api/redacoes/${id}`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
-  telaRedacoes = { modo: 'painel' };
+  telaRedacoes = { modo: 'estatisticas' };
   desenharRedacoes();
 }
 
 // ---------- corrigir ----------
 async function comecarCorrecao(pulados = []) {
   telaRedacoes = { modo: 'corrigir' };
-  const alvo = document.getElementById('conteudo-comunidade');
+  const alvo = alvoRedacao();
   alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Buscando uma redação…</div>`;
   let d;
   try { d = await api(`/api/redacoes/fila${pulados.length ? '?pular=' + pulados.join(',') : ''}`); }
   catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
-  if (telaRedacoes.modo !== 'corrigir') return;
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'corrigir') return;
   correcaoAtual = d.redacao ? { redacao: d.redacao, notas: [null, null, null, null, null], comentarios: ['', '', '', '', ''], anulada: null, pulados, restam: d.na_fila } : null;
   desenharCorrecao();
 }
 
 function desenharCorrecao() {
-  const alvo = document.getElementById('conteudo-comunidade');
+  const alvo = alvoRedacao();
   const c = correcaoAtual;
   if (!c) {
     alvo.innerHTML = `${voltarRedacoes()}<div class="vazio"><span class="cara">🎉</span>Não tem mais redação esperando correção agora. Obrigado por ajudar!</div>`;
@@ -11378,7 +11432,7 @@ function abrirPeloLink(abrir) {
   if (tipo === 'pergunta' && id) return abrirPergunta(id);
   if (tipo === 'questao' && id) return abrirDiscussao(id);
   if (tipo === 'redacao' && id) return abrirRedacao(id);
-  if (tipo === 'redacoes') { telaRedacoes = { modo: 'painel' }; return abrirComunidade('redacoes'); }
+  if (tipo === 'redacoes') return abrirRedacoes('estatisticas');
   if (tipo === 'sala' && valor) return entrarNaSala(valor);
   if (tipo === 'salas') return abrirComunidade('salas');
   if (tipo === 'comunidade') return abrirComunidade('agora');
