@@ -2254,6 +2254,7 @@
     .colecao button.convite { box-shadow: inset 0 0 0 1px #3fae6a; }
     .resolucao { margin: 12px 0; border: 1px solid var(--borda); border-radius: 12px; padding: 10px 14px; background: var(--superficie); }
     .resolucao summary { cursor: pointer; font-weight: 700; }
+    .explicacao-ia { border-color: var(--marca); }
     .resolucao .enunciado { margin: 10px 0; }
     .form-serie textarea { width: 100%; }
     .item-revisao { border: 1px solid var(--borda); border-radius: 12px; padding: 10px 12px; margin: 8px 0; }
@@ -4809,11 +4810,11 @@ function responder(escolhida) {
     </div>`;
 
   document.getElementById('area-resultado').scrollIntoView({ behavior: 'smooth', block: 'center' });
-  carregarResolucao(q.id);
+  carregarResolucao(q.id, acertou ? null : escolhida);
 }
 
 // ---------- resolução comentada (aparece depois de responder) ----------
-async function carregarResolucao(id) {
+async function carregarResolucao(id, marcada = null) {
   const alvo = document.getElementById('resolucao-questao');
   if (!alvo) return;
   let r = null;
@@ -4824,8 +4825,35 @@ async function carregarResolucao(id) {
       <div class="enunciado">${formatarEnunciado(r.texto)}</div>
       ${admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Editar resolução</button>` : ''}</details>`
     : admin ? `<button class="acao discreta pequena" onclick="editarResolucao(${id})">✏️ Escrever resolução comentada</button>` : '';
+  // Sem resolução da equipe: a IA explica (uma vez por questão, guardada para todos).
+  if (!r && iaExplicacaoLigada) {
+    alvo.insertAdjacentHTML('afterbegin', `<div id="explicacao-ia"><button class="acao secundaria pequena" onclick="pedirExplicacao(${id}, ${marcada === null ? 'null' : marcada})">
+      ${marcada === null ? '🤖 Entender a questão' : '🤖 Por que errei?'}</button></div>`);
+  }
   alvo.insertAdjacentHTML('beforeend', linkVideoDaQuestao(questaoAtual));
   alvo.dataset.texto = r ? r.texto : '';
+}
+
+async function pedirExplicacao(id, marcada) {
+  const caixa = document.getElementById('explicacao-ia');
+  if (!caixa) return;
+  caixa.innerHTML = '<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está pensando… leva alguns segundos.</p>';
+  let texto;
+  try { texto = (await postar(`/api/questoes/${id}/explicacao`)).explicacao; }
+  catch (e) {
+    caixa.innerHTML = `<p class="pista">${escapar(e.daApi || SEM_SERVIDOR)}</p>
+      <button class="acao discreta pequena" onclick="pedirExplicacao(${id}, ${marcada === null ? 'null' : marcada})">Tentar de novo</button>`;
+    return;
+  }
+  if (questaoAtual && questaoAtual.id !== id) return;
+  const admin = usuarioLogado && usuarioLogado.admin;
+  caixa.dataset.texto = texto;
+  caixa.innerHTML = `<div class="resolucao explicacao-ia">
+      <b>🤖 Explicação da IA</b>${marcada !== null ? ` <small class="pista">Você marcou ${LETRAS[marcada]}.</small>` : ''}
+      <div class="enunciado">${formatarEnunciado(texto)}</div>
+      <small class="pista">Gerada por IA: pode conter erros. Achou um erro? Comente na discussão da questão.</small>
+      ${admin ? `<button class="acao discreta pequena" style="margin-top:8px" onclick="editarResolucao(${id}, document.getElementById('explicacao-ia').dataset.texto)">✏️ Revisar e virar resolução</button>` : ''}
+    </div>`;
 }
 
 // Toda questão ganha um vídeo de explicação: a busca do YouTube já abre na
@@ -6133,7 +6161,8 @@ async function concluirEntrada(dados, mensagem) {
 // O botão só aparece se o servidor tiver GOOGLE_CLIENT_ID. O script do Google
 // é carregado só nesse caso, para não chamar o Google à toa.
 let googleLigado = false;
-let iaRedacaoLigada = false; // o servidor diz se a correção por IA está disponível
+let iaRedacaoLigada = false;    // o servidor diz se a correção de redação por IA está disponível
+let iaExplicacaoLigada = false; // e se o "Por que errei?" está
 
 async function carregarGoogle() {
   let clientId;
@@ -6142,6 +6171,7 @@ async function carregarGoogle() {
     const config = await r.json();
     clientId = config.google_client_id;
     iaRedacaoLigada = Boolean(config.ia_redacao);
+    iaExplicacaoLigada = Boolean(config.ia_explicacao);
   } catch (e) { return; }
   if (!clientId) return;
 

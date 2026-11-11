@@ -544,6 +544,16 @@ async function runMigrations() {
       ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_anulada VARCHAR(200);
       ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_em TIMESTAMP;
     `);
+    // "Por que errei?": explicação da IA, gerada uma vez por questão e reaproveitada.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS explicacoes_ia (
+        questao_id INT PRIMARY KEY REFERENCES questoes(id) ON DELETE CASCADE,
+        texto TEXT NOT NULL,
+        modelo VARCHAR(60),
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_explicacoes_ia_data ON explicacoes_ia(created_at);
+    `);
     console.log('✅ Tabelas das redações criadas');
 
     // Imagens das questões cadastradas à mão pela Administração (as que a

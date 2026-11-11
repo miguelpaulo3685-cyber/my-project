@@ -499,7 +499,7 @@ app.delete('/api/conta', exigirLogin, async (req, res) => {
 // Configurações públicas que o site precisa saber ao abrir. O client ID do
 // Google não é segredo: ele aparece na página de qualquer site com o botão.
 app.get('/api/config', (req, res) => {
-  res.json({ google_client_id: process.env.GOOGLE_CLIENT_ID || null, ia_redacao: require('./correcao-ia').ligada() });
+  res.json({ google_client_id: process.env.GOOGLE_CLIENT_ID || null, ia_redacao: require('./correcao-ia').ligada(), ia_explicacao: require('./explicacao-ia').ligada() });
 });
 
 // ================== HEALTH CHECK ==================
@@ -1235,6 +1235,7 @@ require('./avisos')(app, { pool, auth, limitar, exigirLogin });
 require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 require('./crescimento')(app, { pool, exigirModerador });
 require('./resolucoes')(app, { pool, exigirModerador });
+require('./explicacao-ia')(app, { pool, auth });
 require('./erros').registrarRotasDeErros(app, { pool, vigia: vigiaDeErros, limitar, auth, exigirModerador });
 require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigirModerador });
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
