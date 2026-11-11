@@ -1242,7 +1242,11 @@ require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigi
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });
-require('./estatisticas-redacao')(app);
+require('./estatisticas-redacao')(app, { pool });
+// De hora em hora: as últimas notícias da Agência Brasil, contadas por eixo da redação.
+const buscarNoticias = () => require('./noticias-redacao').atualizarNoticias(pool)
+  .catch(erro => console.error('Erro ao buscar notícias para a redação:', erro.message));
+cron.schedule('17 * * * *', buscarNoticias);
 require('./redacoes')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== ADMINISTRAÇÃO ==================
@@ -1544,6 +1548,7 @@ const server = app.listen(PORT, () => {
   const buscarCanais = () => canais.seguirCanaisIniciais(pool).then(() => canais.buscarNovos(pool))
     .catch(err => console.error('❌ Erro nos canais automáticos:', err.message));
   setTimeout(buscarCanais, 60 * 1000).unref();
+  setTimeout(buscarNoticias, 90 * 1000).unref();
   setInterval(buscarCanais, canais.INTERVALO).unref();
 });
 

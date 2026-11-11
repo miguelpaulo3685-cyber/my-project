@@ -138,9 +138,18 @@ function estatisticas(temas = TEMAS) {
   };
 }
 
-function registrarEstatisticasDaRedacao(app) {
+function registrarEstatisticasDaRedacao(app, { pool } = {}) {
   const pronto = estatisticas(); // os dados só mudam quando sai um tema novo
-  app.get('/api/redacoes/estatisticas', (req, res) => res.json(pronto));
+  const noticias = require('./noticias-redacao');
+  let guardado = { em: 0, resumo: null }; // o resumo das notícias é refeito no máximo de hora em hora
+  app.get('/api/redacoes/estatisticas', async (req, res) => {
+    if (pool && Date.now() - guardado.em > 60 * 60 * 1000) {
+      guardado = { em: Date.now(), resumo: guardado.resumo };
+      try { guardado.resumo = await noticias.resumoDasNoticias(pool, EIXOS); }
+      catch (erro) { console.error('Erro no resumo das notícias:', erro.message); }
+    }
+    res.json({ ...pronto, noticias: guardado.resumo });
+  });
 }
 
 module.exports = registrarEstatisticasDaRedacao;

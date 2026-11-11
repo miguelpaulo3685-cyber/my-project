@@ -1644,6 +1644,7 @@
     .eixo > i { display: block; height: 8px; border-radius: 999px; background: var(--marca-suave); margin: 6px 0 4px; overflow: hidden; }
     .eixo > i em { display: block; height: 100%; border-radius: 999px; background: var(--marca); }
     .eixo small { display: block; color: var(--texto-fraco); font-size: .8rem; line-height: 1.45; }
+    .eixo small a { color: inherit; }
     .lista-historico { display: grid; gap: 8px; margin-top: 10px; font-size: .88rem; }
     .lista-historico div { display: grid; grid-template-columns: 44px 1fr; gap: 8px; }
     .lista-historico small { display: block; color: var(--texto-fraco); font-size: .78rem; }
@@ -6643,6 +6644,7 @@ const AVISOS_SIM = [60, 30, 15, 5]; // minutos restantes em que o fiscal avisa
 
 // Temas da redação de cada ENEM (aplicação regular, prova impressa).
 const TEMAS_REDACAO = {
+  2026: 'A valorização do Sistema Único de Saúde (SUS) como direito universal',
   2025: 'Perspectivas acerca do envelhecimento na sociedade brasileira',
   2024: 'Desafios para a valorização da herança africana no Brasil',
   2023: 'Desafios para o enfrentamento da invisibilidade do trabalho de cuidado realizado pela mulher no Brasil',
@@ -10179,6 +10181,7 @@ async function desenharTemasParaTreinar() {
   try { d = await api('/api/redacoes/estatisticas'); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
   if (!redacaoNaTela() || telaRedacoes.modo !== 'treinar') return;
   const maior = d.ranking[0].chance;
+  const nasNoticias = d.noticias ? Object.fromEntries(d.noticias.eixos.map(n => [n.eixo, n])) : {};
   alvo.innerHTML = `${voltarRedacoes()}
     <section class="opcao-redacao" style="margin-top:12px">
       <h2>${iconeRedacao('estatisticas')} O que treinar para o ENEM ${d.alvo}</h2>
@@ -10189,6 +10192,7 @@ async function desenharTemasParaTreinar() {
           <i><em style="width:${Math.round(r.chance / maior * 100)}%"></em></i>
           <small>Caiu ${plural(r.vezes, 'vez', 'vezes')} · última em ${r.ultima}</small>
           ${i < 3 ? `<small>Para treinar: ${r.assuntos.map(escapar).join(' · ')}</small>` : ''}
+          ${nasNoticias[r.eixo] && nasNoticias[r.eixo].exemplo ? `<small>Nas notícias: ${nasNoticias[r.eixo].parte}% · <a href="${escapar(nasNoticias[r.eixo].exemplo.link)}" target="_blank" rel="noopener">${escapar(nasNoticias[r.eixo].exemplo.titulo)}</a></small>` : ''}
         </div>`).join('')}</div>
       <p class="aviso-redacao"><b>Dá para confiar?</b> Testamos a conta nos últimos ${d.teste.total} anos, usando só os temas anteriores a cada um:
         o eixo que caiu ficou entre os 3 primeiros em <b>${d.teste.top3} de ${d.teste.total}</b> (chutando, seriam uns ${d.teste.ao_acaso}).
@@ -10196,6 +10200,8 @@ async function desenharTemasParaTreinar() {
       <details class="resolucao" style="margin-top:12px"><summary>Ver todos os temas e eixos</summary>
         <div class="lista-historico">${d.historico.map(h => `<div><b>${h.ano}</b><span>${escapar(h.tema)}<small>${escapar(h.eixo)}</small></span></div>`).join('')}</div>
       </details>
+      ${d.noticias ? `<p class="pista" style="margin-top:10px">"Nas notícias" é a parte de cada eixo em ${d.noticias.total} notícias da Agência Brasil
+        (a agência do governo federal) nos últimos ${d.noticias.dias} dias, lidas sozinhas pelo site. É um sinal a mais e não entra na conta das chances.</p>` : ''}
       <p class="pista" style="margin-top:10px">Como é a conta: ${escapar(d.teste.como)}. Os assuntos "para treinar" são sugestões da equipe, não estatística.</p>
     </section>`;
 }

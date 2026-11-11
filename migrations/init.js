@@ -750,6 +750,16 @@ async function runMigrations() {
       );
     `);
 
+    // Notícias da Agência Brasil por eixo da redação (noticias-redacao.js): só título, link e eixo.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS noticias_redacao (
+        link VARCHAR(500) PRIMARY KEY,
+        titulo VARCHAR(300) NOT NULL,
+        eixo VARCHAR(20),
+        publicada_em TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_noticias_redacao_data ON noticias_redacao (publicada_em);
+    `);
     // Canais do YouTube que o servidor confere sozinho atrás de Shorts novos (canais.js).
     await pool.query(`
       CREATE TABLE IF NOT EXISTS reels_canais (

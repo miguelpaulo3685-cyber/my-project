@@ -129,8 +129,11 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 4. **Estatísticas da redação** — feito em 12/11 (`estatisticas-redacao.js`): os temas de 1998 a 2026 em 8 eixos,
    chance de cada eixo para o próximo ENEM e teste nos últimos 10 anos (o eixo certo ficou entre os 3 primeiros
    em 5 de 10; ao acaso seriam uns 4, e o site diz isso). Quando sair um tema novo, é só acrescentar a linha
-   em `TEMAS`. Ideia para depois: um robô semanal que lê as notícias de gov.br (MEC, INEP, Planalto) e conta
-   os assuntos por eixo (o Instagram não deixa ler sozinho). Falta pôr o tema de 2026 (SUS) em "Anos anteriores".
+   em `TEMAS`. "Nas notícias" (`noticias-redacao.js`, 12/11): de hora em hora o servidor lê o feed
+   da Agência Brasil (agência do governo federal; sem chave), classifica os títulos por palavras-chave e mostra
+   a parte de cada eixo nos últimos 30 dias (só aparece com 40 notícias classificadas, uns 4 a 5 dias). Não
+   entra na conta das chances. Instagram e gov.br bloqueiam robôs, por isso a Agência Brasil. As palavras-chave
+   ficam em `PALAVRAS`. O tema de 2026 (SUS) já está em "Anos anteriores", sem os textos motivadores.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
