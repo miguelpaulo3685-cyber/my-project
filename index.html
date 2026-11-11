@@ -1551,6 +1551,10 @@
       .quadrado-redacao small { font-size: .95rem; }
     }
     .formas-correcao { display: grid; gap: 14px; margin-top: 12px; }
+    .correcao-ia { margin: 12px 0 16px; border-color: var(--marca); }
+    .correcao-ia .titulo-bloco b { display: flex; align-items: center; gap: 10px; }
+    .correcao-ia .topo-resultado { margin: 6px 0 12px; }
+    .ia-carregando { display: flex; align-items: center; gap: 10px; color: var(--texto-fraco); margin: 4px 0; }
     .botoes-forma { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .botoes-forma .acao { margin: 0; }
     .numeros-redacao { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 12px 0 16px; }
@@ -6129,12 +6133,15 @@ async function concluirEntrada(dados, mensagem) {
 // O botão só aparece se o servidor tiver GOOGLE_CLIENT_ID. O script do Google
 // é carregado só nesse caso, para não chamar o Google à toa.
 let googleLigado = false;
+let iaRedacaoLigada = false; // o servidor diz se a correção por IA está disponível
 
 async function carregarGoogle() {
   let clientId;
   try {
     const r = await fetch(`${API_URL}/api/config`);
-    clientId = (await r.json()).google_client_id;
+    const config = await r.json();
+    clientId = config.google_client_id;
+    iaRedacaoLigada = Boolean(config.ia_redacao);
   } catch (e) { return; }
   if (!clientId) return;
 
@@ -10135,8 +10142,10 @@ async function desenharFormasDeCorrecao() {
         <p>Professores parceiros corrigindo com comentários.</p>
       </section>
       <section class="opcao-redacao">
-        <h2>${iconeRedacao('ia')} Por IA <span class="selo-breve">Em breve</span></h2>
-        <p>Uma primeira leitura na hora, com dicas por competência.</p>
+        <h2>${iconeRedacao('ia')} Por IA ${iaRedacaoLigada ? '' : '<span class="selo-breve">Em breve</span>'}</h2>
+        <p>${iaRedacaoLigada ? 'Automática: toda redação que você manda recebe uma correção da IA nas 5 competências em cerca de 1 minuto (até 3 por dia). É uma estimativa para treinar, não a nota oficial.'
+          : 'Uma primeira leitura na hora, com dicas por competência.'}</p>
+        ${iaRedacaoLigada ? `<div class="botoes-forma"><button class="acao" onclick="abrirRedacoes('temas')">Escrever e corrigir com IA</button></div>` : ''}
       </section>
     </div>`;
 }
@@ -10202,7 +10211,8 @@ async function enviarRedacao(evento, dados) {
   if (botao) botao.disabled = true;
   try {
     const d = await postar('/api/redacoes', dados);
-    mostrarXp('Redação na fila! Você recebe um aviso a cada correção ✍️');
+    mostrarXp(d.ia === 'corrigindo' ? 'Redação enviada! A IA já está corrigindo ✍️' : 'Redação na fila! Você recebe um aviso a cada correção ✍️');
+    if (d.ia === 'limite') avisoSim('Você já usou as correções por IA de hoje. A comunidade corrige esta, e amanhã tem mais IA!');
     abrirRedacao(d.id);
     oferecerAvisos('Quando sua redação for corrigida, você fica sabendo.');
   } catch (e) {
@@ -10216,15 +10226,20 @@ function enviarRedacaoDoSimulado() {
   enviarRedacao(null, { tema: sim.redacao.tema, texto: sim.redacao.texto, origem: 'simulado' });
 }
 
-async function desenharRedacaoCorrigida(id) {
+let relogioIa = null;
+async function desenharRedacaoCorrigida(id, silencioso) {
+  clearTimeout(relogioIa);
   const alvo = alvoRedacao();
-  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
+  if (!silencioso) alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
   let d;
-  try { d = await api(`/api/redacoes/${id}`); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
-  if (!redacaoNaTela() || telaRedacoes.id !== id) return;
+  try { d = await api(`/api/redacoes/${id}`); } catch (e) { if (!silencioso) alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'ver' || telaRedacoes.id !== id) return;
+  // Enquanto a IA corrige, pergunta de novo a cada 5 segundos.
+  if (d.ia && d.ia.status === 'corrigindo') relogioIa = setTimeout(() => desenharRedacaoCorrigida(id, true), 5000);
   const { redacao: r, resultado: res } = d;
   const [rotulo, explicacao] = SITUACAO_REDACAO[res.situacao];
   alvo.innerHTML = `${voltarRedacoes()}
+    ${htmlCorrecaoIa(d, r)}
     <div class="redacao-aberta">
       <section class="painel resultado-redacao">
         <div class="topo-resultado"><span class="nota-grande">${res.nota === null ? '—' : res.nota}</span>
@@ -10244,6 +10259,37 @@ async function desenharRedacaoCorrigida(id) {
     <div class="rotulo-galeria" style="margin-top:22px">${d.correcoes.length ? plural(d.correcoes.length, 'correção', 'correções') : 'Nenhuma correção ainda'}</div>
     ${d.correcoes.map((c, n) => htmlCorrecao(c, n, r.minha, res.situacao === 'corrigida' && d.correcoes.filter(x => !x.oculto).length === 3
       && !c.oculto && !res.usadas.includes(d.correcoes.filter(x => !x.oculto).indexOf(c)))).join('')}`;
+}
+
+// Correção da IA: aparece em cima, separada da nota da comunidade.
+function htmlCorrecaoIa(d, r) {
+  const ia = d.ia;
+  const cabeca = `<div class="titulo-bloco"><b>${iconeRedacao('ia')} Correção da IA</b></div>`;
+  if (!ia) {
+    return d.ia_ligada && r.minha ? `<section class="painel correcao-ia">${cabeca}
+      <p class="pista">Esta redação ainda não foi corrigida pela IA.</p>
+      <button class="acao" onclick="pedirCorrecaoIa(${r.id})">Corrigir com IA</button></section>` : '';
+  }
+  if (ia.status === 'corrigindo') {
+    return `<section class="painel correcao-ia">${cabeca}<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está lendo sua redação… leva cerca de 1 minuto.</p></section>`;
+  }
+  if (ia.status !== 'pronta') {
+    return `<section class="painel correcao-ia">${cabeca}<p class="pista">Não deu certo desta vez.</p>
+      ${r.minha ? `<button class="acao secundaria" onclick="pedirCorrecaoIa(${r.id})">Tentar de novo</button>` : ''}</section>`;
+  }
+  return `<section class="painel correcao-ia">${cabeca}
+    <div class="topo-resultado"><span class="nota-grande">${ia.total}</span>
+      <div><b>Nota estimada pela IA</b><small>Serve para treinar: a IA pode errar, e a nota oficial só a banca do ENEM dá.</small></div></div>
+    ${ia.anulada ? `<p class="aviso-redacao">Nota zero: ${escapar(ia.anulada)}.</p>` : `<div class="notas-correcao">${COMPETENCIAS.map((comp, i) => `
+      <div><span>C${i + 1} · ${comp.nome}</span><b>${ia.notas[i]}</b>
+        ${ia.comentarios[i] ? `<p>${escapar(ia.comentarios[i])}</p>` : ''}</div>`).join('')}</div>`}
+    ${ia.geral ? `<div class="geral-correcao"><b>Comentário geral</b><p>${escapar(ia.geral)}</p></div>` : ''}
+  </section>`;
+}
+
+async function pedirCorrecaoIa(id) {
+  try { await postar(`/api/redacoes/${id}/ia`); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenharRedacaoCorrigida(id, true);
 }
 
 function htmlCorrecao(c, n, minha, foraDaMedia) {

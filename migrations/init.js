@@ -535,6 +535,15 @@ async function runMigrations() {
         PRIMARY KEY (alvo_tipo, alvo_id, usuario_id)
       );
     `);
+    // Correção por IA (opcional): fica na própria redação, separada das da comunidade.
+    await pool.query(`
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_status VARCHAR(12);
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_notas SMALLINT[];
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_comentarios JSONB;
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_geral TEXT;
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_anulada VARCHAR(200);
+      ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_em TIMESTAMP;
+    `);
     console.log('✅ Tabelas das redações criadas');
 
     // Imagens das questões cadastradas à mão pela Administração (as que a

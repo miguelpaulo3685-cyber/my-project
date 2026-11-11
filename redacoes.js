@@ -35,7 +35,43 @@ function resultadoDaRedacao(lista) {
   return { situacao: 'corrigida', faltam: 0, usadas: [pertoDeA ? 0 : 1, 2], ...media(c, pertoDeA ? a : b) };
 }
 
+const ia = require('./correcao-ia');
+
 function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
+  // ---------- correção por IA ----------
+  // Começa a correção (sem esperar): o site mostra "corrigindo…" e pergunta de novo.
+  async function pedirCorrecaoIa(redacaoId, usuarioId) {
+    if (!ia.ligada()) return null;
+    const { rows: [c] } = await pool.query(
+      `SELECT COUNT(*) FILTER (WHERE usuario_id = $1)::int AS minhas, COUNT(*)::int AS site
+         FROM redacoes WHERE ia_em > NOW() - INTERVAL '1 day'`, [usuarioId]);
+    if (c.minhas >= ia.POR_PESSOA_POR_DIA || c.site >= ia.LIMITE_DO_SITE) return 'limite';
+    await pool.query(`UPDATE redacoes SET ia_status = 'corrigindo', ia_em = NOW() WHERE id = $1`, [redacaoId]);
+    corrigirAgora(redacaoId);
+    return 'corrigindo';
+  }
+  async function corrigirAgora(redacaoId) {
+    try {
+      const r = (await pool.query('SELECT tema, texto FROM redacoes WHERE id = $1', [redacaoId])).rows[0];
+      if (!r) return;
+      const c = await ia.corrigirComIa(r);
+      await pool.query(
+        `UPDATE redacoes SET ia_status = 'pronta', ia_notas = $2, ia_comentarios = $3, ia_geral = $4, ia_anulada = $5 WHERE id = $1`,
+        [redacaoId, c.notas, JSON.stringify(c.comentarios), c.geral, c.anulada]);
+    } catch (erro) {
+      console.error(`Erro na correção por IA da redação ${redacaoId}:`, erro.message);
+      await pool.query(`UPDATE redacoes SET ia_status = 'erro' WHERE id = $1`, [redacaoId]).catch(() => {});
+    }
+  }
+  // Correção que travou (o servidor reiniciou no meio) conta como erro depois de 10 minutos.
+  const situacaoIa = r => (r.ia_status === 'corrigindo' && r.ia_em && Date.now() - new Date(r.ia_em) > 10 * 60000) ? 'erro' : r.ia_status;
+  const correcaoIaDe = r => {
+    const status = situacaoIa(r);
+    if (!status) return null;
+    if (status !== 'pronta') return { status };
+    return { status, notas: r.ia_notas, total: soma(r.ia_notas), comentarios: r.ia_comentarios || [], geral: r.ia_geral, anulada: r.ia_anulada };
+  };
+
   const porConta = req => `u${req.usuario.id}`;
   const freioEnviar = limitar(auth.criarFreio(10, 60 * 60 * 1000), 'Muitos envios agora. Espere um pouco.', porConta);
   const freioCorrigir = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Muitas correções seguidas. Respira e volta daqui a pouco 🙂', porConta);
@@ -109,7 +145,11 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       if (!s.pode_enviar) return res.status(403).json({ error: s.motivo });
       const r = await pool.query('INSERT INTO redacoes (usuario_id, tema, texto, origem) VALUES ($1, $2, $3, $4) RETURNING id',
         [req.usuario.id, tema, texto, origem]);
-      res.status(201).json({ id: r.rows[0].id });
+      const iaSituacao = await pedirCorrecaoIa(r.rows[0].id, req.usuario.id).catch(erro => {
+        console.error('Erro ao pedir correção por IA:', erro.message);
+        return null;
+      });
+      res.status(201).json({ id: r.rows[0].id, ia: iaSituacao });
     } catch (erro) {
       console.error('Erro ao enviar redação:', erro.message);
       res.status(500).json({ error: 'Não consegui enviar a redação agora.' });
@@ -133,6 +173,8 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       res.json({
         redacao: { id: r.id, tema: r.tema, texto: r.texto, origem: r.origem, created_at: r.created_at, oculto: r.oculto, minha: r.usuario_id === eu.id },
         resultado: resultadoDaRedacao(valendo.map(c => c.notas)),
+        ia: r.usuario_id === eu.id || eu.admin ? correcaoIaDe(r) : null,
+        ia_ligada: ia.ligada(),
         correcoes: rows.filter(c => !c.oculto || eu.admin).map(c => ({
           id: c.id, notas: c.notas, total: soma(c.notas), comentarios: c.comentarios, geral: c.geral, anulada: c.anulada,
           util: c.util, oculto: c.oculto, created_at: c.created_at,
@@ -142,6 +184,24 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
     } catch (erro) {
       console.error('Erro ao abrir redação:', erro.message);
       res.status(500).json({ error: 'Não consegui abrir a redação agora.' });
+    }
+  });
+
+  // Tentar de novo a correção por IA (deu erro ou ainda não tinha sido pedida).
+  app.post('/api/redacoes/:id(\\d+)/ia', exigirLogin, freioEnviar, async (req, res) => {
+    const id = idValido(req.params.id);
+    try {
+      const r = (await pool.query('SELECT usuario_id, ia_status, ia_em FROM redacoes WHERE id = $1', [id])).rows[0];
+      if (!r || r.usuario_id !== req.usuario.id) return res.status(404).json({ error: 'Redação não encontrada.' });
+      if (!ia.ligada()) return res.status(503).json({ error: 'A correção por IA não está disponível agora.' });
+      const s = situacaoIa(r);
+      if (s === 'pronta' || s === 'corrigindo') return res.json({ ia: s });
+      const pedido = await pedirCorrecaoIa(id, req.usuario.id);
+      if (pedido === 'limite') return res.status(429).json({ error: `Você já usou as ${ia.POR_PESSOA_POR_DIA} correções por IA de hoje. Amanhã tem mais!` });
+      res.json({ ia: pedido });
+    } catch (erro) {
+      console.error('Erro ao pedir correção por IA:', erro.message);
+      res.status(500).json({ error: 'Não consegui pedir a correção agora.' });
     }
   });
 
