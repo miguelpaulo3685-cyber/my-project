@@ -171,7 +171,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - [ ] Rodar no Neon o UPDATE que deixa a conta de vocês como admin.
 - [ ] Render pago (~US$ 7/mês) antes de divulgar: o grátis reinicia e as salas da Arena ficam na memória.
 - [x] Domínio mmestudos.com.br (registro.br) apontado para o GitHub Pages (11/11); SITE_URL e CORS no código.
-- [ ] Autenticar o domínio no Brevo (para o e-mail não cair no spam).
+- [x] Autenticar o domínio no Brevo (11/11): domínio autenticado, remetente `nao-responda@mmestudos.com.br`.
 - [x] Aviso automático de erros do site (e-mail e celular para os administradores; lista na Administração).
       No primeiro deploy deve chegar um alerta com os erros da api.enem.dev: é esperado, é só limpar a lista.
 
