@@ -11,6 +11,7 @@
 
 const imagens = require('./imagens');
 const { notificar } = require('./social');
+const { atividadeVisivelSql } = require('./privacidade-notas');
 const { registrarAtividade, sequenciaDe } = require('./comunidade');
 
 const CONVITES_PENDENTES = 5;
@@ -193,7 +194,7 @@ function registrarDuplas(app, { pool, auth, limitar, exigirLogin }) {
         `SELECT a.id, a.tipo, a.texto, a.alvo_id, a.created_at, u.id AS autor_id, u.username AS autor, u.foto_id
            FROM atividades a JOIN usuarios u ON u.id = a.usuario_id
           WHERE a.tipo = ANY($2::text[]) AND NOT a.oculto AND a.created_at > NOW() - INTERVAL '48 hours' AND a.usuario_id <> $1
-            AND NOT ${bloqueio('$1', 'u.id')} AND NOT (a.tipo = 'dupla' AND a.alvo_id = $1)
+            AND NOT ${bloqueio('$1', 'u.id')} AND NOT (a.tipo = 'dupla' AND a.alvo_id = $1) AND ${atividadeVisivelSql('$1', 'a', 'u')}
             AND NOT EXISTS (SELECT 1 FROM atividades_reacoes r WHERE r.atividade_id = a.id AND r.usuario_id = $1)
             AND (EXISTS (SELECT 1 FROM seguidores s WHERE s.seguidor_id = $1 AND s.seguido_id = u.id)
                  OR (u.escola_chave IS NOT NULL AND u.escola_chave = (SELECT escola_chave FROM usuarios WHERE id = $1))

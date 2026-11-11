@@ -637,6 +637,8 @@ async function runMigrations() {
       );
       ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS quem_mensagem VARCHAR(10) DEFAULT 'seguindo';
       ALTER TABLE usuarios ALTER COLUMN quem_mensagem SET DEFAULT 'seguindo';
+      -- Quem vê minhas notas (TRI na comunidade, ranking do Desafio): todos, amigos ou eu.
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS quem_ve_notas VARCHAR(10) DEFAULT 'amigos';
     `);
     // Uma vez só: quem ganhou 'todos' no período de teste passa para 'seguindo'
     // (desconhecido não puxa conversa com menor). Depois, vale o que cada um escolher.

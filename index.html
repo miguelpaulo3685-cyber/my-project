@@ -8678,11 +8678,19 @@ async function desenharPreferenciaMensagens() {
   let d;
   try { d = await api('/api/mensagens/preferencia'); } catch (e) { alvo.innerHTML = ''; return; }
   const opcoes = [['todos', 'Todo mundo'], ['seguindo', 'Só quem eu sigo'], ['ninguem', 'Ninguém']];
-  alvo.innerHTML = `<div class="rotulo-modal">Mensagens</div>
+  const opcoesNotas = [['todos', 'Todo mundo'], ['amigos', 'Só amigos (quem eu sigo e me segue)'], ['eu', 'Só eu']];
+  alvo.innerHTML = `<div class="rotulo-modal">Privacidade</div>
     <label class="linha-aviso"><span>Quem pode me mandar mensagem</span>
       <select onchange="salvarPreferenciaMensagens(this.value)">${opcoes.map(([v, t]) => `<option value="${v}"${d.quem === v ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
+    <label class="linha-aviso"><span>Quem vê minhas notas<small class="pista" style="display:block;margin:2px 0 0">Nota TRI na comunidade e nome no ranking do Desafio. Redações só você vê.</small></span>
+      <select onchange="salvarPreferenciaNotas(this.value)">${opcoesNotas.map(([v, t]) => `<option value="${v}"${d.notas === v ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     ${d.bloqueados.length ? `<small class="pista">Bloqueados:</small>${d.bloqueados.map(b => `<div class="linha-aviso"><span>${escapar(b.nome)}</span>
       <button class="acao discreta pequena" onclick="bloquearConversa(${b.id}, true).then(desenharPreferenciaMensagens)">Desbloquear</button></div>`).join('')}` : ''}`;
+}
+
+async function salvarPreferenciaNotas(notas) {
+  try { await api('/api/mensagens/preferencia', { method: 'PUT', body: JSON.stringify({ notas }) }); avisoSim('Pronto, salvo.'); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
 }
 
 async function salvarPreferenciaMensagens(quem) {
@@ -8928,7 +8936,8 @@ async function desenharRankingDesafio() {
       <div class="linha-ranking${l.eu ? ' eu' : ''}">
         <span class="pos">${medalha(l.posicao)}</span>
         <span class="bolha-autor">${l.foto ? `<img src="${escapar(urlImagem(l.foto))}" alt="">` : escapar((l.nome || '?').charAt(0).toUpperCase())}</span>
-        ${usuarioLogado ? `<button class="autor-link nome" onclick="abrirPerfil(${Number(l.id)})">${escapar(l.nome)}${l.eu ? ' (você)' : ''}</button>` : `<b class="nome">${escapar(l.nome)}</b>`}
+        ${usuarioLogado && l.id ? `<button class="autor-link nome" onclick="abrirPerfil(${Number(l.id)})">${escapar(l.nome)}${l.eu ? ' (você)' : ''}</button>`
+          : `<b class="nome"${l.anonimo ? ' title="Esta pessoa preferiu não mostrar as notas"' : ''}>${escapar(l.nome)}</b>`}
         <span class="pontos"><b>${l.acertos}</b>/10${l.nota ? ` · ${l.nota}` : ''}</span>
         <small>${formatarTempo(l.segundos * 1000).replace(/^0:/, '')}</small>
       </div>`).join('')}</div>`

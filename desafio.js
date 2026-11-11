@@ -6,6 +6,7 @@
 
 const tri = require('./tri');
 const imagens = require('./imagens');
+const { podeVerNotasSql } = require('./privacidade-notas');
 const { registrarAtividade } = require('./comunidade');
 const { questaoCompletaSql } = require('./provas');
 
@@ -137,7 +138,7 @@ function registrarDesafio(app, { pool, auth, limitar, exigirLogin }) {
         if (!membro.rowCount) return res.status(403).json({ error: 'Você não faz parte desse grupo.' });
       }
       const { rows } = await pool.query(
-        `SELECT r.usuario_id, r.acertos, r.nota, r.segundos, u.username AS nome, u.foto_id,
+        `SELECT r.usuario_id, r.acertos, r.nota, r.segundos, u.username AS nome, u.foto_id, ${podeVerNotasSql('$3::int', 'u')} AS visivel,
                 RANK() OVER (ORDER BY r.acertos DESC, r.nota DESC NULLS LAST, r.segundos ASC) AS posicao
            FROM desafio_resultados r JOIN usuarios u ON u.id = r.usuario_id
           WHERE r.semana = $1
@@ -146,10 +147,11 @@ function registrarDesafio(app, { pool, auth, limitar, exigirLogin }) {
           ORDER BY posicao, r.created_at`,
         [semana, filtro === 'seguindo' ? 'seguindo' : 'geral', eu ? eu.id : null, grupoId]
       );
-      const linha = r => ({
+      // Quem escolheu esconder as notas continua contando na posição, mas sem nome nem foto.
+      const linha = r => r.visivel ? ({
         posicao: Number(r.posicao), id: r.usuario_id, nome: r.nome, acertos: r.acertos, nota: r.nota, segundos: r.segundos,
         foto: eu ? imagens.urlAssinada(r.foto_id) : null, eu: Boolean(eu && eu.id === r.usuario_id)
-      });
+      }) : ({ posicao: Number(r.posicao), id: null, nome: 'Estudante', anonimo: true, acertos: r.acertos, nota: r.nota, segundos: r.segundos, foto: null, eu: false });
       const minha = eu ? rows.find(r => r.usuario_id === eu.id) : null;
       res.json({ semana, ranking: rows.slice(0, 50).map(linha), minha: minha ? linha(minha) : null, total: rows.length });
     } catch (erro) {

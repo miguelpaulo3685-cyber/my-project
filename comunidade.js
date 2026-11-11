@@ -10,6 +10,7 @@
 
 const imagens = require('./imagens');
 const { notificar } = require('./social');
+const { atividadeVisivelSql } = require('./privacidade-notas');
 
 const SALAS = [
   { id: 'geral', nome: 'Sala geral', emoji: '☕', chat: true },
@@ -178,7 +179,7 @@ function registrarComunidade(app, { pool, auth, limitar, exigirLogin }) {
         pool.query(
           `SELECT a.id, a.tipo, a.texto, a.alvo_id, a.feito, a.created_at, u.id AS autor_id, u.username AS autor, u.foto_id
              FROM atividades a JOIN usuarios u ON u.id = a.usuario_id
-            WHERE NOT a.oculto AND a.tipo <> 'meta'
+            WHERE NOT a.oculto AND a.tipo <> 'meta' AND ${atividadeVisivelSql('$1', 'a', 'u')}
               AND ($2 <> 'seguindo' OR a.usuario_id = $1 OR a.usuario_id IN (SELECT seguido_id FROM seguidores WHERE seguidor_id = $1))
             ORDER BY a.created_at DESC, a.id DESC LIMIT 40`, [eu.id, filtro]),
         pool.query(

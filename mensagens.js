@@ -9,6 +9,7 @@
 // - denúncia leva a mensagem para a administração ler.
 
 const imagens = require('./imagens');
+const { OPCOES_NOTAS } = require('./privacidade-notas');
 const { notificar } = require('./social');
 
 const TAMANHO_MAXIMO = 1000;
@@ -68,12 +69,18 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
     }
   });
 
+  // Preferências de privacidade: quem manda mensagem (quem) e quem vê as notas (notas).
   app.put('/api/mensagens/preferencia', exigirLogin, async (req, res) => {
-    const quem = String((req.body || {}).quem || '');
-    if (!QUEM_PODE.includes(quem)) return res.status(400).json({ error: 'Escolha inválida.' });
+    const corpo = req.body || {};
+    const quem = corpo.quem === undefined ? null : String(corpo.quem);
+    const notas = corpo.notas === undefined ? null : String(corpo.notas);
+    if ((quem !== null && !QUEM_PODE.includes(quem)) || (notas !== null && !OPCOES_NOTAS.includes(notas)) || (quem === null && notas === null)) {
+      return res.status(400).json({ error: 'Escolha inválida.' });
+    }
     try {
-      await pool.query('UPDATE usuarios SET quem_mensagem = $1 WHERE id = $2', [quem, req.usuario.id]);
-      res.json({ quem });
+      await pool.query('UPDATE usuarios SET quem_mensagem = COALESCE($1, quem_mensagem), quem_ve_notas = COALESCE($2, quem_ve_notas) WHERE id = $3',
+        [quem, notas, req.usuario.id]);
+      res.json({ quem, notas });
     } catch (erro) {
       res.status(500).json({ error: 'Não consegui salvar agora.' });
     }
@@ -82,7 +89,7 @@ function registrarMensagens(app, { pool, auth, limitar, exigirLogin, exigirModer
   app.get('/api/mensagens/preferencia', exigirLogin, async (req, res) => {
     try {
       const { rows } = await pool.query(
-        `SELECT COALESCE(u.quem_mensagem, 'seguindo') AS quem,
+        `SELECT COALESCE(u.quem_mensagem, 'seguindo') AS quem, COALESCE(u.quem_ve_notas, 'amigos') AS notas,
                 COALESCE((SELECT json_agg(json_build_object('id', b.bloqueado_id, 'nome', x.username) ORDER BY b.created_at DESC)
                             FROM bloqueios b JOIN usuarios x ON x.id = b.bloqueado_id WHERE b.usuario_id = u.id), '[]') AS bloqueados
            FROM usuarios u WHERE u.id = $1`, [req.usuario.id]);
