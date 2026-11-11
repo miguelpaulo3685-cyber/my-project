@@ -544,6 +544,26 @@ async function runMigrations() {
       ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_anulada VARCHAR(200);
       ALTER TABLE redacoes ADD COLUMN IF NOT EXISTS ia_em TIMESTAMP;
     `);
+    // Prova de corretor: antes de corrigir, a pessoa corrige redações que já têm nota
+    // fechada pela comunidade e precisa chegar perto dela. Quem já corrigia fica aprovado.
+    await pool.query(`
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS corretor_aprovado BOOLEAN NOT NULL DEFAULT FALSE;
+      CREATE TABLE IF NOT EXISTS redacoes_provas (
+        id SERIAL PRIMARY KEY,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        redacao_id INT NOT NULL REFERENCES redacoes(id) ON DELETE CASCADE,
+        notas SMALLINT[] NOT NULL,
+        ok BOOLEAN NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_redacoes_provas_usuario ON redacoes_provas(usuario_id, id DESC);
+    `);
+    const jaFeito = await pool.query(`SELECT 1 FROM configuracoes WHERE chave = 'corretores_aprovados_v1'`).catch(() => ({ rowCount: 1 }));
+    if (!jaFeito.rowCount) {
+      await pool.query(`UPDATE usuarios SET corretor_aprovado = TRUE WHERE id IN (SELECT usuario_id FROM redacoes_correcoes WHERE NOT oculto)`);
+      await pool.query(`INSERT INTO configuracoes (chave, valor) VALUES ('corretores_aprovados_v1', '"ok"') ON CONFLICT DO NOTHING`);
+    }
+
     // "Por que errei?": explicação da IA, gerada uma vez por questão e reaproveitada.
     await pool.query(`
       CREATE TABLE IF NOT EXISTS explicacoes_ia (

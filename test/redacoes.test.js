@@ -31,3 +31,11 @@ test('redação: a terceira correção faz média com a mais próxima', () => {
   assert.strictEqual(r.nota, (760 + 600) / 2, 'a 3ª (760) fica mais perto de 600 que de 1000');
   assert.deepStrictEqual(r.usadas, [1, 2]);
 });
+
+test('prova de corretor: perto da nota é a mesma regra da 3ª correção', () => {
+  const { pertoDaNota } = require('../redacoes');
+  assert.equal(pertoDaNota([160, 120, 120, 160, 120], [160, 120, 120, 160, 120]), true);
+  assert.equal(pertoDaNota([160, 120, 200, 160, 120], [160, 120, 120, 160, 120]), true);  // 80 numa competência: ainda passa
+  assert.equal(pertoDaNota([40, 40, 40, 40, 40], [160, 120, 120, 160, 120]), false);      // longe no total
+  assert.equal(pertoDaNota([200, 120, 120, 160, 120], [100, 120, 120, 160, 120]), false); // 100 numa competência
+});

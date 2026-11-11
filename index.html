@@ -1552,6 +1552,11 @@
     }
     .formas-correcao { display: grid; gap: 14px; margin-top: 12px; }
     .correcao-ia { margin: 12px 0 16px; border-color: var(--marca); }
+    .aviso-prova { background: var(--marca-suave); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: .9rem; line-height: 1.5; }
+    .aviso-prova b { display: block; margin-bottom: 4px; }
+    .titulo-prova { font-size: 1.2rem; display: block; }
+    .tabela-prova { display: grid; grid-template-columns: 1fr auto auto; gap: 8px 18px; margin-top: 12px; font-size: .92rem; }
+    .tabela-prova > :nth-child(3n+2), .tabela-prova > :nth-child(3n) { text-align: right; }
     .correcao-ia .titulo-bloco b { display: flex; align-items: center; gap: 10px; }
     .correcao-ia .topo-resultado { margin: 6px 0 12px; }
     .ia-carregando { display: flex; align-items: center; gap: 10px; color: var(--texto-fraco); margin: 4px 0; }
@@ -10378,7 +10383,7 @@ async function comecarCorrecao(pulados = []) {
   try { d = await api(`/api/redacoes/fila${pulados.length ? '?pular=' + pulados.join(',') : ''}`); }
   catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
   if (!redacaoNaTela() || telaRedacoes.modo !== 'corrigir') return;
-  correcaoAtual = d.redacao ? { redacao: d.redacao, notas: [null, null, null, null, null], comentarios: ['', '', '', '', ''], anulada: null, pulados, restam: d.na_fila } : null;
+  correcaoAtual = d.redacao ? { redacao: d.redacao, notas: [null, null, null, null, null], comentarios: ['', '', '', '', ''], anulada: null, pulados, restam: d.na_fila, prova: d.prova || null } : null;
   desenharCorrecao();
 }
 
@@ -10392,7 +10397,10 @@ function desenharCorrecao() {
   alvo.innerHTML = `${voltarRedacoes()}
     <div class="corrigindo">
       <section class="painel">
-        <small class="pista" style="display:block;margin:0 0 4px">Correção às cegas · ${plural(c.restam, 'redação na fila', 'redações na fila')}</small>
+        ${c.prova ? `<div class="aviso-prova"><b>Prova de corretor · ${c.prova.etapa} de ${c.prova.de}</b>
+          Antes de corrigir a redação dos colegas, corrija ${c.prova.de} redações que já têm nota fechada pela comunidade.
+          Passa quem chegar perto da nota (até 100 pontos no total e 80 em cada competência). Aqui não precisa escrever comentários.</div>`
+          : `<small class="pista" style="display:block;margin:0 0 4px">Correção às cegas · ${plural(c.restam, 'redação na fila', 'redações na fila')}</small>`}
         <b class="tema-redacao">${escapar(c.redacao.tema)}</b>
         ${htmlPropostaDoTema(c.redacao.tema)}
         <div class="texto-redacao">${escapar(c.redacao.texto)}</div>
@@ -10408,15 +10416,15 @@ function desenharCorrecao() {
             <div class="niveis" role="group" aria-label="Nota da competência ${i + 1}">${NIVEIS_REDACAO.map(n =>
               `<button type="button" aria-pressed="${c.notas[i] === n}" onclick="darNota(${i}, ${n})">${n}</button>`).join('')}</div>
             <small class="descricao-nivel" id="descricao-${i}">${c.notas[i] === null ? 'Escolha a nota.' : comp.niveis[NIVEIS_REDACAO.indexOf(c.notas[i])]}</small>
-            <textarea class="caixa-texto comentario-competencia" maxlength="600" placeholder="O que melhorar aqui? (opcional)"
-              oninput="correcaoAtual.comentarios[${i}] = this.value">${escapar(c.comentarios[i])}</textarea>
+            ${c.prova ? '' : `<textarea class="caixa-texto comentario-competencia" maxlength="600" placeholder="O que melhorar aqui? (opcional)"
+              oninput="correcaoAtual.comentarios[${i}] = this.value">${escapar(c.comentarios[i])}</textarea>`}
           </div>`).join('')}
-        <div class="rotulo-modal">Comentário geral</div>
+        ${c.prova ? '' : `<div class="rotulo-modal">Comentário geral</div>
         <textarea class="caixa-texto" id="geral-correcao" maxlength="2000" required oninput="correcaoAtual.geral = this.value"
-          placeholder="O que ficou bom, o que mais pesou na nota e uma dica principal para a próxima. Seja gentil e específico.">${escapar(c.geral || '')}</textarea>
+          placeholder="O que ficou bom, o que mais pesou na nota e uma dica principal para a próxima. Seja gentil e específico.">${escapar(c.geral || '')}</textarea>`}
         <div class="botoes-ficha">
-          <button type="button" class="acao discreta" onclick="comecarCorrecao([...correcaoAtual.pulados, correcaoAtual.redacao.id])">Pular esta</button>
-          <button class="acao" id="botao-correcao">Enviar correção · +15 XP</button>
+          ${c.prova ? '' : `<button type="button" class="acao discreta" onclick="comecarCorrecao([...correcaoAtual.pulados, correcaoAtual.redacao.id])">Pular esta</button>`}
+          <button class="acao" id="botao-correcao">${c.prova ? 'Conferir minhas notas' : 'Enviar correção · +15 XP'}</button>
         </div>
         <button type="button" class="link-bloco" style="margin-top:10px" onclick="denunciarRedacao(${c.redacao.id})">Denunciar redação (ofensiva ou que não é redação)</button>
       </form>
@@ -10442,6 +10450,7 @@ async function enviarCorrecao(evento) {
   evento.preventDefault();
   const c = correcaoAtual;
   if (!c.anulada && c.notas.some(n => n === null)) return avisoSim('Dê uma nota em cada uma das 5 competências.');
+  if (c.prova) return enviarProva(c);
   const botao = document.getElementById('botao-correcao');
   botao.disabled = true;
   try {
@@ -10456,6 +10465,28 @@ async function enviarCorrecao(evento) {
     avisoSim(e.daApi || SEM_SERVIDOR);
     botao.disabled = false;
   }
+}
+
+// Prova de corretor: mostra as suas notas ao lado das da comunidade.
+async function enviarProva(c) {
+  const botao = document.getElementById('botao-correcao');
+  botao.disabled = true;
+  let d;
+  try { d = await postar(`/api/redacoes/${c.redacao.id}/prova`, { notas: c.anulada ? [0, 0, 0, 0, 0] : c.notas, anulada: c.anulada }); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); botao.disabled = false; return; }
+  const total = d.minhas.reduce((t, n) => t + n, 0);
+  alvoRedacao().innerHTML = `${voltarRedacoes()}
+    <section class="painel resultado-prova" style="margin-top:12px">
+      <b class="titulo-prova">${d.aprovado ? '🎉 Você agora é corretor!' : d.ok ? '✅ Perto da nota!' : '📏 Ficou longe da nota'}</b>
+      <p class="pista">${d.aprovado ? 'Agora você pode corrigir as redações dos colegas. Cada correção vale +15 XP e libera mais um envio seu.'
+        : d.ok ? 'Mais uma assim e você vira corretor.' : 'Compare com a nota da comunidade abaixo, veja onde mais diferiu e tente de novo.'}</p>
+      <div class="tabela-prova">
+        <span></span><b>Você</b><b>Comunidade</b>
+        ${COMPETENCIAS.map((comp, i) => `<span>C${i + 1} · ${comp.nome}</span><span>${d.minhas[i]}</span><span>${d.oficial.competencias[i]}</span>`).join('')}
+        <span><b>Total</b></span><b>${total}</b><b>${d.oficial.nota}</b>
+      </div>
+      <button class="acao" style="margin-top:14px" onclick="comecarCorrecao()">${d.aprovado ? 'Corrigir redações' : 'Próxima redação'}</button>
+    </section>`;
 }
 
 async function denunciarRedacao(id) {

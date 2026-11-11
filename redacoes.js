@@ -22,6 +22,11 @@ const MARCOS_DE_CORRECOES = [1, 5, 10, 25, 50, 100];
 
 const soma = notas => notas.reduce((t, n) => t + n, 0);
 const discrepantes = (a, b) => Math.abs(soma(a) - soma(b)) > 100 || a.some((n, i) => Math.abs(n - b[i]) > 80);
+// Prova de corretor: perto da nota fechada pela comunidade é a mesma regra que
+// chama a 3ª correção (até 100 no total e até 80 em cada competência).
+const pertoDaNota = (minhas, oficiais) => !discrepantes(minhas, oficiais.map(n => Math.round(n)));
+const PROVAS_PARA_APROVAR = 2;   // seguidas, dentro da regra
+const MINIMO_PARA_TER_PROVA = 3; // redações com nota fechada; antes disso, todo mundo corrige
 const media = (a, b) => ({ nota: Math.round((soma(a) + soma(b)) / 2), competencias: a.map((n, i) => (n + b[i]) / 2) });
 
 // Situação da redação a partir das notas das correções, na ordem em que chegaram.
@@ -100,11 +105,44 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
     return { proxima: abertas[0] || null, na_fila: abertas.length };
   }
 
+  // ---------- prova de corretor ----------
+  // Redações com nota fechada que servem de prova para esta pessoa (as que ela
+  // escreveu ou já corrigiu ficam de fora; as que já usou na prova, só se pedir).
+  async function redacoesDeProva(eu, incluirUsadas = false) {
+    const { rows } = await pool.query(
+      `SELECT r.id, r.tema, r.texto FROM redacoes r
+        WHERE r.usuario_id <> $1 AND NOT r.oculto
+          AND NOT EXISTS (SELECT 1 FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND c.usuario_id = $1)
+          AND ($2 OR NOT EXISTS (SELECT 1 FROM redacoes_provas p WHERE p.redacao_id = r.id AND p.usuario_id = $1))
+          AND (SELECT COUNT(*) FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND NOT c.oculto) >= 2
+        ORDER BY RANDOM() LIMIT 40`, [eu, incluirUsadas]);
+    const notas = await notasDe(rows.map(r => r.id));
+    return rows.map(r => ({ ...r, oficial: resultadoDaRedacao(notas.get(r.id).map(c => c.notas)) }))
+      .filter(r => r.oficial.situacao === 'corrigida');
+  }
+  // Precisa fazer a prova? Não, se já foi aprovado, se é da equipe ou se ainda
+  // não há redações com nota fechada suficientes no site.
+  async function situacaoDaProva(usuario) {
+    const u = (await pool.query('SELECT corretor_aprovado, COALESCE(admin, FALSE) AS admin FROM usuarios WHERE id = $1', [usuario.id])).rows[0];
+    if (!u || u.corretor_aprovado || u.admin) return { precisa: false };
+    // Poucas redações com nota fechada no site: ainda não há prova, todos corrigem.
+    if ((await redacoesDeProva(usuario.id, true)).length < MINIMO_PARA_TER_PROVA) return { precisa: false };
+    // Já usou todas as que existem: segue sem prova até aparecerem outras.
+    const disponiveis = await redacoesDeProva(usuario.id);
+    if (!disponiveis.length) return { precisa: false };
+    const ultimas = (await pool.query('SELECT ok FROM redacoes_provas WHERE usuario_id = $1 ORDER BY id DESC LIMIT $2',
+      [usuario.id, PROVAS_PARA_APROVAR])).rows;
+    let seguidas = 0;
+    for (const p of ultimas) { if (!p.ok) break; seguidas++; }
+    return { precisa: true, seguidas, faltam: PROVAS_PARA_APROVAR - seguidas, proxima: disponiveis[0] };
+  }
+
   async function situacaoDoEnvio(eu) {
     const c = (await pool.query(
       `SELECT (SELECT COUNT(*)::int FROM redacoes WHERE usuario_id = $1) AS enviadas,
               (SELECT COUNT(*)::int FROM redacoes WHERE usuario_id = $1 AND created_at > NOW() - INTERVAL '7 days') AS semana,
-              (SELECT COUNT(*)::int FROM redacoes_correcoes WHERE usuario_id = $1 AND NOT oculto) AS correcoes,
+              (SELECT COUNT(*)::int FROM redacoes_correcoes WHERE usuario_id = $1 AND NOT oculto)
+                + (SELECT COUNT(*)::int FROM redacoes_provas WHERE usuario_id = $1) AS correcoes,
               (SELECT COUNT(*)::int FROM redacoes_correcoes WHERE usuario_id = $1 AND util AND NOT oculto) AS uteis`, [eu])).rows[0];
     const { na_fila } = await proximaDaFila(eu);
     const creditos = Math.max(0, 1 + c.correcoes - c.enviadas);
@@ -187,6 +225,32 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
     }
   });
 
+  // Resposta da prova de corretor: compara com a nota fechada pela comunidade.
+  app.post('/api/redacoes/:id(\\d+)/prova', exigirLogin, freioCorrigir, async (req, res) => {
+    const id = idValido(req.params.id);
+    const eu = req.usuario.id;
+    const anulada = ANULACOES.includes(req.body?.anulada);
+    const notas = anulada ? [0, 0, 0, 0, 0] : (Array.isArray(req.body?.notas) ? req.body.notas.map(Number) : []);
+    if (notas.length !== 5 || !notas.every(n => NIVEIS.includes(n))) return res.status(400).json({ error: 'Dê uma nota de 0 a 200 (de 40 em 40) em cada competência.' });
+    try {
+      const r = (await pool.query('SELECT usuario_id FROM redacoes WHERE id = $1 AND NOT oculto', [id])).rows[0];
+      if (!r || r.usuario_id === eu) return res.status(404).json({ error: 'Redação não encontrada.' });
+      const ja = await pool.query('SELECT 1 FROM redacoes_provas WHERE usuario_id = $1 AND redacao_id = $2', [eu, id]);
+      if (ja.rowCount) return res.status(409).json({ error: 'Você já corrigiu esta redação na prova.' });
+      const oficial = resultadoDaRedacao((await notasDe([id])).get(id).map(c => c.notas));
+      if (oficial.situacao !== 'corrigida') return res.status(409).json({ error: 'Esta redação não serve mais para a prova. Busque outra.' });
+      const ok = pertoDaNota(notas, oficial.competencias);
+      await pool.query('INSERT INTO redacoes_provas (usuario_id, redacao_id, notas, ok) VALUES ($1, $2, $3, $4)', [eu, id, notas, ok]);
+      const ultimas = (await pool.query('SELECT ok FROM redacoes_provas WHERE usuario_id = $1 ORDER BY id DESC LIMIT $2', [eu, PROVAS_PARA_APROVAR])).rows;
+      const aprovado = ultimas.length === PROVAS_PARA_APROVAR && ultimas.every(p => p.ok);
+      if (aprovado) await pool.query('UPDATE usuarios SET corretor_aprovado = TRUE WHERE id = $1', [eu]);
+      res.json({ ok, aprovado, minhas: notas, oficial: { nota: oficial.nota, competencias: oficial.competencias.map(n => Math.round(n)) } });
+    } catch (erro) {
+      console.error('Erro na prova de corretor:', erro.message);
+      res.status(500).json({ error: 'Não consegui conferir agora.' });
+    }
+  });
+
   // Tentar de novo a correção por IA (deu erro ou ainda não tinha sido pedida).
   app.post('/api/redacoes/:id(\\d+)/ia', exigirLogin, freioEnviar, async (req, res) => {
     const id = idValido(req.params.id);
@@ -209,6 +273,11 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
   app.get('/api/redacoes/fila', exigirLogin, async (req, res) => {
     const pular = String(req.query.pular || '').split(',').map(Number).filter(n => Number.isInteger(n) && n > 0).slice(0, 50);
     try {
+      const prova = await situacaoDaProva(req.usuario);
+      if (prova.precisa) {
+        const p = prova.proxima;
+        return res.json({ prova: { etapa: prova.seguidas + 1, de: PROVAS_PARA_APROVAR }, redacao: { id: p.id, tema: p.tema, texto: p.texto }, na_fila: 0 });
+      }
       const { proxima, na_fila } = await proximaDaFila(req.usuario.id, pular);
       res.json({ redacao: proxima && { id: proxima.id, tema: proxima.tema, texto: proxima.texto, created_at: proxima.created_at }, na_fila });
     } catch (erro) {
@@ -229,6 +298,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
     if (geral.length < 40) return res.status(400).json({ error: 'Escreva um comentário geral com pelo menos 40 caracteres: é ele que ajuda quem escreveu a melhorar.' });
     if (geral.length > 2000) return res.status(400).json({ error: 'O comentário geral pode ter até 2000 caracteres.' });
     try {
+      if ((await situacaoDaProva(req.usuario)).precisa) return res.status(403).json({ error: 'Faça a prova de corretor antes de corrigir.' });
       const r = (await pool.query('SELECT usuario_id, tema FROM redacoes WHERE id = $1 AND NOT oculto', [id])).rows[0];
       if (!r) return res.status(404).json({ error: 'Essa redação não está mais na fila.' });
       if (r.usuario_id === eu) return res.status(400).json({ error: 'Você não pode corrigir a sua própria redação.' });
@@ -310,4 +380,4 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
 }
 
 module.exports = registrarRedacoes;
-Object.assign(module.exports, { resultadoDaRedacao, discrepantes, NIVEIS });
+Object.assign(module.exports, { resultadoDaRedacao, discrepantes, pertoDaNota, NIVEIS });
