@@ -40,9 +40,34 @@ function resultadoDaRedacao(lista) {
   return { situacao: 'corrigida', faltam: 0, usadas: [pertoDeA ? 0 : 1, 2], ...media(c, pertoDeA ? a : b) };
 }
 
+// Com as correções do banco ({ notas, professor }): a de um professor da escola
+// fecha a nota sozinha (vale a mais recente); sem professor, vale a regra do ENEM.
+function resultadoDasCorrecoes(correcoes) {
+  const i = correcoes.map(c => Boolean(c.professor)).lastIndexOf(true);
+  if (i < 0) return resultadoDaRedacao(correcoes.map(c => c.notas));
+  const notas = correcoes[i].notas;
+  return { situacao: 'corrigida', faltam: 0, usadas: [i], nota: soma(notas), competencias: notas, professor: true };
+}
+
+// Notas que já aparecem marcadas para o professor: as da comunidade (arredondadas
+// para o nível mais próximo) ou, se ninguém corrigiu ainda, as da IA.
+const nivelMaisProximo = n => NIVEIS.reduce((melhor, nivel) => (Math.abs(nivel - n) < Math.abs(melhor - n) ? nivel : melhor), 0);
+function sugestaoDeNotas(resultado, notasDaIa) {
+  if (resultado && resultado.competencias) return { origem: 'comunidade', notas: resultado.competencias.map(nivelMaisProximo) };
+  if (Array.isArray(notasDaIa) && notasDaIa.length === 5) return { origem: 'ia', notas: notasDaIa.map(nivelMaisProximo) };
+  return { origem: null, notas: [null, null, null, null, null] };
+}
+
+// Urgente na fila do professor: a comunidade discordou, ou a redação espera há mais de 3 dias.
+const DIAS_PARA_URGENTE = 3;
+function urgenteParaProfessor(situacao, criadaEm, agora = Date.now()) {
+  if (situacao === 'discrepante') return true;
+  return agora - new Date(criadaEm).getTime() > DIAS_PARA_URGENTE * 24 * 60 * 60 * 1000;
+}
+
 const ia = require('./correcao-ia');
 
-function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
+function registrarRedacoes(app, { pool, auth, limitar, exigirLogin, exigirModerador }) {
   // ---------- correção por IA ----------
   // Começa a correção (sem esperar): o site mostra "corrigindo…" e pergunta de novo.
   async function pedirCorrecaoIa(redacaoId, usuarioId) {
@@ -80,13 +105,14 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
   const porConta = req => `u${req.usuario.id}`;
   const freioEnviar = limitar(auth.criarFreio(10, 60 * 60 * 1000), 'Muitos envios agora. Espere um pouco.', porConta);
   const freioCorrigir = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Muitas correções seguidas. Respira e volta daqui a pouco 🙂', porConta);
+  const freioProfessor = limitar(auth.criarFreio(120, 60 * 60 * 1000), 'Muitas correções seguidas. Espere um pouco.', porConta);
   const freioDenunciar = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Você fez muitas denúncias. Espere um pouco.', porConta);
   const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
 
   async function notasDe(redacaoIds) {
     if (!redacaoIds.length) return new Map();
     const { rows } = await pool.query(
-      'SELECT redacao_id, usuario_id, notas FROM redacoes_correcoes WHERE redacao_id = ANY($1::int[]) AND NOT oculto ORDER BY id', [redacaoIds]);
+      'SELECT redacao_id, usuario_id, notas, professor FROM redacoes_correcoes WHERE redacao_id = ANY($1::int[]) AND NOT oculto ORDER BY id', [redacaoIds]);
     const mapa = new Map(redacaoIds.map(id => [id, []]));
     for (const r of rows) mapa.get(r.redacao_id).push(r);
     return mapa;
@@ -101,7 +127,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
           AND (SELECT COUNT(*) FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND NOT c.oculto) < 3
         ORDER BY r.id LIMIT 60`, [eu, pular]);
     const notas = await notasDe(rows.map(r => r.id));
-    const abertas = rows.filter(r => resultadoDaRedacao(notas.get(r.id).map(c => c.notas)).faltam > 0);
+    const abertas = rows.filter(r => resultadoDasCorrecoes(notas.get(r.id)).faltam > 0);
     return { proxima: abertas[0] || null, na_fila: abertas.length };
   }
 
@@ -117,7 +143,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
           AND (SELECT COUNT(*) FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND NOT c.oculto) >= 2
         ORDER BY RANDOM() LIMIT 40`, [eu, incluirUsadas]);
     const notas = await notasDe(rows.map(r => r.id));
-    return rows.map(r => ({ ...r, oficial: resultadoDaRedacao(notas.get(r.id).map(c => c.notas)) }))
+    return rows.map(r => ({ ...r, oficial: resultadoDasCorrecoes(notas.get(r.id)) }))
       .filter(r => r.oficial.situacao === 'corrigida');
   }
   // Precisa fazer a prova? Não, se já foi aprovado, se é da equipe ou se ainda
@@ -161,7 +187,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       res.json({
         ...situacao,
         minhas: rows.map(r => {
-          const res = resultadoDaRedacao(notas.get(r.id).map(c => c.notas));
+          const res = resultadoDasCorrecoes(notas.get(r.id));
           return { id: r.id, tema: r.tema, created_at: r.created_at, oculto: r.oculto, correcoes: notas.get(r.id).length, ...res };
         })
       });
@@ -202,7 +228,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       const r = (await pool.query('SELECT * FROM redacoes WHERE id = $1', [id])).rows[0];
       if (!r || (r.usuario_id !== eu.id && !eu.admin)) return res.status(404).json({ error: 'Redação não encontrada.' });
       const { rows } = await pool.query(
-        `SELECT c.id, c.notas, c.comentarios, c.geral, c.anulada, c.util, c.oculto, c.created_at,
+        `SELECT c.id, c.notas, c.comentarios, c.geral, c.anulada, c.util, c.oculto, c.created_at, c.professor,
                 u.id AS autor_id, u.username AS autor, u.foto_id, COALESCE(u.admin, FALSE) AS autor_admin,
                 (SELECT COUNT(*)::int FROM redacoes_correcoes x WHERE x.usuario_id = u.id AND NOT x.oculto) AS corrigidas
            FROM redacoes_correcoes c JOIN usuarios u ON u.id = c.usuario_id
@@ -210,12 +236,12 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       const valendo = rows.filter(c => !c.oculto);
       res.json({
         redacao: { id: r.id, tema: r.tema, texto: r.texto, origem: r.origem, created_at: r.created_at, oculto: r.oculto, minha: r.usuario_id === eu.id },
-        resultado: resultadoDaRedacao(valendo.map(c => c.notas)),
+        resultado: resultadoDasCorrecoes(valendo),
         ia: r.usuario_id === eu.id || eu.admin ? correcaoIaDe(r) : null,
         ia_ligada: ia.ligada(),
         correcoes: rows.filter(c => !c.oculto || eu.admin).map(c => ({
           id: c.id, notas: c.notas, total: soma(c.notas), comentarios: c.comentarios, geral: c.geral, anulada: c.anulada,
-          util: c.util, oculto: c.oculto, created_at: c.created_at,
+          util: c.util, oculto: c.oculto, created_at: c.created_at, professor: c.professor,
           corretor: { id: c.autor_id, nome: c.autor, foto: imagens.urlAssinada(c.foto_id), equipe: c.autor_admin, corrigidas: c.corrigidas }
         }))
       });
@@ -237,7 +263,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       if (!r || r.usuario_id === eu) return res.status(404).json({ error: 'Redação não encontrada.' });
       const ja = await pool.query('SELECT 1 FROM redacoes_provas WHERE usuario_id = $1 AND redacao_id = $2', [eu, id]);
       if (ja.rowCount) return res.status(409).json({ error: 'Você já corrigiu esta redação na prova.' });
-      const oficial = resultadoDaRedacao((await notasDe([id])).get(id).map(c => c.notas));
+      const oficial = resultadoDasCorrecoes((await notasDe([id])).get(id));
       if (oficial.situacao !== 'corrigida') return res.status(409).json({ error: 'Esta redação não serve mais para a prova. Busque outra.' });
       const ok = pertoDaNota(notas, oficial.competencias);
       await pool.query('INSERT INTO redacoes_provas (usuario_id, redacao_id, notas, ok) VALUES ($1, $2, $3, $4)', [eu, id, notas, ok]);
@@ -302,7 +328,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       const r = (await pool.query('SELECT usuario_id, tema FROM redacoes WHERE id = $1 AND NOT oculto', [id])).rows[0];
       if (!r) return res.status(404).json({ error: 'Essa redação não está mais na fila.' });
       if (r.usuario_id === eu) return res.status(400).json({ error: 'Você não pode corrigir a sua própria redação.' });
-      const antes = resultadoDaRedacao((await notasDe([id])).get(id).map(c => c.notas));
+      const antes = resultadoDasCorrecoes((await notasDe([id])).get(id));
       if (antes.faltam === 0) return res.status(409).json({ error: 'Essa redação já recebeu todas as correções. Pegue a próxima!' });
       const ins = await pool.query(
         `INSERT INTO redacoes_correcoes (redacao_id, usuario_id, notas, comentarios, geral, anulada)
@@ -310,7 +336,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
         [id, eu, notas, JSON.stringify(comentarios), geral, anulada]);
       if (!ins.rowCount) return res.status(409).json({ error: 'Você já corrigiu essa redação.' });
 
-      const depois = resultadoDaRedacao((await notasDe([id])).get(id).map(c => c.notas));
+      const depois = resultadoDasCorrecoes((await notasDe([id])).get(id));
       await notificar(pool, {
         usuarioId: r.usuario_id, atorId: eu, tipo: depois.situacao === 'corrigida' ? 'redacao_corrigida' : 'correcao',
         alvoTipo: 'redacao', alvoId: id, texto: depois.situacao === 'corrigida' ? String(depois.nota) : String(soma(notas))
@@ -377,7 +403,127 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin }) {
       res.status(500).json({ error: 'Não consegui registrar a denúncia agora.' });
     }
   });
+
+  // ---------- ferramenta do professor ----------
+  // Professor (marcado pela equipe) vê só as redações de quem pôs a mesma escola
+  // no perfil, sem o nome de quem escreveu. A correção dele fecha a nota.
+  async function exigirProfessor(req, res, next) {
+    if (!req.usuario) return res.status(401).json({ error: 'Faça login para continuar.' });
+    try {
+      const u = (await pool.query('SELECT COALESCE(professor, FALSE) AS professor, escola, escola_chave FROM usuarios WHERE id = $1', [req.usuario.id])).rows[0];
+      if (!u || !u.professor) return res.status(403).json({ error: 'Esta parte é só para professores.' });
+      req.professor = u;
+      next();
+    } catch (erro) {
+      console.error('Erro ao conferir professor:', erro.message);
+      res.status(500).json({ error: 'Não deu certo agora.' });
+    }
+  }
+
+  // A redação tem de ser de um aluno da escola do professor e não ser dele.
+  async function redacaoDaEscola(id, req) {
+    if (!id || !req.professor.escola_chave) return null;
+    return (await pool.query(
+      `SELECT r.id, r.usuario_id, r.tema, r.texto, r.created_at, r.ia_status, r.ia_notas
+         FROM redacoes r JOIN usuarios u ON u.id = r.usuario_id
+        WHERE r.id = $1 AND NOT r.oculto AND r.usuario_id <> $2 AND u.escola_chave = $3`,
+      [id, req.usuario.id, req.professor.escola_chave])).rows[0] || null;
+  }
+
+  // Fila da escola: o que nenhum professor corrigiu ainda, com as urgentes primeiro.
+  app.get('/api/professor/fila', exigirProfessor, async (req, res) => {
+    const p = req.professor;
+    if (!p.escola_chave) return res.json({ escola: null, redacoes: [] });
+    try {
+      const { rows } = await pool.query(
+        `SELECT r.id, r.tema, r.created_at FROM redacoes r JOIN usuarios u ON u.id = r.usuario_id
+          WHERE u.escola_chave = $1 AND r.usuario_id <> $2 AND NOT r.oculto
+            AND NOT EXISTS (SELECT 1 FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND NOT c.oculto AND (c.professor OR c.usuario_id = $2))
+          ORDER BY r.id LIMIT 100`, [p.escola_chave, req.usuario.id]);
+      const notas = await notasDe(rows.map(r => r.id));
+      const redacoes = rows.map(r => {
+        const resultado = resultadoDasCorrecoes(notas.get(r.id));
+        return { id: r.id, tema: r.tema, created_at: r.created_at, situacao: resultado.situacao, nota: resultado.nota,
+          correcoes: notas.get(r.id).length, urgente: urgenteParaProfessor(resultado.situacao, r.created_at) };
+      }).sort((a, b) => (b.urgente - a.urgente) || (a.id - b.id));
+      res.json({ escola: p.escola, redacoes });
+    } catch (erro) {
+      console.error('Erro na fila do professor:', erro.message);
+      res.status(500).json({ error: 'Não consegui carregar a fila agora.' });
+    }
+  });
+
+  // Uma redação para revisar: o texto, as notas sugeridas e o que a comunidade escreveu.
+  app.get('/api/professor/redacoes/:id(\\d+)', exigirProfessor, async (req, res) => {
+    try {
+      const r = await redacaoDaEscola(idValido(req.params.id), req);
+      if (!r) return res.status(404).json({ error: 'Essa redação não está na fila da sua escola.' });
+      const { rows } = await pool.query(
+        `SELECT notas, comentarios, geral, anulada, professor FROM redacoes_correcoes WHERE redacao_id = $1 AND NOT oculto ORDER BY id`, [r.id]);
+      const resultado = resultadoDasCorrecoes(rows);
+      res.json({
+        redacao: { id: r.id, tema: r.tema, texto: r.texto, created_at: r.created_at },
+        sugestao: sugestaoDeNotas(resultado, r.ia_status === 'pronta' ? r.ia_notas : null),
+        comunidade: rows.filter(c => !c.professor).map(c => ({ notas: c.notas, total: soma(c.notas), comentarios: c.comentarios, geral: c.geral, anulada: c.anulada }))
+      });
+    } catch (erro) {
+      console.error('Erro ao abrir redação para o professor:', erro.message);
+      res.status(500).json({ error: 'Não consegui abrir a redação agora.' });
+    }
+  });
+
+  // Correção do professor. O comentário geral é opcional (os comentários prontos já ajudam).
+  app.post('/api/professor/redacoes/:id(\\d+)/correcao', exigirProfessor, freioProfessor, async (req, res) => {
+    const eu = req.usuario.id;
+    const anulada = ANULACOES.includes(req.body?.anulada) ? req.body.anulada : null;
+    const notas = anulada ? [0, 0, 0, 0, 0] : (Array.isArray(req.body?.notas) ? req.body.notas.map(Number) : []);
+    const comentarios = (Array.isArray(req.body?.comentarios) ? req.body.comentarios : []).slice(0, 5)
+      .map(c => (typeof c === 'string' ? c.trim().slice(0, 600) : ''));
+    const geral = typeof req.body?.geral === 'string' ? req.body.geral.trim() : '';
+    if (notas.length !== 5 || !notas.every(n => NIVEIS.includes(n))) return res.status(400).json({ error: 'Dê uma nota de 0 a 200 (de 40 em 40) em cada competência.' });
+    if (geral.length > 2000) return res.status(400).json({ error: 'O comentário geral pode ter até 2000 caracteres.' });
+    try {
+      const r = await redacaoDaEscola(idValido(req.params.id), req);
+      if (!r) return res.status(404).json({ error: 'Essa redação não está na fila da sua escola.' });
+      const ins = await pool.query(
+        `INSERT INTO redacoes_correcoes (redacao_id, usuario_id, notas, comentarios, geral, anulada, professor)
+         VALUES ($1, $2, $3, $4, $5, $6, TRUE) ON CONFLICT DO NOTHING RETURNING id`,
+        [r.id, eu, notas, JSON.stringify(comentarios), geral, anulada]);
+      if (!ins.rowCount) return res.status(409).json({ error: 'Você já corrigiu essa redação.' });
+      await notificar(pool, { usuarioId: r.usuario_id, atorId: eu, tipo: 'redacao_corrigida', alvoTipo: 'redacao', alvoId: r.id, texto: String(soma(notas)) });
+      res.status(201).json({ id: ins.rows[0].id });
+    } catch (erro) {
+      console.error('Erro na correção do professor:', erro.message);
+      res.status(500).json({ error: 'Não consegui salvar a correção agora.' });
+    }
+  });
+
+  // A equipe marca (ou desmarca) quem é professor, pelo e-mail da conta.
+  app.get('/api/admin/professores', exigirModerador, async (req, res) => {
+    try {
+      const { rows } = await pool.query(
+        `SELECT u.id, u.username AS nome, u.escola,
+                (SELECT COUNT(*)::int FROM redacoes_correcoes c WHERE c.usuario_id = u.id AND c.professor AND NOT c.oculto) AS corrigidas
+           FROM usuarios u WHERE u.professor ORDER BY u.username`);
+      res.json({ professores: rows });
+    } catch (erro) {
+      res.status(500).json({ error: 'Não consegui carregar os professores agora.' });
+    }
+  });
+  app.post('/api/admin/professores', exigirModerador, async (req, res) => {
+    const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+    const professor = req.body?.professor !== false;
+    if (!email) return res.status(400).json({ error: 'Escreva o e-mail da conta do professor.' });
+    try {
+      const r = await pool.query('UPDATE usuarios SET professor = $2 WHERE email = $1 RETURNING id, username AS nome, escola', [email, professor]);
+      if (!r.rowCount) return res.status(404).json({ error: 'Não achei uma conta com esse e-mail. A pessoa precisa criar a conta primeiro.' });
+      console.log(`🎓 Conta ${r.rows[0].id} ${professor ? 'virou professor' : 'deixou de ser professor'} (por ${req.usuario.id})`);
+      res.json({ ...r.rows[0], professor });
+    } catch (erro) {
+      res.status(500).json({ error: 'Não deu certo agora.' });
+    }
+  });
 }
 
 module.exports = registrarRedacoes;
-Object.assign(module.exports, { resultadoDaRedacao, discrepantes, pertoDaNota, NIVEIS });
+Object.assign(module.exports, { resultadoDaRedacao, resultadoDasCorrecoes, sugestaoDeNotas, urgenteParaProfessor, discrepantes, pertoDaNota, NIVEIS });

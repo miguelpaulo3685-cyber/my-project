@@ -112,10 +112,13 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
 ### Depois do lançamento
-1. **Ferramenta do professor** (versão simples, para levar ao colégio): perfil de professor/monitor, fila só
-   da escola com as urgentes primeiro, revisão rápida com as notas da comunidade já preenchidas, comentários
-   prontos de um toque, selo "corrigida por professor". Metas e divisão entre monitores numa segunda fase,
-   ajustando com a professora.
+1. **Ferramenta do professor** — versão simples feita em 11/11 (rotas em `redacoes.js`). A equipe marca o
+   professor em Administração → Professores (pelo e-mail da conta). Ele abre Redação → Correção → "Fila da
+   minha escola": redações de quem pôs a mesma escola no perfil, sem o nome do aluno, urgentes primeiro
+   (comunidade discordou ou espera há mais de 3 dias). As notas já vêm marcadas (média da comunidade ou IA),
+   há comentários prontos de um toque, e a correção dele fecha a nota e leva o selo "professor".
+   Falta decidir com a professora: mostrar o nome do aluno (hoje não mostra; se mudar, avisar na Política de
+   Privacidade e na tela de envio), metas e divisão entre monitores.
 2. **Correção de redação por IA** (já pronta em `correcao-ia.js`, em "Em breve" até ter chave): pôr
    `ANTHROPIC_API_KEY` no Render com limite de gasto no console.anthropic.com. Hoje usa Claude Opus 5.5
    (~US$ 0,06 por redação); para gastar menos, trocar para Claude Haiku 5.5 (~US$ 0,002). Limite: 3 por

@@ -558,6 +558,11 @@ async function runMigrations() {
       );
       CREATE INDEX IF NOT EXISTS idx_redacoes_provas_usuario ON redacoes_provas(usuario_id, id DESC);
     `);
+    // Ferramenta do professor: a equipe marca a conta; a correção dele leva o selo e fecha a nota.
+    await pool.query(`
+      ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS professor BOOLEAN NOT NULL DEFAULT FALSE;
+      ALTER TABLE redacoes_correcoes ADD COLUMN IF NOT EXISTS professor BOOLEAN NOT NULL DEFAULT FALSE;
+    `);
     const jaFeito = await pool.query(`SELECT 1 FROM configuracoes WHERE chave = 'corretores_aprovados_v1'`).catch(() => ({ rowCount: 1 }));
     if (!jaFeito.rowCount) {
       await pool.query(`UPDATE usuarios SET corretor_aprovado = TRUE WHERE id IN (SELECT usuario_id FROM redacoes_correcoes WHERE NOT oculto)`);

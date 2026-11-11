@@ -39,3 +39,35 @@ test('prova de corretor: perto da nota é a mesma regra da 3ª correção', () =
   assert.equal(pertoDaNota([40, 40, 40, 40, 40], [160, 120, 120, 160, 120]), false);      // longe no total
   assert.equal(pertoDaNota([200, 120, 120, 160, 120], [100, 120, 120, 160, 120]), false); // 100 numa competência
 });
+
+test('professor: a correção dele fecha a nota sozinha', () => {
+  const { resultadoDasCorrecoes } = require('../redacoes');
+  const comunidade = [{ notas: [160, 160, 120, 160, 120] }, { notas: [160, 120, 160, 160, 160] }];
+  assert.strictEqual(resultadoDasCorrecoes(comunidade).nota, 740, 'sem professor, vale a média');
+  const r = resultadoDasCorrecoes([...comunidade, { notas: [120, 120, 120, 160, 120], professor: true }]);
+  assert.strictEqual(r.situacao, 'corrigida');
+  assert.strictEqual(r.nota, 640);
+  assert.strictEqual(r.professor, true);
+  assert.deepStrictEqual(r.usadas, [2]);
+  const so = resultadoDasCorrecoes([{ notas: [200, 200, 160, 200, 160], professor: true }]);
+  assert.strictEqual(so.faltam, 0, 'não precisa esperar a comunidade');
+});
+
+test('professor: notas sugeridas vêm da comunidade (arredondadas) ou da IA', () => {
+  const { sugestaoDeNotas, resultadoDasCorrecoes } = require('../redacoes');
+  const media = resultadoDasCorrecoes([{ notas: [160, 160, 120, 160, 120] }, { notas: [160, 120, 160, 160, 160] }]);
+  const s = sugestaoDeNotas(media, [200, 200, 200, 200, 200]);
+  assert.strictEqual(s.origem, 'comunidade');
+  assert.ok(s.notas.every(n => [0, 40, 80, 120, 160, 200].includes(n)), 'só níveis válidos');
+  assert.strictEqual(s.notas[0], 160);
+  assert.deepStrictEqual(sugestaoDeNotas(resultadoDasCorrecoes([]), [160, 120, 120, 160, 80]), { origem: 'ia', notas: [160, 120, 120, 160, 80] });
+  assert.deepStrictEqual(sugestaoDeNotas(resultadoDasCorrecoes([]), null), { origem: null, notas: [null, null, null, null, null] });
+});
+
+test('professor: urgente é discrepante ou esperando há mais de 3 dias', () => {
+  const { urgenteParaProfessor } = require('../redacoes');
+  const agora = Date.parse('2026-11-20T12:00:00Z');
+  assert.equal(urgenteParaProfessor('discrepante', '2026-11-20T10:00:00Z', agora), true);
+  assert.equal(urgenteParaProfessor('aguardando', '2026-11-19T12:00:00Z', agora), false);
+  assert.equal(urgenteParaProfessor('parcial', '2026-11-16T11:00:00Z', agora), true);
+});
