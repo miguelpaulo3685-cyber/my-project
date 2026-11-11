@@ -1242,6 +1242,7 @@ require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigi
 const arena = require('./arena')(app, { pool, auth, limitar, exigirLogin, cortes: CORTES_TRI, enviarPush: require('./avisos').enviarPush });
 cron.schedule('25 19 * * *', () => arena.lembrarArena().catch(erro => console.error('Erro no aviso da Arena:', erro.message)),
   { timezone: 'America/Sao_Paulo' });
+require('./estatisticas-redacao')(app);
 require('./redacoes')(app, { pool, auth, limitar, exigirLogin, exigirModerador });
 
 // ================== ADMINISTRAÇÃO ==================

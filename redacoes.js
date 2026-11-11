@@ -406,7 +406,8 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin, exigirModera
 
   // ---------- ferramenta do professor ----------
   // Professor (marcado pela equipe) vê só as redações de quem pôs a mesma escola
-  // no perfil, sem o nome de quem escreveu. A correção dele fecha a nota.
+  // no perfil. Só ele vê o nome de quem escreveu (os colegas corrigem às cegas).
+  // A correção dele fecha a nota.
   async function exigirProfessor(req, res, next) {
     if (!req.usuario) return res.status(401).json({ error: 'Faça login para continuar.' });
     try {
@@ -424,7 +425,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin, exigirModera
   async function redacaoDaEscola(id, req) {
     if (!id || !req.professor.escola_chave) return null;
     return (await pool.query(
-      `SELECT r.id, r.usuario_id, r.tema, r.texto, r.created_at, r.ia_status, r.ia_notas
+      `SELECT r.id, r.usuario_id, r.tema, r.texto, r.created_at, r.ia_status, r.ia_notas, u.username AS aluno
          FROM redacoes r JOIN usuarios u ON u.id = r.usuario_id
         WHERE r.id = $1 AND NOT r.oculto AND r.usuario_id <> $2 AND u.escola_chave = $3`,
       [id, req.usuario.id, req.professor.escola_chave])).rows[0] || null;
@@ -436,14 +437,14 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin, exigirModera
     if (!p.escola_chave) return res.json({ escola: null, redacoes: [] });
     try {
       const { rows } = await pool.query(
-        `SELECT r.id, r.tema, r.created_at FROM redacoes r JOIN usuarios u ON u.id = r.usuario_id
+        `SELECT r.id, r.tema, r.created_at, u.username AS aluno FROM redacoes r JOIN usuarios u ON u.id = r.usuario_id
           WHERE u.escola_chave = $1 AND r.usuario_id <> $2 AND NOT r.oculto
             AND NOT EXISTS (SELECT 1 FROM redacoes_correcoes c WHERE c.redacao_id = r.id AND NOT c.oculto AND (c.professor OR c.usuario_id = $2))
           ORDER BY r.id LIMIT 100`, [p.escola_chave, req.usuario.id]);
       const notas = await notasDe(rows.map(r => r.id));
       const redacoes = rows.map(r => {
         const resultado = resultadoDasCorrecoes(notas.get(r.id));
-        return { id: r.id, tema: r.tema, created_at: r.created_at, situacao: resultado.situacao, nota: resultado.nota,
+        return { id: r.id, tema: r.tema, aluno: r.aluno, created_at: r.created_at, situacao: resultado.situacao, nota: resultado.nota,
           correcoes: notas.get(r.id).length, urgente: urgenteParaProfessor(resultado.situacao, r.created_at) };
       }).sort((a, b) => (b.urgente - a.urgente) || (a.id - b.id));
       res.json({ escola: p.escola, redacoes });
@@ -462,7 +463,7 @@ function registrarRedacoes(app, { pool, auth, limitar, exigirLogin, exigirModera
         `SELECT notas, comentarios, geral, anulada, professor FROM redacoes_correcoes WHERE redacao_id = $1 AND NOT oculto ORDER BY id`, [r.id]);
       const resultado = resultadoDasCorrecoes(rows);
       res.json({
-        redacao: { id: r.id, tema: r.tema, texto: r.texto, created_at: r.created_at },
+        redacao: { id: r.id, tema: r.tema, texto: r.texto, created_at: r.created_at, aluno: r.aluno },
         sugestao: sugestaoDeNotas(resultado, r.ia_status === 'pronta' ? r.ia_notas : null),
         comunidade: rows.filter(c => !c.professor).map(c => ({ notas: c.notas, total: soma(c.notas), comentarios: c.comentarios, geral: c.geral, anulada: c.anulada }))
       });

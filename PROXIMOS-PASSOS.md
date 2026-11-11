@@ -107,7 +107,8 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 
 ### No dia (16/11)
 - [ ] **Gemini** ("Por que errei?" no Treinar): criar chave em aistudio.google.com e pôr `GEMINI_API_KEY`
-      no Render. Grátis. Opcionais: `GEMINI_MODELO` (padrão gemini-2.5-flash), `EXPLICACAO_LIMITE_DIARIO` (400).
+      no Render. Grátis. Quando o aluno erra, a explicação destaca a alternativa que ele marcou
+      ("Você marcou C. ...") e embaixo fica o link do vídeo. Opcionais: `GEMINI_MODELO` (padrão gemini-2.5-flash), `EXPLICACAO_LIMITE_DIARIO` (400).
 - [ ] Render pago (~US$ 7/mês), se der.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
@@ -117,16 +118,19 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    minha escola": redações de quem pôs a mesma escola no perfil, sem o nome do aluno, urgentes primeiro
    (comunidade discordou ou espera há mais de 3 dias). As notas já vêm marcadas (média da comunidade ou IA),
    há comentários prontos de um toque, e a correção dele fecha a nota e leva o selo "professor".
-   Falta decidir com a professora: mostrar o nome do aluno (hoje não mostra; se mudar, avisar na Política de
-   Privacidade e na tela de envio), metas e divisão entre monitores.
+   Só o professor vê o nome do aluno (decidido em 12/11; está na tela de envio e na Política de Privacidade).
+   Falta decidir com a professora: metas e divisão entre monitores.
 2. **Correção de redação por IA** (já pronta em `correcao-ia.js`, em "Em breve" até ter chave): pôr
    `ANTHROPIC_API_KEY` no Render com limite de gasto no console.anthropic.com. Hoje usa Claude Opus 5.5
    (~US$ 0,06 por redação); para gastar menos, trocar para Claude Haiku 5.5 (~US$ 0,002). Limite: 3 por
    aluno por dia e `IA_LIMITE_DIARIO` (200) no site. Não usar IA gratuita para redação (textos de menores).
 3. **Registro da marca no INPI** (classe 41, mista). Busca feita em 11/11: ninguém tem "M&M Estudos"; os
    "M&M"/"MM" da classe 41 são de fotografia, música e jornalismo (ramos diferentes).
-4. **Estatísticas da redação** (o quadrado com esse nome na aba Redação, "Em breve"): ranking de temas pela
-   matemática, testando antes com 2023-2025. É ranking para treino, não previsão garantida.
+4. **Estatísticas da redação** — feito em 12/11 (`estatisticas-redacao.js`): os temas de 1998 a 2026 em 8 eixos,
+   chance de cada eixo para o próximo ENEM e teste nos últimos 10 anos (o eixo certo ficou entre os 3 primeiros
+   em 5 de 10; ao acaso seriam uns 4, e o site diz isso). Quando sair um tema novo, é só acrescentar a linha
+   em `TEMAS`. Ideia para depois: um robô semanal que lê as notícias de gov.br (MEC, INEP, Planalto) e conta
+   os assuntos por eixo (o Instagram não deixa ler sozinho). Falta pôr o tema de 2026 (SUS) em "Anos anteriores".
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 

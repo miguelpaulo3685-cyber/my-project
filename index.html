@@ -1638,6 +1638,15 @@
     .niveis button[aria-pressed="true"] { background: var(--marca); border-color: var(--marca); color: var(--sobre-marca); }
     .descricao-nivel { display: block; font-size: .8rem; margin: 6px 0; min-height: 1.2em; color: var(--texto); }
     .comentario-competencia { min-height: 44px; font-size: .85rem; }
+    .ranking-eixos { display: grid; gap: 14px; margin: 6px 0 16px; }
+    .eixo .topo-eixo { display: flex; justify-content: space-between; gap: 10px; font-size: .95rem; }
+    .eixo .topo-eixo span { font-weight: 700; color: var(--marca-texto); }
+    .eixo > i { display: block; height: 8px; border-radius: 999px; background: var(--marca-suave); margin: 6px 0 4px; overflow: hidden; }
+    .eixo > i em { display: block; height: 100%; border-radius: 999px; background: var(--marca); }
+    .eixo small { display: block; color: var(--texto-fraco); font-size: .8rem; line-height: 1.45; }
+    .lista-historico { display: grid; gap: 8px; margin-top: 10px; font-size: .88rem; }
+    .lista-historico div { display: grid; grid-template-columns: 44px 1fr; gap: 8px; }
+    .lista-historico small { display: block; color: var(--texto-fraco); font-size: .78rem; }
     .prontos { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0 6px; }
     .prontos button { font: inherit; font-size: .76rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--borda);
       background: var(--superficie); color: var(--texto-fraco); cursor: pointer; }
@@ -4850,7 +4859,8 @@ async function pedirExplicacao(id, marcada) {
   if (!caixa) return;
   caixa.innerHTML = '<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está pensando… leva alguns segundos.</p>';
   let texto;
-  try { texto = (await postar(`/api/questoes/${id}/explicacao`)).explicacao; }
+  let sua = null;
+  try { const d = await postar(`/api/questoes/${id}/explicacao`, { marcada }); texto = d.explicacao; sua = d.sua; }
   catch (e) {
     caixa.innerHTML = `<p class="pista">${escapar(e.daApi || SEM_SERVIDOR)}</p>
       <button class="acao discreta pequena" onclick="pedirExplicacao(${id}, ${marcada === null ? 'null' : marcada})">Tentar de novo</button>`;
@@ -4860,7 +4870,8 @@ async function pedirExplicacao(id, marcada) {
   const admin = usuarioLogado && usuarioLogado.admin;
   caixa.dataset.texto = texto;
   caixa.innerHTML = `<div class="resolucao explicacao-ia">
-      <b>🤖 Explicação da IA</b>${marcada !== null ? ` <small class="pista">Você marcou ${LETRAS[marcada]}.</small>` : ''}
+      <b>🤖 Explicação da IA</b>${marcada !== null && !sua ? ` <small class="pista">Você marcou ${LETRAS[marcada]}.</small>` : ''}
+      ${marcada !== null && sua ? `<p class="aviso-redacao" style="margin:8px 0"><b>Você marcou ${LETRAS[marcada]}.</b> ${escapar(sua)}</p>` : ''}
       <div class="enunciado">${formatarEnunciado(texto)}</div>
       <small class="pista">Gerada por IA: pode conter erros. Achou um erro? Comente na discussão da questão.</small>
       ${admin ? `<button class="acao discreta pequena" style="margin-top:8px" onclick="editarResolucao(${id}, document.getElementById('explicacao-ia').dataset.texto)">✏️ Revisar e virar resolução</button>` : ''}
@@ -10144,7 +10155,7 @@ function desenharMenuRedacao() {
   alvoRedacao().innerHTML = `<div class="menu-redacao">
       ${quadrado('temas', 'temas', 'Anos anteriores', 'Escreva sobre os temas do ENEM')}
       ${quadrado('formas', 'correcao', 'Correção', 'Comunidade, professores ou IA')}
-      ${quadrado('treinar', 'estatisticas', 'Estatísticas', 'O tema mais provável, pela matemática · em breve')}
+      ${quadrado('treinar', 'estatisticas', 'Estatísticas', 'O que tem mais chance de cair, pela matemática')}
       ${quadrado('estatisticas', 'minhas', 'Minhas redações', 'Suas notas e correções')}
     </div>`;
 }
@@ -10160,12 +10171,32 @@ function desenharTemasRedacao() {
     </section>`;
 }
 
-function desenharTemasParaTreinar() {
-  alvoRedacao().innerHTML = `${voltarRedacoes()}
+// Estatísticas: ranking dos eixos temáticos pela história dos temas, com o teste nos anos passados.
+async function desenharTemasParaTreinar() {
+  const alvo = alvoRedacao();
+  alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
+  let d;
+  try { d = await api('/api/redacoes/estatisticas'); } catch (e) { alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  if (!redacaoNaTela() || telaRedacoes.modo !== 'treinar') return;
+  const maior = d.ranking[0].chance;
+  alvo.innerHTML = `${voltarRedacoes()}
     <section class="opcao-redacao" style="margin-top:12px">
-      <h2>${iconeRedacao('estatisticas')} Estatísticas <span class="selo-breve">Em breve</span></h2>
-      <p>Um ranking de assuntos com mais chance de cair na redação, montado com matemática a partir dos temas
-        dos anos anteriores e da agenda do governo. Serve para escolher o que treinar: é uma aposta com base em dados, não uma garantia do tema.</p>
+      <h2>${iconeRedacao('estatisticas')} O que treinar para o ENEM ${d.alvo}</h2>
+      <p>Classificamos os ${d.ate - d.desde + 1} temas do ENEM (${d.desde} a ${d.ate}) em 8 eixos e calculamos a chance de cada eixo cair.
+        Não dá para adivinhar o tema: serve para escolher o que treinar primeiro.</p>
+      <div class="ranking-eixos">${d.ranking.map((r, i) => `<div class="eixo">
+          <div class="topo-eixo"><b>${i + 1}. ${escapar(r.nome)}</b><span>${r.chance}%</span></div>
+          <i><em style="width:${Math.round(r.chance / maior * 100)}%"></em></i>
+          <small>Caiu ${plural(r.vezes, 'vez', 'vezes')} · última em ${r.ultima}</small>
+          ${i < 3 ? `<small>Para treinar: ${r.assuntos.map(escapar).join(' · ')}</small>` : ''}
+        </div>`).join('')}</div>
+      <p class="aviso-redacao"><b>Dá para confiar?</b> Testamos a conta nos últimos ${d.teste.total} anos, usando só os temas anteriores a cada um:
+        o eixo que caiu ficou entre os 3 primeiros em <b>${d.teste.top3} de ${d.teste.total}</b> (chutando, seriam uns ${d.teste.ao_acaso}).
+        Ou seja: ajuda um pouco, mas o ENEM surpreende. Treine vários eixos.</p>
+      <details class="resolucao" style="margin-top:12px"><summary>Ver todos os temas e eixos</summary>
+        <div class="lista-historico">${d.historico.map(h => `<div><b>${h.ano}</b><span>${escapar(h.tema)}<small>${escapar(h.eixo)}</small></span></div>`).join('')}</div>
+      </details>
+      <p class="pista" style="margin-top:10px">Como é a conta: ${escapar(d.teste.como)}. Os assuntos "para treinar" são sugestões da equipe, não estatística.</p>
     </section>`;
 }
 
@@ -10249,7 +10280,7 @@ function desenharEscreverRedacao() {
       <div class="rotulo-modal">Sua redação <span class="pista" id="linhas-redacao" style="margin:0 0 0 8px;text-transform:none;letter-spacing:0">0 linhas</span></div>
       <textarea class="folha-redacao" id="texto-redacao" maxlength="5000" placeholder="Escreva aqui, com título opcional na primeira linha. No ENEM são de 7 a 30 linhas."
         oninput="document.getElementById('linhas-redacao').textContent = plural(contarLinhas(this.value), 'linha', 'linhas') + ' (aprox.)'"></textarea>
-      <p class="pista">Quem corrige não vê o seu nome. Você vê o nome de quem corrigiu e pode marcar as correções que ajudaram.</p>
+      <p class="pista">Os colegas que corrigem não veem o seu nome; só o professor da sua escola, se houver, vê. Você vê o nome de quem corrigiu e pode marcar as correções que ajudaram.</p>
       <div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="acao" style="margin:0" id="botao-enviar-redacao">Mandar para correção</button></div>
     </form>`;
 }
@@ -10409,7 +10440,7 @@ function desenharCorrecao() {
         ${c.prova ? `<div class="aviso-prova"><b>Prova de corretor · ${c.prova.etapa} de ${c.prova.de}</b>
           Antes de corrigir a redação dos colegas, corrija ${c.prova.de} redações que já têm nota fechada pela comunidade.
           Passa quem chegar perto da nota (até 100 pontos no total e 80 em cada competência). Aqui não precisa escrever comentários.</div>`
-          : c.professor ? `<div class="aviso-prova"><b>Revisão do professor</b>${c.professor.origem
+          : c.professor ? `<div class="aviso-prova"><b>Revisão do professor · ${escapar(c.redacao.aluno || '')}</b>${c.professor.origem
               ? `As notas já vêm marcadas com ${c.professor.origem === 'ia' ? 'a estimativa da IA' : 'a média da comunidade'}. Ajuste só o que discordar: a sua correção fecha a nota.`
               : 'Ninguém corrigiu esta ainda. A sua correção fecha a nota.'}</div>`
           : `<small class="pista" style="display:block;margin:0 0 4px">Correção às cegas · ${plural(c.restam, 'redação na fila', 'redações na fila')}</small>`}
@@ -10501,7 +10532,7 @@ function comentarioPronto(i, k) {
   if (caixa) caixa.value = correcaoAtual.comentarios[i];
 }
 
-// Fila da escola: as redações dos alunos da escola do professor, urgentes primeiro, sem nomes.
+// Fila da escola: as redações dos alunos da escola do professor, urgentes primeiro.
 async function desenharFilaDoProfessor() {
   const alvo = alvoRedacao();
   alvo.innerHTML = `${voltarRedacoes()}<div class="vazio">Carregando…</div>`;
@@ -10518,7 +10549,7 @@ async function desenharFilaDoProfessor() {
     ${d.redacoes.length ? `<div class="lista-redacoes">${d.redacoes.map(r => `<button class="cartao-redacao" onclick="revisarComoProfessor(${r.id})">
         <span class="nota-redacao previa">${r.nota === null ? '—' : r.nota}<small>${r.nota === null ? '' : 'comunidade'}</small></span>
         <span><b>${escapar(r.tema)}${r.urgente ? '<span class="selo-urgente">urgente</span>' : ''}</b>
-          <small>${new Date(r.created_at).toLocaleDateString('pt-BR')} · ${r.correcoes ? plural(r.correcoes, 'correção da comunidade', 'correções da comunidade') : 'ninguém corrigiu ainda'}</small></span>
+          <small>${escapar(r.aluno)} · ${new Date(r.created_at).toLocaleDateString('pt-BR')} · ${r.correcoes ? plural(r.correcoes, 'correção da comunidade', 'correções da comunidade') : 'ninguém corrigiu ainda'}</small></span>
       </button>`).join('')}</div>`
       : '<div class="vazio"><span class="cara">🎉</span>Nenhuma redação da sua escola esperando correção.</div>'}`;
 }
@@ -10568,7 +10599,7 @@ async function desenharProfessoresAdmin() {
       <button class="acao pequena" style="margin:0" onclick="marcarProfessor(true)">Tornar professor</button>
       <button class="acao discreta pequena" style="margin:0" onclick="marcarProfessor(false)">Tirar</button>
     </div>
-    <p class="pista">O professor vê só as redações de quem pôs a mesma escola no perfil, sem o nome do aluno.</p>`;
+    <p class="pista">O professor vê só as redações de quem pôs a mesma escola no perfil, com o nome do aluno.</p>`;
 }
 async function marcarProfessor(professor) {
   const email = document.getElementById('email-professor').value;

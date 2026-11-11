@@ -19,7 +19,7 @@ const INSTRUCOES = `Você é um professor de cursinho que explica questões do E
 Explique a questão em português do Brasil, de forma clara, curta e didática:
 1. O que a questão pede, em uma ou duas frases.
 2. O raciocínio ou a conta até a resposta certa, passo a passo.
-3. Por que cada alternativa errada está errada (uma linha para cada, começando com a letra).
+3. Por que cada alternativa errada está errada: uma linha para cada, sempre no formato "A) motivo", dizendo qual foi o engano de quem marcou essa letra.
 Use o gabarito informado como a resposta certa. Use **negrito** só para o essencial. Não invente dados que não estão na questão.
 Termine com a linha: **Resposta: X**.`;
 
@@ -63,6 +63,19 @@ async function explicarQuestao(q, http = axios) {
   return texto.slice(0, 6000);
 }
 
+// "Por que errei?": a linha da explicação que fala da alternativa que o aluno marcou
+// (a IA escreve "C) motivo"; aceita também "**C)**", "- C)" e "C:").
+function trechoDaAlternativa(texto, indice) {
+  const letra = LETRAS[indice];
+  if (!letra) return null;
+  const padrao = new RegExp(`^[\\s>*•-]*\\**${letra}\\**\\s*[\\):.-]\\**\\s*(.+)$`);
+  for (const linha of String(texto || '').split('\n')) {
+    const m = linha.match(padrao);
+    if (m && m[1].trim().length > 8) return m[1].replace(/\*\*/g, '').trim().slice(0, 500);
+  }
+  return null;
+}
+
 function registrarExplicacoes(app, { pool, auth }) {
   // Por aparelho: 30 explicações novas por hora. As já guardadas não contam.
   const freio = auth.criarFreio(30, 60 * 60 * 1000);
@@ -73,7 +86,8 @@ function registrarExplicacoes(app, { pool, auth }) {
     if (!Number.isInteger(id) || id <= 0) return res.status(404).json({ error: 'Questão não encontrada.' });
     try {
       const guardada = (await pool.query('SELECT texto FROM explicacoes_ia WHERE questao_id = $1', [id])).rows[0];
-      if (guardada) return res.json({ explicacao: guardada.texto });
+      const marcada = Number.isInteger(req.body?.marcada) ? req.body.marcada : -1;
+      if (guardada) return res.json({ explicacao: guardada.texto, sua: trechoDaAlternativa(guardada.texto, marcada) });
       if (!ligada()) return res.status(503).json({ error: 'A explicação por IA ainda não está disponível.' });
       if (freio.bloqueado(req.ip)) return res.status(429).json({ error: 'Muitas explicações seguidas. Espere um pouco.' });
       const hoje = (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
@@ -93,7 +107,7 @@ function registrarExplicacoes(app, { pool, auth }) {
       }
       const texto = await emAndamento.get(id);
       if (!texto) return res.status(404).json({ error: 'Questão não encontrada.' });
-      res.json({ explicacao: texto });
+      res.json({ explicacao: texto, sua: trechoDaAlternativa(texto, marcada) });
     } catch (erro) {
       console.error(`Erro na explicação por IA da questão ${id}:`, erro.response?.status || '', erro.message);
       const ocupada = erro.response?.status === 429;
@@ -103,4 +117,4 @@ function registrarExplicacoes(app, { pool, auth }) {
 }
 
 module.exports = registrarExplicacoes;
-Object.assign(module.exports, { ligada, explicarQuestao, montarPergunta, urlsDasFiguras, semFiguras, MODELO });
+Object.assign(module.exports, { ligada, explicarQuestao, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });

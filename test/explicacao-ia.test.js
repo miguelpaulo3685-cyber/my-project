@@ -39,3 +39,12 @@ test('explicação: resposta vazia vira erro; desligada sem chave', async () => 
   await assert.rejects(ex.explicarQuestao(questao, http), /SAFETY/);
   assert.equal(ex.ligada(), false);
 });
+
+test('por que errei: acha a linha da alternativa que o aluno marcou', () => {
+  const texto = 'A questão pede a área.\n\n1. Conta...\n\nA) Somou em vez de multiplicar.\n**B)** Esqueceu de converter cm em m.\n- C: usou o raio no lugar do diâmetro.\n\n**Resposta: D**';
+  assert.equal(ex.trechoDaAlternativa(texto, 0), 'Somou em vez de multiplicar.');
+  assert.equal(ex.trechoDaAlternativa(texto, 1), 'Esqueceu de converter cm em m.');
+  assert.equal(ex.trechoDaAlternativa(texto, 2), 'usou o raio no lugar do diâmetro.');
+  assert.equal(ex.trechoDaAlternativa(texto, 4), null, 'sem linha para a letra, não inventa');
+  assert.equal(ex.trechoDaAlternativa(texto, -1), null);
+});
