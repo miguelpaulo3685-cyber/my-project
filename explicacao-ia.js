@@ -17,7 +17,7 @@ const MODELOS_RESERVA = ['gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'];
 const VALIDADE_DA_LISTA = 12 * 60 * 60 * 1000;
 let listaGuardada = { em: 0, modelos: null };
 // Para a Administração: o que aconteceu na última tentativa.
-const estado = { ok: null, modelo: null, erro: null, em: null };
+const estado = { ok: null, modelo: null, erro: null, em: null, antes: [] }; // antes: modelos que falharam nesta tentativa
 
 function escolherModelos(lista) {
   const estaveis = (Array.isArray(lista) ? lista : [])
@@ -58,6 +58,9 @@ Explique a questão em português do Brasil, de forma clara, curta e didática:
 2. O raciocínio ou a conta até a resposta certa, passo a passo.
 3. Por que cada alternativa errada está errada: uma linha para cada, sempre no formato "A) motivo", dizendo qual foi o engano de quem marcou essa letra.
 Use o gabarito informado como a resposta certa. Use **negrito** só para o essencial. Não invente dados que não estão na questão.
+Antes de responder, refaça a conta: cada passo tem de fechar e o resultado final tem de ser exatamente o do gabarito. Nunca escreva uma conta cujo resultado não bate com o que você afirma.
+Se a questão depende de uma figura e você não consegue ver com certeza o que ela mostra (quantas regiões, valores do gráfico, medidas), não chute: diga em uma frase o que não deu para ler e explique só o caminho do raciocínio.
+Não cumprimente nem se apresente: comece direto pelo item 1.
 Termine com a linha: **Resposta: X**.`;
 
 const FIGURA = /!\[[^\]]*\]\(([^)\s]+)\)/g;
@@ -88,6 +91,7 @@ async function explicarComModelo(q, http = axios) {
   const figuras = await baixarFiguras([q.contexto, ...(q.alternativas || [])].flatMap(urlsDasFiguras), http);
   const modelos = await modelosParaTentar(http);
   let ultimoErro = null;
+  const antes = [];
   for (const modelo of modelos) {
     try {
       const r = await http.post(
@@ -102,11 +106,12 @@ async function explicarComModelo(q, http = axios) {
       const candidato = r.data?.candidates?.[0];
       const texto = (candidato?.content?.parts || []).map(p => p.text || '').join('').trim();
       if (!texto) throw new Error(`a IA não devolveu explicação (${candidato?.finishReason || 'sem resposta'})`);
-      Object.assign(estado, { ok: true, modelo, erro: null, em: new Date().toISOString() });
+      Object.assign(estado, { ok: true, modelo, erro: null, em: new Date().toISOString(), antes });
       return { texto: texto.slice(0, 6000), modelo };
     } catch (erro) {
       ultimoErro = erro;
-      Object.assign(estado, { ok: false, modelo, erro: motivoDoErro(erro), em: new Date().toISOString() });
+      antes.push({ modelo, erro: motivoDoErro(erro) });
+      Object.assign(estado, { ok: false, modelo, erro: motivoDoErro(erro), em: new Date().toISOString(), antes: antes.slice(0, -1) });
       // Chave recusada: trocar de modelo não resolve.
       if (erro.response?.status === 401) break;
     }
@@ -170,6 +175,17 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
 
   // Administração: a IA está respondendo? Com qual modelo, ou por que não.
   if (exigirModerador) {
+    // Explicação errada: a equipe apaga e a próxima pessoa que pedir gera outra.
+    app.delete('/api/admin/questoes/:id/explicacao', exigirModerador, async (req, res) => {
+      const id = Number(req.params.id);
+      if (!Number.isInteger(id) || id <= 0) return res.status(404).json({ error: 'Questão não encontrada.' });
+      try {
+        const r = await pool.query('DELETE FROM explicacoes_ia WHERE questao_id = $1', [id]);
+        res.json({ apagada: r.rowCount > 0 });
+      } catch (erro) {
+        res.status(500).json({ error: 'Não deu certo agora.' });
+      }
+    });
     app.get('/api/admin/ia', exigirModerador, async (req, res) => {
       const guardadas = (await pool.query('SELECT COUNT(*)::int AS n FROM explicacoes_ia').catch(() => ({ rows: [{ n: null }] }))).rows[0].n;
       res.json({ explicacao: { ligada: ligada(), ...estado, guardadas } });

@@ -4877,8 +4877,16 @@ async function pedirExplicacao(id, marcada) {
       ${marcada !== null && sua ? `<p class="aviso-redacao" style="margin:8px 0"><b>Você marcou ${LETRAS[marcada]}.</b> ${escapar(sua)}</p>` : ''}
       <div class="enunciado">${formatarEnunciado(texto)}</div>
       <small class="pista">Gerada por IA: pode conter erros. Achou um erro? Comente na discussão da questão.</small>
-      ${admin ? `<button class="acao discreta pequena" style="margin-top:8px" onclick="editarResolucao(${id}, document.getElementById('explicacao-ia').dataset.texto)">✏️ Revisar e virar resolução</button>` : ''}
+      ${admin ? `<button class="acao discreta pequena" style="margin-top:8px" onclick="editarResolucao(${id}, document.getElementById('explicacao-ia').dataset.texto)">✏️ Revisar e virar resolução</button>
+        <button class="acao discreta pequena" style="margin-top:8px" onclick="apagarExplicacaoIa(${id}, ${marcada === null ? 'null' : marcada})">🗑 Está errada: apagar e gerar outra</button>` : ''}
     </div>`;
+}
+
+// Administradores: apaga a explicação guardada e pede outra à IA.
+async function apagarExplicacaoIa(id, marcada) {
+  if (!await confirmar('Apagar esta explicação da IA? Ela some para todo mundo e a IA escreve outra.', { sim: 'Apagar e gerar outra', perigo: true })) return;
+  try { await api(`/api/admin/questoes/${id}/explicacao`, { method: 'DELETE' }); } catch (e) { return avisoSim(e.daApi || SEM_SERVIDOR); }
+  pedirExplicacao(id, marcada);
 }
 
 // Toda questão ganha um vídeo de explicação: a busca do YouTube já abre na
@@ -10601,7 +10609,7 @@ async function desenharIaAdmin() {
   try { d = (await api('/api/admin/ia')).explicacao; } catch (e) { alvo.innerHTML = ''; return; }
   const texto = !d.ligada ? 'desligada (falta a GEMINI_API_KEY no Render).'
     : d.ok === null ? `ligada, ainda sem pedidos desde que o servidor reiniciou. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
-    : d.ok ? `✅ funcionando com ${escapar(d.modelo)}. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
+    : d.ok ? `✅ funcionando com ${escapar(d.modelo)}${(d.antes || []).map(a => ` (antes falhou ${escapar(a.modelo)}: ${escapar(a.erro)})`).join('')}. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
     : `⚠️ o último pedido falhou (${escapar(d.modelo || '')}): ${escapar(d.erro || 'erro desconhecido')}`;
   alvo.innerHTML = `<p class="pista" style="margin:10px 0"><b>"Por que errei?" (IA):</b> ${texto}</p>`;
 }
