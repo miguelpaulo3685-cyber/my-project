@@ -86,7 +86,7 @@ Só correção de erro, conteúdo e o que os testadores pedirem. Ordem:
    texto (tiradas do PDF pelo `extrair.py` ou digitadas das fórmulas); os recortes cortados foram corrigidos.
    Ficaram como imagem só as alternativas que são desenho (gráficos, circuitos, heredogramas): 2024-112, 121, 131;
    2025-106, 107, 108, 119, 127, 135 e 172.
-4b. **Manter o servidor acordado de verdade:** o robô do GitHub (`manter-acordado.yml`) deveria rodar a cada
+4b. [x] (feito em 12/11 com o UptimeRobot) **Manter o servidor acordado de verdade:** o robô do GitHub (`manter-acordado.yml`) deveria rodar a cada
    10 minutos, mas o GitHub atrasa esses horários e ele roda só a cada 4 a 6 horas. Até o Render pago, criem um
    monitor grátis no UptimeRobot (uptimerobot.com → New monitor → HTTP(s) →
    `https://enem-api-cbo6.onrender.com/api/health`, a cada 5 minutos).
@@ -102,11 +102,10 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 
 ### Até domingo (15/11)
 - [ ] Marcar os erros do painel como resolvidos.
-- [ ] UptimeRobot (grátis): avisar se o site ou a API caírem.
-- [ ] **Cópia de segurança do banco** (`.github/workflows/copia-do-banco.yml`, todo dia, criptografada, 30 dias):
-      criar no GitHub (Settings > Secrets and variables > Actions) os segredos `COPIA_DATABASE_URL` (a URL do
-      Neon) e `COPIA_SENHA` (20+ caracteres, guardada fora do GitHub). Depois rodar uma vez à mão em Actions.
-- [ ] Link `mmestudos.com.br` na bio do Instagram e do TikTok; mensagem de divulgação.
+- [x] UptimeRobot (12/11): monitores do site e da API criados, os dois "Up".
+- [x] **Cópia de segurança do banco** (`.github/workflows/copia-do-banco.yml`): segredos criados e primeira
+      cópia feita em 12/11 (1,4 MB, conferida). Roda sozinha todo dia; cada cópia fica 30 dias em Actions >
+      Artifacts. A `COPIA_SENHA` tem de estar guardada fora do GitHub: sem ela a cópia não abre.
 
 ### No dia (16/11)
 - [ ] **Gemini** ("Por que errei?" no Treinar): criar chave em aistudio.google.com e pôr `GEMINI_API_KEY`
