@@ -1,0 +1,20 @@
+# O GitHub confere as bibliotecas do servidor e os robôs (Actions) toda semana.
+# Falha de segurança conhecida: ele abre sozinho um pedido com a correção, e os
+# testes rodam nele. Só entra no master quando Miguel ou Matheus aceitarem.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+    # Um pedido só para as atualizações pequenas, em vez de um por biblioteca.
+    groups:
+      pequenas:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
