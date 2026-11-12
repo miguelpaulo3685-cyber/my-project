@@ -17,7 +17,7 @@ const MODELOS_RESERVA = ['gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'];
 const VALIDADE_DA_LISTA = 12 * 60 * 60 * 1000;
 let listaGuardada = { em: 0, modelos: null };
 // Para a Administração: o que aconteceu na última tentativa.
-const estado = { ok: null, modelo: null, erro: null, em: null, antes: [] }; // antes: modelos que falharam nesta tentativa
+const estado = { ok: null, modelo: null, erro: null, em: null, antes: [], recusadas: [] }; // recusadas: últimas barradas pela trava // antes: modelos que falharam nesta tentativa
 
 function escolherModelos(lista) {
   const estaveis = (Array.isArray(lista) ? lista : [])
@@ -60,7 +60,9 @@ Explique a questão em português do Brasil, de forma clara, curta e didática:
 Use o gabarito informado como a resposta certa. Use **negrito** só para o essencial. Não invente dados que não estão na questão.
 Antes de responder, refaça a conta: cada passo tem de fechar e o resultado final tem de ser exatamente o do gabarito. Nunca escreva uma conta cujo resultado não bate com o que você afirma.
 Se a questão depende de uma figura e você não consegue ver com certeza o que ela mostra (quantas regiões, valores do gráfico, medidas), não chute: diga em uma frase o que não deu para ler e explique só o caminho do raciocínio.
-Não cumprimente nem se apresente: comece direto pelo item 1.
+Não cumprimente nem se apresente: comece direto pelo item 1. Escreva só a versão final: nada de "espere", "opa" ou contas refeitas no meio do texto.
+Não use LaTeX nem cifrões: escreva as contas em texto simples, com × e ÷ (exemplo: 4 × 3 = 12).
+Se a sua conta não chegar ao gabarito (o enunciado pode estar com erro), não force o resultado: responda apenas uma linha começando com NAO_BATE: e o motivo.
 Termine com a linha: **Resposta: X**.`;
 
 const FIGURA = /!\[[^\]]*\]\(([^)\s]+)\)/g;
@@ -86,6 +88,56 @@ function montarPergunta(q) {
   return `ENEM ${q.ano || ''}${q.numero ? `, questão ${q.numero}` : ''}\n\n${semFiguras(q.contexto)}\n\nAlternativas:\n${alternativas}\n\nGabarito: ${LETRAS[q.correta]}`;
 }
 
+// ---------- trava de qualidade ----------
+// Uma explicação errada com cara de certa é pior do que nenhuma. Antes de
+// guardar (e de mostrar uma já guardada), o servidor recusa o texto se a IA
+// avisou que a conta não bate, se ela se corrigiu no meio do texto, se a
+// resposta final não é a do gabarito ou se alguma conta simples escrita no
+// texto está errada (ex.: "4 × 3 × 2 = 972").
+const HESITACAO = /(^|[^a-zà-ú])(opa|ops|espere|vamos refazer|refazendo a conta|me enganei|o gabarito oficial (da questão )?é|aceita pela banca)([^a-zà-ú]|$)/i;
+const NUMERO = '\\d{1,3}(?:[ .]\\d{3})+(?:,\\d+)?|\\d+(?:[.,]\\d+)?';
+const CONTA = new RegExp(`(?<![×÷*/+\\-=^(]\\s*)(?<![\\d.,])(?<!\\d[ .])((?:${NUMERO})(?:\\s*[×÷*/+\\-]\\s*(?:${NUMERO}))+)\\s*=\\s*(-?(?:${NUMERO}))(?![ .,]?\\d)(?!\\s*[×÷*/+\\-^%⁰¹²³⁴-⁹])`, 'g');
+const valor = t => Number(t.replace(/[ .](?=\d{3}(?:\D|$))/g, '').replace(',', '.'));
+
+function calcular(expressao) {
+  const partes = expressao.split(/\s*([×÷*/+\-])\s*/).filter(Boolean);
+  const pilha = [valor(partes[0])];
+  for (let i = 1; i < partes.length; i += 2) {
+    const n = valor(partes[i + 1]);
+    if (partes[i] === '×' || partes[i] === '*') pilha.push(pilha.pop() * n);
+    else if (partes[i] === '÷' || partes[i] === '/') pilha.push(pilha.pop() / n);
+    else pilha.push(partes[i] === '-' ? -n : n);
+  }
+  return pilha.reduce((a, b) => a + b, 0);
+}
+
+// As contas simples do texto (só números, × ÷ + −) cujo resultado escrito não confere.
+function contasErradas(texto) {
+  const limpo = String(texto || '').replace(/\$|\*\*/g, '').replace(/\\times|\\cdot|·/g, '×').replace(/\\div/g, '÷').replace(/−|–/g, '-');
+  const erradas = [];
+  for (const m of limpo.matchAll(CONTA)) {
+    const certo = calcular(m[1]);
+    const escrito = valor(m[2]);
+    if (!Number.isFinite(certo) || !Number.isFinite(escrito)) continue;
+    // Só inteiros com × + −: tem de dar exato. Com divisão ou decimais, aceita arredondamento de até 1%.
+    const exata = !/[÷/,]/.test(m[1]) && !/\d\.\d{1,2}(\D|$)/.test(m[1]);
+    const folga = exata ? 1e-9 : Math.max(0.01 * Math.abs(certo), 0.051);
+    if (Math.abs(certo - escrito) > folga) erradas.push(m[0].trim());
+  }
+  return erradas;
+}
+
+function problemaNaExplicacao(texto, q) {
+  const t = String(texto || '');
+  if (/NAO_BATE/.test(t)) return `a conta da IA não chegou ao gabarito (${t.replace(/\s+/g, ' ').slice(0, 160)})`;
+  const final = t.match(/Resposta:\s*\**\s*([A-E])\b/g);
+  if (!final || !final[final.length - 1].endsWith(LETRAS[q.correta])) return 'a resposta final não é a do gabarito';
+  if (HESITACAO.test(t)) return 'a IA se corrigiu no meio do texto';
+  const erradas = contasErradas(t);
+  if (erradas.length) return `conta que não fecha: ${erradas[0].slice(0, 80)}`;
+  return null;
+}
+
 // Tenta os modelos em ordem: se um foi aposentado, está sem cota ou fora do ar, vai o próximo.
 async function explicarComModelo(q, http = axios) {
   const figuras = await baixarFiguras([q.contexto, ...(q.alternativas || [])].flatMap(urlsDasFiguras), http);
@@ -106,6 +158,8 @@ async function explicarComModelo(q, http = axios) {
       const candidato = r.data?.candidates?.[0];
       const texto = (candidato?.content?.parts || []).map(p => p.text || '').join('').trim();
       if (!texto) throw new Error(`a IA não devolveu explicação (${candidato?.finishReason || 'sem resposta'})`);
+      const problema = problemaNaExplicacao(texto, q);
+      if (problema) throw Object.assign(new Error(`explicação recusada: ${problema}`), { recusada: problema });
       Object.assign(estado, { ok: true, modelo, erro: null, em: new Date().toISOString(), antes });
       return { texto: texto.slice(0, 6000), modelo };
     } catch (erro) {
@@ -116,7 +170,11 @@ async function explicarComModelo(q, http = axios) {
       if (erro.response?.status === 401) break;
     }
   }
-  listaGuardada.em = 0; // na próxima, pergunta de novo quais modelos existem
+  if (ultimoErro && ultimoErro.recusada) {
+    estado.recusadas = [{ questao: `${q.ano || '?'}-${q.numero || '?'}`, motivo: ultimoErro.recusada }, ...estado.recusadas].slice(0, 10);
+  } else {
+    listaGuardada.em = 0; // na próxima, pergunta de novo quais modelos existem
+  }
   throw ultimoErro;
 }
 const explicarQuestao = async (q, http) => (await explicarComModelo(q, http)).texto;
@@ -138,14 +196,24 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
   // Por aparelho: 30 explicações novas por hora. As já guardadas não contam.
   const freio = auth.criarFreio(30, 60 * 60 * 1000);
   const emAndamento = new Map(); // a mesma questão pedida por dois alunos ao mesmo tempo gera uma vez só
+  const recusadas = new Map();   // questão barrada pela trava: só tenta de novo no dia seguinte (ou se a equipe apagar)
+  const SEM_EXPLICACAO = 'A IA não conseguiu explicar esta questão com segurança. Veja a resolução em vídeo logo abaixo.';
 
   app.post('/api/questoes/:id/explicacao', async (req, res) => {
     const id = Number(req.params.id);
     if (!Number.isInteger(id) || id <= 0) return res.status(404).json({ error: 'Questão não encontrada.' });
     try {
-      const guardada = (await pool.query('SELECT texto FROM explicacoes_ia WHERE questao_id = $1', [id])).rows[0];
+      const guardada = (await pool.query(
+        'SELECT e.texto, q.correta FROM explicacoes_ia e JOIN questoes q ON q.id = e.questao_id WHERE e.questao_id = $1', [id])).rows[0];
       const marcada = Number.isInteger(req.body?.marcada) ? req.body.marcada : -1;
-      if (guardada) return res.json({ explicacao: guardada.texto, sua: trechoDaAlternativa(guardada.texto, marcada) });
+      if (guardada) {
+        // Guardada antes da trava (ou antes de uma correção do gabarito): se não passa, sai e é refeita.
+        const problema = problemaNaExplicacao(guardada.texto, guardada);
+        if (!problema) return res.json({ explicacao: guardada.texto, sua: trechoDaAlternativa(guardada.texto, marcada) });
+        console.log(`🧹 Explicação da questão ${id} apagada pela trava: ${problema}`);
+        await pool.query('DELETE FROM explicacoes_ia WHERE questao_id = $1', [id]);
+      }
+      if (recusadas.has(id) && Date.now() - recusadas.get(id) < 24 * 60 * 60 * 1000) return res.status(422).json({ error: SEM_EXPLICACAO });
       if (!ligada()) return res.status(503).json({ error: 'A explicação por IA ainda não está disponível.' });
       if (freio.bloqueado(req.ip)) return res.status(429).json({ error: 'Muitas explicações seguidas. Espere um pouco.' });
       const hoje = (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
@@ -168,6 +236,7 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
       res.json({ explicacao: texto, sua: trechoDaAlternativa(texto, marcada) });
     } catch (erro) {
       console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
+      if (erro.recusada) { recusadas.set(id, Date.now()); return res.status(422).json({ error: SEM_EXPLICACAO }); }
       const ocupada = erro.response?.status === 429;
       res.status(ocupada ? 429 : 502).json({ error: ocupada ? 'A IA está ocupada agora. Tente de novo em alguns minutos.' : 'Não consegui explicar agora. Tente de novo.' });
     }
@@ -181,6 +250,7 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
       if (!Number.isInteger(id) || id <= 0) return res.status(404).json({ error: 'Questão não encontrada.' });
       try {
         const r = await pool.query('DELETE FROM explicacoes_ia WHERE questao_id = $1', [id]);
+        recusadas.delete(id);
         res.json({ apagada: r.rowCount > 0 });
       } catch (erro) {
         res.status(500).json({ error: 'Não deu certo agora.' });
@@ -194,4 +264,4 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
 }
 
 module.exports = registrarExplicacoes;
-Object.assign(module.exports, { ligada, explicarQuestao, explicarComModelo, escolherModelos, estado, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });
+Object.assign(module.exports, { ligada, explicarQuestao, explicarComModelo, escolherModelos, problemaNaExplicacao, contasErradas, estado, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });

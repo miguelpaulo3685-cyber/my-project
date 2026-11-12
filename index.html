@@ -10611,7 +10611,8 @@ async function desenharIaAdmin() {
     : d.ok === null ? `ligada, ainda sem pedidos desde que o servidor reiniciou. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
     : d.ok ? `✅ funcionando com ${escapar(d.modelo)}${(d.antes || []).map(a => ` (antes falhou ${escapar(a.modelo)}: ${escapar(a.erro)})`).join('')}. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
     : `⚠️ o último pedido falhou (${escapar(d.modelo || '')}): ${escapar(d.erro || 'erro desconhecido')}`;
-  alvo.innerHTML = `<p class="pista" style="margin:10px 0"><b>"Por que errei?" (IA):</b> ${texto}</p>`;
+  const barradas = (d.recusadas || []).length ? `<br>A trava de qualidade barrou explicações destas questões (vale conferir o enunciado e o gabarito): ${d.recusadas.map(r => `<b>${escapar(r.questao)}</b> (${escapar(r.motivo)})`).join('; ')}` : '';
+  alvo.innerHTML = `<p class="pista" style="margin:10px 0"><b>"Por que errei?" (IA):</b> ${texto}${barradas}</p>`;
 }
 
 // Administração: marcar quem é professor, pelo e-mail da conta.
