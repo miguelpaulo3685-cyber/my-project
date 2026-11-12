@@ -103,6 +103,9 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 ### Até domingo (15/11)
 - [ ] Marcar os erros do painel como resolvidos.
 - [ ] UptimeRobot (grátis): avisar se o site ou a API caírem.
+- [ ] **Cópia de segurança do banco** (`.github/workflows/copia-do-banco.yml`, todo dia, criptografada, 30 dias):
+      criar no GitHub (Settings > Secrets and variables > Actions) os segredos `COPIA_DATABASE_URL` (a URL do
+      Neon) e `COPIA_SENHA` (20+ caracteres, guardada fora do GitHub). Depois rodar uma vez à mão em Actions.
 - [ ] Link `mmestudos.com.br` na bio do Instagram e do TikTok; mensagem de divulgação.
 
 ### No dia (16/11)
@@ -113,6 +116,8 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
 ### Depois do lançamento
+0. **Cloudflare (grátis)** na frente do domínio: cache mais longo, proteção e contador de visitas sem cookies.
+   Passos no fim da conversa de 12/11. Fazer com calma, fora da semana do lançamento.
 1. **Ferramenta do professor** — versão simples feita em 11/11 (rotas em `redacoes.js`). A equipe marca o
    professor em Administração → Professores (pelo e-mail da conta). Ele abre Redação → Correção → "Fila da
    minha escola": redações de quem pôs a mesma escola no perfil, sem o nome do aluno, urgentes primeiro
@@ -136,6 +141,12 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    ficam em `PALAVRAS`. O tema de 2026 (SUS) já está em "Anos anteriores", sem os textos motivadores.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
+
+### Feito em 12/11
+- Dependabot (correções de segurança das bibliotecas, toda segunda).
+- Velocidade (Lighthouse no celular): fontes sem travar a tela, imagens das áreas em WebP (metade do peso),
+  links legíveis pelo Google. Primeiro desenho da tela de 2,4 s para 1,5 s; SEO de 92 para 100. O que resta é
+  o tamanho do `index.html` (690 KB num arquivo só): dividir é trabalho grande, para depois.
 
 ### Feito em 11/11
 - Domínio mmestudos.com.br; prévia do link (og:*); robots.txt, sitemap.xml, canônico.

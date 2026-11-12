@@ -1,0 +1,81 @@
+name: Cópia de segurança do banco
+
+# Todo dia, uma cópia completa do banco (Neon) fica guardada por 30 dias aqui
+# no GitHub, em Actions > Cópia de segurança do banco > (a execução) > Artifacts.
+#
+# O repositório é público e o banco tem dados de alunos, então a cópia sai
+# CRIPTOGRAFADA: sem a senha, o arquivo não serve para nada.
+#
+# Para ligar (uma vez só), em Settings > Secrets and variables > Actions:
+#   COPIA_DATABASE_URL  a URL do banco no Neon (a mesma DATABASE_URL do Render)
+#   COPIA_SENHA         uma senha longa, inventada por vocês. Guardem fora do
+#                       GitHub (gerenciador de senhas): sem ela não dá para abrir.
+#
+# Para abrir uma cópia no computador (precisa do gpg e do psql):
+#   gpg --decrypt banco-AAAA-MM-DD.sql.gz.gpg | gunzip > banco.sql
+#   psql "URL-DE-UM-BANCO-NOVO-E-VAZIO" < banco.sql
+on:
+  schedule:
+    - cron: '40 6 * * *' # 3h40 da manhã no Brasil
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  copiar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      COPIA_DATABASE_URL: ${{ secrets.COPIA_DATABASE_URL }}
+      COPIA_SENHA: ${{ secrets.COPIA_SENHA }}
+    steps:
+      - name: Conferir se os segredos existem
+        id: segredos
+        run: |
+          if [ -z "$COPIA_DATABASE_URL" ] || [ -z "$COPIA_SENHA" ]; then
+            echo "::warning::Cópia NÃO feita: faltam os segredos COPIA_DATABASE_URL e COPIA_SENHA (veja o começo deste arquivo)."
+            echo "prontos=nao" >> "$GITHUB_OUTPUT"
+          elif [ ${#COPIA_SENHA} -lt 20 ]; then
+            echo "::error::A COPIA_SENHA precisa ter pelo menos 20 caracteres."
+            exit 1
+          else
+            echo "prontos=sim" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Instalar o pg_dump mais novo
+        if: steps.segredos.outputs.prontos == 'sim'
+        run: |
+          # O pg_dump precisa ser da mesma versão do banco ou mais novo.
+          sudo apt-get install -y -qq postgresql-common > /dev/null
+          sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y > /dev/null
+          sudo apt-get install -y -qq postgresql-client > /dev/null
+          ls /usr/lib/postgresql/
+
+      - name: Copiar e criptografar
+        if: steps.segredos.outputs.prontos == 'sim'
+        run: |
+          set -euo pipefail
+          pg_dump="$(ls -d /usr/lib/postgresql/*/bin | sort -V | tail -1)/pg_dump"
+          arquivo="banco-$(date -u +%F).sql.gz.gpg"
+          # A senha vai por um descritor de arquivo: nunca aparece no registro nem na lista de processos.
+          "$pg_dump" --no-owner --no-privileges "$COPIA_DATABASE_URL" \
+            | gzip -9 \
+            | gpg --batch --quiet --symmetric --cipher-algo AES256 --passphrase-fd 3 --output "$arquivo" 3<<<"$COPIA_SENHA"
+          tamanho=$(stat -c %s "$arquivo")
+          echo "Cópia pronta: $arquivo ($((tamanho / 1024)) KB)"
+          # Um banco de verdade nunca cabe em menos de 20 KB: algo deu errado.
+          if [ "$tamanho" -lt 20000 ]; then echo "::error::A cópia ficou pequena demais ($tamanho bytes)."; exit 1; fi
+          # Confere que abre com a senha e que é uma cópia do Postgres (lê o arquivo inteiro).
+          gpg --batch --quiet --decrypt --passphrase-fd 3 "$arquivo" 3<<<"$COPIA_SENHA" | gunzip \
+            | awk 'NR <= 5 && /PostgreSQL database dump/ { ok = 1 } END { exit !ok }'
+          echo "Conferida: abre com a senha."
+
+      - name: Guardar por 30 dias
+        if: steps.segredos.outputs.prontos == 'sim'
+        uses: actions/upload-artifact@v4
+        with:
+          name: copia-do-banco
+          path: banco-*.sql.gz.gpg
+          retention-days: 30
+          if-no-files-found: error
+          compression-level: 0
