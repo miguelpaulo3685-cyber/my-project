@@ -32,7 +32,9 @@
   <link rel="preconnect" href="https://www.youtube-nocookie.com">
   <link rel="preconnect" href="https://i.ytimg.com">
   <link rel="dns-prefetch" href="https://www.tiktok.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap">
+  <!-- As fontes carregam sem segurar o primeiro desenho da tela (o texto aparece na fonte do aparelho e troca em seguida). -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap"></noscript>
   <style>
     /* ===================== TEMAS ===================== */
     :root {
@@ -4330,7 +4332,7 @@ function desenharOndeSalva() {
     ? `Seu progresso está salvo na conta <strong>${escapar(usuarioLogado.username)}</strong>
        — continua de onde parou em qualquer aparelho.`
     : `Seu progresso está guardado só neste navegador.
-       <a onclick="abrirConta('criar')">Crie uma conta</a> para treinar também no celular.`;
+       <a href="#" onclick="abrirConta('criar'); return false">Crie uma conta</a> para treinar também no celular.`;
 }
 
 function anotarResposta(area, acertou) {
@@ -4365,7 +4367,7 @@ function desenharAreas() {
     return `
       <article class="area">
         <div class="figuras" aria-hidden="true">${a.figuras.map(([img, foco], i) =>
-          `<img ${i === inicio ? 'src' : 'data-src'}="img/areas/${img.includes('.') ? img : img + '.jpg'}" alt="" loading="lazy" decoding="async"
+          `<img ${i === inicio ? 'src' : 'data-src'}="img/areas/${img.includes('.') ? img : img + '.webp'}" alt="" ${i === inicio && a === AREAS[0] ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"
                 ${i === inicio ? 'class="ativa"' : ''} style="--foco:${foco}">`).join('')}</div>
         <div class="area-topo">
           <div>
@@ -6083,7 +6085,7 @@ const MODOS_CONTA = {
   entrar: {
     titulo: 'Entrar', sub: 'Sua turma está estudando. Bora junto?', botao: 'Entrar', carregando: 'Entrando…',
     campos: ['email', 'senha'], rota: 'login',
-    alternar: `Ainda não tem conta?<br><a onclick="abrirConta('criar')">Criar conta</a>`
+    alternar: `Ainda não tem conta?<br><a href="#" onclick="abrirConta('criar'); return false">Criar conta</a>`
   },
   criar: {
     titulo: 'Criar sua conta', sub: 'Em menos de um minuto você entra, acha seus colegas e começa a treinar com questões reais do ENEM.', botao: 'Criar minha conta', carregando: 'Criando…',
