@@ -48,3 +48,40 @@ test('por que errei: acha a linha da alternativa que o aluno marcou', () => {
   assert.equal(ex.trechoDaAlternativa(texto, 4), null, 'sem linha para a letra, não inventa');
   assert.equal(ex.trechoDaAlternativa(texto, -1), null);
 });
+
+test('explicação: escolhe o flash mais novo e o flash-lite mais novo, sem prévias', () => {
+  const m = (name, metodos = ['generateContent']) => ({ name: `models/${name}`, supportedGenerationMethods: metodos });
+  const lista = [m('gemini-2.5-flash'), m('gemini-3.8-flash'), m('gemini-3.5-flash-lite'), m('gemini-2.5-flash-lite'),
+    m('gemini-4.0-flash-preview'), m('gemini-3.8-flash-image'), m('gemini-3.8-pro'), m('gemini-9.0-flash', ['embedContent'])];
+  assert.deepEqual(ex.escolherModelos(lista), ['gemini-3.8-flash', 'gemini-3.5-flash-lite']);
+  assert.deepEqual(ex.escolherModelos(undefined), []);
+});
+
+test('explicação: modelo aposentado ou sem cota passa para o próximo e guarda o motivo', async () => {
+  process.env.GEMINI_API_KEY = 'teste';
+  const tentados = [];
+  const http = {
+    get: async url => {
+      if (/\/models\?/.test(url)) return { data: { models: [
+        { name: 'models/gemini-3.8-flash', supportedGenerationMethods: ['generateContent'] },
+        { name: 'models/gemini-3.5-flash-lite', supportedGenerationMethods: ['generateContent'] }] } };
+      throw new Error('sem figura');
+    },
+    post: async url => {
+      const modelo = url.match(/models\/([^:]+):/)[1];
+      tentados.push(modelo);
+      if (modelo === 'gemini-3.8-flash') throw Object.assign(new Error('falhou'), { response: { status: 429, data: { error: { message: 'Quota exceeded' } } } });
+      return { data: { candidates: [{ content: { parts: [{ text: '**Resposta: C**' }] } }] } };
+    }
+  };
+  const r = await ex.explicarComModelo(questao, http);
+  assert.deepEqual(tentados, ['gemini-3.8-flash', 'gemini-3.5-flash-lite']);
+  assert.equal(r.modelo, 'gemini-3.5-flash-lite');
+  assert.equal(ex.estado.ok, true);
+
+  const semNada = { get: http.get, post: async () => { throw Object.assign(new Error('x'), { response: { status: 404, data: { error: { message: 'model not found' } } } }); } };
+  await assert.rejects(ex.explicarComModelo(questao, semNada));
+  assert.equal(ex.estado.ok, false);
+  assert.match(ex.estado.erro, /^404 model not found/);
+  delete process.env.GEMINI_API_KEY;
+});

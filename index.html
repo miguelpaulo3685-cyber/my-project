@@ -10593,6 +10593,19 @@ async function enviarCorrecaoDoProfessor(c) {
   abrirRedacoes('professor');
 }
 
+// Administração: a explicação por IA está respondendo? (mostra o motivo quando não está)
+async function desenharIaAdmin() {
+  const alvo = document.getElementById('admin-ia');
+  if (!alvo) return;
+  let d;
+  try { d = (await api('/api/admin/ia')).explicacao; } catch (e) { alvo.innerHTML = ''; return; }
+  const texto = !d.ligada ? 'desligada (falta a GEMINI_API_KEY no Render).'
+    : d.ok === null ? `ligada, ainda sem pedidos desde que o servidor reiniciou. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
+    : d.ok ? `✅ funcionando com ${escapar(d.modelo)}. ${plural(d.guardadas || 0, 'explicação guardada', 'explicações guardadas')}.`
+    : `⚠️ o último pedido falhou (${escapar(d.modelo || '')}): ${escapar(d.erro || 'erro desconhecido')}`;
+  alvo.innerHTML = `<p class="pista" style="margin:10px 0"><b>"Por que errei?" (IA):</b> ${texto}</p>`;
+}
+
 // Administração: marcar quem é professor, pelo e-mail da conta.
 async function desenharProfessoresAdmin() {
   const alvo = document.getElementById('admin-professores');
@@ -10676,6 +10689,7 @@ async function desenharPainelAdmin() {
       ${numero(n.aparelhos_com_avisos, 'aparelhos com avisos')}
     </div>
     <p class="pista">"Voltaram em 2+ dias" é o número mais importante: mostra quem criou o hábito.</p>
+    <div id="admin-ia"></div>
     <div id="admin-feedback"></div>
     <div id="admin-erros"></div>
     <div id="admin-crescimento"></div>
@@ -10699,6 +10713,7 @@ async function desenharPainelAdmin() {
     <div id="lista-faltando"><p class="pista">Carregando…</p></div>`;
   desenharFaltando();
   desenharMensagensDenunciadas();
+  desenharIaAdmin();
   desenharProfessoresAdmin();
   desenharCrescimento();
   desenharErrosAdmin();

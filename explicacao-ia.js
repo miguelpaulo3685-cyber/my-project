@@ -8,7 +8,44 @@
 
 const axios = require('axios');
 
-const MODELO = () => process.env.GEMINI_MODELO || 'gemini-2.5-flash';
+// O Google aposenta modelos de tempos em tempos (o gemini-2.5-flash saiu em
+// novembro de 2026). Por isso o servidor pergunta à própria API quais modelos
+// a chave pode usar e escolhe o "flash" mais novo, com o "flash-lite" mais
+// novo de reserva. GEMINI_MODELO, se existir, é tentado primeiro.
+const API = 'https://generativelanguage.googleapis.com/v1beta';
+const MODELOS_RESERVA = ['gemini-3.5-flash-lite', 'gemini-2.5-flash-lite'];
+const VALIDADE_DA_LISTA = 12 * 60 * 60 * 1000;
+let listaGuardada = { em: 0, modelos: null };
+// Para a Administração: o que aconteceu na última tentativa.
+const estado = { ok: null, modelo: null, erro: null, em: null };
+
+function escolherModelos(lista) {
+  const estaveis = (Array.isArray(lista) ? lista : [])
+    .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+    .map(m => String(m.name || '').replace(/^models\//, ''))
+    .map(nome => ({ nome, m: nome.match(/^gemini-(\d+(?:\.\d+)?)-flash(-lite)?$/) })) // sem "preview", "exp", "tts", "image"
+    .filter(x => x.m)
+    .map(x => ({ nome: x.nome, versao: Number(x.m[1]), lite: Boolean(x.m[2]) }));
+  const melhor = lite => estaveis.filter(e => e.lite === lite).sort((a, b) => b.versao - a.versao)[0];
+  return [melhor(false), melhor(true)].filter(Boolean).map(e => e.nome);
+}
+
+async function modelosParaTentar(http) {
+  if (!listaGuardada.modelos || Date.now() - listaGuardada.em > VALIDADE_DA_LISTA) {
+    let achados = [];
+    try {
+      const r = await http.get(`${API}/models?pageSize=200`, { headers: { 'x-goog-api-key': process.env.GEMINI_API_KEY }, timeout: 15000 });
+      achados = escolherModelos(r.data && r.data.models);
+    } catch (e) { /* sem a lista, vale a reserva */ }
+    listaGuardada = { em: achados.length ? Date.now() : 0, modelos: achados.length ? achados : MODELOS_RESERVA };
+  }
+  const escolhido = process.env.GEMINI_MODELO;
+  return [...new Set([...(escolhido ? [escolhido] : []), ...listaGuardada.modelos])];
+}
+
+// O motivo do erro, do jeito que o Google respondeu (nunca traz a chave).
+const motivoDoErro = erro => [erro.response?.status, erro.response?.data?.error?.message || erro.message].filter(Boolean).join(' ').slice(0, 300);
+const MODELO = () => estado.modelo || process.env.GEMINI_MODELO || MODELOS_RESERVA[0];
 const LIMITE_DO_DIA = () => Number(process.env.EXPLICACAO_LIMITE_DIARIO) || 400;
 const ligada = () => Boolean(process.env.GEMINI_API_KEY);
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
@@ -46,22 +83,38 @@ function montarPergunta(q) {
   return `ENEM ${q.ano || ''}${q.numero ? `, questão ${q.numero}` : ''}\n\n${semFiguras(q.contexto)}\n\nAlternativas:\n${alternativas}\n\nGabarito: ${LETRAS[q.correta]}`;
 }
 
-async function explicarQuestao(q, http = axios) {
+// Tenta os modelos em ordem: se um foi aposentado, está sem cota ou fora do ar, vai o próximo.
+async function explicarComModelo(q, http = axios) {
   const figuras = await baixarFiguras([q.contexto, ...(q.alternativas || [])].flatMap(urlsDasFiguras), http);
-  const r = await http.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/${MODELO()}:generateContent`,
-    {
-      systemInstruction: { parts: [{ text: INSTRUCOES }] },
-      contents: [{ role: 'user', parts: [{ text: montarPergunta(q) }, ...figuras] }],
-      generationConfig: { maxOutputTokens: 4096 }
-    },
-    { headers: { 'x-goog-api-key': process.env.GEMINI_API_KEY, 'Content-Type': 'application/json' }, timeout: 60000 }
-  );
-  const candidato = r.data?.candidates?.[0];
-  const texto = (candidato?.content?.parts || []).map(p => p.text || '').join('').trim();
-  if (!texto) throw new Error(`a IA não devolveu explicação (${candidato?.finishReason || 'sem resposta'})`);
-  return texto.slice(0, 6000);
+  const modelos = await modelosParaTentar(http);
+  let ultimoErro = null;
+  for (const modelo of modelos) {
+    try {
+      const r = await http.post(
+        `${API}/models/${modelo}:generateContent`,
+        {
+          systemInstruction: { parts: [{ text: INSTRUCOES }] },
+          contents: [{ role: 'user', parts: [{ text: montarPergunta(q) }, ...figuras] }],
+          generationConfig: { maxOutputTokens: 4096 }
+        },
+        { headers: { 'x-goog-api-key': process.env.GEMINI_API_KEY, 'Content-Type': 'application/json' }, timeout: 60000 }
+      );
+      const candidato = r.data?.candidates?.[0];
+      const texto = (candidato?.content?.parts || []).map(p => p.text || '').join('').trim();
+      if (!texto) throw new Error(`a IA não devolveu explicação (${candidato?.finishReason || 'sem resposta'})`);
+      Object.assign(estado, { ok: true, modelo, erro: null, em: new Date().toISOString() });
+      return { texto: texto.slice(0, 6000), modelo };
+    } catch (erro) {
+      ultimoErro = erro;
+      Object.assign(estado, { ok: false, modelo, erro: motivoDoErro(erro), em: new Date().toISOString() });
+      // Chave recusada: trocar de modelo não resolve.
+      if (erro.response?.status === 401) break;
+    }
+  }
+  listaGuardada.em = 0; // na próxima, pergunta de novo quais modelos existem
+  throw ultimoErro;
 }
+const explicarQuestao = async (q, http) => (await explicarComModelo(q, http)).texto;
 
 // "Por que errei?": a linha da explicação que fala da alternativa que o aluno marcou
 // (a IA escreve "C) motivo"; aceita também "**C)**", "- C)" e "C:").
@@ -76,7 +129,7 @@ function trechoDaAlternativa(texto, indice) {
   return null;
 }
 
-function registrarExplicacoes(app, { pool, auth }) {
+function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
   // Por aparelho: 30 explicações novas por hora. As já guardadas não contam.
   const freio = auth.criarFreio(30, 60 * 60 * 1000);
   const emAndamento = new Map(); // a mesma questão pedida por dois alunos ao mesmo tempo gera uma vez só
@@ -98,10 +151,10 @@ function registrarExplicacoes(app, { pool, auth }) {
         emAndamento.set(id, (async () => {
           const q = (await pool.query('SELECT ano, numero, contexto, alternativas, correta FROM questoes WHERE id = $1', [id])).rows[0];
           if (!q) return null;
-          const texto = await explicarQuestao(q);
+          const { texto, modelo } = await explicarComModelo(q);
           await pool.query(
             `INSERT INTO explicacoes_ia (questao_id, texto, modelo) VALUES ($1, $2, $3) ON CONFLICT (questao_id) DO NOTHING`,
-            [id, texto, MODELO()]);
+            [id, texto, modelo]);
           return texto;
         })().finally(() => emAndamento.delete(id)));
       }
@@ -109,12 +162,20 @@ function registrarExplicacoes(app, { pool, auth }) {
       if (!texto) return res.status(404).json({ error: 'Questão não encontrada.' });
       res.json({ explicacao: texto, sua: trechoDaAlternativa(texto, marcada) });
     } catch (erro) {
-      console.error(`Erro na explicação por IA da questão ${id}:`, erro.response?.status || '', erro.message);
+      console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
       const ocupada = erro.response?.status === 429;
       res.status(ocupada ? 429 : 502).json({ error: ocupada ? 'A IA está ocupada agora. Tente de novo em alguns minutos.' : 'Não consegui explicar agora. Tente de novo.' });
     }
   });
+
+  // Administração: a IA está respondendo? Com qual modelo, ou por que não.
+  if (exigirModerador) {
+    app.get('/api/admin/ia', exigirModerador, async (req, res) => {
+      const guardadas = (await pool.query('SELECT COUNT(*)::int AS n FROM explicacoes_ia').catch(() => ({ rows: [{ n: null }] }))).rows[0].n;
+      res.json({ explicacao: { ligada: ligada(), ...estado, guardadas } });
+    });
+  }
 }
 
 module.exports = registrarExplicacoes;
-Object.assign(module.exports, { ligada, explicarQuestao, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });
+Object.assign(module.exports, { ligada, explicarQuestao, explicarComModelo, escolherModelos, estado, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });

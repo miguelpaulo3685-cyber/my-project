@@ -110,7 +110,9 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 ### No dia (16/11)
 - [ ] **Gemini** ("Por que errei?" no Treinar): criar chave em aistudio.google.com e pôr `GEMINI_API_KEY`
       no Render. Grátis. Quando o aluno erra, a explicação destaca a alternativa que ele marcou
-      ("Você marcou C. ...") e embaixo fica o link do vídeo. Opcionais: `GEMINI_MODELO` (padrão gemini-2.5-flash), `EXPLICACAO_LIMITE_DIARIO` (400).
+      ("Você marcou C. ...") e embaixo fica o link do vídeo. O servidor escolhe sozinho o modelo "flash" mais novo que a
+      chave aceita (o Google aposenta modelos); em Administração aparece se a IA está respondendo e o motivo
+      quando não está. Opcionais: `GEMINI_MODELO` (força um modelo), `EXPLICACAO_LIMITE_DIARIO` (400).
 - [ ] Render pago (~US$ 7/mês), se der.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
