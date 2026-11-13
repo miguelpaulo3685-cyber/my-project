@@ -117,9 +117,15 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
       barradas (costuma indicar enunciado ou gabarito errado: foi assim que achamos a 2021-165, corrigida).
       Administradores têm o botão "Está errada: apagar e gerar outra". Opcionais: `GEMINI_MODELO`,
       `EXPLICACAO_LIMITE_DIARIO` (400).
-      **Em aberto:** (1) com o modelo principal sobrecarregado a explicação leva até 1 minuto: limitar a espera
-      a uns 20 s; (2) só 3 questões de Matemática foram testadas: testar umas 20 e decidir se a IA fica ligada
-      em Matemática; (3) a 2017-160 foi barrada: escrever a resolução à mão.
+      **Fechado em 13/11 (no ramo `claude/great-pascal-rrk8vh`, esperando o "sim" para ir ao master):**
+      (1) o aluno espera no máximo 20 s: passou disso, o servidor responde "demorando", continua gerando e o
+      site pergunta de novo sozinho (até 4 vezes), sem gastar o freio; (2) teste com 20 questões de Matemática
+      sorteadas, no site de verdade: 17 explicações certas (conferidas uma a uma), 3 barradas pela trava (todas
+      dependem de figura: 2017-171, 2016-153, 2016-139) e nenhuma errada no ar. Duas falharam na primeira
+      tentativa e saíram na segunda. 6 das 20 passaram de 20 s. **Decisão sugerida: a IA fica ligada em
+      Matemática.** Pontos fracos: as linhas das alternativas erradas às vezes são vagas ("errou a conta") e a
+      2012-147 tem uma frase confusa ("353485 metros cúbicos"; o certo é 3 534,85 m³): apagar pelo botão
+      "Está errada: apagar e gerar outra"; (3) resolução da 2017-160 escrita à mão em `resolucoes.json`.
 - [ ] Render pago (~US$ 7/mês), se der.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
