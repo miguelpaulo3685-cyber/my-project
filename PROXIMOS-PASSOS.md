@@ -108,11 +108,18 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
       Artifacts. A `COPIA_SENHA` tem de estar guardada fora do GitHub: sem ela a cópia não abre.
 
 ### No dia (16/11)
-- [ ] **Gemini** ("Por que errei?" no Treinar): criar chave em aistudio.google.com e pôr `GEMINI_API_KEY`
-      no Render. Grátis. Quando o aluno erra, a explicação destaca a alternativa que ele marcou
-      ("Você marcou C. ...") e embaixo fica o link do vídeo. O servidor escolhe sozinho o modelo "flash" mais novo que a
-      chave aceita (o Google aposenta modelos); em Administração aparece se a IA está respondendo e o motivo
-      quando não está. Opcionais: `GEMINI_MODELO` (força um modelo), `EXPLICACAO_LIMITE_DIARIO` (400).
+- [x] **Gemini** ("Por que errei?" no Treinar): ligado em 12/11 (`GEMINI_API_KEY` no Render; as chaves novas
+      do Google começam com `AQ.`). O servidor escolhe sozinho o modelo "flash" mais novo que a chave aceita,
+      com o "flash-lite" de reserva (`explicacao-ia.js`). Uma **trava de qualidade** recusa a explicação se uma
+      conta escrita não fecha, se a IA se corrige no meio do texto ou se a resposta final não é a do gabarito;
+      aí o aluno vê um aviso e o link do vídeo. Explicação guardada que não passa na trava é apagada e refeita.
+      Em Administração, a linha "Por que errei? (IA)" mostra o modelo, o motivo do último erro e as questões
+      barradas (costuma indicar enunciado ou gabarito errado: foi assim que achamos a 2021-165, corrigida).
+      Administradores têm o botão "Está errada: apagar e gerar outra". Opcionais: `GEMINI_MODELO`,
+      `EXPLICACAO_LIMITE_DIARIO` (400).
+      **Em aberto:** (1) com o modelo principal sobrecarregado a explicação leva até 1 minuto: limitar a espera
+      a uns 20 s; (2) só 3 questões de Matemática foram testadas: testar umas 20 e decidir se a IA fica ligada
+      em Matemática; (3) a 2017-160 foi barrada: escrever a resolução à mão.
 - [ ] Render pago (~US$ 7/mês), se der.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
@@ -144,6 +151,10 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
 ### Feito em 12/11
+- Ferramenta do professor, Estatísticas da redação, "Nas notícias" (Agência Brasil), tema de 2026, mais 14
+  resoluções comentadas (30 no total), cópia diária do banco, UptimeRobot e Gemini ligado com trava de qualidade.
+- Ambiente `my-project` no Claude Code com acesso liberado a gov.br, Agência Brasil, à API e ao site: as
+  próximas conversas conseguem testar o site de verdade.
 - Dependabot (correções de segurança das bibliotecas, toda segunda).
 - Velocidade (Lighthouse no celular): fontes sem travar a tela, imagens das áreas em WebP (metade do peso),
   links legíveis pelo Google. Primeiro desenho da tela de 2,4 s para 1,5 s; SEO de 92 para 100. O que resta é
