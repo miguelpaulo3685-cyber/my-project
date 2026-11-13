@@ -153,6 +153,15 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    a parte de cada eixo nos últimos 30 dias (só aparece com 40 notícias classificadas, uns 4 a 5 dias). Não
    entra na conta das chances. Instagram e gov.br bloqueiam robôs, por isso a Agência Brasil. As palavras-chave
    ficam em `PALAVRAS`. O tema de 2026 (SUS) já está em "Anos anteriores", sem os textos motivadores.
+4b. **Temas para treinar esta semana** (combinado em 13/11, fazer depois do dia 16): uma vez por semana o
+   servidor pega as notícias dos eixos mais fortes e pede ao Gemini uns 3 temas no formato do ENEM (só títulos
+   de notícia vão para a IA). Os temas entram numa **fila de aprovação** na Administração (publicar/descartar),
+   como os Reels automáticos, e aparecem em Redação → Estatísticas como treino, não como previsão. Junto:
+   testar mais fontes oficiais com feed aberto (Agência Senado, Agência Câmara, IBGE). Instagram e gov.br não
+   dão (bloqueiam robôs).
+4c. **Em aberto (perguntado em 13/11, sem resposta):** campo "Abrir questão" (ano e número) na Administração,
+   só para a equipe. Hoje não há como abrir uma questão específica; para apagar uma explicação da IA foi
+   preciso usar o console do navegador.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
