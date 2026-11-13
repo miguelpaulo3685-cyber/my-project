@@ -4857,13 +4857,25 @@ async function carregarResolucao(id, marcada = null) {
   alvo.dataset.texto = r ? r.texto : '';
 }
 
-async function pedirExplicacao(id, marcada) {
+async function pedirExplicacao(id, marcada, tentativa = 1) {
   const caixa = document.getElementById('explicacao-ia');
   if (!caixa) return;
-  caixa.innerHTML = '<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está pensando… leva alguns segundos.</p>';
+  if (tentativa === 1) caixa.innerHTML = '<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está pensando… leva alguns segundos.</p>';
   let texto;
   let sua = null;
-  try { const d = await postar(`/api/questoes/${id}/explicacao`, { marcada }); texto = d.explicacao; sua = d.sua; }
+  try {
+    const d = await postar(`/api/questoes/${id}/explicacao`, { marcada });
+    // Passou de 20 s: o servidor continua gerando e o site pergunta de novo sozinho (até 4 vezes).
+    if (d.demorando) {
+      if (questaoAtual && questaoAtual.id !== id) return;
+      if (tentativa < 4) {
+        caixa.innerHTML = '<p class="ia-carregando"><span class="ponto-vivo"></span>A IA está demorando mais que o normal. Pode ver o vídeo abaixo enquanto isso: a explicação aparece aqui quando ficar pronta.</p>';
+        return pedirExplicacao(id, marcada, tentativa + 1);
+      }
+      throw { daApi: 'A IA está muito lenta agora. Tente de novo daqui a pouco.' };
+    }
+    texto = d.explicacao; sua = d.sua;
+  }
   catch (e) {
     caixa.innerHTML = `<p class="pista">${escapar(e.daApi || SEM_SERVIDOR)}</p>
       <button class="acao discreta pequena" onclick="pedirExplicacao(${id}, ${marcada === null ? 'null' : marcada})">Tentar de novo</button>`;

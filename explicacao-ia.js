@@ -192,7 +192,12 @@ function trechoDaAlternativa(texto, indice) {
   return null;
 }
 
-function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
+// O aluno espera no máximo isto. Se a IA demorar mais (modelo principal
+// sobrecarregado), a rota responde "demorando" e a explicação continua sendo
+// feita no servidor: o site pergunta de novo sozinho e pega a mesma geração.
+const ESPERA_DO_ALUNO = 20000;
+
+function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPERA_DO_ALUNO, explicar = explicarComModelo }) {
   // Por aparelho: 30 explicações novas por hora. As já guardadas não contam.
   const freio = auth.criarFreio(30, 60 * 60 * 1000);
   const emAndamento = new Map(); // a mesma questão pedida por dois alunos ao mesmo tempo gera uma vez só
@@ -215,28 +220,46 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador }) {
       }
       if (recusadas.has(id) && Date.now() - recusadas.get(id) < 24 * 60 * 60 * 1000) return res.status(422).json({ error: SEM_EXPLICACAO });
       if (!ligada()) return res.status(503).json({ error: 'A explicação por IA ainda não está disponível.' });
-      if (freio.bloqueado(req.ip)) return res.status(429).json({ error: 'Muitas explicações seguidas. Espere um pouco.' });
-      const hoje = (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
-      if (hoje >= LIMITE_DO_DIA()) return res.status(429).json({ error: 'As explicações novas de hoje acabaram. Amanhã tem mais!' });
-      freio.registrar(req.ip);
+      // Quem pergunta de novo por uma geração já em andamento não gasta o freio nem o limite do dia.
+      if (!emAndamento.has(id)) {
+        if (freio.bloqueado(req.ip)) return res.status(429).json({ error: 'Muitas explicações seguidas. Espere um pouco.' });
+        const hoje = (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
+        if (hoje >= LIMITE_DO_DIA()) return res.status(429).json({ error: 'As explicações novas de hoje acabaram. Amanhã tem mais!' });
+        freio.registrar(req.ip);
+      }
 
       if (!emAndamento.has(id)) {
+        // Nunca rejeita: devolve { texto } ou { erro }, porque pode terminar depois de o aluno já ter recebido "demorando".
         emAndamento.set(id, (async () => {
-          const q = (await pool.query('SELECT ano, numero, contexto, alternativas, correta FROM questoes WHERE id = $1', [id])).rows[0];
-          if (!q) return null;
-          const { texto, modelo } = await explicarComModelo(q);
-          await pool.query(
-            `INSERT INTO explicacoes_ia (questao_id, texto, modelo) VALUES ($1, $2, $3) ON CONFLICT (questao_id) DO NOTHING`,
-            [id, texto, modelo]);
-          return texto;
-        })().finally(() => emAndamento.delete(id)));
+          try {
+            const q = (await pool.query('SELECT ano, numero, contexto, alternativas, correta FROM questoes WHERE id = $1', [id])).rows[0];
+            if (!q) return { texto: null };
+            const { texto, modelo } = await explicar(q);
+            await pool.query(
+              `INSERT INTO explicacoes_ia (questao_id, texto, modelo) VALUES ($1, $2, $3) ON CONFLICT (questao_id) DO NOTHING`,
+              [id, texto, modelo]);
+            return { texto };
+          } catch (erro) {
+            console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
+            if (erro.recusada) recusadas.set(id, Date.now());
+            return { erro };
+          } finally { emAndamento.delete(id); }
+        })());
       }
-      const texto = await emAndamento.get(id);
+      let relogio;
+      const resultado = await Promise.race([
+        emAndamento.get(id),
+        new Promise(pronto => { relogio = setTimeout(() => pronto({ demorando: true }), espera); })
+      ]);
+      clearTimeout(relogio);
+      if (resultado.demorando) return res.status(202).json({ demorando: true });
+      if (resultado.erro) throw resultado.erro;
+      const texto = resultado.texto;
       if (!texto) return res.status(404).json({ error: 'Questão não encontrada.' });
       res.json({ explicacao: texto, sua: trechoDaAlternativa(texto, marcada) });
     } catch (erro) {
-      console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
-      if (erro.recusada) { recusadas.set(id, Date.now()); return res.status(422).json({ error: SEM_EXPLICACAO }); }
+      if (erro.recusada) return res.status(422).json({ error: SEM_EXPLICACAO });
+      if (!erro.response && !erro.recusada) console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
       const ocupada = erro.response?.status === 429;
       res.status(ocupada ? 429 : 502).json({ error: ocupada ? 'A IA está ocupada agora. Tente de novo em alguns minutos.' : 'Não consegui explicar agora. Tente de novo.' });
     }

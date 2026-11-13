@@ -116,3 +116,58 @@ test('trava: explicação recusada não é devolvida e fica anotada para a equip
   assert.equal(ex.estado.recusadas[0].questao, '2019-140');
   delete process.env.GEMINI_API_KEY;
 });
+
+// Rota de mentira: guarda os manipuladores e chama direto.
+function rotaDeTeste(opcoes) {
+  const rotas = {};
+  const app = { post: (caminho, f) => { rotas.post = f; }, get() {}, delete() {} };
+  const guardadas = [];
+  const pool = { query: async (sql, valores) => {
+    if (/^SELECT e\.texto/.test(sql)) return { rows: guardadas.filter(g => g.id === valores[0]) };
+    if (/COUNT/.test(sql)) return { rows: [{ n: 0 }] };
+    if (/^SELECT ano/.test(sql)) return { rows: [questao] };
+    if (/^INSERT/.test(sql)) { guardadas.push({ id: valores[0], texto: valores[1], correta: questao.correta }); return { rowCount: 1 }; }
+    return { rows: [] };
+  } };
+  const usos = { freio: 0 };
+  const auth = { criarFreio: () => ({ bloqueado: () => false, registrar: () => { usos.freio++; } }) };
+  ex(app, { pool, auth, ...opcoes });
+  const pedir = () => new Promise(pronto => {
+    const res = { codigo: 200, status(c) { this.codigo = c; return this; }, json(corpo) { pronto({ codigo: this.codigo, corpo }); } };
+    rotas.post({ params: { id: '7' }, body: { marcada: 0 }, ip: '1.1.1.1' }, res);
+  });
+  return { pedir, guardadas, usos };
+}
+
+test('espera: IA lenta devolve "demorando" e a geração continua; a segunda pergunta pega a mesma', async () => {
+  process.env.GEMINI_API_KEY = 'teste';
+  let chamadas = 0;
+  let soltar;
+  const explicar = () => { chamadas++; return new Promise(r => { soltar = () => r({ texto: 'Passo. **Resposta: C**', modelo: 'm' }); }); };
+  const { pedir, guardadas, usos } = rotaDeTeste({ espera: 20, explicar });
+  const primeira = await pedir();
+  assert.equal(primeira.codigo, 202);
+  assert.equal(primeira.corpo.demorando, true);
+  const segunda = pedir();
+  await new Promise(r => setTimeout(r, 5));
+  soltar();
+  const r = await segunda;
+  assert.equal(r.codigo, 200);
+  assert.match(r.corpo.explicacao, /Resposta: C/);
+  assert.equal(chamadas, 1);      // uma geração só
+  assert.equal(usos.freio, 1);    // perguntar de novo não gasta o freio
+  assert.equal(guardadas.length, 1);
+  delete process.env.GEMINI_API_KEY;
+});
+
+test('espera: erro depois do "demorando" não derruba o servidor e a recusa fica valendo', async () => {
+  process.env.GEMINI_API_KEY = 'teste';
+  let falhar;
+  const explicar = () => new Promise((_, r) => { falhar = () => r(Object.assign(new Error('recusada'), { recusada: 'conta que não fecha' })); });
+  const { pedir } = rotaDeTeste({ espera: 10, explicar });
+  assert.equal((await pedir()).codigo, 202);
+  falhar();
+  await new Promise(r => setTimeout(r, 5));
+  assert.equal((await pedir()).codigo, 422); // barrada: não tenta de novo hoje
+  delete process.env.GEMINI_API_KEY;
+});
