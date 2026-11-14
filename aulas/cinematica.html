@@ -1,0 +1,105 @@
+<header>
+    <div class="au-trilha">Física · Movimento</div>
+    <h1>Cinemática</h1>
+    <p class="au-abre">Escolha a velocidade e a aceleração do carro e veja o movimento desenhar os dois gráficos que mais caem no ENEM.</p>
+  </header>
+
+  <section class="au-cena" aria-label="Simulação de um carro em movimento">
+    <canvas id="au-tela" class="au-larga" width="800" height="360" role="img" aria-label="Carro andando numa pista com régua em metros; a cada segundo fica uma marca"></canvas>
+    <div class="au-painel">
+      <div class="au-leituras">
+        <div class="au-leitura"><small>Tempo</small><strong id="au-l-t">0,0 s</strong></div>
+        <div class="au-leitura"><small>Posição</small><strong id="au-l-s">0 m</strong></div>
+        <div class="au-leitura"><small>Velocidade</small><strong id="au-l-v">0 m/s</strong><div class="au-legenda" id="au-l-kmh">0 km/h</div></div>
+      </div>
+      <div id="au-recado" class="au-recado" aria-live="polite"></div>
+
+      <div class="au-graficos">
+        <figure><figcaption>Posição × tempo</figcaption>
+          <svg id="au-g-s" viewBox="0 0 170 120" role="img" aria-label="Gráfico da posição pelo tempo">
+            <path class="au-eixo" d="M26 8V98H164" fill="none" stroke="var(--borda)" stroke-width="1"/>
+            <path id="au-s-prev" fill="none" stroke="var(--texto-fraco)" stroke-width="1" stroke-dasharray="3 3"/>
+            <path id="au-s-feito" fill="none" stroke="var(--au-agua)" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle id="au-s-ponto" r="4.5" fill="var(--marca)" stroke="var(--superficie)" stroke-width="1.5"/>
+            <text id="au-s-max" x="23" y="12" text-anchor="end">0</text><text x="23" y="101" text-anchor="end">0</text>
+            <text x="164" y="112" text-anchor="end">10 s</text><text x="26" y="112">0</text><text x="6" y="56" transform="rotate(-90 6 56)" text-anchor="middle">m</text>
+          </svg></figure>
+        <figure><figcaption>Velocidade × tempo</figcaption>
+          <svg id="au-g-v" viewBox="0 0 170 120" role="img" aria-label="Gráfico da velocidade pelo tempo, com a área pintada igual à distância percorrida">
+            <path class="au-eixo" d="M26 8V98H164" fill="none" stroke="var(--borda)" stroke-width="1"/>
+            <path id="au-v-area" fill="var(--marca-suave)" stroke="none"/>
+            <path id="au-v-prev" fill="none" stroke="var(--texto-fraco)" stroke-width="1" stroke-dasharray="3 3"/>
+            <path id="au-v-feito" fill="none" stroke="var(--au-folha)" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle id="au-v-ponto" r="4.5" fill="var(--marca)" stroke="var(--superficie)" stroke-width="1.5"/>
+            <text id="au-v-max" x="23" y="12" text-anchor="end">0</text><text x="23" y="101" text-anchor="end">0</text>
+            <text x="164" y="112" text-anchor="end">10 s</text><text x="26" y="112">0</text><text x="6" y="56" transform="rotate(-90 6 56)" text-anchor="middle">m/s</text>
+          </svg></figure>
+      </div>
+      <div class="au-legenda">A área pintada no gráfico da velocidade vale a distância percorrida: <b id="au-l-area">0 m</b>.</div>
+
+      <div class="au-controle"><label for="au-v0">Velocidade inicial</label><input id="au-v0" type="range" min="0" max="30" value="10"><output id="au-o-v0">10 m/s</output></div>
+      <div class="au-controle"><label for="au-ac">Aceleração</label><input id="au-ac" type="range" min="-5" max="5" step="0.5" value="0"><output id="au-o-ac">0 m/s²</output></div>
+
+      <div class="au-atalhos">
+        <button type="button" data-cena="12,0">Velocidade constante</button>
+        <button type="button" data-cena="0,3">Arrancando</button>
+        <button type="button" data-cena="25,-4">Freando</button>
+        <button type="button" id="au-repetir">↺ Repetir</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="au-bloco">
+    <h2>Sem aceleração: movimento uniforme</h2>
+    <p>Clique em <b>Velocidade constante</b> e olhe as marcas que o carro deixa a cada segundo: ficam <b>igualmente espaçadas</b>. Ele anda a mesma distância em tempos iguais.</p>
+    <p class="au-formula">s = s₀ + v · t</p>
+    <p>O gráfico da posição é uma <b>reta</b>, e a inclinação dela é a velocidade. O da velocidade é uma linha deitada, porque ela não muda.</p>
+  </section>
+
+  <section class="au-bloco">
+    <h2>Com aceleração: movimento uniformemente variado</h2>
+    <p>Agora clique em <b>Arrancando</b>. As marcas vão ficando cada vez mais <b>afastadas</b>: a cada segundo o carro está mais rápido. A aceleração diz quanto a velocidade muda por segundo.</p>
+    <p class="au-formula">v = v₀ + a · t</p>
+    <p class="au-formula">s = s₀ + v₀ · t + a · t² ÷ 2</p>
+    <p>O gráfico da posição vira uma <b>curva</b> (parábola) e o da velocidade vira uma reta inclinada. A inclinação dessa reta é a aceleração.</p>
+  </section>
+
+  <section class="au-bloco">
+    <h2>Freando: a aceleração é negativa</h2>
+    <p>Em <b>Freando</b>, as marcas se aproximam até o carro parar. Quando não se sabe o tempo, a equação de Torricelli resolve:</p>
+    <p class="au-formula">v² = v₀² + 2 · a · Δs</p>
+    <p>Teste frear a 10 m/s e depois a 20 m/s com a mesma aceleração: a distância até parar fica <b>quatro vezes maior</b>, e não o dobro. Ela cresce com o quadrado da velocidade.</p>
+  </section>
+
+  <section class="au-bloco">
+    <h2>Onde o ENEM pega</h2>
+    <ul class="au-pegadinhas">
+      <li>Para passar de km/h para m/s, <b>divida por 3,6</b>. De m/s para km/h, multiplique. Confira as unidades antes de fazer a conta.</li>
+      <li>No gráfico da velocidade, a <b>área</b> embaixo da linha é a distância percorrida.</li>
+      <li>Aceleração negativa não quer dizer andar para trás: quer dizer que a velocidade está diminuindo.</li>
+      <li>Dobrar a velocidade multiplica por 4 a distância de frenagem. É o argumento por trás dos limites de velocidade.</li>
+    </ul>
+  </section>
+
+  <section class="au-bloco">
+    <h2>Teste rápido</h2>
+    <div class="au-pergunta" data-certa="1" data-porque="72 ÷ 3,6 = 20 m/s. Em 5 s: 20 × 5 = 100 m.">
+      <p>Um carro a 72 km/h, com velocidade constante, percorre quantos metros em 5 segundos?</p>
+      <button type="button" class="au-alt">360 m</button>
+      <button type="button" class="au-alt">100 m</button>
+      <button type="button" class="au-alt">14,4 m</button>
+      <div class="au-retorno" aria-live="polite"></div>
+    </div>
+    <div class="au-pergunta" data-certa="2" data-porque="A distância até parar é v₀² ÷ (2 · |a|). Com o dobro da velocidade, v₀² fica 4 vezes maior.">
+      <p>Com os mesmos freios, um carro a 60 km/h para em 20 m. A 120 km/h, ele para em cerca de:</p>
+      <button type="button" class="au-alt">30 m</button>
+      <button type="button" class="au-alt">40 m</button>
+      <button type="button" class="au-alt">80 m</button>
+      <div class="au-retorno" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="au-bloco">
+    <p><button type="button" class="au-seguir" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button></p>
+    <p class="au-nota">A simulação despreza o atrito do ar e trata o carro como um ponto, como nos exercícios do ENEM.</p>
+  </section>

@@ -1726,6 +1726,24 @@
       transition: border-color .18s, transform .18s;
     }
     .atalho-inicio:hover { border-color: var(--marca); transform: translateY(-2px); }
+    .aprender {
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+      padding: 18px 0 16px; margin-bottom: 16px; box-shadow: var(--sombra-leve);
+    }
+    .aprender > b { display: block; font-family: var(--fonte-titulo); font-size: 1.15rem; padding: 0 22px; }
+    .aprender > p { color: var(--texto-fraco); font-size: .88rem; margin: 2px 0 12px; padding: 0 22px; }
+    .aprender-lista { display: flex; gap: 10px; overflow-x: auto; padding: 2px 22px 4px; scrollbar-width: none; }
+    .aprender-lista::-webkit-scrollbar { display: none; }
+    .aprender-lista button {
+      flex: none; display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer; font: inherit; color: var(--texto);
+      background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 12px; padding: 10px 14px;
+      transition: border-color .18s;
+    }
+    .aprender-lista button:hover { border-color: var(--marca); }
+    .aprender-lista button:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .aprender-lista .icone { font-size: 1.4rem; }
+    .aprender-lista b { display: block; font-size: .92rem; white-space: nowrap; }
+    .aprender-lista small { display: block; color: var(--texto-fraco); font-size: .76rem; }
     .atalho-inicio .icone { font-size: 1.7rem; flex: none; }
     .atalho-inicio b { display: block; font-size: .98rem; }
     .atalho-inicio small { display: block; color: var(--texto-fraco); font-size: .8rem; line-height: 1.4; margin-top: 2px; }
@@ -3212,6 +3230,12 @@
       <div class="atalhos-treino" id="atalhos-treino"></div>
     </section>
 
+    <section class="aprender" aria-label="Aulas interativas">
+      <b>Aprender mexendo</b>
+      <p>Aulas curtas em que você controla a figura.</p>
+      <div class="aprender-lista" id="aprender-lista"></div>
+    </section>
+
     <div id="junto-treinar"></div>
     <div class="atalhos-inicio"><div id="atalho-arena"></div><div id="cartao-desafio"></div></div>
     <div id="convite-app"></div>
@@ -3225,6 +3249,9 @@
     <div class="grade-areas" id="grade-areas"></div>
     <p class="onde-salva" id="onde-salva"></p>
   </main>
+
+  <!-- ===================== AULA (aba Aprender; o conteúdo vem de aulas/) ===================== -->
+  <main class="pagina escondido" id="tela-aula"></main>
 
   <!-- ===================== QUESTÃO ===================== -->
   <main class="pagina escondido" id="tela-questao">
@@ -4096,10 +4123,11 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao'].forEach(t => {
+  ['treinar', 'aula', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
-  const treinando = ['treinar', 'questao', 'resultado', 'desafio'].includes(tela);
+  const treinando = ['treinar', 'aula', 'questao', 'resultado', 'desafio'].includes(tela);
+  if (tela !== 'aula') fecharAula();
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', ['feed', 'comunidade', 'reels'].includes(tela));
   document.getElementById('btn-perfil').classList.toggle('ativo', ['perfil', 'config'].includes(tela));
@@ -4121,12 +4149,81 @@ function irPara(tela) {
   if (tela === 'simulado') abrirSimulado();
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
-  if (tela === 'treinar') { desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
+  if (tela === 'treinar') { desenharAprender(); desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
   if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') { abaComunidade = 'feed'; desenharSubabas(); abrirFeed(); }
   if (tela === 'comunidade') mostrarComunidade();
   if (tela === 'treinar') carregarJunto();
   desenharChipSala();
+}
+
+// ===================== APRENDER (aulas interativas) =====================
+// Cada aula mora em aulas/<id>.html e aulas/<id>.js e só é baixada quando o
+// aluno abre. Para acrescentar uma aula: os dois arquivos e uma linha aqui.
+const AULAS = [
+  { id: 'fotossintese', nome: 'Fotossíntese', materia: 'Biologia', icone: '🌱' },
+  { id: 'cinematica', nome: 'Cinemática', materia: 'Física', icone: '🚗' },
+  { id: 'porcentagem', nome: 'Porcentagem', materia: 'Matemática', icone: '🧮' },
+  { id: 'piramide-etaria', nome: 'Pirâmide etária', materia: 'Geografia', icone: '👥' },
+  { id: 'figuras-de-linguagem', nome: 'Figuras de linguagem', materia: 'Português', icone: '💬' }
+];
+let pararAula = null;
+let aulaPedida = null;
+const arquivosDasAulas = {};
+
+function desenharAprender() {
+  const alvo = document.getElementById('aprender-lista');
+  if (alvo.children.length) return;
+  alvo.innerHTML = AULAS.map(a => `<button type="button" onclick="abrirAula('${a.id}')">
+    <span class="icone" aria-hidden="true">${a.icone}</span><span><b>${a.nome}</b><small>${a.materia}</small></span></button>`).join('');
+}
+
+// Põe na página, uma vez só, um arquivo de estilo ou de código das aulas.
+function arquivoDaAula(caminho) {
+  if (!arquivosDasAulas[caminho]) {
+    arquivosDasAulas[caminho] = new Promise((pronto, falhou) => {
+      const css = caminho.endsWith('.css');
+      const el = document.createElement(css ? 'link' : 'script');
+      if (css) { el.rel = 'stylesheet'; el.href = caminho; } else el.src = caminho;
+      el.onload = pronto;
+      el.onerror = () => { delete arquivosDasAulas[caminho]; el.remove(); falhou(new Error('sem ' + caminho)); };
+      document.head.appendChild(el);
+    });
+  }
+  return arquivosDasAulas[caminho];
+}
+
+function fecharAula() {
+  aulaPedida = null;
+  if (pararAula) { try { pararAula(); } catch (e) { /* a aula já saiu da tela */ } pararAula = null; }
+  document.getElementById('tela-aula').innerHTML = '';
+}
+
+async function abrirAula(id) {
+  if (!AULAS.some(a => a.id === id)) return;
+  const tela = document.getElementById('tela-aula');
+  const voltar = `<button class="acao discreta pequena" style="align-self:flex-start;margin:0" onclick="irPara('treinar')">← Voltar para o Treinar</button>`;
+  irPara('aula');
+  fecharAula();
+  aulaPedida = id;
+  tela.innerHTML = '<p class="pista">Abrindo a aula…</p>';
+  try {
+    await Promise.all([arquivoDaAula('aulas/base.css'), arquivoDaAula('aulas/base.js')]);
+    const [html] = await Promise.all([
+      fetch(`aulas/${id}.html`).then(r => { if (!r.ok) throw new Error('aula ' + r.status); return r.text(); }),
+      arquivoDaAula(`aulas/${id}.js`)
+    ]);
+    if (aulaPedida !== id) return; // o aluno já saiu ou abriu outra
+    tela.innerHTML = `<article class="aula">${voltar}${html}</article>`;
+    const raiz = tela.firstElementChild;
+    aulasMM.teste(raiz);
+    raiz.querySelectorAll('[data-treinar]').forEach(b => b.addEventListener('click', () => abrirMateria(b.dataset.treinar)));
+    pararAula = aulasMM.aulas[id](raiz);
+  } catch (e) {
+    if (aulaPedida !== id) return;
+    tela.innerHTML = `<p class="pista" style="margin-bottom:12px">Não consegui abrir a aula agora. Confira a internet e tente de novo.</p>
+      <button class="acao" onclick="abrirAula('${id}')">Tentar de novo</button> ${voltar}`;
+  }
 }
 
 // ===================== PROGRESSO =====================
@@ -4185,6 +4282,7 @@ async function buscarNotasTri() {
 }
 
 function desenharTudo() {
+  desenharAprender();
   desenharIndicadores();
   desenharAreas();
   desenharOndeSalva();

@@ -1,0 +1,79 @@
+<header>
+  <div class="au-trilha">Geografia · População</div>
+  <h1>Pirâmide etária</h1>
+  <p class="au-abre">Mude quantos filhos as mulheres têm e quanto as pessoas vivem. O desenho da população muda de forma, e os problemas do país mudam junto.</p>
+</header>
+
+<section class="au-cena" aria-label="Simulação de uma pirâmide etária">
+  <div class="au-piramide" id="au-piramide" role="img" aria-label="Pirâmide etária: homens à esquerda, mulheres à direita, idades de baixo para cima">
+    <div class="au-piramide-topo"><span>Homens</span><span>Idade</span><span>Mulheres</span></div>
+  </div>
+  <div class="au-painel">
+    <div class="au-leituras">
+      <div class="au-leitura"><small>Jovens (0–19)</small><strong id="au-l-jovens">0%</strong></div>
+      <div class="au-leitura"><small>Adultos (20–59)</small><strong id="au-l-adultos">0%</strong></div>
+      <div class="au-leitura"><small>Idosos (60+)</small><strong id="au-l-idosos">0%</strong></div>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+    <div class="au-controle"><label for="au-filhos">Filhos por mulher</label><input id="au-filhos" type="range" min="1" max="7" step="0.1" value="6"><output id="au-o-filhos">6,0</output></div>
+    <div class="au-controle"><label for="au-vida">Expectativa de vida</label><input id="au-vida" type="range" min="45" max="85" value="52"><output id="au-o-vida">52 anos</output></div>
+    <div class="au-atalhos">
+      <button type="button" data-cena="6,52">Muitos filhos, vida curta</button>
+      <button type="button" data-cena="2.6,68">Em transição</button>
+      <button type="button" data-cena="1.4,83">Poucos filhos, vida longa</button>
+    </div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Como ler</h2>
+  <p>Cada barra é uma faixa de idade: crianças embaixo, idosos em cima. Quanto mais larga a barra, mais gente naquela idade. A <b>base</b> mostra quantos nascem; o <b>topo</b> mostra quantos chegam à velhice.</p>
+  <p>Com muitos filhos e vida curta, sai um <b>triângulo</b>: muita criança e pouca gente idosa. Era parecido com o Brasil de 1960, quando a média passava de 6 filhos por mulher.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>A transição demográfica</h2>
+  <p>Primeiro a medicina, o saneamento e as vacinas fazem as pessoas <b>viverem mais</b>. Aumente só a expectativa de vida: o meio e o topo engordam.</p>
+  <p>Depois a <b>fecundidade cai</b>, com a urbanização, a escolaridade das mulheres, a entrada delas no mercado de trabalho e o acesso a métodos contraceptivos. Diminua os filhos: a base encolhe e a pirâmide vira um <b>barril</b>, e depois quase uma pirâmide de cabeça para baixo.</p>
+  <p>Com <b>2,1 filhos por mulher</b> a população apenas se repõe. Abaixo disso, ela envelhece e, com o tempo, diminui. O Brasil já está abaixo de 2.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>O que muda para o país</h2>
+  <p><b>População jovem:</b> a pressão é por escolas, creches e empregos para quem está chegando.</p>
+  <p><b>População adulta:</b> há muita gente trabalhando para poucos dependentes. É o <b>bônus demográfico</b>, uma janela boa para crescer, que não dura para sempre.</p>
+  <p><b>População envelhecida:</b> a pressão passa para a previdência e a saúde, com menos trabalhadores para cada aposentado.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Base estreita não quer dizer que a população já está diminuindo: quer dizer que nascem menos pessoas do que antes.</li>
+    <li>Envelhecimento não é só coisa de país rico. O Brasil envelhece mais rápido do que a Europa envelheceu.</li>
+    <li>A queda da fecundidade no Brasil aconteceu sem política de controle de natalidade: veio com a urbanização e as mudanças no papel da mulher.</li>
+    <li>O topo costuma ter mais mulheres, porque elas vivem mais, em média.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Base larga é muito nascimento; topo estreito é pouca gente chegando à velhice.">
+    <p>Uma pirâmide de base larga e topo estreito indica uma população com:</p>
+    <button type="button" class="au-alt">Alta natalidade e baixa expectativa de vida</button>
+    <button type="button" class="au-alt">Baixa natalidade e alta expectativa de vida</button>
+    <button type="button" class="au-alt">Muitos idosos e poucos jovens</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Com menos nascimentos e mais idosos, há menos gente contribuindo para cada pessoa aposentada.">
+    <p>Num país em que a base da pirâmide encolhe e o topo alarga, o desafio que mais cresce é:</p>
+    <button type="button" class="au-alt">Construir mais creches e escolas</button>
+    <button type="button" class="au-alt">Criar empregos para muitos jovens</button>
+    <button type="button" class="au-alt">Financiar a previdência e a saúde</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p><button type="button" class="au-seguir" data-treinar="humanas">Treinar questões de Ciências Humanas →</button></p>
+  <p class="au-nota">A simulação é simplificada: mostra a forma que a população teria se essas taxas ficassem iguais por muitas décadas. Países reais carregam a história das gerações anteriores.</p>
+</section>

@@ -162,13 +162,16 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 4c. **Em aberto (perguntado em 13/11, sem resposta):** campo "Abrir questão" (ano e número) na Administração,
    só para a equipe. Hoje não há como abrir uma questão específica; para apagar uma explicação da IA foi
    preciso usar o console do navegador.
-4d. **Aba Conteúdos interativa** (ideia do dia 14/11, para depois do lançamento): aulas curtas por assunto
-   (ex.: cinemática, fotossíntese) em que o aluno mexe na figura (controle de luz e a planta cresce, gráfico que
-   muda com a velocidade), com texto curto ao lado. Plano sugerido: começar com um piloto de 3 a 5 assuntos
-   dos que mais caem, cada aula num arquivo próprio (carregado só ao abrir, para não engordar o `index.html`),
-   sem biblioteca externa (CSP), terminando em "treinar questões deste assunto" e na discussão da comunidade.
-   Medir se quem abre a aula acerta mais antes de fazer as outras. Textos próprios, nada copiado de outra
-   plataforma.
+4d. **Aprender mexendo (aulas interativas)** — ideia do Miguel (14/11). Feito em 14/11 no ramo
+   `claude/great-pascal-rrk8vh`, **esperando o "sim" para ir ao master** (Miguel pediu antes do lançamento).
+   Cartão "Aprender mexendo" no Treinar, logo abaixo do "Bora treinar?" (sem botão novo na barra). Cinco aulas,
+   uma por área: Fotossíntese, Cinemática, Porcentagem, Pirâmide etária e Figuras de linguagem. Cada aula tem
+   uma figura que o aluno controla, texto curto, "Onde o ENEM pega", teste rápido e o botão "Treinar questões".
+   Como é feito: cada aula são dois arquivos em `aulas/` (`<id>.html` e `<id>.js`), baixados só quando o aluno
+   abre; `aulas/base.css` e `aulas/base.js` são comuns. Tudo começa com `au-` para não bater com o resto do
+   site (`test/aulas.test.js` confere). Para acrescentar uma aula: os dois arquivos e uma linha em `AULAS` no
+   `index.html`. Os números das simulações são ilustrativos (está escrito nas aulas). **Falta:** vocês (ou um
+   professor) lerem os textos; depois, mais assuntos e medir se quem abre a aula acerta mais.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 

@@ -1,0 +1,89 @@
+/* Aulas interativas (aba Aprender). Tudo começa com "au-" para não bater com
+   as classes do resto do site. As cores vêm do tema que o aluno escolheu. */
+.aula { --au-folha: #3aa862; --au-agua: #4a94d8; max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; line-height: 1.6; }
+.aula p { margin: 0 0 10px; }
+.aula p:last-child { margin-bottom: 0; }
+.aula b { font-weight: 700; }
+.au-trilha { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--marca-texto, var(--marca)); }
+.aula h1 { font: 700 clamp(28px, 7vw, 40px)/1.1 var(--fonte-titulo); margin: 4px 0 6px; text-wrap: balance; letter-spacing: 0; }
+.aula h2 { font: 600 22px/1.2 var(--fonte-titulo); margin: 0 0 6px; text-wrap: balance; }
+.au-abre { color: var(--texto-fraco); max-width: 60ch; }
+
+.au-cena { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); overflow: hidden; }
+.aula canvas { display: block; width: 100%; aspect-ratio: 4 / 3; max-width: 100%; touch-action: pan-y; }
+.aula canvas.au-larga { aspect-ratio: 20 / 9; }
+.au-painel { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 14px; }
+.au-leituras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.au-leitura small { display: block; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--texto-fraco); }
+.au-leitura strong { display: block; font: 700 20px/1.2 var(--fonte); font-variant-numeric: tabular-nums; }
+.au-barra { height: 6px; border-radius: 3px; background: var(--marca-suave); overflow: hidden; margin-top: 6px; }
+.au-barra i { display: block; height: 100%; width: 0; background: var(--au-folha); border-radius: 3px; transition: width .2s; }
+.au-recado { font-size: 14px; background: var(--marca-suave); border-radius: 10px; padding: 9px 12px; min-height: 2.6em; }
+
+.au-controle { display: grid; grid-template-columns: 96px minmax(0, 1fr) 68px; align-items: center; gap: 10px; }
+.au-controle label { font-weight: 600; font-size: 14px; line-height: 1.25; }
+.au-controle output { text-align: right; font-size: 13px; color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+.aula input[type="range"] { width: 100%; accent-color: var(--marca); height: 28px; }
+.au-atalhos { display: flex; flex-wrap: wrap; gap: 8px; }
+.au-atalhos button, .au-alt { font: 600 14px var(--fonte); color: var(--texto); background: transparent; border: 1px solid var(--borda); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.au-atalhos button:hover, .au-alt:hover { border-color: var(--marca); }
+.au-atalhos button[aria-pressed="true"] { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+.aula button:focus-visible, .aula input:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+
+.au-equacao { text-align: center; font: 600 clamp(15px, 4.2vw, 19px)/1.5 var(--fonte); font-variant-numeric: tabular-nums; padding: 4px 0; }
+.au-equacao span { padding: 2px 6px; border-radius: 8px; transition: background .2s, color .2s; white-space: nowrap; }
+.au-equacao .au-falta { background: var(--errado); color: #fff; }
+.au-legenda { font-size: 13px; color: var(--texto-fraco); text-align: center; }
+.au-leitura .au-legenda { text-align: left; }
+.au-formula { font: 600 17px/1.5 var(--fonte); font-variant-numeric: tabular-nums; background: var(--marca-suave); border-radius: 10px; padding: 8px 12px; margin: 0 0 10px; overflow-x: auto; white-space: nowrap; }
+
+.au-graficos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.au-graficos figure { margin: 0; }
+.au-graficos figcaption { font-size: 12px; font-weight: 600; color: var(--texto-fraco); }
+.aula svg { display: block; width: 100%; height: auto; margin-top: 6px; }
+.aula svg text { font: 11px var(--fonte); fill: var(--texto-fraco); }
+
+.au-bloco { border-top: 1px solid var(--borda); padding-top: 20px; }
+.au-bloco p { max-width: 62ch; }
+.au-pegadinhas { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 62ch; }
+
+.au-pergunta { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.au-pergunta p { font-weight: 600; margin: 0; }
+.au-alt { text-align: left; border-radius: 12px; font-weight: 500; padding: 10px 14px; }
+.au-alt.au-certa { border-color: var(--certo); background: color-mix(in srgb, var(--certo) 14%, transparent); }
+.au-alt.au-errada { border-color: var(--errado); background: color-mix(in srgb, var(--errado) 12%, transparent); }
+.au-retorno { font-size: 14px; color: var(--texto-fraco); min-height: 1.4em; }
+.au-seguir { font: 700 15px var(--fonte); background: var(--marca); color: var(--sobre-marca); border: none; border-radius: 999px; padding: 12px 20px; cursor: pointer; }
+.au-nota { font-size: 12px; color: var(--texto-fraco); }
+
+/* Porcentagem */
+.au-grade { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 16px; max-width: 340px; margin: 0 auto; }
+.au-grade i { aspect-ratio: 1; border-radius: 3px; background: var(--superficie-2); border: 1px solid var(--borda); transition: background .15s; }
+.au-grade i.au-cheio { background: var(--marca); border-color: var(--marca); }
+.au-precos { display: flex; flex-direction: column; gap: 10px; }
+.au-preco { display: grid; grid-template-columns: 78px minmax(0, 1fr); align-items: center; gap: 10px; font-size: 13px; }
+.au-preco span { color: var(--texto-fraco); line-height: 1.25; }
+.au-trilho { position: relative; height: 30px; }
+.au-trilho i { display: block; height: 100%; min-width: 2px; border-radius: 8px; background: var(--au-agua); transition: width .25s; }
+.au-trilho b { position: absolute; left: 8px; top: 0; line-height: 30px; font-size: 13px; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.55); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.au-trilho em { position: absolute; top: -4px; bottom: -4px; width: 0; border-left: 2px dashed var(--texto-fraco); }
+
+/* Pirâmide etária */
+.au-piramide { padding: 16px 12px 10px; display: flex; flex-direction: column; gap: 3px; }
+.au-faixa { display: grid; grid-template-columns: minmax(0, 1fr) 46px minmax(0, 1fr); align-items: center; gap: 4px; font-size: 11px; color: var(--texto-fraco); text-align: center; font-variant-numeric: tabular-nums; }
+.au-faixa div { height: 20px; display: flex; }
+.au-faixa div:first-child { justify-content: flex-end; }
+.au-faixa i { display: block; height: 100%; border-radius: 4px; transition: width .3s; }
+.au-faixa div:first-child i { background: var(--au-agua); }
+.au-faixa div:last-child i { background: var(--marca); }
+.au-piramide-topo { display: grid; grid-template-columns: 1fr 46px 1fr; font-size: 12px; font-weight: 600; text-align: center; color: var(--texto-fraco); margin-bottom: 4px; }
+
+/* Figuras de linguagem */
+.au-ficha { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.au-frase { font: 600 clamp(18px, 5vw, 22px)/1.35 var(--fonte-titulo); text-wrap: balance; min-height: 2.7em; }
+.au-frase mark { background: var(--marca-suave); color: inherit; border-radius: 6px; padding: 0 4px; box-shadow: inset 0 -2px 0 var(--marca); }
+.au-de-para { font-size: 14px; color: var(--texto-fraco); }
+.au-opcoes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.au-opcoes .au-alt { text-align: center; padding: 10px 8px; }
+.au-placar { font-size: 13px; color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+.aula [hidden] { display: none !important; }
