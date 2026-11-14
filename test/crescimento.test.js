@@ -59,3 +59,9 @@ test('emblemas de convite existem na Arena e nunca saem do baú', () => {
   for (const e of c.EMBLEMAS_CONVITE) assert.ok(arena.ITEM_POR_ID.has(e.item), e.item);
   for (let i = 0; i < 200; i++) assert.notStrictEqual(arena.sortearItem(new Set(), Math.random).raridade, 'convite');
 });
+
+test('comunidade: a consulta conta os laços da primeira semana e separa quem voltou', () => {
+  const sql = require('../crescimento').SQL_COMUNIDADE;
+  for (const pedaco of ['seguidores', 'grupo_membros', 'boas_vindas', 'duplas', 'mensagens', 'questoes_comentarios', "INTERVAL '7 days'", 'laco_voltou', 'sem_laco_voltou'])
+    assert.ok(sql.includes(pedaco), pedaco);
+});

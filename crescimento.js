@@ -46,6 +46,39 @@ async function registrarOrigem(pool, novoId, { origem, convite } = {}) {
 // Brasília: o servidor guarda em UTC, o dia do aluno vira 3 horas depois.
 const DIA = "(created_at - INTERVAL '3 hours')::date";
 
+// Comunidade: das contas criadas nos últimos 30 dias, quantas criaram algum laço
+// na primeira semana, e se quem criou laço volta mais do que quem não criou.
+// "Voltou" é o mesmo do painel de cima: respondeu questão num dos 7 dias seguintes ao cadastro.
+const SQL_COMUNIDADE = `
+  WITH u AS (
+    SELECT id, created_at, ${DIA} AS dia FROM usuarios WHERE created_at > NOW() - INTERVAL '30 days'
+  ), l AS (
+    SELECT u.id, u.dia,
+      EXISTS (SELECT 1 FROM seguidores s WHERE s.seguidor_id = u.id AND s.created_at < u.created_at + INTERVAL '7 days') AS seguiu,
+      EXISTS (SELECT 1 FROM grupo_membros g WHERE g.usuario_id = u.id AND g.created_at < u.created_at + INTERVAL '7 days') AS grupo,
+      EXISTS (SELECT 1 FROM boas_vindas b WHERE (b.novo_id = u.id OR b.quem_id = u.id) AND b.created_at < u.created_at + INTERVAL '7 days') AS boas_vindas,
+      EXISTS (SELECT 1 FROM duplas d WHERE (d.convidou_id = u.id OR d.convidado_id = u.id) AND d.aceita_em IS NOT NULL
+                 AND d.aceita_em < u.created_at + INTERVAL '7 days') AS dupla,
+      (EXISTS (SELECT 1 FROM mensagens m WHERE m.de_id = u.id AND m.created_at < u.created_at + INTERVAL '7 days')
+        OR EXISTS (SELECT 1 FROM questoes_comentarios c WHERE c.usuario_id = u.id AND c.created_at < u.created_at + INTERVAL '7 days')) AS conversou,
+      EXISTS (SELECT 1 FROM respostas r WHERE r.usuario_id = u.id
+                 AND r.created_at >= u.dia + INTERVAL '1 day 3 hours' AND r.created_at < u.dia + INTERVAL '8 days 3 hours') AS voltou,
+      u.dia <= (NOW() - INTERVAL '3 hours')::date - 8 AS teve_7_dias
+    FROM u
+  )
+  SELECT COUNT(*)::int AS novos,
+    COUNT(*) FILTER (WHERE seguiu)::int AS seguiu,
+    COUNT(*) FILTER (WHERE grupo)::int AS grupo,
+    COUNT(*) FILTER (WHERE boas_vindas)::int AS boas_vindas,
+    COUNT(*) FILTER (WHERE dupla)::int AS dupla,
+    COUNT(*) FILTER (WHERE conversou)::int AS conversou,
+    COUNT(*) FILTER (WHERE seguiu OR grupo OR boas_vindas OR dupla OR conversou)::int AS com_laco,
+    COUNT(*) FILTER (WHERE teve_7_dias AND (seguiu OR grupo OR boas_vindas OR dupla OR conversou))::int AS laco_7,
+    COUNT(*) FILTER (WHERE teve_7_dias AND (seguiu OR grupo OR boas_vindas OR dupla OR conversou) AND voltou)::int AS laco_voltou,
+    COUNT(*) FILTER (WHERE teve_7_dias AND NOT (seguiu OR grupo OR boas_vindas OR dupla OR conversou))::int AS sem_laco_7,
+    COUNT(*) FILTER (WHERE teve_7_dias AND NOT (seguiu OR grupo OR boas_vindas OR dupla OR conversou) AND voltou)::int AS sem_laco_voltou
+  FROM l`;
+
 function registrarCrescimento(app, { pool, exigirModerador }) {
   app.get('/api/admin/crescimento', exigirModerador, async (req, res) => {
     try {
@@ -78,7 +111,10 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
                   COUNT(DISTINCT convidado_por)::int AS quem_convidou
              FROM usuarios`)
       ]);
+      // À parte: se esta conta der erro, o resto do painel continua aparecendo.
+      const comunidade = await pool.query(SQL_COMUNIDADE).then(r => r.rows[0]).catch(erro => { console.error('Erro nos números da comunidade:', erro.message); return null; });
       res.json({
+        comunidade,
         por_dia: porDia.rows,
         semanas: semanas.rows,
         origens: origens.rows.map(o => ({ ...o, nome: NOMES_ORIGEM[o.origem] || o.origem })),
@@ -92,4 +128,4 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
 }
 
 module.exports = registrarCrescimento;
-Object.assign(module.exports, { ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });
+Object.assign(module.exports, { SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });

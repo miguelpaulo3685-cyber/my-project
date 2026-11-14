@@ -11032,6 +11032,31 @@ async function limparErrosAdmin() {
 }
 
 // Crescimento: só números somados, sem nome de ninguém.
+// A comunidade é o diferencial: quantas contas novas criam algum laço na primeira
+// semana e se quem cria laço volta mais do que quem não cria.
+function blocoComunidade(c, pct) {
+  if (!c) return '';
+  if (!c.novos) return `<div class="rotulo-modal">Comunidade na 1ª semana</div><p class="pista">Ainda não há contas novas nos últimos 30 dias.</p>`;
+  const linha = (nome, n) => `<div class="barra-admin"><span>${nome}</span>
+    <div class="trilho"><i style="width:${pct(n, c.novos)}%"></i></div><b>${pct(n, c.novos)}%</b><small>${n} de ${c.novos}</small></div>`;
+  const volta = (nome, v, t) => `<div class="barra-admin"><span>${nome}</span>
+    <div class="trilho"><i style="width:${pct(v, t)}%"></i></div><b>${t ? pct(v, t) + '%' : '–'}</b><small>${v} de ${t}</small></div>`;
+  const pouco = c.laco_7 + c.sem_laco_7 < 20;
+  return `<div class="rotulo-modal">Comunidade na 1ª semana (contas novas em 30 dias: ${c.novos})</div>
+    ${linha('<b>Criaram algum laço</b>', c.com_laco)}
+    ${linha('Seguiram alguém', c.seguiu)}
+    ${linha('Entraram num grupo', c.grupo)}
+    ${linha('Deram ou receberam boas-vindas', c.boas_vindas)}
+    ${linha('Formaram dupla', c.dupla)}
+    ${linha('Mandaram mensagem ou comentaram', c.conversou)}
+    <p class="pista">Conta o que a pessoa fez nos 7 primeiros dias depois de criar a conta.</p>
+    <div class="rotulo-modal">Quem cria laço volta mais?</div>
+    ${volta('Com laço', c.laco_voltou, c.laco_7)}
+    ${volta('Sem laço', c.sem_laco_voltou, c.sem_laco_7)}
+    <p class="pista">Voltou = respondeu ao menos uma questão num dos 7 dias seguintes ao cadastro (só contas que já tiveram os 7 dias).
+      ${pouco ? '<b>Ainda é pouca gente para concluir:</b> esperem umas 20 contas com mais de 7 dias.' : 'Se a barra "Com laço" for bem maior, a comunidade está segurando as pessoas.'}</p>`;
+}
+
 async function desenharCrescimento() {
   const alvo = document.getElementById('admin-crescimento');
   let d;
@@ -11056,6 +11081,8 @@ async function desenharCrescimento() {
       : '<p class="pista">Ainda não há contas com mais de 7 dias.</p>'}
     <p class="pista">Conta quem criou a conta naquela semana e respondeu ao menos uma questão (treino, simulado ou Arena)
       em algum dos 7 dias seguintes. Acima de 30% é bom sinal.</p>
+
+    ${blocoComunidade(d.comunidade, pct)}
 
     <div class="rotulo-modal">De onde vieram (últimos 30 dias: ${totalMes})</div>
     ${d.origens.filter(o => o.total).map(o => `<div class="barra-admin"><span>${escapar(o.nome)}</span>

@@ -191,6 +191,12 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    (`EXPLICACAO_LIMITE_DIARIO`, 400); o resto fica para quem pedir na hora. Sem cota no Google, para e descansa
    10 minutos. Desliga com `EXPLICACAO_ADIANTAR=0` no Render. Cada questão só é explicada uma vez na vida, então
    com o uso o banco inteiro (~3.200) fica coberto.
+4i. **Medir a comunidade** (14/11, no ramo `claude/great-pascal-rrk8vh`, esperando o "sim"): Administração →
+   crescimento ganhou "Comunidade na 1ª semana" (das contas novas em 30 dias, quantas seguiram alguém, entraram
+   num grupo, deram/receberam boas-vindas, formaram dupla, mandaram mensagem ou comentaram) e "Quem cria laço
+   volta mais?" (retorno em 7 dias com laço × sem laço). Conta em `SQL_COMUNIDADE` (`crescimento.js`), testada
+   num Postgres local. Ideias de ênfase propostas ao Miguel, ainda sem resposta: missão de boas-vindas com um
+   passo social, "sua turma" no fim do bloco e convite para dupla depois do primeiro bloco.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
