@@ -172,6 +172,11 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    site (`test/aulas.test.js` confere). Para acrescentar uma aula: os dois arquivos e uma linha em `AULAS` no
    `index.html`. Os números das simulações são ilustrativos (está escrito nas aulas). **Falta:** vocês (ou um
    professor) lerem os textos; depois, mais assuntos e medir se quem abre a aula acerta mais.
+4e. **Temas prontos na Aparência** (14/11, no ramo `claude/great-pascal-rrk8vh`, esperando o "sim"): 12 temas de
+   um toque na aba Estilo (Oceano, Floresta, Pôr do sol, Aurora, Meia-noite, Neon roxo, Matrix, Cyber rosa,
+   Sakura, Lavanda, Menta, Papel). Cada um é só fundo + cor principal + secundária (`TEMAS_PRONTOS` no
+   `index.html`); o texto se ajusta sozinho. Pedido depois: um estilo novo "como o Serra" ficou para depois
+   do lançamento, se quiserem.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 

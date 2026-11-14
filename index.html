@@ -356,6 +356,17 @@
       border-radius: 11px; padding: 10px; font: inherit; font-weight: 600; font-size: .88rem; cursor: pointer;
     }
     .escolha-tema button.ativo, .paleta.ativa { border-color: var(--marca); }
+    .temas-prontos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+    .tema-pronto {
+      display: flex; flex-direction: column; align-items: stretch; gap: 6px; padding: 6px 6px 8px; cursor: pointer;
+      background: none; border: 1px solid var(--borda); border-radius: 12px; color: var(--texto); font: inherit; font-size: .76rem; font-weight: 600;
+    }
+    .tema-pronto:hover, .tema-pronto.ativa { border-color: var(--marca); }
+    .tema-pronto.ativa { box-shadow: 0 0 0 2px var(--marca-suave); }
+    .tema-pronto:focus-visible { outline: 2px solid var(--marca); outline-offset: 2px; }
+    .tema-pronto i { display: flex; align-items: flex-end; gap: 4px; height: 44px; border-radius: 8px; padding: 6px; }
+    .tema-pronto i u { display: block; height: 8px; border-radius: 4px; flex: 1; }
+    .tema-pronto i u + u { flex: .5; }
     .paletas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .paleta { display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: .78rem; }
     .paleta i { width: 30px; height: 30px; border-radius: 50%; display: block; }
@@ -2850,6 +2861,8 @@
             <i style="background:linear-gradient(180deg,#5c5c5c,#9a9a9a 45%,#3f3f3f 46%,#222 100%)"></i><span>Serra (vidro)</span>
           </button>
         </div>
+        <div class="rotulo-modal">Temas prontos</div>
+        <div class="temas-prontos" id="lista-temas"></div>
         <p class="aviso-estilo" id="aviso-estilo">No estilo Serra, o tema, as cores e a imagem de fundo das outras abas ficam guardados
           e voltam quando você escolher Preto &amp; Bege.</p>
       </div>
@@ -3583,6 +3596,22 @@ const FUNDOS = [
   { nome: 'Céu', cor: '#e8f1f9' }
 ];
 
+// Temas prontos: fundo + cores de um toque só. O texto se ajusta ao fundo.
+const TEMAS_PRONTOS = [
+  { nome: 'Oceano', fundo: '#0b1d2e', principal: '#2a9df4', secundaria: '#5eead4' },
+  { nome: 'Floresta', fundo: '#0f1d17', principal: '#2fa36b', secundaria: '#a3e635' },
+  { nome: 'Pôr do sol', fundo: '#24121a', principal: '#f97316', secundaria: '#fbbf24' },
+  { nome: 'Aurora', fundo: '#0d1626', principal: '#34d399', secundaria: '#a78bfa' },
+  { nome: 'Meia-noite', fundo: '#0b1020', principal: '#6d7cff', secundaria: '#38bdf8' },
+  { nome: 'Neon roxo', fundo: '#150a24', principal: '#d946ef', secundaria: '#8b5cf6' },
+  { nome: 'Matrix', fundo: '#060d08', principal: '#22c55e', secundaria: '#86efac' },
+  { nome: 'Cyber rosa', fundo: '#170a1c', principal: '#ff3d9a', secundaria: '#22d3ee' },
+  { nome: 'Sakura', fundo: '#fbeef2', principal: '#db5c8a', secundaria: '#f4a6c0' },
+  { nome: 'Lavanda', fundo: '#efecf8', principal: '#8b74e8', secundaria: '#a78bfa' },
+  { nome: 'Menta', fundo: '#e9f4ee', principal: '#1f9d6b', secundaria: '#5fcfa0' },
+  { nome: 'Papel', fundo: '#f7f3ea', principal: '#b08a4c', secundaria: '#c8a96e' }
+];
+
 let cores = { ...PALETAS[0], fundo: null };
 try {
   const salvas = JSON.parse(ler(CHAVE_CORES));
@@ -3716,6 +3745,14 @@ function escolherPaleta(i) {
   salvarCores();
 }
 
+function escolherTemaPronto(i) {
+  const t = TEMAS_PRONTOS[i];
+  if (!t) return;
+  // No estilo Serra as cores ficam guardadas: volta para o Preto & Bege para o tema aparecer.
+  if (document.documentElement.dataset.estilo === 'serra') { guardar(CHAVE_ESTILO, null); aplicarEstilo('classico'); }
+  cores = { principal: t.principal, secundaria: t.secundaria, fundo: t.fundo };
+  salvarCores();
+}
 function restaurarCores() {
   cores = { ...PALETAS[0], fundo: null };
   salvarCores();
@@ -3725,6 +3762,11 @@ function desenharAparencia() {
   const estilo = document.documentElement.dataset.estilo || 'classico';
   document.getElementById('estilo-classico').classList.toggle('ativo', estilo === 'classico');
   document.getElementById('estilo-serra').classList.toggle('ativo', estilo === 'serra');
+  document.getElementById('lista-temas').innerHTML = TEMAS_PRONTOS.map((t, i) => {
+    const ativa = estilo === 'classico' && t.fundo === cores.fundo && t.principal === cores.principal && t.secundaria === cores.secundaria;
+    return `<button class="tema-pronto${ativa ? ' ativa' : ''}" onclick="escolherTemaPronto(${i})" aria-pressed="${ativa}">
+      <i style="background:${t.fundo}"><u style="background:${t.principal}"></u><u style="background:${t.secundaria}"></u></i>${escapar(t.nome)}</button>`;
+  }).join('');
   const tema = document.documentElement.dataset.tema;
   document.getElementById('tema-escuro').classList.toggle('ativo', !cores.fundo && tema === 'escuro');
   document.getElementById('tema-claro').classList.toggle('ativo', !cores.fundo && tema === 'claro');
