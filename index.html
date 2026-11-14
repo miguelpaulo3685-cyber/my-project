@@ -1997,6 +1997,12 @@
     .linha-escola .acao { margin: 0; }
     .faixa-junto { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin: 0 0 14px; padding: 12px 16px;
       border-radius: 14px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font: inherit; font-size: .9rem; cursor: pointer; }
+    .turma-fim { display: flex; align-items: flex-start; gap: 12px; text-align: left; margin: 0 0 16px; padding: 14px 16px;
+      border-radius: 14px; border: 1px solid var(--marca); background: var(--marca-suave); }
+    .turma-fim b { display: block; font-size: .98rem; }
+    .turma-fim p { color: var(--texto-fraco); font-size: .86rem; margin: 2px 0 10px; line-height: 1.45; }
+    .turma-fim .botoes { display: flex; flex-wrap: wrap; gap: 8px; }
+    .turma-fim .acao { margin: 0; }
     .bolhas-junto { display: flex; flex-shrink: 0; }
     .bolhas-junto .bolha-autor { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
       margin-left: -8px; border: 2px solid var(--superficie); background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; font-size: .8rem; }
@@ -5157,11 +5163,12 @@ function registrarResposta(questaoId, acertou, segundos) {
 function mostrarResultado() {
   pararCronometro();
   // Quem mais estudou hoje: a resposta deste bloco já conta, então pede de novo daqui a pouco.
-  document.getElementById('res-junto').innerHTML = '';
+  // O fim do bloco é a hora de puxar para a comunidade: sempre aparece um convite, com ou sem conta.
+  document.getElementById('res-junto').innerHTML = usuarioLogado ? '' : htmlTurmaNoFim(null);
   if (usuarioLogado) setTimeout(async () => {
-    try { junto = await api('/api/comunidade/junto'); } catch (e) { return; }
+    try { junto = await api('/api/comunidade/junto'); } catch (e) { junto = null; }
     const alvo = document.getElementById('res-junto');
-    if (alvo) alvo.innerHTML = htmlJunto(junto, 'resultado');
+    if (alvo) alvo.innerHTML = htmlTurmaNoFim(junto);
   }, 1500);
   setTimeout(atualizarMeuProgresso, 1500); // a sequência do dia pode ter começado agora
 
@@ -9730,6 +9737,33 @@ function htmlJunto(d, onde) {
     ? `Você e mais ${plural(t.estudaram_hoje, 'pessoa', 'pessoas')} ${quem} treinaram hoje 💪`
     : `${plural(t.estudaram_hoje, 'pessoa', 'pessoas')} ${quem} ${t.estudaram_hoje === 1 ? 'estudou' : 'estudaram'} hoje${online.length ? ` · ${online.join(', ')} ${online.length === 1 ? 'está' : 'estão'} online agora` : nomes.length ? `: ${nomes.join(', ')}` : ''}`;
   return `<button class="faixa-junto" onclick="abrirComunidade('agora')"><span class="bolhas-junto">${t.pessoas.map(p => bolha(p)).join('')}</span><span>${frase}</span></button>`;
+}
+
+// Fim do bloco: um cartão que leva para a comunidade, conforme a situação de quem acabou de treinar.
+function htmlTurmaNoFim(d) {
+  const cartao = (bolhas, titulo, texto, botoes) => `<div class="turma-fim">${bolhas}<div><b>${titulo}</b><p>${texto}</p>
+    <div class="botoes">${botoes}</div></div></div>`;
+  if (!usuarioLogado) {
+    if (bloco && bloco.visita) return ''; // a primeira visita já termina com o convite para criar a conta
+    return cartao('', 'Ninguém passa no ENEM sozinho', 'Com uma conta você vê quem da sua escola treinou hoje, forma dupla de estudo e guarda a sua nota.',
+      `<button class="acao pequena" onclick="abrirConta('criar')">Criar conta grátis</button>`);
+  }
+  const turmas = [d && d.escola, d && d.grupo].filter(Boolean);
+  const ativa = turmas.find(t => t.estudaram_hoje);
+  if (ativa) {
+    const quem = ativa === d.escola ? 'da sua escola' : `do grupo ${escapar(ativa.nome)}`;
+    return cartao(`<span class="bolhas-junto">${ativa.pessoas.map(p => bolha(p)).join('')}</span>`,
+      `Você e mais ${plural(ativa.estudaram_hoje, 'pessoa', 'pessoas')} ${quem} treinaram hoje 💪`,
+      'Passe na Comunidade para ver como a turma foi e dar um oi.',
+      `<button class="acao pequena" onclick="abrirComunidade('agora')">Ver a turma</button>`);
+  }
+  if (turmas.length) {
+    return cartao('', 'Você puxou a fila hoje 🏁', 'Ninguém da sua turma treinou ainda. Chame a galera para estudar junto.',
+      `<button class="acao pequena" onclick="convidarColegas()">Chamar no WhatsApp</button>
+       <button class="acao discreta pequena" onclick="abrirComunidade('agora')">Ir para a Comunidade</button>`);
+  }
+  return cartao('', 'Ache a sua turma', 'Encontre quem é da sua escola ou quer o mesmo curso que você. Estudar junto ajuda a não desistir.',
+    `<button class="acao pequena" onclick="abrirComunidade('agora'); abrirBuscaPessoas()">Encontrar pessoas</button>`);
 }
 
 // Ao lado do título da Comunidade: quantos estão no site agora. Na hora da
