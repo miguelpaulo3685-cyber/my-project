@@ -113,3 +113,10 @@
 .au-opcoes .au-alt { text-align: center; padding: 10px 8px; }
 .au-placar { font-size: 13px; color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
 .aula [hidden] { display: none !important; }
+
+/* Com foto de fundo (ou no estilo Serra), a aula ganha um cartão por baixo para o texto e os gráficos continuarem legíveis. */
+body.com-imagem .aula, html[data-estilo="serra"] .aula {
+  background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+  padding: 18px 16px 22px; box-shadow: var(--sombra-leve);
+}
+body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(--superficie-2); }
