@@ -162,6 +162,13 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 4c. **Em aberto (perguntado em 13/11, sem resposta):** campo "Abrir questão" (ano e número) na Administração,
    só para a equipe. Hoje não há como abrir uma questão específica; para apagar uma explicação da IA foi
    preciso usar o console do navegador.
+4d. **Aba Conteúdos interativa** (ideia do dia 14/11, para depois do lançamento): aulas curtas por assunto
+   (ex.: cinemática, fotossíntese) em que o aluno mexe na figura (controle de luz e a planta cresce, gráfico que
+   muda com a velocidade), com texto curto ao lado. Plano sugerido: começar com um piloto de 3 a 5 assuntos
+   dos que mais caem, cada aula num arquivo próprio (carregado só ao abrir, para não engordar o `index.html`),
+   sem biblioteca externa (CSP), terminando em "treinar questões deste assunto" e na discussão da comunidade.
+   Medir se quem abre a aula acerta mais antes de fazer as outras. Textos próprios, nada copiado de outra
+   plataforma.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
