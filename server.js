@@ -779,6 +779,8 @@ app.get('/api/questoes/:area', async (req, res) => {
     }
 
     res.json({ questoes: result.rows, fonte: 'cache_neon' });
+    // Enquanto o aluno lê as questões, a IA já vai escrevendo as explicações que faltam.
+    require('./explicacao-ia').adiantar(result.rows.map(q => q.id));
   } catch (error) {
     console.error('Erro ao buscar questões:', error);
     res.status(500).json({ error: 'Erro ao buscar questões' });

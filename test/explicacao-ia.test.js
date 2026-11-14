@@ -124,7 +124,8 @@ function rotaDeTeste(opcoes) {
   const guardadas = [];
   const pool = { query: async (sql, valores) => {
     if (/^SELECT e\.texto/.test(sql)) return { rows: guardadas.filter(g => g.id === valores[0]) };
-    if (/COUNT/.test(sql)) return { rows: [{ n: 0 }] };
+    if (/COUNT/.test(sql)) return { rows: [{ n: opcoes.feitasHoje || guardadas.length }] };
+    if (/UNION ALL/.test(sql)) return { rows: guardadas.filter(g => g.id === valores[0]) };
     if (/^SELECT ano/.test(sql)) return { rows: [questao] };
     if (/^INSERT/.test(sql)) { guardadas.push({ id: valores[0], texto: valores[1], correta: questao.correta }); return { rowCount: 1 }; }
     return { rows: [] };
@@ -132,9 +133,9 @@ function rotaDeTeste(opcoes) {
   const usos = { freio: 0 };
   const auth = { criarFreio: () => ({ bloqueado: () => false, registrar: () => { usos.freio++; } }) };
   ex(app, { pool, auth, ...opcoes });
-  const pedir = () => new Promise(pronto => {
+  const pedir = (id = '7') => new Promise(pronto => {
     const res = { codigo: 200, status(c) { this.codigo = c; return this; }, json(corpo) { pronto({ codigo: this.codigo, corpo }); } };
-    rotas.post({ params: { id: '7' }, body: { marcada: 0 }, ip: '1.1.1.1' }, res);
+    rotas.post({ params: { id: String(id) }, body: { marcada: 0 }, ip: '1.1.1.1' }, res);
   });
   return { pedir, guardadas, usos };
 }
@@ -169,5 +170,48 @@ test('espera: erro depois do "demorando" não derruba o servidor e a recusa fica
   falhar();
   await new Promise(r => setTimeout(r, 5));
   assert.equal((await pedir()).codigo, 422); // barrada: não tenta de novo hoje
+  delete process.env.GEMINI_API_KEY;
+});
+
+const esperar = ms => new Promise(r => setTimeout(r, ms));
+
+test('adiantar: escreve as explicações do bloco antes do pedido; depois o aluno recebe na hora', async () => {
+  process.env.GEMINI_API_KEY = 'teste';
+  const pedidas = [];
+  const explicar = async q => { pedidas.push(q.numero); return { texto: 'Passo. **Resposta: C**', modelo: 'm' }; };
+  const { pedir, guardadas, usos } = rotaDeTeste({ explicar, pausa: 1 });
+  ex.adiantar([7, 8, 7]);
+  await esperar(40);
+  assert.deepEqual(guardadas.map(g => g.id).sort(), [7, 8]); // as duas, sem repetir
+  const r = await pedir(7);
+  assert.equal(r.codigo, 200);
+  assert.equal(pedidas.length, 2);  // o pedido do aluno não gerou de novo
+  assert.equal(usos.freio, 0);      // nem gastou o freio dele
+  ex.adiantar([7, 8]);
+  await esperar(20);
+  assert.equal(pedidas.length, 2);  // o que já está guardado não é refeito
+  delete process.env.GEMINI_API_KEY;
+});
+
+test('adiantar: para quando chega a 70% do limite do dia, sem cota ou quando está desligado', async () => {
+  process.env.GEMINI_API_KEY = 'teste';
+  let chamadas = 0;
+  const cheio = rotaDeTeste({ explicar: async () => { chamadas++; return { texto: 'x **Resposta: C**', modelo: 'm' }; }, pausa: 1, feitasHoje: 280 });
+  ex.adiantar([7, 8]); await esperar(20);
+  assert.equal(chamadas, 0);
+  assert.equal(cheio.guardadas.length, 0);
+
+  const semCota = rotaDeTeste({ explicar: async () => { chamadas++; throw Object.assign(new Error('cota'), { response: { status: 429 } }); }, pausa: 1 });
+  ex.adiantar([7, 8, 9]); await esperar(20);
+  assert.equal(chamadas, 1); // parou na primeira, não insistiu
+  ex.adiantar([10]); await esperar(20);
+  assert.equal(chamadas, 1); // e descansa antes de tentar de novo
+  assert.equal(semCota.guardadas.length, 0);
+
+  process.env.EXPLICACAO_ADIANTAR = '0';
+  rotaDeTeste({ explicar: async () => { chamadas++; return { texto: 'x **Resposta: C**', modelo: 'm' }; }, pausa: 1 });
+  ex.adiantar([7]); await esperar(20);
+  assert.equal(chamadas, 1);
+  delete process.env.EXPLICACAO_ADIANTAR;
   delete process.env.GEMINI_API_KEY;
 });

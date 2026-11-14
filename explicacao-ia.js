@@ -197,12 +197,76 @@ function trechoDaAlternativa(texto, indice) {
 // feita no servidor: o site pergunta de novo sozinho e pega a mesma geração.
 const ESPERA_DO_ALUNO = 20000;
 
-function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPERA_DO_ALUNO, explicar = explicarComModelo }) {
+// Adiantar: quando um bloco do Treinar é entregue, o servidor já vai escrevendo
+// as explicações que faltam, uma de cada vez. Quando o aluno toca em "Por que
+// errei?", ela costuma estar pronta. Desliga com EXPLICACAO_ADIANTAR=0.
+const PAUSA_ENTRE_ADIANTADAS = 4000;       // respeita o limite por minuto do plano gratuito
+const PARTE_DO_DIA_PARA_ADIANTAR = 0.7;    // o resto do limite diário fica para quem pedir na hora
+const DESCANSO_SEM_COTA = 10 * 60 * 1000;
+let adiantarNaFila = () => {};
+
+function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPERA_DO_ALUNO, explicar = explicarComModelo, pausa = PAUSA_ENTRE_ADIANTADAS }) {
   // Por aparelho: 30 explicações novas por hora. As já guardadas não contam.
   const freio = auth.criarFreio(30, 60 * 60 * 1000);
   const emAndamento = new Map(); // a mesma questão pedida por dois alunos ao mesmo tempo gera uma vez só
   const recusadas = new Map();   // questão barrada pela trava: só tenta de novo no dia seguinte (ou se a equipe apagar)
   const SEM_EXPLICACAO = 'A IA não conseguiu explicar esta questão com segurança. Veja a resolução em vídeo logo abaixo.';
+  const recusadaHoje = id => recusadas.has(id) && Date.now() - recusadas.get(id) < 24 * 60 * 60 * 1000;
+  const feitasHoje = async () => (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
+
+  // Gera e guarda a explicação de uma questão. Quem pedir a mesma questão enquanto isso pega a mesma geração.
+  // Nunca rejeita: devolve { texto } ou { erro }, porque pode terminar depois de o aluno já ter recebido "demorando".
+  function gerar(id) {
+    if (!emAndamento.has(id)) {
+      emAndamento.set(id, (async () => {
+        try {
+          const q = (await pool.query('SELECT ano, numero, contexto, alternativas, correta FROM questoes WHERE id = $1', [id])).rows[0];
+          if (!q) return { texto: null };
+          const { texto, modelo } = await explicar(q);
+          await pool.query(
+            `INSERT INTO explicacoes_ia (questao_id, texto, modelo) VALUES ($1, $2, $3) ON CONFLICT (questao_id) DO NOTHING`,
+            [id, texto, modelo]);
+          return { texto };
+        } catch (erro) {
+          console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
+          if (erro.recusada) recusadas.set(id, Date.now());
+          return { erro };
+        } finally { emAndamento.delete(id); }
+      })());
+    }
+    return emAndamento.get(id);
+  }
+
+  // ---------- adiantar as explicações do bloco que o aluno acabou de receber ----------
+  let fila = [];
+  let adiantando = false;
+  let semCotaAte = 0;
+  async function adiantar(ids) {
+    if (!ligada() || process.env.EXPLICACAO_ADIANTAR === '0' || Date.now() < semCotaAte) return;
+    const novos = (ids || []).map(Number).filter(id => Number.isInteger(id) && id > 0 && !fila.includes(id));
+    fila = [...novos, ...fila].slice(0, 40); // o bloco mais novo passa na frente
+    if (adiantando) return;
+    adiantando = true;
+    try {
+      while (fila.length) {
+        const id = fila.shift();
+        if (emAndamento.has(id) || recusadaHoje(id)) continue;
+        // Já tem explicação da IA, ou resolução escrita pela equipe (aí a IA nem aparece).
+        const pronta = (await pool.query(
+          'SELECT 1 FROM explicacoes_ia WHERE questao_id = $1 UNION ALL SELECT 1 FROM resolucoes WHERE questao_id = $1 LIMIT 1', [id])).rows[0];
+        if (pronta) continue;
+        if (await feitasHoje() >= LIMITE_DO_DIA() * PARTE_DO_DIA_PARA_ADIANTAR) { fila = []; break; }
+        const r = await gerar(id);
+        const estado429 = r.erro && r.erro.response && r.erro.response.status === 429;
+        if (estado429) { fila = []; semCotaAte = Date.now() + DESCANSO_SEM_COTA; break; } // sem cota: para e descansa
+        if (fila.length) await new Promise(pronto => setTimeout(pronto, pausa));
+      }
+    } catch (erro) {
+      console.error('Erro ao adiantar explicações:', erro.message);
+      fila = [];
+    } finally { adiantando = false; }
+  }
+  adiantarNaFila = adiantar;
 
   app.post('/api/questoes/:id/explicacao', async (req, res) => {
     const id = Number(req.params.id);
@@ -218,37 +282,18 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPER
         console.log(`🧹 Explicação da questão ${id} apagada pela trava: ${problema}`);
         await pool.query('DELETE FROM explicacoes_ia WHERE questao_id = $1', [id]);
       }
-      if (recusadas.has(id) && Date.now() - recusadas.get(id) < 24 * 60 * 60 * 1000) return res.status(422).json({ error: SEM_EXPLICACAO });
+      if (recusadaHoje(id)) return res.status(422).json({ error: SEM_EXPLICACAO });
       if (!ligada()) return res.status(503).json({ error: 'A explicação por IA ainda não está disponível.' });
       // Quem pergunta de novo por uma geração já em andamento não gasta o freio nem o limite do dia.
       if (!emAndamento.has(id)) {
         if (freio.bloqueado(req.ip)) return res.status(429).json({ error: 'Muitas explicações seguidas. Espere um pouco.' });
-        const hoje = (await pool.query(`SELECT COUNT(*)::int AS n FROM explicacoes_ia WHERE created_at > NOW() - INTERVAL '1 day'`)).rows[0].n;
-        if (hoje >= LIMITE_DO_DIA()) return res.status(429).json({ error: 'As explicações novas de hoje acabaram. Amanhã tem mais!' });
+        if (await feitasHoje() >= LIMITE_DO_DIA()) return res.status(429).json({ error: 'As explicações novas de hoje acabaram. Amanhã tem mais!' });
         freio.registrar(req.ip);
       }
 
-      if (!emAndamento.has(id)) {
-        // Nunca rejeita: devolve { texto } ou { erro }, porque pode terminar depois de o aluno já ter recebido "demorando".
-        emAndamento.set(id, (async () => {
-          try {
-            const q = (await pool.query('SELECT ano, numero, contexto, alternativas, correta FROM questoes WHERE id = $1', [id])).rows[0];
-            if (!q) return { texto: null };
-            const { texto, modelo } = await explicar(q);
-            await pool.query(
-              `INSERT INTO explicacoes_ia (questao_id, texto, modelo) VALUES ($1, $2, $3) ON CONFLICT (questao_id) DO NOTHING`,
-              [id, texto, modelo]);
-            return { texto };
-          } catch (erro) {
-            console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
-            if (erro.recusada) recusadas.set(id, Date.now());
-            return { erro };
-          } finally { emAndamento.delete(id); }
-        })());
-      }
       let relogio;
       const resultado = await Promise.race([
-        emAndamento.get(id),
+        gerar(id),
         new Promise(pronto => { relogio = setTimeout(() => pronto({ demorando: true }), espera); })
       ]);
       clearTimeout(relogio);
@@ -287,4 +332,6 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPER
 }
 
 module.exports = registrarExplicacoes;
-Object.assign(module.exports, { ligada, explicarQuestao, explicarComModelo, escolherModelos, problemaNaExplicacao, contasErradas, estado, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });
+// Chamado pelo servidor ao entregar um bloco de questões; não espera nem dá erro para quem chama.
+const adiantar = ids => { Promise.resolve().then(() => adiantarNaFila(ids)).catch(() => {}); };
+Object.assign(module.exports, { adiantar, ligada, explicarQuestao, explicarComModelo, escolherModelos, problemaNaExplicacao, contasErradas, estado, trechoDaAlternativa, montarPergunta, urlsDasFiguras, semFiguras, MODELO });

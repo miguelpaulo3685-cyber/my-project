@@ -185,6 +185,12 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    mais de 10 px, era rolagem e nada acontece; um toque parado só **escolhe** a alternativa e aparece o botão
    "Confirmar resposta". Com mouse e teclado continua direto. Vale só para o Treinar (a Arena é contra o
    relógio e ficou como era).
+4h. **"Por que errei?" mais rápido** (14/11, publicado): ao entregar um bloco do Treinar, o servidor já vai
+   escrevendo, uma de cada vez, as explicações que ainda não existem (`adiantar` em `explicacao-ia.js`). Quando o
+   aluno toca no botão, ela costuma estar guardada e aparece na hora. Usa até 70% do limite diário
+   (`EXPLICACAO_LIMITE_DIARIO`, 400); o resto fica para quem pedir na hora. Sem cota no Google, para e descansa
+   10 minutos. Desliga com `EXPLICACAO_ADIANTAR=0` no Render. Cada questão só é explicada uma vez na vida, então
+   com o uso o banco inteiro (~3.200) fica coberto.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
