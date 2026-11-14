@@ -56,10 +56,33 @@
 .au-seguir { font: 700 15px var(--fonte); background: var(--marca); color: var(--sobre-marca); border: none; border-radius: 999px; padding: 12px 20px; cursor: pointer; }
 .au-nota { font-size: 12px; color: var(--texto-fraco); }
 
-/* Porcentagem */
-.au-grade { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; padding: 16px; max-width: 340px; margin: 0 auto; }
-.au-grade i { aspect-ratio: 1; border-radius: 3px; background: var(--superficie-2); border: 1px solid var(--borda); transition: background .15s; }
-.au-grade i.au-cheio { background: var(--marca); border-color: var(--marca); }
+/* Porcentagem (mercadinho) */
+.au-toldo { height: 26px; background: repeating-linear-gradient(90deg, var(--marca) 0 26px, var(--superficie-2) 26px 52px); border-bottom: 1px solid var(--borda); }
+.au-loja { padding: 12px 14px 4px; font: 600 15px var(--fonte-titulo); display: flex; flex-direction: column; gap: 0; }
+.au-loja small { font: 500 12px var(--fonte); color: var(--texto-fraco); }
+.au-prateleira { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 8px 14px 14px; }
+.au-produto { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 4px 8px; cursor: pointer; font: inherit; color: var(--texto);
+  background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 12px; transition: border-color .15s, transform .1s; }
+.au-produto:hover { border-color: var(--marca); }
+.au-produto:active { transform: scale(.96); }
+.au-produto .au-emoji { font-size: 30px; line-height: 1.2; }
+.au-produto b { font-size: 12px; font-weight: 600; text-align: center; line-height: 1.2; }
+.au-produto s { font-size: 11px; color: var(--texto-fraco); min-height: 1.3em; }
+.au-produto strong { font-size: 13px; font-variant-numeric: tabular-nums; }
+.au-produto .au-qtd { position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--marca); color: var(--sobre-marca); font: 700 12px/22px var(--fonte); text-align: center; }
+.au-etiqueta { position: absolute; top: 6px; left: 6px; background: var(--errado); color: #fff; font: 700 10px/1 var(--fonte); padding: 3px 5px; border-radius: 6px; }
+.au-nota-fiscal { background: var(--superficie-2); border: 1px dashed var(--borda); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.au-nota-fiscal > b { display: block; font: 600 15px var(--fonte-titulo); margin-bottom: 6px; }
+.au-linha { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
+.au-linha span:last-child { white-space: nowrap; }
+.au-linha.au-sub { border-top: 1px dashed var(--borda); margin-top: 6px; padding-top: 8px; }
+.au-linha.au-desc { color: var(--certo); font-weight: 600; }
+.au-linha.au-total { font-weight: 700; font-size: 17px; }
+.au-linha small { color: var(--texto-fraco); font-weight: 400; }
+.au-vazio { color: var(--texto-fraco); }
+.au-partes { display: flex; height: 26px; border-radius: 8px; overflow: hidden; font: 700 11px/26px var(--fonte); text-align: center; color: #fff; white-space: nowrap; }
+.au-partes i { font-style: normal; background: var(--au-agua); transition: width .25s; overflow: hidden; }
+.au-partes i + i { background: var(--certo); }
 .au-precos { display: flex; flex-direction: column; gap: 10px; }
 .au-preco { display: grid; grid-template-columns: 78px minmax(0, 1fr); align-items: center; gap: 10px; font-size: 13px; }
 .au-preco span { color: var(--texto-fraco); line-height: 1.25; }

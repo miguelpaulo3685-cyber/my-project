@@ -1,51 +1,55 @@
 <header>
   <div class="au-trilha">Matemática · Proporção</div>
   <h1>Porcentagem</h1>
-  <p class="au-abre">Por cento quer dizer "de cada 100". Pinte os quadradinhos e depois veja o que acontece quando um preço sobe e desce.</p>
+  <p class="au-abre">Faça uma compra no mercadinho, aplique o cupom de desconto e veja de onde sai cada número da nota.</p>
 </header>
 
-<section class="au-cena" aria-label="Quadro de 100 quadradinhos">
-  <div class="au-grade" id="au-grade" role="img" aria-label="Cem quadradinhos; os pintados mostram a porcentagem escolhida"></div>
+<section class="au-cena" aria-label="Mercadinho com cupom de desconto">
+  <div class="au-toldo" aria-hidden="true"></div>
+  <div class="au-loja">Mercadinho M&amp;M <small>toque num produto para pôr no carrinho</small></div>
+  <div class="au-prateleira" id="au-prateleira"></div>
   <div class="au-painel">
-    <div class="au-leituras">
-      <div class="au-leitura"><small>Fração</small><strong id="au-l-fracao">25/100</strong></div>
-      <div class="au-leitura"><small>Decimal</small><strong id="au-l-decimal">0,25</strong></div>
-      <div class="au-leitura"><small id="au-l-de">25% de 80</small><strong id="au-l-parte">20</strong></div>
-    </div>
-    <div class="au-recado" id="au-recado" aria-live="polite"></div>
-    <div class="au-controle"><label for="au-p">Porcentagem</label><input id="au-p" type="range" min="0" max="100" value="25"><output id="au-o-p">25%</output></div>
-    <div class="au-controle"><label for="au-total">Valor total</label><input id="au-total" type="range" min="10" max="400" step="10" value="80"><output id="au-o-total">80</output></div>
+    <div class="au-controle"><label for="au-cupom">🎟️ Cupom de desconto</label><input id="au-cupom" type="range" min="0" max="60" step="5" value="25"><output id="au-o-cupom">25%</output></div>
     <div class="au-atalhos">
-      <button type="button" data-p="10">10%</button>
-      <button type="button" data-p="25">25%</button>
-      <button type="button" data-p="50">50%</button>
-      <button type="button" data-p="75">75%</button>
+      <button type="button" data-cupom="10">10%</button>
+      <button type="button" data-cupom="25">25%</button>
+      <button type="button" data-cupom="50">50%</button>
+      <button type="button" id="au-esvaziar">🛒 Esvaziar carrinho</button>
     </div>
+    <div class="au-nota-fiscal" id="au-nota-fiscal" aria-live="polite"></div>
+    <div class="au-partes" id="au-partes" role="img"><i id="au-paga"></i><i id="au-poupa"></i></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
   </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que a nota mostra</h2>
+  <p>Por cento quer dizer <b>de cada 100</b>. Um cupom de 25% tira R$ 25 de cada R$ 100 de compra. Se a compra é menor ou maior, o desconto acompanha na mesma proporção.</p>
+  <p>Mude o cupom e repare na barra colorida: a parte azul é o que você paga, a verde é o que você economiza. As duas juntas sempre dão 100%.</p>
 </section>
 
 <section class="au-bloco">
   <h2>Três jeitos de escrever a mesma coisa</h2>
   <p>25% é o mesmo que <b>25/100</b> e que <b>0,25</b>. Para calcular a porcentagem de um valor, multiplique pelo decimal:</p>
-  <p class="au-formula">25% de 80 = 0,25 × 80 = 20</p>
+  <p class="au-formula">25% de R$ 80 = 0,25 × 80 = R$ 20</p>
   <p>Atalhos que economizam tempo na prova: <b>10%</b> é dividir por 10, <b>50%</b> é a metade, <b>25%</b> é a metade da metade e <b>1%</b> é dividir por 100.</p>
 </section>
 
 <section class="au-bloco">
   <h2>Aumento e desconto: multiplique pelo fator</h2>
   <p>Aumentar 20% é ficar com 100% + 20% = 120% do valor: multiplique por <b>1,20</b>. Dar 20% de desconto é ficar com 80%: multiplique por <b>0,80</b>.</p>
-  <p>Mexa nas duas mudanças abaixo. A linha tracejada marca o preço inicial.</p>
+  <p>Agora a pegadinha clássica de promoção: a loja <b>remarca</b> o preço e depois anuncia um desconto. Mexa nas duas mudanças de um produto de R$ 100. A linha tracejada marca o preço original.</p>
   <div class="au-cena">
     <div class="au-painel">
       <div class="au-precos">
-        <div class="au-preco"><span>Preço inicial</span><div class="au-trilho"><i id="au-b0"></i><b id="au-v0"></b></div></div>
+        <div class="au-preco"><span>Preço original</span><div class="au-trilho"><i id="au-b0"></i><b id="au-v0"></b></div></div>
         <div class="au-preco"><span id="au-n1">Depois da 1ª</span><div class="au-trilho"><i id="au-b1"></i><b id="au-v1"></b><em id="au-m1"></em></div></div>
         <div class="au-preco"><span id="au-n2">Depois da 2ª</span><div class="au-trilho"><i id="au-b2"></i><b id="au-v2"></b><em id="au-m2"></em></div></div>
       </div>
       <p class="au-formula" id="au-conta"></p>
       <div class="au-recado" id="au-recado2" aria-live="polite"></div>
-      <div class="au-controle"><label for="au-m-a">1ª mudança</label><input id="au-m-a" type="range" min="-50" max="50" step="5" value="20"><output id="au-o-a">+20%</output></div>
-      <div class="au-controle"><label for="au-m-b">2ª mudança</label><input id="au-m-b" type="range" min="-50" max="50" step="5" value="-20"><output id="au-o-b">−20%</output></div>
+      <div class="au-controle"><label for="au-m-a">Remarcação</label><input id="au-m-a" type="range" min="-50" max="50" step="5" value="20"><output id="au-o-a">+20%</output></div>
+      <div class="au-controle"><label for="au-m-b">"Promoção"</label><input id="au-m-b" type="range" min="-50" max="50" step="5" value="-20"><output id="au-o-b">−20%</output></div>
       <div class="au-atalhos">
         <button type="button" data-par="20,-20">Sobe 20%, desce 20%</button>
         <button type="button" data-par="10,10">Dois aumentos de 10%</button>
