@@ -70,7 +70,7 @@
 .au-produto s { font-size: 11px; color: var(--texto-fraco); min-height: 1.3em; }
 .au-produto strong { font-size: 13px; font-variant-numeric: tabular-nums; }
 .au-produto .au-qtd { position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; background: var(--marca); color: var(--sobre-marca); font: 700 12px/22px var(--fonte); text-align: center; }
-.au-etiqueta { position: absolute; top: 6px; left: 6px; background: var(--errado); color: #fff; font: 700 10px/1 var(--fonte); padding: 3px 5px; border-radius: 6px; }
+.au-etiqueta { position: absolute; top: 6px; left: 6px; background: var(--certo); color: #fff; font: 700 10px/1 var(--fonte); padding: 3px 5px; border-radius: 6px; }
 .au-nota-fiscal { background: var(--superficie-2); border: 1px dashed var(--borda); border-radius: 12px; padding: 12px 14px; font-size: 14px; font-variant-numeric: tabular-nums; }
 .au-nota-fiscal > b { display: block; font: 600 15px var(--fonte-titulo); margin-bottom: 6px; }
 .au-linha { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; }
@@ -83,6 +83,9 @@
 .au-partes { display: flex; height: 26px; border-radius: 8px; overflow: hidden; font: 700 11px/26px var(--fonte); text-align: center; color: #fff; white-space: nowrap; }
 .au-partes i { font-style: normal; background: var(--au-agua); transition: width .25s; overflow: hidden; }
 .au-partes i + i { background: var(--certo); }
+.au-partes.au-sobe i + i { background: var(--errado); }
+.au-etiqueta.au-sobe { background: #8a5a00; }
+.au-linha.au-acres { color: var(--errado); font-weight: 600; }
 .au-precos { display: flex; flex-direction: column; gap: 10px; }
 .au-preco { display: grid; grid-template-columns: 78px minmax(0, 1fr); align-items: center; gap: 10px; font-size: 13px; }
 .au-preco span { color: var(--texto-fraco); line-height: 1.25; }

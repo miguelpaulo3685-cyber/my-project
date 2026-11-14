@@ -1,15 +1,19 @@
 <header>
   <div class="au-trilha">Matemática · Proporção</div>
   <h1>Porcentagem</h1>
-  <p class="au-abre">Faça uma compra no mercadinho, aplique o cupom de desconto e veja de onde sai cada número da nota.</p>
+  <p class="au-abre">Faça uma compra no mercadinho, aplique um desconto ou um acréscimo e veja de onde sai cada número da nota.</p>
 </header>
 
-<section class="au-cena" aria-label="Mercadinho com cupom de desconto">
+<section class="au-cena" aria-label="Mercadinho com desconto e acréscimo">
   <div class="au-toldo" aria-hidden="true"></div>
   <div class="au-loja">Mercadinho M&amp;M <small>toque num produto para pôr no carrinho</small></div>
   <div class="au-prateleira" id="au-prateleira"></div>
   <div class="au-painel">
-    <div class="au-controle"><label for="au-cupom">🎟️ Cupom de desconto</label><input id="au-cupom" type="range" min="0" max="60" step="5" value="25"><output id="au-o-cupom">25%</output></div>
+    <div class="au-atalhos" role="group" aria-label="Tipo de mudança no preço">
+      <button type="button" data-modo="desconto" aria-pressed="true">🎟️ Desconto (cupom)</button>
+      <button type="button" data-modo="acrescimo" aria-pressed="false">💳 Acréscimo (parcelado)</button>
+    </div>
+    <div class="au-controle"><label for="au-cupom" id="au-n-cupom">Desconto</label><input id="au-cupom" type="range" min="0" max="60" step="5" value="25"><output id="au-o-cupom">25%</output></div>
     <div class="au-atalhos">
       <button type="button" data-cupom="10">10%</button>
       <button type="button" data-cupom="25">25%</button>
@@ -24,8 +28,8 @@
 
 <section class="au-bloco">
   <h2>O que a nota mostra</h2>
-  <p>Por cento quer dizer <b>de cada 100</b>. Um cupom de 25% tira R$ 25 de cada R$ 100 de compra. Se a compra é menor ou maior, o desconto acompanha na mesma proporção.</p>
-  <p>Mude o cupom e repare na barra colorida: a parte azul é o que você paga, a verde é o que você economiza. As duas juntas sempre dão 100%.</p>
+  <p>Por cento quer dizer <b>de cada 100</b>. Um cupom de 25% tira R$ 25 de cada R$ 100 de compra. Um acréscimo de 25% põe R$ 25 a mais em cada R$ 100. Se a compra é menor ou maior, o valor acompanha na mesma proporção.</p>
+  <p>No <b>desconto</b>, a barra mostra em azul o que você paga e em verde o que economiza: as duas partes juntas dão 100%. No <b>acréscimo</b>, o azul é o preço inteiro (100%) e o vermelho é o que entra a mais, como os juros de uma compra parcelada.</p>
 </section>
 
 <section class="au-bloco">

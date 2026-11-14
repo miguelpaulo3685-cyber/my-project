@@ -13,32 +13,45 @@ aulasMM.aulas['porcentagem'] = raiz => {
   const prateleira = $('prateleira');
   const dinheiro = v => 'R$ ' + br(v, 2);
 
+  let modo = 'desconto'; // ou 'acrescimo'
+
   function loja() {
-    const cupom = Number($('cupom').value), fator = 1 - cupom / 100;
-    $('o-cupom').textContent = cupom + '%';
+    const taxa = Number($('cupom').value), sobe = modo === 'acrescimo';
+    const fator = sobe ? 1 + taxa / 100 : 1 - taxa / 100;
+    const nome = sobe ? 'Acréscimo' : 'Desconto', marca = (sobe ? '+' : '−') + taxa + '%';
+    $('n-cupom').textContent = nome; $('o-cupom').textContent = taxa + '%';
+    raiz.querySelectorAll('[data-modo]').forEach(b => b.setAttribute('aria-pressed', b.dataset.modo === modo));
     prateleira.innerHTML = PRODUTOS.map((p, i) => `<button type="button" class="au-produto" data-i="${i}" aria-label="Pôr ${p.nome} no carrinho, ${dinheiro(p.preco * fator)}">
-      ${cupom ? `<span class="au-etiqueta">−${cupom}%</span>` : ''}${carrinho[i] ? `<span class="au-qtd">${carrinho[i]}</span>` : ''}
+      ${taxa ? `<span class="au-etiqueta${sobe ? ' au-sobe' : ''}">${marca}</span>` : ''}${carrinho[i] ? `<span class="au-qtd">${carrinho[i]}</span>` : ''}
       <span class="au-emoji" aria-hidden="true">${p.emoji}</span><b>${p.nome}</b>
-      <s>${cupom ? dinheiro(p.preco) : ''}</s><strong>${dinheiro(p.preco * fator)}</strong></button>`).join('');
+      <s>${taxa ? dinheiro(p.preco) : ''}</s><strong>${dinheiro(p.preco * fator)}</strong></button>`).join('');
 
     const subtotal = PRODUTOS.reduce((s, p, i) => s + p.preco * carrinho[i], 0);
-    const desconto = subtotal * cupom / 100, total = subtotal - desconto;
+    const diferenca = subtotal * taxa / 100, total = subtotal * fator;
     const itens = PRODUTOS.map((p, i) => carrinho[i] ? `<div class="au-linha"><span>${carrinho[i]} × ${p.nome}</span><span>${dinheiro(p.preco * carrinho[i])}</span></div>` : '').join('');
     $('nota-fiscal').innerHTML = '<b>🧾 Sua compra</b>' + (subtotal === 0 ? '<div class="au-vazio">O carrinho está vazio. Toque num produto da prateleira.</div>'
       : `${itens}
         <div class="au-linha au-sub"><span>Subtotal</span><span>${dinheiro(subtotal)}</span></div>
-        <div class="au-linha au-desc"><span>Cupom de ${cupom}% <small>${br(cupom / 100, 2)} × ${br(subtotal)}</small></span><span>− ${dinheiro(desconto)}</span></div>
+        <div class="au-linha ${sobe ? 'au-acres' : 'au-desc'}"><span>${nome} de ${taxa}% <small>${br(taxa / 100, 2)} × ${br(subtotal)}</small></span><span>${sobe ? '+' : '−'} ${dinheiro(diferenca)}</span></div>
         <div class="au-linha au-total"><span>Total <small>${br(fator, 2)} × ${br(subtotal)}</small></span><span>${dinheiro(total)}</span></div>`);
-    $('paga').style.width = 100 - cupom + '%'; $('poupa').style.width = cupom + '%';
-    $('paga').textContent = `você paga ${100 - cupom}%`; $('poupa').textContent = cupom >= 35 ? `economiza ${cupom}%` : cupom >= 10 ? `−${cupom}%` : '';
-    $('partes').setAttribute('aria-label', `Você paga ${100 - cupom}% e economiza ${cupom}%`);
-    $('recado').textContent = subtotal === 0 ? 'Monte uma compra para ver o desconto aparecer.'
-      : cupom === 0 ? 'Sem cupom, você paga 100% do preço. Arraste o cupom para ver o desconto.'
-      : `${cupom}% de ${dinheiro(subtotal)} é ${br(cupom / 100, 2)} × ${br(subtotal)} = ${dinheiro(desconto)}. Você paga os outros ${100 - cupom}%: ${br(fator, 2)} × ${br(subtotal)} = ${dinheiro(total)}.`;
+
+    // Barra: no desconto, as duas partes somam o preço (100%); no acréscimo, o preço inteiro e o que entra a mais.
+    const inteiro = sobe ? 100 + taxa : 100;
+    $('partes').classList.toggle('au-sobe', sobe);
+    $('paga').style.width = (sobe ? 100 : 100 - taxa) / inteiro * 100 + '%'; $('poupa').style.width = taxa / inteiro * 100 + '%';
+    $('paga').textContent = sobe ? 'preço: 100%' : `você paga ${100 - taxa}%`;
+    $('poupa').textContent = taxa >= 35 ? `${sobe ? 'a mais' : 'economiza'} ${taxa}%` : taxa >= 10 ? marca : '';
+    $('partes').setAttribute('aria-label', sobe ? `Você paga 100% mais ${taxa}%` : `Você paga ${100 - taxa}% e economiza ${taxa}%`);
+    $('recado').textContent = subtotal === 0 ? 'Monte uma compra para ver a conta aparecer.'
+      : taxa === 0 ? `Sem ${sobe ? 'acréscimo' : 'desconto'}, você paga 100% do preço. Arraste a barra para ver a mudança.`
+      : `${taxa}% de ${dinheiro(subtotal)} é ${br(taxa / 100, 2)} × ${br(subtotal)} = ${dinheiro(diferenca)}. `
+        + (sobe ? `Você paga 100% + ${taxa}% = ${100 + taxa}%: ${br(fator, 2)} × ${br(subtotal)} = ${dinheiro(total)}.`
+                : `Você paga os outros ${100 - taxa}%: ${br(fator, 2)} × ${br(subtotal)} = ${dinheiro(total)}.`);
   }
   prateleira.addEventListener('click', e => { const b = e.target.closest('.au-produto'); if (b) { carrinho[Number(b.dataset.i)]++; loja(); } });
   $('cupom').addEventListener('input', loja);
   raiz.querySelectorAll('[data-cupom]').forEach(b => b.addEventListener('click', () => { $('cupom').value = b.dataset.cupom; loja(); }));
+  raiz.querySelectorAll('[data-modo]').forEach(b => b.addEventListener('click', () => { modo = b.dataset.modo; loja(); }));
   $('esvaziar').addEventListener('click', () => { carrinho.fill(0); loja(); });
 
   // ---------- aumentos e descontos seguidos ----------
