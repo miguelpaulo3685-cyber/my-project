@@ -4035,24 +4035,6 @@ async function usarLinkImagem() {
 
 // Reduz para no máximo 2400px e converte em JPEG: uma foto de celular de
 // vários MB vira algumas centenas de KB e cabe no armazenamento do navegador.
-// Realça os contornos da foto (cada ponto fica um pouco mais diferente dos
-// vizinhos), para ela não parecer embaçada atrás do véu do fundo.
-function realcarNitidez(pincel, largura, altura, forca = 0.45) {
-  let quadro;
-  try { quadro = pincel.getImageData(0, 0, largura, altura); } catch (e) { return; }
-  const d = quadro.data, original = new Uint8ClampedArray(d), linha = largura * 4;
-  for (let y = 1; y < altura - 1; y++) {
-    for (let x = 1; x < largura - 1; x++) {
-      const i = y * linha + x * 4;
-      for (let c = 0; c < 3; c++) {
-        const p = i + c;
-        d[p] = original[p] + forca * (4 * original[p] - original[p - 4] - original[p + 4] - original[p - linha] - original[p + linha]);
-      }
-    }
-  }
-  pincel.putImageData(quadro, 0, 0);
-}
-
 async function enviarImagemFundo(input) {
   const arquivo = input.files && input.files[0];
   input.value = '';
@@ -4069,18 +4051,14 @@ async function enviarImagemFundo(input) {
       leitor.readAsDataURL(arquivo);
     });
     const img = await testarImagem(original);
-    // Começa pela melhor qualidade que couber no armazenamento do navegador.
-    for (const [lado, qualidade] of [[2400, 0.92], [2400, 0.85], [1920, 0.85], [1600, 0.8], [1280, 0.72], [960, 0.65]]) {
+    for (const [lado, qualidade] of [[2400, 0.8], [1600, 0.78], [1280, 0.7], [960, 0.65]]) {
       const escala = Math.min(1, lado / Math.max(img.naturalWidth, img.naturalHeight));
       const tela = document.createElement('canvas');
       tela.width = Math.round(img.naturalWidth * escala);
       tela.height = Math.round(img.naturalHeight * escala);
-      const pincel = tela.getContext('2d');
-      pincel.imageSmoothingQuality = 'high';
-      pincel.drawImage(img, 0, 0, tela.width, tela.height);
-      realcarNitidez(pincel, tela.width, tela.height);
+      tela.getContext('2d').drawImage(img, 0, 0, tela.width, tela.height);
       const dados = tela.toDataURL('image/jpeg', qualidade);
-      if (dados.length < 3 * 1024 * 1024 && salvarImagem(dados)) {
+      if (dados.length < 1.8 * 1024 * 1024 && salvarImagem(dados)) {
         aplicarImagemFundo();
         recadoImagem('Imagem aplicada! Ajuste a visibilidade se o texto ficar difícil de ler.', 'bom');
         return;

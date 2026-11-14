@@ -177,10 +177,9 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    Sakura, Lavanda, Menta, Papel). Cada um é só fundo + cor principal + secundária (`TEMAS_PRONTOS` no
    `index.html`); o texto se ajusta sozinho. Pedido depois: um estilo novo "como o Serra" ficou para depois
    do lançamento, se quiserem.
-4f. **Imagem de fundo mais nítida** (14/11, publicado): ao enviar a foto, o site realça os contornos
-   (`realcarNitidez`) e guarda com mais qualidade (até 2400 px, JPEG 0,92, até 3 MB no navegador). O véu
-   sobre a foto e a barra de visibilidade ficaram como eram (Miguel não quis a foto mais "aparente", só nítida).
-   Vale só para fotos enviadas de novo.
+4f. **Imagem de fundo** (14/11): tentamos deixar a foto mais nítida (menos véu; depois realce de contornos e
+   mais qualidade ao guardar). O Miguel não gostou e pediu para voltar: **está tudo como era antes** (véu 70%,
+   barra até 70%, JPEG 0,8 até 1,8 MB). Se voltarem ao assunto, perguntar primeiro o que exatamente incomoda.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
