@@ -162,8 +162,8 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 4c. **Em aberto (perguntado em 13/11, sem resposta):** campo "Abrir questão" (ano e número) na Administração,
    só para a equipe. Hoje não há como abrir uma questão específica; para apagar uma explicação da IA foi
    preciso usar o console do navegador.
-4d. **Aprender mexendo (aulas interativas)** — ideia do Miguel (14/11). Feito em 14/11 no ramo
-   `claude/great-pascal-rrk8vh`, **esperando o "sim" para ir ao master** (Miguel pediu antes do lançamento).
+4d. **Aprender mexendo (aulas interativas)** — ideia do Miguel (14/11). Feito e publicado em 14/11
+   (Miguel pediu antes do lançamento). A aula de Porcentagem é um mercadinho (carrinho, desconto, acréscimo, nota).
    Cartão "Aprender mexendo" no Treinar, logo abaixo do "Bora treinar?" (sem botão novo na barra). Cinco aulas,
    uma por área: Fotossíntese, Cinemática, Porcentagem, Pirâmide etária e Figuras de linguagem. Cada aula tem
    uma figura que o aluno controla, texto curto, "Onde o ENEM pega", teste rápido e o botão "Treinar questões".
@@ -172,11 +172,14 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    site (`test/aulas.test.js` confere). Para acrescentar uma aula: os dois arquivos e uma linha em `AULAS` no
    `index.html`. Os números das simulações são ilustrativos (está escrito nas aulas). **Falta:** vocês (ou um
    professor) lerem os textos; depois, mais assuntos e medir se quem abre a aula acerta mais.
-4e. **Temas prontos na Aparência** (14/11, no ramo `claude/great-pascal-rrk8vh`, esperando o "sim"): 12 temas de
+4e. **Temas prontos na Aparência** (14/11, publicado): 12 temas de
    um toque na aba Estilo (Oceano, Floresta, Pôr do sol, Aurora, Meia-noite, Neon roxo, Matrix, Cyber rosa,
    Sakura, Lavanda, Menta, Papel). Cada um é só fundo + cor principal + secundária (`TEMAS_PRONTOS` no
    `index.html`); o texto se ajusta sozinho. Pedido depois: um estilo novo "como o Serra" ficou para depois
    do lançamento, se quiserem.
+4f. **Imagem de fundo mais nítida** (14/11, publicado): o véu padrão sobre a foto caiu de 70% para 50% e o aluno
+   pode levar a visibilidade até 90% (antes 70%); a foto é guardada com mais qualidade (até 2400 px, JPEG 0,92,
+   enquanto couber no navegador). Quem já tinha mexido na visibilidade continua com o valor que escolheu.
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 
