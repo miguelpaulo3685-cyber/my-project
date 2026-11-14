@@ -180,6 +180,11 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 4f. **Imagem de fundo** (14/11): tentamos deixar a foto mais nítida (menos véu; depois realce de contornos e
    mais qualidade ao guardar). O Miguel não gostou e pediu para voltar: **está tudo como era antes** (véu 70%,
    barra até 70%, JPEG 0,8 até 1,8 MB). Se voltarem ao assunto, perguntar primeiro o que exatamente incomoda.
+4g. **Resposta sem querer no celular** (14/11, publicado): alunos do teste perdiam questões no Treinar porque o
+   dedo que rolava a página respondia a alternativa. Agora, só no toque (celular e tablet): se o dedo andou
+   mais de 10 px, era rolagem e nada acontece; um toque parado só **escolhe** a alternativa e aparece o botão
+   "Confirmar resposta". Com mouse e teclado continua direto. Vale só para o Treinar (a Arena é contra o
+   relógio e ficou como era).
 5. **Piloto no colégio**: 1-2 turmas do 3º ano por 1-2 meses, medir "voltou em 2+ dias".
 6. **Confiança na nota da IA**: calibrar com as redações nota 1000 da Cartilha do Participante do INEP.
 

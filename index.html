@@ -519,7 +519,8 @@
       user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
       transition: border-color .18s, background .18s, transform .12s;
     }
-    .alt:hover:not(:disabled) { border-color: var(--marca); transform: translateX(5px); }
+    /* Só com mouse: no toque o "hover" fica preso na alternativa e parece uma escolha. */
+    @media (hover: hover) { .alt:hover:not(:disabled) { border-color: var(--marca); transform: translateX(5px); } }
     .alt .letra {
       flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
       background: var(--marca); color: var(--sobre-marca);
@@ -4688,6 +4689,7 @@ function desenharQuestao() {
   questaoAtual = q;
   respondida = false;
   eliminadas = new Set();
+  altSelecionada = null;
 
   const alternativas = typeof q.alternativas === 'string' ? JSON.parse(q.alternativas) : (q.alternativas || []);
 
@@ -4696,7 +4698,8 @@ function desenharQuestao() {
     <div class="dica-uso" id="dica-uso">
       <span>💡</span>
       <span><b>Dica:</b> arraste o mouse ou o dedo no texto para marcar o que é importante. Segure o clique
-      (ou o dedo) numa alternativa para riscá-la e ir eliminando as que você descartou.</span>
+      (ou o dedo) numa alternativa para riscá-la e ir eliminando as que você descartou.
+      ${matchMedia('(pointer: coarse)').matches ? ' No celular, toque na alternativa e depois em <b>Confirmar resposta</b>.' : ''}</span>
       <button onclick="fecharDica()" title="Fechar">✕</button>
     </div>`;
 
@@ -4730,7 +4733,7 @@ function desenharQuestao() {
       <button class="alt" id="alt-${i}"
         onmousedown="pressionar(event, ${i})" onmouseup="soltar(event, ${i})"
         onmouseleave="cancelarPressao()" oncontextmenu="return riscarPeloMenu(event, ${i})"
-        ontouchstart="pressionar(event, ${i})" ontouchend="soltar(event, ${i})"
+        ontouchstart="pressionar(event, ${i})" ontouchmove="moverToque(event)" ontouchend="soltar(event, ${i})"
         ontouchcancel="cancelarPressao()">
         <span class="letra">${LETRAS[i] || i + 1}</span>
         <span>${formatarEnunciado(t)}</span>
@@ -4870,9 +4873,47 @@ function fecharDica() {
 let timerPressao = null;
 let riscouAgora = false;
 
+// No celular e no tablet o dedo que rola a página passa por cima das
+// alternativas. Por isso, no toque: (1) se o dedo andou, era rolagem e nada
+// acontece; (2) um toque só escolhe a alternativa, e a resposta vale depois
+// de "Confirmar resposta". Com mouse e teclado continua direto, como sempre.
+let toque = null;          // { x, y, moveu } do dedo que está na tela
+let ultimoToque = 0;       // para ignorar o clique de mouse que o navegador inventa depois do toque
+let altSelecionada = null; // alternativa escolhida no toque, esperando a confirmação
+const veioDoToque = evento => evento.type.startsWith('touch');
+const mouseFalso = evento => !veioDoToque(evento) && Date.now() - ultimoToque < 800;
+
+function moverToque(evento) {
+  const dedo = evento.touches[0];
+  if (!toque || toque.moveu || !dedo) return;
+  if (Math.abs(dedo.clientX - toque.x) > 10 || Math.abs(dedo.clientY - toque.y) > 10) {
+    toque.moveu = true; // virou rolagem: não risca nem escolhe
+    cancelarPressao();
+  }
+}
+
+function selecionarAlternativa(i) {
+  altSelecionada = i;
+  document.querySelectorAll('#lista-alts .alt').forEach((b, n) => b.classList.toggle('escolhida', n === i));
+  const area = document.getElementById('area-resultado');
+  area.innerHTML = `<button class="acao" id="confirmar-resposta" style="width:100%;margin-top:14px" onclick="confirmarResposta()">
+    Confirmar resposta: alternativa ${LETRAS[i] || i + 1}</button>`;
+  area.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function confirmarResposta() {
+  if (altSelecionada === null || respondida) return;
+  responder(altSelecionada);
+}
+
 function pressionar(evento, i) {
   if (respondida) return;
+  if (mouseFalso(evento)) return;
   if (evento.button === 2) return; // botão direito tem tratamento próprio
+  if (veioDoToque(evento)) {
+    const dedo = evento.touches[0];
+    toque = dedo ? { x: dedo.clientX, y: dedo.clientY, moveu: false } : null;
+  }
   riscouAgora = false;
   document.getElementById('alt-' + i)?.classList.add('segurando');
   timerPressao = setTimeout(() => {
@@ -4885,6 +4926,18 @@ function pressionar(evento, i) {
 function soltar(evento, i) {
   cancelarPressao();
   if (respondida) return;
+  if (mouseFalso(evento)) return;
+  if (veioDoToque(evento)) {
+    ultimoToque = Date.now();
+    const rolou = !toque || toque.moveu;
+    toque = null;
+    if (rolou) { riscouAgora = false; return; }
+    if (evento.cancelable) evento.preventDefault(); // sem o clique de mouse inventado
+    if (riscouAgora) { riscouAgora = false; return; }
+    if (eliminadas.has(i)) { alternarRiscada(i); return; }
+    selecionarAlternativa(i);
+    return;
+  }
   // o botao direito so risca, pelo oncontextmenu; sem isso o mouseup dele
   // cairia aqui e responderia a questao sem querer
   if (evento.button === 2) return;
@@ -4909,7 +4962,11 @@ function alternarRiscada(i) {
   const alvo = document.getElementById('alt-' + i);
   if (!alvo) return;
   if (eliminadas.has(i)) { eliminadas.delete(i); alvo.classList.remove('riscada'); }
-  else { eliminadas.add(i); alvo.classList.add('riscada'); }
+  else {
+    eliminadas.add(i); alvo.classList.add('riscada');
+    // riscou a que estava escolhida no toque: desfaz a escolha
+    if (altSelecionada === i) { altSelecionada = null; alvo.classList.remove('escolhida'); document.getElementById('confirmar-resposta')?.remove(); }
+  }
 }
 
 // Atalhos de teclado na questão: A a E (ou 1 a 5) respondem e Enter ou →
@@ -4932,6 +4989,8 @@ function responder(escolhida) {
   if (respondida) return;
   respondida = true;
   cancelarPressao();
+  altSelecionada = null;
+  document.querySelectorAll('#lista-alts .alt.escolhida').forEach(b => b.classList.remove('escolhida'));
 
   const q = bloco.questoes[bloco.indice];
   const acertou = escolhida === q.correta;
