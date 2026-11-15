@@ -120,3 +120,13 @@ body.com-imagem .aula, html[data-estilo="serra"] .aula {
   padding: 18px 16px 22px; box-shadow: var(--sombra-leve);
 }
 body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(--superficie-2); }
+
+/* Tela larga (computador, tablet deitado): ilustração à esquerda, parada enquanto o texto rola à direita.
+   No celular continua empilhado. A coluna .au-texto é montada pelo abrirAula no index.html. */
+@media (min-width: 900px) {
+  .aula:has(> .au-texto) { max-width: 1100px; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 36px; row-gap: 22px; align-items: start; }
+  .aula:has(> .au-texto) > button, .aula:has(> .au-texto) > header { grid-column: 1 / -1; justify-self: start; }
+  .aula.au-fixa > .au-cena { position: sticky; top: 80px; } /* só quando cabe inteira na tela (aulaFixa no index.html) */
+  .au-texto { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+  .au-texto > .au-bloco:first-child { border-top: 0; padding-top: 0; }
+}

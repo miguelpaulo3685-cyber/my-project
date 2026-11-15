@@ -4248,6 +4248,14 @@ function fecharAula() {
   document.getElementById('tela-aula').innerHTML = '';
 }
 
+// A ilustração fica parada ao lado do texto só se cabe inteira na tela; senão rola junto e nada fica cortado.
+function aulaFixa() {
+  const raiz = document.querySelector('#tela-aula .aula'), cena = raiz && raiz.querySelector(':scope > .au-cena');
+  if (cena) raiz.classList.toggle('au-fixa', cena.offsetHeight <= innerHeight - 96);
+}
+addEventListener('resize', aulaFixa);
+const olhoNaAula = typeof ResizeObserver === 'function' ? new ResizeObserver(aulaFixa) : null; // o carrinho do mercadinho cresce
+
 async function abrirAula(id) {
   if (!AULAS.some(a => a.id === id)) return;
   const tela = document.getElementById('tela-aula');
@@ -4265,9 +4273,14 @@ async function abrirAula(id) {
     if (aulaPedida !== id) return; // o aluno já saiu ou abriu outra
     tela.innerHTML = `<article class="aula">${voltar}${html}</article>`;
     const raiz = tela.firstElementChild;
+    // O texto vai numa coluna só, para ficar ao lado da ilustração na tela larga (base.css).
+    const blocos = raiz.querySelectorAll(':scope > .au-bloco');
+    if (blocos.length) { const texto = document.createElement('div'); texto.className = 'au-texto'; blocos[0].before(texto); texto.append(...blocos); }
     aulasMM.teste(raiz);
     raiz.querySelectorAll('[data-treinar]').forEach(b => b.addEventListener('click', () => abrirMateria(b.dataset.treinar)));
     pararAula = aulasMM.aulas[id](raiz);
+    aulaFixa();
+    if (olhoNaAula) { olhoNaAula.disconnect(); const cena = raiz.querySelector(':scope > .au-cena'); if (cena) olhoNaAula.observe(cena); }
   } catch (e) {
     if (aulaPedida !== id) return;
     tela.innerHTML = `<p class="pista" style="margin-bottom:12px">Não consegui abrir a aula agora. Confira a internet e tente de novo.</p>
