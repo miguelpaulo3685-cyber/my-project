@@ -172,6 +172,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
    site (`test/aulas.test.js` confere). Para acrescentar uma aula: os dois arquivos e uma linha em `AULAS` no
    `index.html`. Os números das simulações são ilustrativos (está escrito nas aulas). **Falta:** vocês (ou um
    professor) lerem os textos; depois, mais assuntos e medir se quem abre a aula acerta mais.
+   **Nome (15/11):** o cartão agora se chama "O que cai no ENEM" (antes "Aprender mexendo").
    **Lado a lado (15/11, publicado):** em tela de 900 px ou mais, a ilustração fica à esquerda e o texto à direita
    (`.au-texto`, montada pelo `abrirAula`). A ilustração só fica parada enquanto o texto rola se couber inteira
    na tela (`aulaFixa`); senão rola junto. No celular continua empilhado.
