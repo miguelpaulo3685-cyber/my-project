@@ -23,6 +23,15 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   (padrão "só quem eu sigo", bloquear, denunciar, sem links, limites por dia); site a partir de 13 anos.
 - Respostas em português, simples e diretas.
 
+## OS DOIS DIFERENCIAIS (Miguel, 16/11, dia do lançamento)
+
+1. **A comunidade (o maior, o site nasceu dela).** "Não é apenas um site de questões, vai além disso." A conexão
+   entre as pessoas tem de ser a maior potência do site e nunca ficar esquecida. Toda função nova deve, se
+   possível, aproximar os alunos.
+2. **Ensino com figuras que dá para mexer** ("O que cai no ENEM", em `aulas/`). Miguel não viu isso em nenhum
+   outro site de ENEM. Mais aulas e mais dinamismo no aprendizado.
+Quando der, juntar os dois (ex.: aula feita com a turma ou a dupla).
+
 ## O DIFERENCIAL (decidido em 28/10)
 
 Nas palavras do Miguel (29/10): "Esse é o maior diferencial do site: a conexão, e os milhares de estudantes que
