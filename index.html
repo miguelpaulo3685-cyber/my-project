@@ -2525,9 +2525,15 @@
     .gaveta .aba { flex-direction: row; width: 100%; padding: 13px 12px; gap: 14px; font-size: 1rem; text-align: left; justify-content: flex-start; }
     .gaveta .aba svg { width: 21px; height: 21px; }
     .gaveta .aba-extra { display: flex; }
-    .gaveta .separador-gaveta { border-top: 1px solid var(--borda); margin: 8px 6px; }
     .gaveta .avatar-aba { width: 22px; height: 22px; }
-    /* @media (max-width: 700px) { #btn-menu { display: flex; } } -- menu do celular desligado até a nova versão ser aprovada */
+    /* Celular: à vista só o mais usado (Comunidade, Arena, Treinar, Redação embaixo; perfil, mensagens e sino no topo).
+       Simulado, Configurações, Aparência e Feedback ficam no menu de 3 barras, sem repetir nada. */
+    @media (max-width: 700px) {
+      #btn-menu { display: flex; }
+      #btn-menu.no-menu { border-color: var(--marca); background: var(--marca-suave); color: var(--marca-texto); }
+      #aba-simulado, #btn-aparencia { display: none; }
+      .abas { grid-template-columns: repeat(4, 1fr) !important; }
+    }
     @media (prefers-reduced-motion: reduce) { .gaveta, .gaveta-fundo { transition: none; } }
 
     /* ===================== ESTILO SERRA ===================== */
@@ -4242,6 +4248,7 @@ function irPara(tela) {
   if (tela !== 'reels') pararReels();
   if (tela === 'reels') abrirReels();
   document.getElementById('aba-simulado').classList.toggle('ativa', tela === 'simulado' || tela === 'prova');
+  document.getElementById('btn-menu').classList.toggle('no-menu', ['simulado', 'prova', 'config'].includes(tela)); // a tela atual está no menu
   if (tela !== 'prova') pararRelogioProva();
   if (tela === 'simulado') abrirSimulado();
   if (tela !== 'questao') pararCronometro();
@@ -4296,15 +4303,14 @@ function fecharAula() {
   document.getElementById('tela-aula').innerHTML = '';
 }
 
-// Menu de 3 barras do celular: copia as abas (com a que está ativa) e acrescenta a Aparência.
+// Menu de 3 barras do celular: Simulado, Configurações, Aparência e Feedback (copiados das abas, com a ativa acesa).
 function abrirGaveta() {
   const gaveta = document.getElementById('gaveta');
   const copia = id => { const b = document.getElementById(id).cloneNode(true); b.removeAttribute('id'); b.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); return b; };
   gaveta.innerHTML = `<div class="gaveta-topo"><div class="marca"><span class="selo">M</span><span class="nome-marca">M&amp;M <em>Estudos</em></span></div>
     <button class="btn-icone" onclick="fecharGaveta()" aria-label="Fechar o menu">✕</button></div>`;
-  ['aba-feed', 'aba-arena', 'aba-treinar', 'aba-simulado', 'aba-redacao'].forEach(id => gaveta.append(copia(id)));
-  gaveta.insertAdjacentHTML('beforeend', '<div class="separador-gaveta"></div>');
-  ['aba-perfil', 'aba-config'].forEach(id => gaveta.append(copia(id)));
+  // Só o que não está à vista no celular (o resto fica na barra de baixo e no topo).
+  ['aba-simulado', 'aba-config'].forEach(id => gaveta.append(copia(id)));
   gaveta.insertAdjacentHTML('beforeend', `<button class="aba" onclick="abrirAparencia()"><span aria-hidden="true" style="width:21px;text-align:center">🎨</span><span class="nome-aba">Aparência</span></button>`);
   gaveta.append(copia('aba-feedback'));
   gaveta.querySelectorAll('button.aba').forEach(b => b.addEventListener('click', fecharGaveta));
