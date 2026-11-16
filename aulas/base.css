@@ -133,6 +133,6 @@ body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(-
 
 /* Celular e tablet (toque): botões da aula com pelo menos 44 px de altura, o mínimo confortável para o dedo. */
 @media (pointer: coarse) {
-  .au-atalhos button, .au-alt, .au-seguir { min-height: 44px; }
+  .au-atalhos button, .au-alt, .au-seguir, .aula > .acao.pequena { min-height: 44px; }
   .aula input[type="range"] { height: 44px; }
 }
