@@ -4231,6 +4231,7 @@ function irPara(tela) {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
   const treinando = ['treinar', 'aula', 'questao', 'resultado', 'desafio'].includes(tela);
+  registrarUso(PARTE_DA_TELA[tela]);
   if (tela !== 'aula') fecharAula();
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
   document.getElementById('aba-feed').classList.toggle('ativa', ['feed', 'comunidade', 'reels'].includes(tela));
@@ -4304,6 +4305,29 @@ function fecharAula() {
   document.getElementById('tela-aula').innerHTML = '';
 }
 
+// Uso de cada parte (para o painel da Administração): avisa o servidor uma vez por parte e por dia
+// em cada aparelho. Sem conta, vai um código sorteado no aparelho, sem nada que identifique a pessoa.
+const PARTE_DA_TELA = { questao: 'treinar', comunidade: 'comunidade', feed: 'comunidade', simulado: 'simulado', prova: 'simulado',
+  arena: 'arena', redacao: 'redacao', reels: 'reels', mensagens: 'mensagens', desafio: 'desafio' };
+function registrarUso(parte) {
+  if (!parte) return;
+  const dia = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
+  const marca = (usuarioLogado ? 'u' + usuarioLogado.id : 'v') + ':' + parte;
+  const anotacao = () => { let f = {}; try { f = JSON.parse(ler('mm-uso')) || {}; } catch (e) {} return f.dia === dia && Array.isArray(f.partes) ? f : { dia, partes: [] }; };
+  const feito = anotacao();
+  if (feito.partes.includes(marca)) return;
+  feito.partes.push(marca); guardar('mm-uso', JSON.stringify(feito)); // anota já, para não mandar duas vezes
+  let visitante = ler('mm-visitante');
+  if (!visitante) {
+    visitante = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('').slice(0, 20);
+    guardar('mm-visitante', visitante);
+  }
+  const desfazer = () => { const f = anotacao(); f.partes = f.partes.filter(m => m !== marca); guardar('mm-uso', JSON.stringify(f)); };
+  fetch(`${API_URL}/api/uso`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
+    body: JSON.stringify({ parte, visitante }) })
+    .then(r => { if (!r.ok) desfazer(); }).catch(desfazer);
+}
+
 // Menu de 3 barras do celular: Arena, Redação, Aparência, Feedback e Configurações (copiados das abas, com a ativa acesa).
 function abrirGaveta() {
   const gaveta = document.getElementById('gaveta');
@@ -4344,6 +4368,7 @@ async function abrirAula(id) {
   irPara('aula');
   fecharAula();
   aulaPedida = id;
+  registrarUso('aulas');
   tela.innerHTML = '<p class="pista">Abrindo a aula…</p>';
   try {
     await Promise.all([arquivoDaAula('aulas/base.css'), arquivoDaAula('aulas/base.js')]);
@@ -11185,6 +11210,19 @@ function blocoComunidade(c, pct) {
       ${pouco ? '<b>Ainda é pouca gente para concluir:</b> esperem umas 20 contas com mais de 7 dias.' : 'Se a barra "Com laço" for bem maior, a comunidade está segurando as pessoas.'}</p>`;
 }
 
+// Quem usa cada parte: pessoas diferentes (com ou sem conta) que abriram cada parte nos últimos 7 dias.
+function blocoUso(uso, pct) {
+  if (!uso) return '';
+  const maior = Math.max(1, ...uso.map(u => u.pessoas_7));
+  const nada = !uso.some(u => u.pessoas_7);
+  return `<div class="rotulo-modal">Quem usa cada parte (últimos 7 dias)</div>
+    ${nada ? '<p class="pista">Ainda sem dados: a contagem começou em 16/11.</p>' : uso.map(u => `<div class="barra-admin"><span>${escapar(u.nome)}</span>
+      <div class="trilho"><i style="width:${pct(u.pessoas_7, maior)}%"></i></div>
+      <b>${u.pessoas_7}</b><small>${u.contas_7} com conta · ${u.hoje} hoje</small></div>`).join('')}
+    <p class="pista">Pessoas diferentes que abriram cada parte, contando uma vez por dia. Treinar conta quem fez questões
+      (não quem só viu a tela). Quem entrou sem conta e depois criou uma pode aparecer duas vezes.</p>`;
+}
+
 async function desenharCrescimento() {
   const alvo = document.getElementById('admin-crescimento');
   let d;
@@ -11209,6 +11247,8 @@ async function desenharCrescimento() {
       : '<p class="pista">Ainda não há contas com mais de 7 dias.</p>'}
     <p class="pista">Conta quem criou a conta naquela semana e respondeu ao menos uma questão (treino, simulado ou Arena)
       em algum dos 7 dias seguintes. Acima de 30% é bom sinal.</p>
+
+    ${blocoUso(d.uso, pct)}
 
     ${blocoComunidade(d.comunidade, pct)}
 

@@ -19,6 +19,28 @@ const EMBLEMAS_CONVITE = [
   { item: 'turma', amigos: 5 }
 ];
 
+// Uso de cada parte do site (painel "Quem usa cada parte"). Lista fechada, como as origens.
+const PARTES = ['treinar', 'aulas', 'comunidade', 'simulado', 'arena', 'redacao', 'reels', 'mensagens', 'desafio'];
+const NOMES_PARTE = {
+  treinar: 'Treinar (fez questões)', aulas: 'O que cai no ENEM (aulas)', comunidade: 'Comunidade', simulado: 'Simulado',
+  arena: 'Arena', redacao: 'Redação', reels: 'Reels', mensagens: 'Mensagens', desafio: 'Desafio da semana'
+};
+const lerParte = valor => (PARTES.includes(valor) ? valor : null);
+// Visitante sem conta: o site manda um código sorteado no aparelho; aqui ele vira um resumo (hash),
+// para o banco não guardar nem o código.
+const quemUsou = (usuario, visitante) => {
+  if (usuario) return { quem: `u${usuario.id}`, conta: true };
+  if (typeof visitante !== 'string' || !/^[a-z0-9]{12,40}$/.test(visitante)) return null;
+  return { quem: 'v' + require('crypto').createHash('sha256').update(visitante).digest('hex').slice(0, 20), conta: false };
+};
+const HOJE = "(NOW() - INTERVAL '3 hours')::date";
+const SQL_USO = `
+  SELECT parte,
+    COUNT(DISTINCT quem)::int AS pessoas_7,
+    COUNT(DISTINCT quem) FILTER (WHERE conta)::int AS contas_7,
+    COUNT(DISTINCT quem) FILTER (WHERE dia = ${HOJE})::int AS hoje
+  FROM uso_partes WHERE dia > ${HOJE} - 7 GROUP BY parte`;
+
 const lerOrigem = valor => (ORIGENS.includes(valor) ? valor : null);
 const lerConvite = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
 
@@ -80,6 +102,16 @@ const SQL_COMUNIDADE = `
   FROM l`;
 
 function registrarCrescimento(app, { pool, exigirModerador }) {
+  // O site avisa quando alguém abre uma parte (uma vez por parte e por dia em cada aparelho).
+  app.post('/api/uso', async (req, res) => {
+    const parte = lerParte(req.body?.parte), q = quemUsou(req.usuario, req.body?.visitante);
+    if (!parte || !q) return res.status(400).json({ error: 'Pedido inválido.' });
+    try {
+      await pool.query(`INSERT INTO uso_partes (dia, parte, quem, conta) VALUES (${HOJE}, $1, $2, $3) ON CONFLICT DO NOTHING`, [parte, q.quem, q.conta]);
+    } catch (erro) { console.error('Erro ao registrar uso:', erro.message); }
+    res.json({ ok: true });
+  });
+
   app.get('/api/admin/crescimento', exigirModerador, async (req, res) => {
     try {
       const [porDia, semanas, origens, convites] = await Promise.all([
@@ -112,8 +144,13 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
              FROM usuarios`)
       ]);
       // À parte: se esta conta der erro, o resto do painel continua aparecendo.
+      const uso = await pool.query(SQL_USO).then(r => PARTES.map(p => {
+        const linha = r.rows.find(x => x.parte === p) || { pessoas_7: 0, contas_7: 0, hoje: 0 };
+        return { parte: p, nome: NOMES_PARTE[p], pessoas_7: linha.pessoas_7, contas_7: linha.contas_7, hoje: linha.hoje };
+      }).sort((a, b) => b.pessoas_7 - a.pessoas_7)).catch(erro => { console.error('Erro nos números de uso:', erro.message); return null; });
       const comunidade = await pool.query(SQL_COMUNIDADE).then(r => r.rows[0]).catch(erro => { console.error('Erro nos números da comunidade:', erro.message); return null; });
       res.json({
+        uso,
         comunidade,
         por_dia: porDia.rows,
         semanas: semanas.rows,
@@ -128,4 +165,4 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
 }
 
 module.exports = registrarCrescimento;
-Object.assign(module.exports, { SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });
+Object.assign(module.exports, { SQL_USO, PARTES, lerParte, quemUsou, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });

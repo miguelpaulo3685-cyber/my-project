@@ -65,3 +65,23 @@ test('comunidade: a consulta conta os laços da primeira semana e separa quem vo
   for (const pedaco of ['seguidores', 'grupo_membros', 'boas_vindas', 'duplas', 'mensagens', 'questoes_comentarios', "INTERVAL '7 days'", 'laco_voltou', 'sem_laco_voltou'])
     assert.ok(sql.includes(pedaco), pedaco);
 });
+
+test('uso: só partes da lista; visitante vira resumo sem o código original', () => {
+  assert.strictEqual(c.lerParte('arena'), 'arena');
+  assert.strictEqual(c.lerParte('<script>'), null);
+  assert.deepStrictEqual(c.quemUsou({ id: 42 }, 'qualquer'), { quem: 'u42', conta: true });
+  const v = c.quemUsou(null, 'abc123def456ghi7');
+  assert.strictEqual(v.conta, false);
+  assert.match(v.quem, /^v[0-9a-f]{20}$/);
+  assert.ok(!v.quem.includes('abc123'));
+  assert.strictEqual(c.quemUsou(null, 'curto'), null);
+  assert.strictEqual(c.quemUsou(null, 'TEM-MAIUSCULA-E-TRACO'), null);
+  assert.strictEqual(c.quemUsou(null, undefined), null);
+});
+
+test('uso: as telas do site só mandam partes que o servidor aceita', () => {
+  const pagina = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
+  const mapa = pagina.match(/const PARTE_DA_TELA = \{([\s\S]*?)\};/)[1];
+  const partes = [...mapa.matchAll(/'([a-z]+)'/g)].map(m => m[1]).concat('aulas');
+  for (const p of partes) assert.ok(c.PARTES.includes(p), `parte desconhecida: ${p}`);
+});

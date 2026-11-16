@@ -142,10 +142,15 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 
 ### Navegação (16/11)
 - **Tablet (publicado):** barra lateral fixa com ícone e nome (`@media (min-width: 701px) and (hover: none)`).
-- **Celular (prévia pronta no ramo, esperando o "sim"):** embaixo Treinar | Comunidade (meio) | Simulado; no menu
+- **Celular (publicado em 16/11):** embaixo Treinar | Comunidade (meio) | Simulado; no menu
   de 3 barras Arena, Redação, Aparência, Feedback e Configurações. Decisão provisória: revisar com os dados de uso
   (Miguel acha que a Arena será pouco usada nos primeiros dias).
 - Corrigido: ao abrir, a aba acesa era Comunidade mesmo caindo no Treinar.
+- **Quem usa cada parte** (16/11, publicado): Administração → crescimento mostra quantas pessoas abriram cada
+  parte nos últimos 7 dias (com conta / hoje). Tabela `uso_partes` (dia, parte, quem), uma linha por pessoa/parte/dia,
+  apagada depois de 90 dias. Contas viram `u<id>`; sem conta, um código sorteado no aparelho que o servidor guarda
+  embaralhado (hash). Treinar conta quem fez questões, não quem só viu a tela. Está na Política de Privacidade.
+  Usar estes números para decidir o que fica à vista no celular.
 
 ### Depois do lançamento
 0. **Cloudflare (grátis)** na frente do domínio: cache mais longo, proteção e contador de visitas sem cookies.

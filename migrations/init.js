@@ -829,6 +829,20 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela cache_log criada');
 
+    // Uso de cada parte do site: uma linha por pessoa, parte e dia (só para somar no painel).
+    // "quem" é u<id> para contas e v<hash> para visitantes sem conta; nada de nome, e-mail ou IP.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS uso_partes (
+        dia DATE NOT NULL,
+        parte VARCHAR(20) NOT NULL,
+        quem VARCHAR(40) NOT NULL,
+        conta BOOLEAN NOT NULL DEFAULT FALSE,
+        PRIMARY KEY (dia, parte, quem)
+      );
+      DELETE FROM uso_partes WHERE dia < CURRENT_DATE - 90;
+    `);
+    console.log('✅ Tabela uso_partes criada');
+
     console.log('✅ Todas as tabelas criadas com sucesso!');
 
     // Verificar dados
