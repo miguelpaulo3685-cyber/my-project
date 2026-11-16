@@ -166,6 +166,14 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   banco de imagens e pôr a música pelo próprio TikTok/Instagram. Os arquivos de edição ficam só na sessão do
   Claude (temporários); se sumirem, é preciso mandar os vídeos de novo.
 
+### Celular: toque e tamanhos (16/11, publicado)
+- Auditoria em 8 tamanhos (320 a 1366 px) e 8 telas: nada rola de lado, viewport/lang/zoom corretos, sem botão sem
+  nome nem imagem sem alt. Rolar a tela nunca responde a questão (testado em iPhone 13, SE e Pixel 7); a resposta só
+  vale em "Confirmar resposta". A Arena responde direto ao toque (é contra o relógio).
+- Mudanças: touchstart/touchmove das alternativas passivos (por delegação em `#lista-alts`), alvos de 44 px no toque
+  (✕ da dica, botões da aula e "Voltar"), e folga embaixo do botão Confirmar (`scroll-margin-bottom`).
+- Fica para depois: avatar do topo com 34 px; `onclick` inline e `index.html` de ~700 KB (dividir é trabalho grande).
+
 ### Depois do lançamento
 0. **Cloudflare (grátis)** na frente do domínio: cache mais longo, proteção e contador de visitas sem cookies.
    Passos no fim da conversa de 12/11. Fazer com calma, fora da semana do lançamento.
