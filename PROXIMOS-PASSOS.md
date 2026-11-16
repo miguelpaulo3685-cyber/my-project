@@ -152,6 +152,20 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   embaralhado (hash). Treinar conta quem fez questões, não quem só viu a tela. Está na Política de Privacidade.
   Usar estes números para decidir o que fica à vista no celular.
 
+### Vídeo de divulgação no estilo da referência (16/11, em andamento)
+- Feito na conversa de 16/11: vídeo de teste de 21 s (16:9, música da referência, cortes na batida), versão 5
+  entregue no chat. Começo: olho, mãos, livro, celular, notebook, montanha viva com "SEJA O QUE VOCÊ QUISER";
+  texto "O QUE VOCÊ PRETENDE FAZER DA VIDA / SE TODO ESSE SONHO SEU NÃO DER CERTO? / ISSO NEM PASSA PELA MINHA
+  CABEÇA" sobre médico, engenheiro e direito (em cor); site no meio (login com partículas, Aparência com os 12
+  temas, aula); final com professor e gráfico cortados na batida.
+- **Crítica do Matheus:** parece vídeo de site de investimento. **Sugestão do Claude (esperando o Matheus decidir):**
+  (1) trocar o gráfico de velas por a nota TRI subindo no estilo do site (ex.: 512 → 780) ou "APROVADO";
+  (2) tirar as cenas da mesa de operador e usar mais professor e plateia estudando; (3) pôr "ENEM 2027" no texto
+  depois de "CABEÇA"; (4) fechar com "NINGUÉM PASSA NO ENEM SOZINHO." + logo M&M + mmestudos.com.br.
+- Para publicar: trocar os trechos que ainda são da referência (outro criador), conferir licença dos vídeos de
+  banco de imagens e pôr a música pelo próprio TikTok/Instagram. Os arquivos de edição ficam só na sessão do
+  Claude (temporários); se sumirem, é preciso mandar os vídeos de novo.
+
 ### Depois do lançamento
 0. **Cloudflare (grátis)** na frente do domínio: cache mais longo, proteção e contador de visitas sem cookies.
    Passos no fim da conversa de 12/11. Fazer com calma, fora da semana do lançamento.
