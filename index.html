@@ -1732,6 +1732,8 @@
     .atalhos-treino button.acao:first-child { padding: 15px 28px; font-size: 1.02rem; }
     .atalhos-inicio { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px; }
     .atalhos-inicio:empty { display: none; }
+    .atalhos-inicio > div:empty { display: none; }
+    .atalhos-inicio:has(> div:empty) { grid-template-columns: 1fr; }
     .atalho-inicio {
       display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; padding: 16px; cursor: pointer;
       background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio); color: var(--texto); font: inherit;
@@ -2488,6 +2490,46 @@
       body.modo-foco .abas { display: none; }
     }
 
+    /* Tablet (tela de 701 px ou mais, sem mouse): barra lateral sempre à vista, com ícone e nome embaixo.
+       Não há "passar o mouse" no toque, por isso ela não abre e fecha como no computador. */
+    @media (min-width: 701px) and (hover: none) {
+      body { padding-left: 84px; }
+      .topo { backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--fundo); }
+      .abas {
+        position: fixed; left: 0; top: 0; bottom: 0; z-index: 60; margin: 0; width: 84px;
+        flex-direction: column; gap: 4px; padding: 18px 6px calc(14px + env(safe-area-inset-bottom, 0px)); overflow-y: auto;
+        background: var(--brilho-topo); border-right: 1px solid var(--borda);
+      }
+      .aba { flex-direction: column; gap: 4px; padding: 10px 2px; font-size: .72rem; text-align: center; justify-content: center; }
+      .aba svg { width: 22px; height: 22px; }
+      .abas .aba-extra { display: flex; }
+      #aba-perfil { margin-top: auto; }
+      .config-no-perfil { display: none; }
+      body.modo-foco { padding-left: 0; }
+      body.modo-foco .abas { display: none; }
+    }
+
+    /* Celular: menu de 3 barras no topo. Abre uma barra lateral com todas as opções (a barra de baixo continua). */
+    #btn-menu { display: none; }
+    .gaveta-fundo { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.4); opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .gaveta {
+      position: fixed; left: 0; top: 0; bottom: 0; z-index: 201; width: min(280px, 82vw);
+      background: var(--fundo); border-right: 1px solid var(--borda); box-shadow: 12px 0 40px rgba(0,0,0,.2);
+      transform: translateX(-102%); transition: transform .25s cubic-bezier(.2,.8,.2,1);
+      display: flex; flex-direction: column; gap: 2px; overflow-y: auto;
+      padding: calc(14px + env(safe-area-inset-top, 0px)) 12px calc(16px + env(safe-area-inset-bottom, 0px));
+    }
+    body.gaveta-aberta .gaveta { transform: none; }
+    body.gaveta-aberta .gaveta-fundo { opacity: 1; pointer-events: auto; }
+    .gaveta-topo { display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 14px; }
+    .gaveta .aba { flex-direction: row; width: 100%; padding: 13px 12px; gap: 14px; font-size: 1rem; text-align: left; justify-content: flex-start; }
+    .gaveta .aba svg { width: 21px; height: 21px; }
+    .gaveta .aba-extra { display: flex; }
+    .gaveta .separador-gaveta { border-top: 1px solid var(--borda); margin: 8px 6px; }
+    .gaveta .avatar-aba { width: 22px; height: 22px; }
+    @media (max-width: 700px) { #btn-menu { display: flex; } }
+    @media (prefers-reduced-motion: reduce) { .gaveta, .gaveta-fundo { transition: none; } }
+
     /* ===================== ESTILO SERRA ===================== */
     /* Escolha em Aparência: o site inteiro no visual da tela de entrada,
        com a serra cinza ao fundo, cartões de vidro e botões pretos. Os
@@ -3163,10 +3205,13 @@
   <!-- ===================== TOPO ===================== -->
   <header class="topo">
     <div class="topo-interno">
+      <button class="btn-icone" id="btn-menu" onclick="abrirGaveta()" aria-label="Abrir o menu" aria-expanded="false" aria-controls="gaveta">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
       <div class="marca"><span class="selo">M</span><span class="nome-marca">M&amp;M <em>Estudos</em></span></div>
 
       <nav class="abas">
-        <button class="aba ativa" id="aba-feed" onclick="trocarAbaComunidade('agora')">
+        <button class="aba" id="aba-feed" onclick="trocarAbaComunidade('agora')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.9-3.2 3-5 5.5-5s4.6 1.8 5.5 5"/><circle cx="16.5" cy="9" r="2.6"/><path d="M15.2 14.6c2.6-.4 4.6 1.3 5.3 4.4"/>
           </svg><span class="nome-aba">Comunidade</span>
@@ -3176,7 +3221,7 @@
             <path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12z"/>
           </svg><span class="nome-aba">Arena</span>
         </button>
-        <button class="aba" id="aba-treinar" onclick="irPara('treinar')">
+        <button class="aba ativa" id="aba-treinar" onclick="irPara('treinar')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
             <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/>
           </svg><span class="nome-aba">Treinar</span>
@@ -3233,6 +3278,9 @@
       </div>
     </div>
   </header>
+
+  <div class="gaveta-fundo" onclick="fecharGaveta()"></div>
+  <nav class="gaveta" id="gaveta" aria-label="Menu" aria-hidden="true" inert></nav>
 
   <!-- ===================== TREINAR ===================== -->
   <main class="pagina" id="tela-treinar">
@@ -4247,6 +4295,32 @@ function fecharAula() {
   if (pararAula) { try { pararAula(); } catch (e) { /* a aula já saiu da tela */ } pararAula = null; }
   document.getElementById('tela-aula').innerHTML = '';
 }
+
+// Menu de 3 barras do celular: copia as abas (com a que está ativa) e acrescenta a Aparência.
+function abrirGaveta() {
+  const gaveta = document.getElementById('gaveta');
+  const copia = id => { const b = document.getElementById(id).cloneNode(true); b.removeAttribute('id'); b.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); return b; };
+  gaveta.innerHTML = `<div class="gaveta-topo"><div class="marca"><span class="selo">M</span><span class="nome-marca">M&amp;M <em>Estudos</em></span></div>
+    <button class="btn-icone" onclick="fecharGaveta()" aria-label="Fechar o menu">✕</button></div>`;
+  ['aba-feed', 'aba-arena', 'aba-treinar', 'aba-simulado', 'aba-redacao'].forEach(id => gaveta.append(copia(id)));
+  gaveta.insertAdjacentHTML('beforeend', '<div class="separador-gaveta"></div>');
+  ['aba-perfil', 'aba-config'].forEach(id => gaveta.append(copia(id)));
+  gaveta.insertAdjacentHTML('beforeend', `<button class="aba" onclick="abrirAparencia()"><span aria-hidden="true" style="width:21px;text-align:center">🎨</span><span class="nome-aba">Aparência</span></button>`);
+  gaveta.append(copia('aba-feedback'));
+  gaveta.querySelectorAll('button.aba').forEach(b => b.addEventListener('click', fecharGaveta));
+  gaveta.removeAttribute('inert'); gaveta.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('gaveta-aberta');
+  document.getElementById('btn-menu').setAttribute('aria-expanded', 'true');
+  gaveta.querySelector('.aba.ativa, .aba')?.focus();
+}
+function fecharGaveta() {
+  if (!document.body.classList.contains('gaveta-aberta')) return;
+  const gaveta = document.getElementById('gaveta');
+  document.body.classList.remove('gaveta-aberta');
+  gaveta.setAttribute('inert', ''); gaveta.setAttribute('aria-hidden', 'true');
+  document.getElementById('btn-menu').setAttribute('aria-expanded', 'false');
+}
+addEventListener('keydown', e => { if (e.key === 'Escape') fecharGaveta(); });
 
 // A ilustração fica parada ao lado do texto só se cabe inteira na tela; senão rola junto e nada fica cortado.
 function aulaFixa() {
