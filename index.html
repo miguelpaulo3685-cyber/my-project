@@ -133,6 +133,7 @@
       .bolinhas-slide button, .botao-ajuda { position: relative; }
       .bolinhas-slide button::after, .botao-ajuda::after { content: ""; position: absolute; inset: -12px -6px; }
       .link-bloco, .link-visita, .recado button { min-height: 44px; padding-left: 8px; padding-right: 8px; }
+      .dica-uso button { min-width: 44px; min-height: 44px; }
     }
     .tipos-feedback { display: flex; gap: 8px; flex-wrap: wrap; }
     .tipos-feedback label { padding: 6px 12px; border: 1px solid var(--borda); border-radius: 999px; cursor: pointer; font-size: .9rem; }
@@ -4858,13 +4859,17 @@ function desenharQuestao() {
       <button class="alt" id="alt-${i}"
         onmousedown="pressionar(event, ${i})" onmouseup="soltar(event, ${i})"
         onmouseleave="cancelarPressao()" oncontextmenu="return riscarPeloMenu(event, ${i})"
-        ontouchstart="pressionar(event, ${i})" ontouchmove="moverToque(event)" ontouchend="soltar(event, ${i})"
-        ontouchcancel="cancelarPressao()">
+        ontouchend="soltar(event, ${i})" ontouchcancel="cancelarPressao()">
         <span class="letra">${LETRAS[i] || i + 1}</span>
         <span>${formatarEnunciado(t)}</span>
       </button>`).join('')}</div>
     <div id="area-resultado"></div>
     <p class="dica-teclado">Atalhos: <kbd>A</kbd>–<kbd>E</kbd> respondem · <kbd>Enter</kbd> vai para a próxima</p>`;
+
+  // touchstart e touchmove ficam "passivos": o navegador não espera o JavaScript para começar a rolar a página.
+  const listaAlts = document.getElementById('lista-alts');
+  listaAlts.addEventListener('touchstart', ev => { const b = ev.target.closest('.alt'); if (b) pressionar(ev, Number(b.id.slice(4))); }, { passive: true });
+  listaAlts.addEventListener('touchmove', moverToque, { passive: true });
 
   bloco.inicioQuestao = Date.now();
 }

@@ -130,3 +130,9 @@ body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(-
   .au-texto { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
   .au-texto > .au-bloco:first-child { border-top: 0; padding-top: 0; }
 }
+
+/* Celular e tablet (toque): botões da aula com pelo menos 44 px de altura, o mínimo confortável para o dedo. */
+@media (pointer: coarse) {
+  .au-atalhos button, .au-alt, .au-seguir { min-height: 44px; }
+  .aula input[type="range"] { height: 44px; }
+}
