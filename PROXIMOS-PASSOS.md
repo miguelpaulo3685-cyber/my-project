@@ -140,6 +140,13 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - [ ] Render pago (~US$ 7/mês), se der.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
+### Navegação (16/11)
+- **Tablet (publicado):** barra lateral fixa com ícone e nome (`@media (min-width: 701px) and (hover: none)`).
+- **Celular (prévia pronta no ramo, esperando o "sim"):** embaixo Treinar | Comunidade (meio) | Simulado; no menu
+  de 3 barras Arena, Redação, Aparência, Feedback e Configurações. Decisão provisória: revisar com os dados de uso
+  (Miguel acha que a Arena será pouco usada nos primeiros dias).
+- Corrigido: ao abrir, a aba acesa era Comunidade mesmo caindo no Treinar.
+
 ### Depois do lançamento
 0. **Cloudflare (grátis)** na frente do domínio: cache mais longo, proteção e contador de visitas sem cookies.
    Passos no fim da conversa de 12/11. Fazer com calma, fora da semana do lançamento.
