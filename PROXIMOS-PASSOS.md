@@ -31,6 +31,8 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 2. **Ensino com figuras que dá para mexer** ("O que cai no ENEM", em `aulas/`). Miguel não viu isso em nenhum
    outro site de ENEM. Mais aulas e mais dinamismo no aprendizado.
 Quando der, juntar os dois (ex.: aula feita com a turma ou a dupla).
+   Concorrência (16/11): o site Resposta Certa tem ilustrações, mas são só imagens paradas. O nosso diferencial é a
+   **simulação**: o aluno muda a situação (luz, água, seca, noite...) e vê o resultado. Manter isso em toda aula nova.
 
 ## O DIFERENCIAL (decidido em 28/10)
 
