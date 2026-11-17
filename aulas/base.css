@@ -176,3 +176,39 @@ body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(-
 .au-seguir-leve { background: transparent; color: var(--texto); border: 1px solid var(--borda); }
 .au-atalhos button:disabled { opacity: .45; cursor: default; }
 @media (max-width: 420px) { .au-linha-mesa { grid-template-columns: 58px repeat(var(--au-cols, 3), minmax(0, 1fr)); } }
+
+/* Filminhos (tocam sozinhos, passo a passo, com legenda) */
+.au-filme { background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; margin: 6px 0 12px; }
+.au-palco { position: relative; width: 100%; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--marca) 8%, transparent), transparent 70%); }
+.au-ator { position: absolute; transform: translate(-50%, -50%) scale(var(--au-s, 1)); white-space: nowrap;
+  transition: left .7s cubic-bezier(.3,.8,.3,1), top .7s cubic-bezier(.3,.8,.3,1), opacity .45s, transform .45s, background .3s, color .3s; }
+.au-sem-transicao .au-ator, .au-sem-transicao .au-ator * { transition: none !important; }
+.au-filme-rodape { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 10px 12px 12px; border-top: 1px solid var(--borda); }
+.au-filme-botao { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borda); background: transparent; color: var(--texto); font: 700 13px var(--fonte); cursor: pointer; }
+.au-filme-legenda { margin: 0 !important; font-size: 15px; line-height: 1.45; min-height: 2.9em; }
+.au-filme-pontos { grid-column: 2; display: flex; gap: 4px; }
+.au-filme-pontos i { flex: 1; height: 3px; border-radius: 2px; background: var(--borda); transition: background .3s; }
+.au-filme-pontos i.au-aceso { background: var(--marca); }
+/* peças dos filminhos */
+.au-palco i { display: block; font-style: normal; }
+.au-palco .au-moeda { width: 22px; height: 22px; border-radius: 50%; font: 700 10px/22px var(--fonte); text-align: center; }
+.au-palco .au-nota10, .au-palco .au-nota100 { width: 38px; height: 20px; border-radius: 4px; font: 700 10px/20px var(--fonte); text-align: center; color: #fff; }
+.au-numero { font: 800 clamp(22px, 7vw, 40px)/1 var(--fonte); font-variant-numeric: tabular-nums; color: var(--texto); }
+.au-numero.au-medio { font-size: clamp(17px, 5vw, 26px); }
+.au-numero.au-pequeno { font-size: clamp(12px, 3.4vw, 15px); font-weight: 700; color: var(--texto-fraco); }
+.au-cor-c { color: #4fc38a !important; } .au-cor-d { color: #62a8ea !important; } .au-cor-u { color: #e9b949 !important; }
+.au-certo-txt { color: var(--certo) !important; } .au-errado-txt { color: var(--errado) !important; }
+.au-faixa { width: 18%; height: 78%; border-radius: 12px; background: var(--superficie); border: 1px dashed var(--borda); }
+.au-chip { font: 800 clamp(16px, 4.6vw, 22px)/1 var(--fonte); padding: 10px 14px; border-radius: 14px; background: var(--superficie); border: 2px solid var(--borda); }
+.au-chip.au-ok { border-color: var(--certo); background: color-mix(in srgb, var(--certo) 22%, var(--superficie)); }
+.au-bloquinho { height: 34px; border-radius: 8px; color: #fff; font: 800 15px/34px var(--fonte); text-align: center; transition: width .6s, left .7s, top .7s, opacity .45s, box-shadow .3s !important; }
+.au-relogio-filme { width: 34%; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--texto); background: var(--superficie); }
+.au-relogio-filme i { position: absolute; left: 50%; bottom: 50%; width: 4px; margin-left: -2px; border-radius: 2px; background: var(--texto); transform-origin: 50% 100%; }
+.au-relogio-filme .au-min { height: 40%; background: var(--marca); transition: transform 2.6s linear; }
+.au-relogio-filme .au-hora { height: 26%; transition: transform 2.6s linear; }
+.au-balao { font: 700 13px/1.3 var(--fonte); padding: 6px 10px; border-radius: 10px; background: var(--texto); color: var(--fundo, #111); }
+@media (prefers-reduced-motion: reduce) { .au-ator { transition-duration: .01s !important; } }
+.au-armadinha { display: grid; grid-template-columns: repeat(3, 22px); font: 800 clamp(16px, 5vw, 24px)/1.3 var(--fonte); text-align: center; font-variant-numeric: tabular-nums; }
+.au-armadinha i { grid-column: 1 / -1; border-top: 2px solid var(--texto); margin: 2px 0; }
+.au-armadinha .au-r1, .au-armadinha .au-r2 { color: var(--certo); min-height: 1.3em; }
