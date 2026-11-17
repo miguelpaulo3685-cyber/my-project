@@ -10,7 +10,8 @@ window.TRILHAS_MM = {
     'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais',
     'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade',
     'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares',
-    'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade'],
+    'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade',
+    'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -39,7 +40,7 @@ window.TRILHAS_MM = {
       { id: 'bio1', nome: 'Ecologia e impactos ambientais', sobre: 'O tópico mais cobrado: cerca de 30% das questões de Biologia.', teste: true, aulas: [
         ['cadeias-alimentares', 'Cadeias, teias e pirâmides', '🦗'], ['relacoes-ecologicas', 'Relações ecológicas', '🤝'],
         ['ciclos-biogeoquimicos', 'Ciclos da água, carbono e nitrogênio', '♻️'], ['impactos-ambientais', 'Impactos ambientais', '🌡️']] },
-      { id: 'bio2', nome: 'Citologia e bioquímica celular', sobre: 'A base estrutural e energética dos seres vivos.', aulas: [
+      { id: 'bio2', nome: 'Citologia e bioquímica celular', sobre: 'A base estrutural e energética dos seres vivos.', teste: true, aulas: [
         ['bioquimica', 'Água, sais e moléculas da vida', '🧪'], ['membrana', 'Membrana e transportes', '🫧'], ['organelas', 'Organelas', '🏭'],
         ['metabolismo-energetico', 'Respiração e fermentação', '⚡'], ['fotossintese', 'Fotossíntese', '🌿']] },
       { id: 'bio3', nome: 'Genética e biologia molecular', sobre: 'Raciocínio lógico, heredogramas e código genético.', aulas: [

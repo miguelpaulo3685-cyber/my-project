@@ -1,0 +1,87 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 2 · Aula 4</div>
+  <h1>Respiração e fermentação: como a célula tira energia do açúcar</h1>
+  <p class="au-abre">Toda célula precisa de ATP, a "moeda de energia". Ela consegue isso quebrando glicose. Com oxigênio, a quebra é completa e rende muito: é a respiração celular. Sem oxigênio, a quebra para no meio e rende pouco: é a fermentação, que faz o pão crescer, o iogurte azedar e o músculo arder.</p>
+</header>
+
+<section class="au-cena" aria-label="Uma glicose: com e sem oxigênio">
+  <div class="au-loja">Quanto ATP sai de uma glicose? <small>escolha com ou sem oxigênio</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Condição">
+      <button type="button" data-via="aerobia">🫁 Com oxigênio (respiração)</button>
+      <button type="button" data-via="alcoolica">🍞 Sem oxigênio: levedura</button>
+      <button type="button" data-via="latica">🏃 Sem oxigênio: músculo</button>
+    </div>
+    <div class="au-via" id="au-via" role="img"></div>
+    <div class="au-atp" id="au-atp" aria-live="polite"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Respiração aeróbica: três etapas</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Glicólise</b> (no citoplasma): a glicose é quebrada ao meio, em duas moléculas de piruvato. Rende pouco ATP. Não precisa de oxigênio.</li>
+    <li><b>Ciclo de Krebs</b> (na mitocôndria): o piruvato é desmontado e solta <b>CO₂</b>, o que você expira.</li>
+    <li><b>Cadeia respiratória</b> (na mitocôndria): é onde entra o <b>oxigênio</b>, que no fim vira <b>água</b>. É aqui que sai a maior parte do ATP.</li>
+  </ul>
+  <p class="au-formula">glicose + O₂ → CO₂ + H₂O + muito ATP</p>
+  <div class="au-filme" data-filme="etapas" aria-label="Animação: glicose passando pela glicólise, Krebs e cadeia respiratória"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Fermentação: sem oxigênio, só a glicólise</h2>
+  <p>Sem oxigênio, a célula faz só a glicólise e precisa "descartar" o piruvato de algum jeito:</p>
+  <ul class="au-pegadinhas">
+    <li><b>Alcoólica</b> (leveduras, o fermento): vira <b>álcool + CO₂</b>. O CO₂ faz a massa do pão crescer; o álcool vira cerveja e vinho.</li>
+    <li><b>Lática</b> (bactérias do iogurte e o nosso músculo em esforço intenso): vira <b>ácido lático</b>. Azeda o leite e faz o músculo arder.</li>
+  </ul>
+  <div class="au-filme" data-filme="pao" aria-label="Animação: fermento soltando CO2 e a massa crescendo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Respiração é o contrário da fotossíntese</h2>
+  <p>Fotossíntese: CO₂ + água + luz → glicose + O₂. Respiração: glicose + O₂ → CO₂ + água + energia. A planta faz <b>as duas</b>: fotossíntese de dia e respiração o tempo todo. (A aula de Fotossíntese, deste mesmo módulo, mostra o outro lado.)</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Respiração rende muito mais ATP</b> que a fermentação (cerca de 30 contra 2 por glicose).</li>
+    <li>O <b>CO₂</b> que expiramos vem do <b>ciclo de Krebs</b>; o <b>O₂</b> que inspiramos é usado na <b>cadeia respiratória</b> e vira água.</li>
+    <li>Pão cresce pelo <b>CO₂</b> da fermentação, não pelo álcool (que evapora no forno).</li>
+    <li><b>Plantas respiram</b> também, inclusive à noite.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="O fermento é uma levedura que faz fermentação alcoólica: solta CO₂, que forma as bolhas e faz a massa crescer.">
+    <p>A massa do pão cresce depois de algum tempo com fermento porque:</p>
+    <button type="button" class="au-alt">o fermento produz oxigênio</button>
+    <button type="button" class="au-alt">o açúcar derrete</button>
+    <button type="button" class="au-alt">as leveduras fazem fermentação e liberam CO₂</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="No esforço intenso falta oxigênio para os músculos, que fazem fermentação lática e acumulam ácido lático.">
+    <p>Num esforço muito intenso, os músculos fazem um tipo de fermentação. Qual, e o que ela produz?</p>
+    <button type="button" class="au-alt">Lática, produzindo ácido lático</button>
+    <button type="button" class="au-alt">Alcoólica, produzindo álcool</button>
+    <button type="button" class="au-alt">Fotossíntese, produzindo glicose</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O oxigênio é o aceptor final de elétrons na cadeia respiratória, na mitocôndria, e se transforma em água.">
+    <p>Na respiração celular, o oxigênio que respiramos é usado na:</p>
+    <button type="button" class="au-alt">glicólise, no citoplasma</button>
+    <button type="button" class="au-alt">cadeia respiratória, na mitocôndria, e vira água</button>
+    <button type="button" class="au-alt">fotossíntese</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="metabolismo-energetico">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
