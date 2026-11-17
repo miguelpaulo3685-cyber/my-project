@@ -1,0 +1,90 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 3</div>
+  <h1>Regra de três: o atalho mais usado do ENEM</h1>
+  <p class="au-abre">Preço do quilo, consumo do carro, quantos dias com mais gente trabalhando: quase todo problema de proporção vira uma regra de três. Aqui você vai aprender o jeito que não erra: descobrir quanto vale 1 e depois multiplicar, e só então o atalho das setas.</p>
+</header>
+
+<section class="au-cena" aria-label="Montar uma regra de três passo a passo">
+  <div class="au-loja">Monte a regra de três <small>escolha um problema e resolva em três passos</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Escolha o problema">
+      <button type="button" data-prob="0">🥩 Carne</button>
+      <button type="button" data-prob="1">⛽ Combustível</button>
+      <button type="button" data-prob="2">🧱 Pedreiros</button>
+      <button type="button" data-prob="3">🚗 Viagem</button>
+    </div>
+    <p class="au-enunciado" id="au-enunciado"></p>
+    <div class="au-tabela3" id="au-tabela" aria-live="polite"></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-passo">Próximo passo</button>
+      <button type="button" id="au-recomecar">↺ Recomeçar</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O jeito que não erra: quanto vale 1?</h2>
+  <p>3 kg de carne custam R$ 84. Quanto custam 5 kg? Primeiro descubra o preço de <b>1 kg</b>: 84 ÷ 3 = R$ 28. Depois multiplique: 5 × 28 = <b>R$ 140</b>. Esse método (chamado de "redução à unidade") funciona em qualquer problema e faz você <b>entender</b> o que está calculando.</p>
+  <div class="au-filme" data-filme="unidade" aria-label="Animação: 3 kg, 1 kg, 5 kg de carne"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>O atalho das setas</h2>
+  <p>Monte a tabela com as grandezas em colunas. Se as duas crescem juntas (<b>direta</b>), as setas apontam para o mesmo lado e você multiplica <b>em cruz</b>: 3 · x = 5 · 84, então x = 420 ÷ 3 = 140.</p>
+  <div class="au-filme" data-filme="cruz" aria-label="Animação: setas e multiplicação em cruz"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Quando é inversa</h2>
+  <p>4 pedreiros fazem um muro em 12 dias. Em quantos dias 6 pedreiros fazem o mesmo muro? <b>Mais pedreiros, menos dias</b>: é inversa. Pense em quanto vale 1: um pedreiro sozinho levaria 4 × 12 = 48 dias. Com 6, 48 ÷ 6 = <b>8 dias</b>.</p>
+  <div class="au-filme" data-filme="inversa" aria-label="Animação: pedreiros e dias do muro"></div>
+  <p>No atalho, inverta uma das colunas antes de multiplicar em cruz. Mas se tiver dúvida, volte para o "quanto vale 1": não tem erro.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Sempre pergunte: faz sentido?</h2>
+  <p>Antes de marcar, olhe o resultado. Mais quilos, mais caro? Mais pedreiros, menos dias? Se a sua resposta diz que 6 pedreiros levam 18 dias, você usou a regra direta num caso inverso. Essa checagem de 3 segundos derruba metade das pegadinhas.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Unidades</b>: se uma linha está em minutos e a outra em horas, converta antes.</li>
+    <li><b>Direta ou inversa</b> é a primeira decisão. Velocidade × tempo, trabalhadores × dias, torneiras × tempo: inversas.</li>
+    <li><b>Taxa fixa</b> não é regra de três (veja a aula de proporção).</li>
+    <li><b>Composta</b>: com três grandezas (pedreiros, horas por dia, dias), resolva uma de cada vez, sempre comparando com a que você quer achar.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Por 1 litro: 420 ÷ 30 = 14 km. Com 45 litros: 45 × 14 = 630 km.">
+    <p>Um carro percorre 420 km com 30 litros. Quantos km percorre com 45 litros, no mesmo ritmo?</p>
+    <button type="button" class="au-alt">630 km</button>
+    <button type="button" class="au-alt">560 km</button>
+    <button type="button" class="au-alt">280 km</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Inversa: 8 máquinas × 15 dias = 120 'máquina-dias'. Com 10 máquinas: 120 ÷ 10 = 12 dias.">
+    <p>8 máquinas iguais fazem uma obra em 15 dias. Em quantos dias 10 dessas máquinas fazem a mesma obra?</p>
+    <button type="button" class="au-alt">18,75 dias</button>
+    <button type="button" class="au-alt">13 dias</button>
+    <button type="button" class="au-alt">12 dias</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Direta. Em 1 minuto: 150 ÷ 6 = 25 páginas. Em 1 hora (60 min): 60 × 25 = 1 500 páginas. Cuidado com minutos e horas.">
+    <p>Uma impressora imprime 150 páginas em 6 minutos. Quantas páginas imprime em 1 hora?</p>
+    <button type="button" class="au-alt">900</button>
+    <button type="button" class="au-alt">1 500</button>
+    <button type="button" class="au-alt">25</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="regra-de-tres">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

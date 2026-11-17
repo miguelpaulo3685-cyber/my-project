@@ -325,3 +325,45 @@ i.au-um { width: 13px; height: 13px; background: radial-gradient(circle at 35% 3
 .au-barra-filme-fr { height: 34px; }
 .au-palco .au-grade-filme b.au-on { background: #62a8ea; }
 .au-preto { color: #3a2a16 !important; }
+
+/* Razão */
+.au-copos { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; }
+.au-copo-fig { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.au-copo { position: relative; width: 74px; height: 120px; border: 3px solid var(--texto-fraco); border-top: none; border-radius: 0 0 16px 16px; overflow: hidden; background: color-mix(in srgb, var(--texto) 5%, transparent); }
+.au-copo i { position: absolute; left: 0; right: 0; bottom: 0; transition: height .35s, background .35s; }
+.au-copo-fig figcaption { text-align: center; font-size: 12px; color: var(--texto-fraco); line-height: 1.3; }
+.au-copo-fig figcaption b { display: block; font-size: 18px; color: var(--texto); }
+.au-palco i.au-pessoa { width: 16px; height: 26px; border-radius: 8px 8px 4px 4px; }
+.au-palco i.au-menino { background: #62a8ea; } .au-palco i.au-menina { background: #e9b949; }
+.au-saco { width: 26%; height: 44%; }
+.au-pilha-copo { display: flex; flex-direction: column-reverse; gap: 2px; padding: 4px; width: 56px; border: 3px solid var(--texto-fraco); border-top: none; border-radius: 0 0 12px 12px; }
+.au-pilha-copo i { display: block; height: 11px; border-radius: 2px; }
+.au-pilha-copo i.au-agua { background: #9cc9f2; } .au-pilha-copo i.au-conc { background: #e2682f; }
+.au-mapa { width: 88%; height: 54%; border-radius: 12px; background: linear-gradient(135deg, #3f6f4a, #5f8f5a 40%, #6f9fb5 41%, #5f8fa5 55%, #4f7f4a 56%); opacity: .55; }
+.au-regua { display: grid; grid-template-columns: repeat(5, 1fr); width: min(230px, 64vw); height: 16px; background: #f3e3a6; border-radius: 3px; }
+.au-regua i { border-right: 2px solid #5a4a20; }
+.au-estrada { width: 84%; height: 10px; border-radius: 5px; background: repeating-linear-gradient(90deg, var(--texto-fraco) 0 16px, transparent 16px 26px); }
+
+/* Proporção */
+.au-receita { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.au-ingrediente { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; border-radius: 12px; background: var(--superficie); border: 1px solid var(--borda); text-align: center; }
+.au-ingrediente span { font-size: 22px; }
+.au-ingrediente b { font: 800 20px var(--fonte); font-variant-numeric: tabular-nums; }
+.au-ingrediente small { font-size: 11px; color: var(--texto-fraco); line-height: 1.2; }
+.au-taxi { display: flex; flex-direction: column; align-items: center; width: 52px; }
+.au-taxi i { display: block; width: 100%; font: 700 11px/1 var(--fonte); font-style: normal; color: #fff; display: flex; align-items: center; justify-content: center; }
+.au-taxi .au-km { background: #3f87c9; border-radius: 6px 6px 0 0; }
+.au-taxi .au-fixa { height: 40px; background: #7d7d84; border-radius: 0 0 6px 6px; }
+
+/* Regra de três */
+.au-enunciado { font-weight: 600; margin: 0 !important; }
+.au-tabela3 { position: relative; display: grid; gap: 6px; max-width: 360px; width: 100%; margin: 0 auto; padding: 0 34px; }
+.au-t3-cab, .au-t3-lin { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: center; }
+.au-t3-cab b { font-size: 12px; color: var(--texto-fraco); }
+.au-t3-lin span { font: 800 24px var(--fonte); padding: 6px; border-radius: 10px; background: var(--superficie); border: 1px solid var(--borda); font-variant-numeric: tabular-nums; }
+.au-t3-lin .au-x { color: var(--marca-texto); border-style: dashed; }
+.au-seta { position: absolute; top: 34px; font: 800 30px var(--fonte); font-style: normal; color: #62a8ea; }
+.au-seta-a { left: 4px; } .au-seta-b { right: 4px; } .au-seta.au-sobe { color: #e9b949; }
+.au-cruz { width: 22%; height: 3px; background: var(--errado); transform: translate(-50%, -50%) rotate(22deg) !important; }
+.au-cruz.au-cruz2 { transform: translate(-50%, -50%) rotate(-22deg) !important; }
+.au-equipe { display: flex; gap: 4px; font-size: 26px; }

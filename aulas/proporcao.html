@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 2</div>
+  <h1>Proporção: quando um cresce, o outro acompanha</h1>
+  <p class="au-abre">Dobrou a receita, dobram os ingredientes. Dobrou a velocidade, cai pela metade o tempo. Aqui você vai aprender a reconhecer quando duas grandezas são proporcionais (e quando parecem, mas não são), que é o passo antes da regra de três.</p>
+</header>
+
+<section class="au-cena" aria-label="Receita de bolo para mais ou menos pessoas">
+  <div class="au-loja">Receita de bolo <small>mude o número de pessoas e veja os ingredientes e o gráfico</small></div>
+  <div class="au-painel">
+    <div class="au-receita" id="au-receita" aria-live="polite"></div>
+    <svg viewBox="0 0 320 170" id="au-grafico" role="img" aria-label="Gráfico de farinha por número de pessoas"></svg>
+    <div class="au-controle"><label for="au-pessoas">Pessoas</label><input id="au-pessoas" type="range" min="2" max="24" step="2" value="8"><output id="au-o-pessoas"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Diretamente proporcional</h2>
+  <p>Duas grandezas são <b>diretamente proporcionais</b> quando uma é multiplicada por um número e a outra é multiplicada <b>pelo mesmo número</b>. Bolo para 4 pessoas usa 2 xícaras; para 8 (× 2), 4 xícaras (× 2); para 12 (× 3), 6 xícaras (× 3).</p>
+  <div class="au-filme" data-filme="tabela" aria-label="Animação: tabela da receita multiplicando"></div>
+  <p>O sinal mais fácil: a divisão entre elas fica sempre igual. 2 ÷ 4 = 4 ÷ 8 = 6 ÷ 12 = <b>0,5 xícara por pessoa</b>. No gráfico, os pontos ficam numa <b>reta que passa pelo zero</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Inversamente proporcional</h2>
+  <p>Na viagem de 240 km: a 60 km/h leva 4 horas; a 120 km/h (o dobro), leva 2 horas (a metade). Quando uma é multiplicada por um número e a outra é <b>dividida</b> pelo mesmo número, são <b>inversamente proporcionais</b>.</p>
+  <div class="au-filme" data-filme="inversa" aria-label="Animação: velocidade e tempo na mesma viagem"></div>
+  <p>O sinal: a <b>multiplicação</b> entre elas fica sempre igual. 60 × 4 = 120 × 2 = 240. Mais pedreiros, menos dias; mais torneiras, menos tempo para encher.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Parece proporcional, mas não é</h2>
+  <p>Corrida de aplicativo: R$ 5 de taxa fixa mais R$ 2 por km. 1 km custa R$ 7; 2 km custam R$ 9, e não R$ 14. Dobrar a distância não dobrou o preço, por causa da taxa fixa. No gráfico, é uma reta que <b>não passa pelo zero</b>.</p>
+  <div class="au-filme" data-filme="taxi" aria-label="Animação: preço da corrida com taxa fixa"></div>
+  <p>Outros falsos amigos: idade e altura (ninguém com 40 anos tem o dobro da altura de quando tinha 20), e área de um quadrado e seu lado (dobra o lado, a área quadruplica).</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Antes de qualquer conta, pergunte: <b>se um dobra, o outro dobra, cai pela metade ou nenhum dos dois?</b></li>
+    <li><b>Taxa fixa</b> (bandeirada, assinatura, frete) quebra a proporção.</li>
+    <li><b>Dividir em partes proporcionais</b>: R$ 900 para quem trabalhou 2, 3 e 4 dias. São 9 partes de R$ 100: R$ 200, R$ 300 e R$ 400.</li>
+    <li>Gráfico de reta pelo zero = proporção direta. Curva que desce = pode ser inversa.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Por pessoa: 3 ovos para 6 pessoas = 0,5 ovo por pessoa. Para 18 pessoas: 18 × 0,5 = 9 ovos (18 é o triplo de 6).">
+    <p>Uma receita para 6 pessoas leva 3 ovos. Quantos ovos para 18 pessoas?</p>
+    <button type="button" class="au-alt">6</button>
+    <button type="button" class="au-alt">15</button>
+    <button type="button" class="au-alt">9</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Mais torneiras, menos tempo: inversa. 2 torneiras × 6 h = 12. Com 3 torneiras: 12 ÷ 3 = 4 horas.">
+    <p>2 torneiras iguais enchem uma caixa em 6 horas. Em quanto tempo 3 torneiras iguais enchem a mesma caixa?</p>
+    <button type="button" class="au-alt">4 horas</button>
+    <button type="button" class="au-alt">9 horas</button>
+    <button type="button" class="au-alt">5 horas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Partes: 3 + 5 = 8. R$ 400 ÷ 8 = R$ 50 por parte. Quem pôs 5 partes recebe 5 × 50 = R$ 250.">
+    <p>Dois sócios investiram R$ 3 mil e R$ 5 mil e vão dividir R$ 400 de lucro em partes proporcionais ao investimento. Quanto recebe quem investiu R$ 5 mil?</p>
+    <button type="button" class="au-alt">R$ 200</button>
+    <button type="button" class="au-alt">R$ 250</button>
+    <button type="button" class="au-alt">R$ 300</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="proporcao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

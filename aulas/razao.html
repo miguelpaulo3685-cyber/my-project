@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 1</div>
+  <h1>Razão e escala: comparar com divisão</h1>
+  <p class="au-abre">Suco mais forte ou mais fraco, mapa do bairro, velocidade do ônibus: razão é comparar duas quantidades dividindo uma pela outra. É a base de proporção e regra de três, o assunto que mais cai em Matemática no ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Copo de suco: concentrado e água">
+  <div class="au-loja">Lanchonete: suco de caju <small>misture concentrado e água e veja a cor e a razão</small></div>
+  <div class="au-painel">
+    <div class="au-copos" id="au-copos" aria-live="polite"></div>
+    <div class="au-controle"><label for="au-conc">Concentrado</label><input id="au-conc" type="range" min="1" max="6" value="1"><output id="au-o-conc"></output></div>
+    <div class="au-controle"><label for="au-agua">Água</label><input id="au-agua" type="range" min="0" max="10" value="3"><output id="au-o-agua"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Parte com parte, parte com o todo</h2>
+  <p>Numa sala, para cada 1 menino há 2 meninas. A razão <b>meninas para meninos</b> é 2 : 1 (ou 2/1 = 2: o dobro). A razão <b>meninas para o total</b> é 2 de cada 3, ou seja, 2/3 da turma. As duas são razões, mas respondem perguntas diferentes.</p>
+  <div class="au-filme" data-filme="turma" aria-label="Animação: 2 meninas para cada menino"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Qual suco é mais forte?</h2>
+  <p>Suco A: 2 copos de concentrado para 5 de água. Suco B: 3 para 8. Não dá para saber de olho. Compare a <b>parte de concentrado no copo inteiro</b>: A tem 2 de 7 (≈ 0,29); B tem 3 de 11 (≈ 0,27). O A é um pouquinho mais forte.</p>
+  <div class="au-filme" data-filme="forte" aria-label="Animação: comparando dois sucos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Escala: o mapa é uma razão</h2>
+  <p>Escala <b>1 : 100 000</b> quer dizer: 1 cm no mapa vale 100 000 cm no mundo real. Como 100 000 cm = 1 000 m = <b>1 km</b>, cada centímetro do mapa é 1 km. Se duas cidades estão a 5 cm no mapa, estão a 5 km de verdade.</p>
+  <div class="au-filme" data-filme="escala" aria-label="Animação: régua no mapa com escala"></div>
+  <p>Truque para converter: de cm para m, corte 2 zeros; de m para km, corte mais 3. Ao todo, 5 zeros de cm para km.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Razões que têm nome</h2>
+  <p><b>Velocidade</b> = distância ÷ tempo: 120 km em 2 h dá 60 km/h (60 km a cada hora). <b>Densidade demográfica</b> = pessoas ÷ área. <b>Consumo</b> = km ÷ litros. Toda unidade com "por" (km <b>por</b> hora, habitantes <b>por</b> km²) é uma razão.</p>
+  <div class="au-filme" data-filme="velocidade" aria-label="Animação: 120 km em 2 horas"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Ordem da razão</b>: "de A para B" é A ÷ B. Trocar a ordem dá outro número.</li>
+    <li><b>Unidades iguais</b> antes de dividir: cm com cm, minuto com minuto.</li>
+    <li><b>Escala com área</b>: se a escala reduz o lado 100 vezes, a área fica 100 × 100 = 10 000 vezes menor.</li>
+    <li>Razão "maior" depende do que está em cima: mais concentrado por água = suco mais forte.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="1 cm = 50 000 cm = 500 m. 8 cm = 4 000 m = 4 km.">
+    <p>Num mapa de escala 1 : 50 000, duas praças estão a 8 cm uma da outra. Qual é a distância real?</p>
+    <button type="button" class="au-alt">400 m</button>
+    <button type="button" class="au-alt">4 km</button>
+    <button type="button" class="au-alt">40 km</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Em 1h30 = 1,5 h, 90 km ÷ 1,5 h = 60 km/h.">
+    <p>Um ônibus andou 90 km em 1h30. Qual foi a velocidade média?</p>
+    <button type="button" class="au-alt">60 km/h</button>
+    <button type="button" class="au-alt">69 km/h</button>
+    <button type="button" class="au-alt">90 km/h</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Para cada 3 meninos há 4 meninas: grupos de 7. 28 ÷ 7 = 4 grupos, então 4 × 4 = 16 meninas.">
+    <p>Numa turma de 28 alunos, a razão de meninos para meninas é 3 : 4. Quantas meninas há?</p>
+    <button type="button" class="au-alt">12</button>
+    <button type="button" class="au-alt">14</button>
+    <button type="button" class="au-alt">16</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="razao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>
