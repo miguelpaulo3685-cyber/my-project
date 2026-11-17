@@ -2142,6 +2142,12 @@
     /* versão do computador: fundo escuro e partículas (só com mouse, tela larga e sem pedir menos movimento) */
     .sugestoes.rolagem { display: flex; overflow-x: auto; scroll-snap-type: x proximity; padding-bottom: 4px; scrollbar-width: thin; }
     .sugestoes.rolagem .sugestao { flex: 0 0 128px; scroll-snap-align: start; }
+    /* Na coluna do lado (e no celular, onde ela fica embaixo), a lista é vertical: avatar, nome e botão
+       lado a lado, sem o cartão estreito da rolagem (que fazia o botão cobrir o texto). */
+    .lado-agora .sugestoes.rolagem { display: grid; grid-template-columns: minmax(0, 1fr); overflow: visible; padding-bottom: 0; }
+    .lado-agora .sugestoes.rolagem .sugestao { flex: none; display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; }
+    .lado-agora .sugestao .autor-link small { white-space: normal; text-align: left; }
+    .lado-agora .sugestao button.acao { white-space: nowrap; padding: 6px 12px; }
     .dupla { display: flex; align-items: stretch; gap: 8px; margin: 12px 0; }
     .lado-dupla { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding: 12px 8px;
       border-radius: 14px; background: var(--superficie-2); min-width: 0; }
