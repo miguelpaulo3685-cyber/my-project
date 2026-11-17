@@ -204,11 +204,11 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - **Simulado**: aviso das anuladas pelo INEP (2009-101, 2024-129, 2025-123/132/174; `ANULADAS_SIM` igual a `provas.js`).
 - **O site cai ao atualizar?** Não: GitHub Pages troca na hora e o Render pago só desliga a versão antiga depois que a
   nova responde. Só as salas da Arena abertas naquele minuto se perdem (ficam na memória).
-- **Lista de conteúdos do Miguel (17/11) aplicada** (no ramo, esperando o "sim"): Matemática, Biologia e Química, 7 módulos
+- **Lista de conteúdos do Miguel (17/11) aplicada** (publicada em 17/11): Matemática, Biologia e Química, 7 módulos
   cada. O índice fica em `trilhas/indice.js` (baixado só quando o cartão da trilha aparece), o teste de cada módulo em
   `trilhas/teste-<id>.js` (baixado só ao começar o teste) e cada aula em `aulas/` (baixada só ao abrir): o site continua
   leve. Para uma aula nova ficar disponível: os dois arquivos em `aulas/` e o id em `prontas` no índice. Módulo sem
-  teste não trava o seguinte. Prontas: 16 aulas (15 de Matemática + Fotossíntese). Testes: mat1, mat2, mat4 (os nomes
+  teste não trava o seguinte. Prontas: 20 aulas (15 de Matemática, Fotossíntese e a Ecologia inteira). Testes: mat1, mat2, mat4, bio1 (os nomes
   antigos m1/m3/m5 continuam valendo para quem já passou). **Faltam ~65 aulas** ("Em produção" na própria trilha).
 - **Trilha "O que cai no ENEM"** (feita em 17/11): cartão no topo do Treinar → tela `trilha` com o mapa dos módulos
   (`TRILHAS` no index.html). O teste de cada módulo (10 questões, passa com 7, alternativas embaralhadas a cada tentativa)
