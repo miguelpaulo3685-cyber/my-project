@@ -190,7 +190,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   mini-desafio, 3 questões reais. Recompensa só visual; comunidade dentro da trilha. **Pedido: tela do mapa
   numa prévia.**
 
-### Pedidos do Miguel de 17/11 (no ramo `claude/gracious-babbage-tp7kds`, esperando o "sim")
+### Pedidos do Miguel de 17/11 (publicados em 18/11 com o "faça e publique" dele)
 - **Metas no topo da Comunidade** (como stories, com outro visual): cartões de papel com a bolinha da pessoa no canto,
   ✓ quando cumprida, contorno quando não vista (`mm_metas_vistas` no aparelho). Tocar abre em tela cheia (passa sozinho
   em 6 s, toque na esquerda volta, segurar pausa, 👏🔥💡 para apoiar). Último cartão: "Chamar amigos" (WhatsApp).
@@ -204,11 +204,21 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - **Simulado**: aviso das anuladas pelo INEP (2009-101, 2024-129, 2025-123/132/174; `ANULADAS_SIM` igual a `provas.js`).
 - **O site cai ao atualizar?** Não: GitHub Pages troca na hora e o Render pago só desliga a versão antiga depois que a
   nova responde. Só as salas da Arena abertas naquele minuto se perdem (ficam na memória).
-- **Trilha "O que cai no ENEM" (PRÉVIA)**: cartão no topo do Treinar → tela `trilha` com mapa de módulos (`TRILHAS` no
-  index.html); terminar o teste do módulo (7 de 10) abre o próximo; dá para fazer o teste e pular. Primeira aula pronta:
-  `aulas/soma.*` (caixa da lanchonete com o "vai um" como troca, duplas redondas, compensação, horas). Módulos 2 a 5 são
-  exemplo até chegar a **lista de conteúdos do Miguel**. Progresso ainda só no aparelho (`mm_trilha`); depois ir para a conta.
-  Pedido de tom: linguagem simples, profundidade de cursinho forte, exemplos do dia a dia.
+- **Trilha "O que cai no ENEM"** (feita em 17-18/11): cartão no topo do Treinar → tela `trilha` com o mapa dos módulos
+  (`TRILHAS` no index.html). O teste de cada módulo (10 questões, passa com 7, alternativas embaralhadas a cada tentativa)
+  abre o próximo; dá para fazer o teste e pular. **Matemática completa, 18 aulas em 5 módulos:**
+  1. Operações básicas e potência: soma, subtração, multiplicação, divisão, potência (com ordem das operações).
+  2. Frações e decimais: frações, números decimais, contas com frações.
+  3. Razão, proporção e regra de três: razão e escala, proporção, regra de três.
+  4. Porcentagem e juros: porcentagem (a aula antiga, agora com filminhos), juros simples e compostos.
+  5. Gráficos, tabelas e médias: gráficos e tabelas, média/moda/mediana.
+  Cada aula: figura de mexer + "filminhos" que tocam sozinhos com legenda (motor `aulasMM.filme` em `aulas/base.js`,
+  roteiros no `.js` de cada aula) + "Onde o ENEM pega" + teste rápido + "✓ Terminei a aula". Linguagem simples com
+  profundidade de cursinho (pedido do Miguel). Progresso na conta: tabela `trilha_progresso`, rotas `GET/PUT /api/trilha`
+  (`trilha.js`, junta sem perder nada); sem conta, fica no aparelho e vai para a conta ao entrar. Na Política de Privacidade.
+  **Falta:** a lista de conteúdos do Miguel (a ordem dos módulos pode mudar), um professor revisar os textos, e as
+  trilhas de Natureza, Humanas e Linguagens ("em breve" no cartão). Ideia guardada: animar com transform em vez de
+  left/top se algum celular fraco engasgar (Miguel preferiu deixar como está).
 
 ### Celular: toque e tamanhos (16/11, publicado)
 - Auditoria em 8 tamanhos (320 a 1366 px) e 8 telas: nada rola de lado, viewport/lang/zoom corretos, sem botão sem

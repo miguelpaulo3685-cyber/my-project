@@ -1,0 +1,81 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 4 · Aula 2</div>
+  <h1>Juros: o preço do tempo</h1>
+  <p class="au-abre">Cartão de crédito, empréstimo, poupança, compra parcelada: juros é o que se paga (ou se ganha) por usar o dinheiro durante um tempo. Aqui você vai ver por que a dívida do cartão cresce tão rápido e como comparar "à vista com desconto" com "parcelado sem juros".</p>
+</header>
+
+<section class="au-cena" aria-label="Simulador de dívida: juros simples e compostos">
+  <div class="au-loja">Simulador de dívida <small>mude a taxa e os meses e compare os dois tipos de juros</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 180" id="au-grafico" role="img" aria-label="Gráfico da dívida mês a mês"></svg>
+    <div class="au-leituras">
+      <div class="au-leitura"><small>Dívida inicial</small><strong id="au-ini">R$ 1.000</strong></div>
+      <div class="au-leitura"><small>Juros simples</small><strong id="au-simples" style="color:#62a8ea"></strong></div>
+      <div class="au-leitura"><small>Juros compostos</small><strong id="au-compostos" style="color:#e9b949"></strong></div>
+    </div>
+    <div class="au-controle"><label for="au-taxa">Taxa ao mês</label><input id="au-taxa" type="range" min="1" max="15" value="10"><output id="au-o-taxa"></output></div>
+    <div class="au-controle"><label for="au-meses">Meses</label><input id="au-meses" type="range" min="1" max="24" value="12"><output id="au-o-meses"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Juros simples: sempre o mesmo valor</h2>
+  <p>Você pega R$ 1 000 emprestado a 10% ao mês, juros simples. Todo mês os juros são 10% de <b>R$ 1 000</b>, ou seja, R$ 100. Em 3 meses: 1 000 + 100 + 100 + 100 = <b>R$ 1 300</b>. Cresce em linha reta.</p>
+  <div class="au-filme" data-filme="simples" aria-label="Animação: juros simples mês a mês"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Juros compostos: juros sobre juros</h2>
+  <p>Nos compostos, os juros de cada mês são calculados sobre <b>o que você deve agora</b>, incluindo os juros anteriores. Mês 1: 10% de 1 000 = 100 → 1 100. Mês 2: 10% de 1 100 = 110 → 1 210. Mês 3: 10% de 1 210 = 121 → <b>1 331</b>. Os juros crescem a cada mês.</p>
+  <div class="au-filme" data-filme="compostos" aria-label="Animação: juros compostos mês a mês"></div>
+  <p>É a potência da aula 5 aparecendo: cada mês multiplica por 1,10. Em 3 meses, 1 000 × 1,1³. Cartão de crédito e cheque especial usam juros compostos, e com taxas altas.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>À vista com desconto ou parcelado "sem juros"?</h2>
+  <p>Uma TV custa R$ 1 000 em 10 × "sem juros", ou R$ 900 à vista. Se o à vista é mais barato, o parcelado <b>tem juros escondidos</b>: você paga R$ 100 a mais por pagar depois. A pergunta certa é sempre: <b>quanto eu pago no total em cada opção?</b></p>
+  <div class="au-filme" data-filme="avista" aria-label="Animação: à vista contra parcelado"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Simples ou compostos?</b> Leia com atenção: muda tudo a partir do 2º mês.</li>
+    <li><b>Taxa e tempo na mesma unidade</b>: 2% ao mês por 1 ano são 12 meses.</li>
+    <li>Nos compostos, <b>não</b> dá para somar as taxas: 10% ao mês por 2 meses dá 21%, e não 20% (é a pegadinha dos aumentos seguidos da aula de porcentagem).</li>
+    <li>"Montante" é o total (dívida + juros); "juros" é só o que foi acrescentado.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Juros simples: 2% de 500 = R$ 10 por mês. Em 6 meses, R$ 60. Montante: 500 + 60 = R$ 560.">
+    <p>R$ 500 aplicados a juros simples de 2% ao mês. Quanto haverá depois de 6 meses?</p>
+    <button type="button" class="au-alt">R$ 510</button>
+    <button type="button" class="au-alt">R$ 560</button>
+    <button type="button" class="au-alt">R$ 600</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Compostos: 2 000 × 1,1 = 2 200 no 1º mês; 2 200 × 1,1 = 2 420 no 2º mês.">
+    <p>Uma dívida de R$ 2 000 tem juros compostos de 10% ao mês. Quanto se deve depois de 2 meses sem pagar nada?</p>
+    <button type="button" class="au-alt">R$ 2 200</button>
+    <button type="button" class="au-alt">R$ 2 400</button>
+    <button type="button" class="au-alt">R$ 2 420</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Parcelado: 12 × 150 = R$ 1 800. À vista com 10% de desconto: 0,9 × 1 800 = R$ 1 620. À vista sai R$ 180 mais barato.">
+    <p>Uma geladeira custa 12 × R$ 150 "sem juros" ou à vista com 10% de desconto sobre o total. Qual sai mais barato e quanto?</p>
+    <button type="button" class="au-alt">À vista, R$ 180 a menos</button>
+    <button type="button" class="au-alt">Parcelado, R$ 150 a menos</button>
+    <button type="button" class="au-alt">Os dois custam o mesmo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="juros">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

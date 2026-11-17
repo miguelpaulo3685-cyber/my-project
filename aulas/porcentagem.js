@@ -76,5 +76,65 @@ aulasMM.aulas['porcentagem'] = raiz => {
   }));
 
   loja(); precos();
-  return () => {};
+
+  // ---------- filminhos ----------
+  const { ator, por } = aulasMM;
+  const N = (t, cls = '') => `<span class="au-numero ${cls}">${t}</span>`;
+  const ROTEIROS = {
+    cem: {
+      montar(p) {
+        const a = { g: ator(p, `<div class="au-grade-filme" style="grid-template-columns:repeat(10, var(--au-cel));--au-cel:10px;gap:2px">${'<b></b>'.repeat(100)}</div>`, 30, 46) };
+        a.t = ator(p, N('100 = o inteiro', 'au-medio'), 74, 46);
+        return a;
+      },
+      passos: [
+        [2400, 'Um quadrado com <b>100 quadradinhos</b>: é o inteiro, 100%.'],
+        [3000, 'Pinte <b>25</b>. "25 por cento" quer dizer <b>25 de cada 100</b>.', a => {
+          a.g.querySelectorAll('b').forEach((c, k) => { if (k < 25) setTimeout(() => { c.className = 'au-on'; }, k * 40); });
+          por(a.t, { html: N('25%', 'au-medio au-cor-d') });
+        }],
+        [3200, 'Por isso <b>25% = 25/100 = 0,25</b>. Três jeitos de escrever o mesmo pedaço.', a => por(a.t, { html: N('25% = 25/100 = 0,25', 'au-pequeno au-certo-txt') })]
+      ]
+    },
+    atalhos: {
+      montar(p) {
+        const linha = (rot, y, cor) => {
+          const b = ator(p, '', 22, y, 'au-barra-filme'); b.style.cssText += `;width:0;height:20px;background:${cor};transform:translate(0,-50%)`;
+          return { b, t: por(ator(p, N(rot, 'au-pequeno'), 11, y), { o: 0 }), valor: por(ator(p, N('', 'au-pequeno'), 92, y), { o: 0 }) };
+        };
+        const a = { base: linha('100%', 14, '#7d7d84'), l: [linha('10%', 34, '#3f87c9'), linha('50%', 52, '#2f9e6a'), linha('25%', 70, '#c9971d'), linha('5%', 88, '#8a55c9')] };
+        a.base.b.style.width = '62%'; por(a.base.t, { o: 1 }); por(a.base.valor, { o: 1, html: N('R$ 80', 'au-pequeno') });
+        return a;
+      },
+      passos: (() => {
+        const mostra = (k, larg, v) => a => { const l = a.l[k]; l.b.style.width = larg; por(l.t, { o: 1 }); por(l.valor, { o: 1, html: N(v, 'au-pequeno') }); };
+        return [
+          [2200, 'Uma compra de <b>R$ 80</b>. Ache as porcentagens sem calculadora.'],
+          [2400, '<b>10%</b>: divida por 10. R$ 8.', mostra(0, '6.2%', 'R$ 8')],
+          [2400, '<b>50%</b>: a metade. R$ 40.', mostra(1, '31%', 'R$ 40')],
+          [2400, '<b>25%</b>: a metade da metade. R$ 20.', mostra(2, '15.5%', 'R$ 20')],
+          [3000, '<b>5%</b>: a metade dos 10%. R$ 4. Combinando: 15% = 10% + 5% = R$ 12.', mostra(3, '3.1%', 'R$ 4')]
+        ];
+      })()
+    },
+    fator: {
+      montar(p) {
+        const a = { b: ator(p, 'R$ 100', 10, 40, 'au-barra-filme') };
+        a.b.style.cssText += ';width:50%;background:#3f87c9;transform:translate(0,-50%)';
+        a.marca = ator(p, '', 60, 40, 'au-marca-cem'); a.t = ator(p, N('100%', 'au-medio'), 50, 76);
+        return a;
+      },
+      passos: [
+        [2200, 'Um preço de <b>R$ 100</b>: é o 100%. A linha tracejada marca esse valor.'],
+        [3000, 'Aumentar <b>20%</b> é ficar com 100% + 20% = <b>120%</b>. Multiplica por <b>1,2</b>: R$ 120.', a => {
+          a.b.style.width = '60%'; por(a.b, { html: 'R$ 120' }); a.b.style.background = '#c94b4b'; por(a.t, { html: N('× 1,2 = R$ 120', 'au-medio') });
+        }],
+        [3200, 'Dar 20% de desconto sobre os R$ 120 é ficar com <b>80%</b> deles: × 0,8 = <b>R$ 96</b>. Não volta para 100!', a => {
+          a.b.style.width = '48%'; por(a.b, { html: 'R$ 96' }); a.b.style.background = '#2f9e6a'; por(a.t, { html: N('1,2 × 0,8 = 0,96 → R$ 96', 'au-medio au-certo-txt') });
+        }]
+      ]
+    }
+  };
+  const paradas = [...raiz.querySelectorAll('[data-filme]')].map(el => aulasMM.filme(el, ROTEIROS[el.dataset.filme]));
+  return () => paradas.forEach(p => p());
 };

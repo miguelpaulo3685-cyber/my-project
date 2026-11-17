@@ -1,0 +1,92 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 1</div>
+  <h1>Gráficos e tabelas: ler antes de calcular</h1>
+  <p class="au-abre">Quase toda prova de Matemática (e de Humanas e Natureza) do ENEM traz um gráfico. Muitas vezes a questão não pede conta difícil, pede leitura cuidadosa. Aqui você vai aprender a ler os eixos, a escolher o gráfico certo e a não ser enganado por um gráfico "esticado".</p>
+</header>
+
+<section class="au-cena" aria-label="Gráfico de vendas: barras ou linha, eixo do zero ou cortado">
+  <div class="au-loja">Vendas da cantina <small>troque o tipo de gráfico e o começo do eixo</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 200" id="au-grafico" role="img" aria-label="Gráfico de vendas por mês"></svg>
+    <div class="au-atalhos" role="group" aria-label="Tipo de gráfico">
+      <button type="button" data-tipo="barras">📊 Barras</button>
+      <button type="button" data-tipo="linha">📈 Linha</button>
+    </div>
+    <div class="au-atalhos" role="group" aria-label="Começo do eixo">
+      <button type="button" data-eixo="0">Eixo começa no 0</button>
+      <button type="button" data-eixo="90">Eixo começa no 90</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Primeiro os eixos, depois o desenho</h2>
+  <p>Antes de olhar as barras, leia: <b>o que está em cada eixo</b>, <b>qual a unidade</b> (mil? milhões? %?) e <b>de quanto em quanto</b> a escala sobe. Metade dos erros em gráfico é de quem pulou essa parte.</p>
+  <div class="au-filme" data-filme="eixos" aria-label="Animação: lendo os eixos de um gráfico"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Cada gráfico tem a sua pergunta</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Barras</b>: comparar quantidades (qual cidade tem mais, qual mês vendeu menos).</li>
+    <li><b>Linha</b>: ver como algo muda com o tempo (subiu, caiu, ficou estável, quando mudou de direção).</li>
+    <li><b>Setores ("pizza")</b>: ver as partes de um todo que soma 100%.</li>
+  </ul>
+  <div class="au-filme" data-filme="pizza" aria-label="Animação: gráfico de setores com porcentagens"></div>
+  <p>No gráfico de setores, cada 1% vale 3,6° do círculo (360° ÷ 100). Um setor de 25% é um quarto do círculo: 90°.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>O gráfico esticado</h2>
+  <p>Quando o eixo vertical não começa no zero, uma diferença pequena parece enorme. As vendas foram de 96 para 104 (pouco mais de 8%), mas com o eixo começando em 90, a barra parece ter mais que dobrado. Teste no gráfico da cantina.</p>
+  <div class="au-filme" data-filme="enganoso" aria-label="Animação: o mesmo dado com eixo cortado e completo"></div>
+  <p>O ENEM gosta de perguntar qual gráfico "representa corretamente" os dados ou em qual mês houve a <b>maior variação</b>: aí a resposta está na inclinação da linha, não na altura.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Tabelas: some só o que pedem</h2>
+  <p>Tabela no ENEM costuma trazer mais dados do que a questão precisa. Sublinhe na pergunta o que ela quer (qual linha, qual coluna, qual período) e só depois procure na tabela. E confira a última linha: às vezes ela já é o total.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>"Maior valor" e "maior aumento"</b> são perguntas diferentes: um olha a altura, o outro a diferença entre dois pontos.</li>
+    <li><b>Unidade no título</b>: "em milhares" faz 35 valer 35 000.</li>
+    <li><b>Porcentagem de quê</b>: 30% de uma cidade pequena pode ser menos gente que 10% de uma grande.</li>
+    <li><b>Legenda</b>: em gráficos com duas séries (cores), confira qual cor é qual antes de responder.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Variação de cada mês: 120 → 150 (+30), 150 → 160 (+10), 160 → 200 (+40). O maior aumento foi de março para abril.">
+    <p>As vendas de uma loja foram: janeiro 120, fevereiro 150, março 160, abril 200. Entre quais meses houve o maior aumento?</p>
+    <button type="button" class="au-alt">Janeiro e fevereiro</button>
+    <button type="button" class="au-alt">Fevereiro e março</button>
+    <button type="button" class="au-alt">Março e abril</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="40% de 360° = 0,4 × 360 = 144°.">
+    <p>Num gráfico de setores, uma fatia representa 40% do total. Qual é o ângulo dessa fatia?</p>
+    <button type="button" class="au-alt">144°</button>
+    <button type="button" class="au-alt">40°</button>
+    <button type="button" class="au-alt">90°</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O título diz &quot;em milhares&quot;: a barra de 12 representa 12 mil, ou 12 000 pessoas.">
+    <p>Um gráfico tem o título "Visitantes do museu (em milhares)". A barra de domingo marca 12. Quantas pessoas visitaram o museu no domingo?</p>
+    <button type="button" class="au-alt">12</button>
+    <button type="button" class="au-alt">12 000</button>
+    <button type="button" class="au-alt">1 200</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="graficos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

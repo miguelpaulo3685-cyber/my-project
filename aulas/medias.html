@@ -1,0 +1,85 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 2</div>
+  <h1>Média, moda e mediana: um número para representar muitos</h1>
+  <p class="au-abre">Média da turma, salário "médio", tamanho de sapato que mais vende: quando há muitos números, a gente resume com um só. Aqui você vai ver o que cada medida quer dizer, por que um número muito fora do comum estraga a média, e como funciona a média com peso.</p>
+</header>
+
+<section class="au-cena" aria-label="Notas de cinco alunos: média, mediana e moda">
+  <div class="au-loja">Notas do simulado <small>arraste as notas e veja as três medidas mudarem</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 120" id="au-reta-notas" role="img" aria-label="Notas na reta de 0 a 10"></svg>
+    <div class="au-leituras">
+      <div class="au-leitura"><small>Média</small><strong id="au-media" style="color:#62a8ea"></strong></div>
+      <div class="au-leitura"><small>Mediana</small><strong id="au-mediana" style="color:#e9b949"></strong></div>
+      <div class="au-leitura"><small>Moda</small><strong id="au-moda" style="color:#2f9e6a"></strong></div>
+    </div>
+    <div id="au-sliders"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Média: dividir igualmente</h2>
+  <p>A média é o valor que cada um teria <b>se tudo fosse dividido por igual</b>. Some tudo e divida pela quantidade. Notas 4, 6 e 8: (4 + 6 + 8) ÷ 3 = <b>6</b>. É como tirar de quem tem mais e dar para quem tem menos até todos ficarem iguais.</p>
+  <div class="au-filme" data-filme="nivelar" aria-label="Animação: barras se nivelando na média"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Mediana: o do meio da fila</h2>
+  <p>Coloque os valores <b>em ordem</b> e pegue o do meio. Em 3, 5, 7, 8, 20, a mediana é <b>7</b>. Se a quantidade for par, a mediana é a média dos dois do meio: em 2, 4, 6, 10, ela é (4 + 6) ÷ 2 = <b>5</b>.</p>
+  <div class="au-filme" data-filme="fila" aria-label="Animação: valores ordenados e o do meio"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Por que o salário "médio" engana</h2>
+  <p>Numa empresa, 4 pessoas ganham R$ 2 mil e o dono ganha R$ 30 mil. A média é (4 × 2 + 30) ÷ 5 = <b>R$ 7,6 mil</b>, mas ninguém de verdade ganha isso. A mediana é <b>R$ 2 mil</b>, que representa muito melhor a maioria. Um valor muito fora do comum puxa a média; a mediana quase não se mexe.</p>
+  <div class="au-filme" data-filme="salario" aria-label="Animação: um salário alto puxando a média"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Moda e média com peso</h2>
+  <p><b>Moda</b> é o valor que mais aparece: a loja de sapatos quer saber qual número vende mais, não o "número médio". Pode haver mais de uma moda, ou nenhuma.</p>
+  <p><b>Média ponderada</b> é quando cada valor tem um peso. Prova com peso 2 e trabalho com peso 1: nota 6 na prova e 9 no trabalho dá (6 × 2 + 9 × 1) ÷ (2 + 1) = 21 ÷ 3 = <b>7</b>. Divide-se pela <b>soma dos pesos</b>. É assim que muitas universidades calculam a nota do ENEM para cada curso.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Mediana exige ordenar</b> antes. A tabela do ENEM quase nunca vem em ordem.</li>
+    <li><b>Quantidade par</b>: a mediana é a média dos dois do meio.</li>
+    <li><b>Média ponderada</b>: divida pela soma dos pesos, não pela quantidade de notas.</li>
+    <li><b>"Qual nota precisa tirar"</b>: média 7 em 4 provas exige soma 28. Se já tem 6 + 7 + 8 = 21, precisa de 7 na última.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Em ordem: 18, 20, 22, 25, 40. O do meio é 22. A média seria 25, puxada pelo 40.">
+    <p>As idades de 5 amigos são 25, 18, 40, 20 e 22. Qual é a mediana?</p>
+    <button type="button" class="au-alt">25</button>
+    <button type="button" class="au-alt">22</button>
+    <button type="button" class="au-alt">40</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Média 6 em 4 provas: a soma tem de ser 24. Já tem 5 + 7 + 4 = 16. Falta 24 − 16 = 8.">
+    <p>Um aluno tirou 5, 7 e 4 em três provas. Quanto precisa tirar na quarta para ficar com média 6?</p>
+    <button type="button" class="au-alt">6</button>
+    <button type="button" class="au-alt">7</button>
+    <button type="button" class="au-alt">8</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="(800 × 3 + 600 × 1) ÷ (3 + 1) = (2 400 + 600) ÷ 4 = 3 000 ÷ 4 = 750.">
+    <p>Um curso usa peso 3 em Matemática e peso 1 em Linguagens. Um candidato tirou 800 em Matemática e 600 em Linguagens. Qual é a média ponderada?</p>
+    <button type="button" class="au-alt">750</button>
+    <button type="button" class="au-alt">700</button>
+    <button type="button" class="au-alt">650</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="medias">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

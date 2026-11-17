@@ -207,6 +207,13 @@ async function runMigrations() {
         PRIMARY KEY (publicacao_id, usuario_id)
       );
       CREATE INDEX IF NOT EXISTS idx_publicacoes_recentes ON publicacoes(created_at DESC) WHERE NOT oculto;
+
+      -- Progresso da trilha "O que cai no ENEM" (aulas feitas e notas dos testes de módulo).
+      CREATE TABLE IF NOT EXISTS trilha_progresso (
+        usuario_id INT PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
+        dados JSONB NOT NULL DEFAULT '{}',
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
     `);
     console.log('✅ Tabelas do perfil criadas');
 

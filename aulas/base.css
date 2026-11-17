@@ -367,3 +367,22 @@ i.au-um { width: 13px; height: 13px; background: radial-gradient(circle at 35% 3
 .au-cruz { width: 22%; height: 3px; background: var(--errado); transform: translate(-50%, -50%) rotate(22deg) !important; }
 .au-cruz.au-cruz2 { transform: translate(-50%, -50%) rotate(-22deg) !important; }
 .au-equipe { display: flex; gap: 4px; font-size: 26px; }
+.au-marca-cem { width: 0; height: 52px; border-left: 2px dashed var(--texto-fraco); }
+
+/* Juros */
+.au-coluna-juros { display: flex; flex-direction: column; width: 54px; }
+.au-coluna-juros i { display: flex; align-items: center; justify-content: center; font: 700 10px var(--fonte); font-style: normal; color: #fff; border-bottom: 1px solid rgba(0,0,0,.25); }
+.au-coluna-juros i.au-base { background: #7d7d84; border-radius: 0 0 6px 6px; }
+.au-coluna-juros i.au-j1 { background: #3f87c9; } .au-coluna-juros i.au-j2 { background: #c9971d; } .au-coluna-juros i.au-j3 { background: #c94b4b; }
+.au-coluna-juros i:first-child { border-radius: 6px 6px 0 0; }
+.au-coluna-juros i:only-child { border-radius: 6px; }
+
+/* Gráficos */
+.au-barra-vert { width: 16%; background: #62a8ea; border-radius: 6px 6px 0 0; transition: height .8s, opacity .45s !important; }
+.au-leg { display: flex; align-items: center; gap: 6px; font: 700 13px var(--fonte); }
+.au-leg i { display: block; width: 14px; height: 14px; border-radius: 4px; }
+
+/* Médias */
+.au-linha-media { width: 88%; height: 0; border-top: 3px dashed #62a8ea; }
+.au-linha-media.au-linha-mediana { border-top-color: #e9b949; }
+.au-bloquinho-media { width: 16%; height: 16%; border-radius: 4px; background: #e9b949; }
