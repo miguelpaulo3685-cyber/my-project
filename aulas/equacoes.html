@@ -1,0 +1,75 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 1</div>
+  <h1>Equações do 1º e do 2º grau: achar o número escondido</h1>
+  <p class="au-abre">Uma equação é uma balança em equilíbrio com um peso desconhecido, o x. Para descobrir quanto ele vale, é só ir tirando a mesma coisa dos dois pratos até o x ficar sozinho. No ENEM, a parte difícil quase nunca é a conta: é transformar o texto em equação.</p>
+</header>
+
+<section class="au-cena" aria-label="Balança: resolva 2x + 3 = 11">
+  <div class="au-loja">Balança da equação <small>faça a mesma coisa dos dois lados até o x ficar sozinho</small></div>
+  <div class="au-painel">
+    <div class="au-balanca-eq" id="au-balanca" role="img"></div>
+    <p class="au-formula" id="au-eq" style="margin:0;text-align:center"></p>
+    <div class="au-atalhos">
+      <button type="button" id="au-tira">Tirar 1 dos dois lados</button>
+      <button type="button" id="au-divide">Dividir os dois lados por 2</button>
+      <button type="button" id="au-nova">↺ Outra equação</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>1º grau: desfaça na ordem inversa</h2>
+  <p>Em 2x + 3 = 11, o x foi multiplicado por 2 e depois somado com 3. Para desfazer, faça o contrário, de trás para frente: tire 3 dos dois lados (2x = 8) e divida os dois por 2 (<b>x = 4</b>). O que você faz de um lado, faz do outro: a balança continua equilibrada.</p>
+  <div class="au-filme" data-filme="texto" aria-label="Animação: transformando um problema em equação"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>2º grau: quando o x aparece ao quadrado</h2>
+  <p>Equações como x² − 5x + 6 = 0 podem ter <b>duas</b> respostas. O caminho mais rápido é a <b>soma e produto</b>: procure dois números que <b>somam 5</b> e <b>multiplicam 6</b>. São 2 e 3, então <b>x = 2 ou x = 3</b>. Quando não sai de cabeça, use a fórmula de Bhaskara:</p>
+  <p class="au-formula">x = (−b ± √Δ) / 2a, com Δ = b² − 4ac</p>
+  <div class="au-filme" data-filme="bhaskara" aria-label="Animação: resolvendo x ao quadrado menos 5x mais 6 igual a zero"></div>
+  <p>O Δ (delta) diz quantas respostas há: positivo, duas; zero, uma; negativo, nenhuma nos números reais.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Monte a equação com calma</b>: dê nome à incógnita ("x = preço do ingresso") e traduza frase por frase.</li>
+    <li><b>Confira a resposta</b> pondo de volta no problema. Muitas alternativas são o resultado de um passo pela metade.</li>
+    <li>No 2º grau, veja se as duas respostas <b>fazem sentido</b>: comprimento, idade e quantidade de pessoas não podem ser negativos.</li>
+    <li>Ao passar para o outro lado, o sinal inverte: somar vira subtrair, multiplicar vira dividir.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Taxa + 2 por km: 5 + 2x = 25, então 2x = 20 e x = 10 km.">
+    <p>Uma corrida de táxi custa R$ 5 de bandeirada mais R$ 2 por km. Uma corrida custou R$ 25. Quantos km foram rodados?</p>
+    <button type="button" class="au-alt">12,5 km</button>
+    <button type="button" class="au-alt">10 km</button>
+    <button type="button" class="au-alt">15 km</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Dois números que somam 7 e multiplicam 12: 3 e 4.">
+    <p>Quais são as soluções de x² − 7x + 12 = 0?</p>
+    <button type="button" class="au-alt">3 e 4</button>
+    <button type="button" class="au-alt">2 e 6</button>
+    <button type="button" class="au-alt">−3 e −4</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Lado x, área x² = 49: x = 7 ou x = −7. Como lado não pode ser negativo, x = 7 m.">
+    <p>Um terreno quadrado tem 49 m² de área. A equação x² = 49 tem duas soluções, mas o lado do terreno é:</p>
+    <button type="button" class="au-alt">−7 m</button>
+    <button type="button" class="au-alt">7 m ou −7 m</button>
+    <button type="button" class="au-alt">7 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="equacoes">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

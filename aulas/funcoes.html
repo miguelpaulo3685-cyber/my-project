@@ -1,0 +1,71 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 3</div>
+  <h1>Funções e gráficos: uma coisa depende da outra</h1>
+  <p class="au-abre">A conta de luz depende do consumo; a temperatura depende da hora do dia; o lucro depende de quantas peças a fábrica vende. Função é essa relação: para cada entrada, uma saída. O ENEM cobra muito a leitura do gráfico: onde sobe, onde desce, onde corta o zero e onde duas curvas se encontram.</p>
+</header>
+
+<section class="au-cena" aria-label="Gráfico da temperatura ao longo do dia">
+  <div class="au-loja">Temperatura num dia de verão <small>arraste a hora e leia o gráfico</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 210" id="au-graf" role="img" aria-label="Temperatura por hora"></svg>
+    <div class="au-controle"><label for="au-hora">Hora</label><input id="au-hora" type="range" min="0" max="24" value="14"><output id="au-o-hora"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Entrada, saída, domínio e imagem</h2>
+  <p>Numa função, cada valor de entrada (o <b>x</b>, aqui a hora) dá <b>um único</b> valor de saída (o <b>y</b>, a temperatura). O conjunto das entradas possíveis é o <b>domínio</b> (de 0 h a 24 h); o das saídas que aparecem é a <b>imagem</b> (de 18 °C a 32 °C, por exemplo). Escreve-se y = f(x): "y é função de x".</p>
+  <div class="au-filme" data-filme="maquina" aria-label="Animação: máquina que transforma a entrada na saída"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que ler num gráfico</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Crescente</b>: andando para a direita, a curva sobe. <b>Decrescente</b>: desce.</li>
+    <li><b>Máximo e mínimo</b>: o ponto mais alto e o mais baixo.</li>
+    <li><b>Raiz (zero da função)</b>: onde a curva corta o eixo x, ou seja, onde y = 0. Ex.: o lucro zero, a partir do qual a empresa começa a ganhar.</li>
+    <li><b>Interseção</b> de duas curvas: onde elas têm o mesmo valor. Ex.: o mês em que as duas operadoras cobram igual.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Leia sempre <b>os eixos e as unidades</b> antes de qualquer coisa (aula de gráficos).</li>
+    <li>"Em que <b>intervalo</b> cresce" pede um trecho do eixo x, não um valor de y.</li>
+    <li>Plano A mais barato até certo consumo e plano B depois: a resposta está no <b>cruzamento</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O ponto em que o lucro é zero é onde o gráfico corta o eixo x: é a raiz da função lucro.">
+    <p>No gráfico do lucro de uma loja em função das peças vendidas, o ponto em que a loja "empata" (nem lucro nem prejuízo) é onde o gráfico:</p>
+    <button type="button" class="au-alt">atinge o máximo</button>
+    <button type="button" class="au-alt">corta o eixo x (lucro = 0)</button>
+    <button type="button" class="au-alt">corta o eixo y</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Os dois planos cobram igual onde os gráficos se cruzam. Antes disso o mais barato é um; depois, o outro.">
+    <p>Os gráficos dos preços de dois planos de celular se cruzam em 5 GB. Isso significa que:</p>
+    <button type="button" class="au-alt">com 5 GB os dois planos custam o mesmo</button>
+    <button type="button" class="au-alt">os planos só funcionam até 5 GB</button>
+    <button type="button" class="au-alt">os dois planos são sempre iguais</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Se f(x) = 3x + 2, então f(4) = 3 × 4 + 2 = 14.">
+    <p>Se f(x) = 3x + 2, quanto vale f(4)?</p>
+    <button type="button" class="au-alt">9</button>
+    <button type="button" class="au-alt">20</button>
+    <button type="button" class="au-alt">14</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="funcoes">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

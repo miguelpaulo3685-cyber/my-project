@@ -1,0 +1,77 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 6</div>
+  <h1>Exponencial e logaritmo: crescer multiplicando</h1>
+  <p class="au-abre">Na função afim, a cada passo se <b>soma</b> sempre o mesmo valor. Na exponencial, a cada passo se <b>multiplica</b> pelo mesmo valor: bactérias que dobram, dívida no cartão, remédio que cai pela metade no sangue. O logaritmo é a pergunta contrária: "quantas vezes eu preciso multiplicar para chegar lá?".</p>
+</header>
+
+<section class="au-cena" aria-label="Crescimento de bactérias: escolha as horas">
+  <div class="au-loja">Colônia de bactérias <small>começa com 1 e dobra a cada hora</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 210" id="au-graf" role="img" aria-label="Curva exponencial"></svg>
+    <p class="au-formula" id="au-lei" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-h">Horas</label><input id="au-h" type="range" min="0" max="10" value="3"><output id="au-o-h"></output></div>
+    <div class="au-controle"><label for="au-base">Multiplica por</label><input id="au-base" type="range" min="2" max="3" value="2"><output id="au-o-base"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A forma da exponencial</h2>
+  <p class="au-formula">f(x) = valor inicial · (fator)ˣ</p>
+  <p>Fator maior que 1: <b>cresce</b> (e cada vez mais rápido). Fator entre 0 e 1: <b>decresce</b>, chegando perto de zero sem nunca chegar. Aumento de 10% ao ano é fator <b>1,1</b>; queda de 20% é fator <b>0,8</b>.</p>
+  <div class="au-filme" data-filme="dobra" aria-label="Animação: bactérias dobrando"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Meia-vida: a exponencial que cai</h2>
+  <p>Um remédio com meia-vida de 6 horas: de 800 mg, depois de 6 h restam 400, depois de 12 h restam 200, depois de 18 h, 100. Cada meia-vida <b>divide por 2</b>. Vale para radioatividade e para o carbono-14.</p>
+  <div class="au-filme" data-filme="meiavida" aria-label="Animação: quantidade caindo pela metade"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Logaritmo: contar quantas multiplicações</h2>
+  <p class="au-formula">log₂ 32 = 5, porque 2⁵ = 32</p>
+  <p>O log responde "a base elevada a quanto dá esse número?". Com base 10: log 1000 = 3. Por isso escalas como a de <b>terremotos (Richter)</b>, o <b>pH</b> e os <b>decibéis</b> usam log: subir 1 ponto na escala Richter é um tremor <b>10 vezes</b> maior em amplitude; pH 3 é 10 vezes mais ácido que pH 4.</p>
+  <div class="au-filme" data-filme="escala" aria-label="Animação: cada degrau da escala multiplica por 10"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Somar o mesmo valor é <b>afim</b> (reta); multiplicar pelo mesmo fator é <b>exponencial</b> (curva).</li>
+    <li>Duas propriedades salvam: <b>log(a·b) = log a + log b</b> e <b>log(aⁿ) = n·log a</b>. O ENEM costuma dar o valor de log 2 ou log 3.</li>
+    <li>Escala log: diferença de 2 pontos é <b>100 vezes</b> (10 × 10), não 20.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Cada 20 min dobra; em 2 horas são 6 períodos: 100 · 2⁶ = 100 · 64 = 6400.">
+    <p>Uma cultura tem 100 bactérias e dobra a cada 20 minutos. Quantas haverá depois de 2 horas?</p>
+    <button type="button" class="au-alt">1 200</button>
+    <button type="button" class="au-alt">6 400</button>
+    <button type="button" class="au-alt">600</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Da 5 para a 7 são 2 pontos: 10 × 10 = 100 vezes.">
+    <p>Na escala Richter, um tremor de magnitude 7 tem amplitude quantas vezes maior que um de magnitude 5?</p>
+    <button type="button" class="au-alt">2 vezes</button>
+    <button type="button" class="au-alt">20 vezes</button>
+    <button type="button" class="au-alt">100 vezes</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Queda de 10% ao ano é multiplicar por 0,9 a cada ano: V(t) = 50 000 · 0,9ᵗ.">
+    <p>Um carro de R$ 50 000 perde 10% do valor por ano. Qual função dá o valor depois de t anos?</p>
+    <button type="button" class="au-alt">V(t) = 50 000 · 0,9ᵗ</button>
+    <button type="button" class="au-alt">V(t) = 50 000 − 0,1t</button>
+    <button type="button" class="au-alt">V(t) = 50 000 · 0,1ᵗ</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="exponencial-log">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

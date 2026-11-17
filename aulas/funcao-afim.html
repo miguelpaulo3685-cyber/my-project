@@ -1,0 +1,73 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 4</div>
+  <h1>Função afim: um valor fixo mais um valor por unidade</h1>
+  <p class="au-abre">Corrida de aplicativo, conta de água, plano de celular, salário com comissão: quase sempre é "um valor fixo + um valor para cada unidade". Isso é a função afim, f(x) = ax + b, e o gráfico dela é sempre uma reta. Entender o que são o a e o b resolve metade das questões de função do ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Reta: mude a taxa fixa e o preço por km">
+  <div class="au-loja">Corrida de aplicativo <small>mude a taxa fixa e o preço por km</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 210" id="au-graf" role="img" aria-label="Preço da corrida por km"></svg>
+    <p class="au-formula" id="au-lei" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-b">Taxa fixa (b)</label><input id="au-b" type="range" min="0" max="10" value="5"><output id="au-o-b"></output></div>
+    <div class="au-controle"><label for="au-a">Por km (a)</label><input id="au-a" type="range" min="0" max="4" step=".5" value="2"><output id="au-o-a"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O b: onde a reta começa</h2>
+  <p>O <b>b</b> (coeficiente linear) é o valor quando x = 0: a taxa fixa, a assinatura, o "só de entrar no táxi". No gráfico, é onde a reta <b>corta o eixo y</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>O a: o quanto sobe a cada passo</h2>
+  <p>O <b>a</b> (coeficiente angular, ou taxa de variação) é quanto o y muda quando o x aumenta 1. Para achá-lo com dois pontos do gráfico: <b>a = (variação de y) ÷ (variação de x)</b>. a positivo, a reta sobe; a negativo, desce; a = 0, fica reta deitada (constante).</p>
+  <div class="au-filme" data-filme="degrau" aria-label="Animação: a reta subindo 2 a cada 1 de x"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Achar a lei a partir de dois pontos</h2>
+  <p>O ENEM costuma dar uma tabela ou dois pontos. Ex.: 2 km custam R$ 9 e 5 km custam R$ 15. a = (15 − 9) ÷ (5 − 2) = 6 ÷ 3 = <b>2</b> por km. Volte a um ponto: 9 = 2 · 2 + b, então <b>b = 5</b>. A lei é <b>f(x) = 2x + 5</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Com taxa fixa (b ≠ 0), <b>não é proporcional</b>: dobrar os km não dobra o preço.</li>
+    <li>Comparar planos: igualar as duas leis (2x + 5 = 3x + 1) dá o ponto em que custam o mesmo.</li>
+    <li>"Taxa de variação", "aumento por unidade", "inclinação": todos são o <b>a</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="a = (32 − 20) ÷ (6 − 2) = 3. 20 = 3·2 + b, então b = 14. f(x) = 3x + 14.">
+    <p>Uma conta de água custa R$ 20 com 2 m³ e R$ 32 com 6 m³, num modelo de função afim. Qual é a lei?</p>
+    <button type="button" class="au-alt">f(x) = 10x</button>
+    <button type="button" class="au-alt">f(x) = 2x + 16</button>
+    <button type="button" class="au-alt">f(x) = 3x + 14</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Iguale: 40 + 0,5x = 20 + 1,5x → 20 = x. Com 20 minutos os dois custam o mesmo (R$ 50).">
+    <p>Plano A: R$ 40 + R$ 0,50 por minuto. Plano B: R$ 20 + R$ 1,50 por minuto. Com quantos minutos os dois custam o mesmo?</p>
+    <button type="button" class="au-alt">20 minutos</button>
+    <button type="button" class="au-alt">10 minutos</button>
+    <button type="button" class="au-alt">40 minutos</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O b é o valor quando x = 0, ou seja, onde a reta corta o eixo y: é a parte fixa.">
+    <p>Em f(x) = ax + b, o b representa no gráfico:</p>
+    <button type="button" class="au-alt">a inclinação da reta</button>
+    <button type="button" class="au-alt">o ponto onde a reta corta o eixo y</button>
+    <button type="button" class="au-alt">o ponto onde a reta corta o eixo x</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="funcao-afim">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

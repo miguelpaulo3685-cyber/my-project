@@ -11,7 +11,8 @@ window.TRILHAS_MM = {
     'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade',
     'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares',
     'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade',
-    'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico'],
+    'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico',
+    'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -22,7 +23,7 @@ window.TRILHAS_MM = {
       { id: 'mat2', nome: 'Proporcionalidade e matemática financeira', sobre: 'O carro-chefe: cerca de 25% a 30% da prova. Muita leitura e interpretação.', teste: true, aulas: [
         ['razao', 'Razão e escala', '🗺️'], ['proporcao', 'Proporção e divisão proporcional', '⚖️'], ['regra-de-tres', 'Regra de três simples e composta', '🔁'],
         ['porcentagem', 'Porcentagem, lucro e variação', '🧮'], ['juros', 'Juros simples e compostos', '💳']] },
-      { id: 'mat3', nome: 'Álgebra e funções', sobre: 'Problemas do dia a dia virando equações e gráficos.', aulas: [
+      { id: 'mat3', nome: 'Álgebra e funções', sobre: 'Problemas do dia a dia virando equações e gráficos.', teste: true, aulas: [
         ['equacoes', 'Equações do 1º e 2º grau', '🟰'], ['sistemas', 'Sistemas de equações', '🔀'], ['funcoes', 'Funções e leitura de gráficos', '📉'],
         ['funcao-afim', 'Função afim (1º grau)', '📐'], ['funcao-quadratica', 'Função quadrática (2º grau)', '⛰️'], ['exponencial-log', 'Exponencial e logaritmo', '🦠']] },
       { id: 'mat4', nome: 'Estatística, contagem e probabilidade', sobre: 'Assuntos que sempre caem e pedem atenção aos detalhes do enunciado.', teste: true, aulas: [

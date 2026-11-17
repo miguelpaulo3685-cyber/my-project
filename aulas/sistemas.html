@@ -1,0 +1,72 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 2</div>
+  <h1>Sistemas de equações: duas pistas, dois números</h1>
+  <p class="au-abre">Quando há duas coisas desconhecidas (o preço do lanche e o do suco, o número de carros e de motos), uma pista só não basta. Com duas pistas, dá para descobrir as duas. Aqui você vai ver o truque de "comparar as compras" e o que isso tem a ver com duas retas se cruzando.</p>
+</header>
+
+<section class="au-cena" aria-label="Duas retas: onde se cruzam">
+  <div class="au-loja">Lanchonete: lanche (x) e suco (y) <small>mude os pedidos e veja onde as retas se cruzam</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 220" id="au-graf" role="img" aria-label="Gráfico das duas equações"></svg>
+    <div class="au-controle"><label for="au-p1">Pedido 1: 1 lanche + 1 suco</label><input id="au-p1" type="range" min="10" max="24" value="15"><output id="au-o-p1"></output></div>
+    <div class="au-controle"><label for="au-p2">Pedido 2: 2 lanches + 1 suco</label><input id="au-p2" type="range" min="20" max="40" value="25"><output id="au-o-p2"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O truque de comparar: subtrair as pistas</h2>
+  <p>Pedido 1: 1 lanche + 1 suco = R$ 15. Pedido 2: 2 lanches + 1 suco = R$ 25. A diferença entre os pedidos é <b>exatamente 1 lanche</b>, e a diferença de preço é R$ 10. Então o lanche custa <b>R$ 10</b> e o suco, R$ 5. Isso é o <b>método da adição</b> (ou da subtração): somar ou subtrair as equações para uma letra sumir.</p>
+  <div class="au-filme" data-filme="comparar" aria-label="Animação: comparando os dois pedidos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Substituição: isolar e trocar</h2>
+  <p>Outro caminho: de x + y = 15, isole y = 15 − x. Troque na outra equação: 2x + (15 − x) = 25, então x = 10, e y = 5. Funciona sempre; escolha o caminho que der menos conta.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Geometricamente: o ponto em comum</h2>
+  <p>Cada equação com x e y é uma <b>reta</b> no gráfico: todos os pares que obedecem a ela. A solução do sistema é o ponto que obedece às <b>duas</b>: onde as retas se cruzam. Retas paralelas nunca se cruzam: o sistema não tem solução.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Carros e motos</b>: 20 veículos e 60 rodas. x + y = 20 e 4x + 2y = 60. Carros = 10, motos = 10.</li>
+    <li>Monte uma equação para <b>cada informação</b> do texto. Duas incógnitas pedem duas equações.</li>
+    <li>Confira o resultado nas <b>duas</b> equações, não só numa.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="x + y = 30 e 4x + 2y = 100. Da primeira, y = 30 − x. Na segunda: 4x + 60 − 2x = 100, x = 20 carros e y = 10 motos.">
+    <p>Num estacionamento há 30 veículos entre carros e motos, com 100 rodas ao todo. Quantos são os carros?</p>
+    <button type="button" class="au-alt">20</button>
+    <button type="button" class="au-alt">10</button>
+    <button type="button" class="au-alt">15</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A diferença entre os pedidos é 1 caneta e R$ 3: a caneta custa R$ 3. Então 2 cadernos = 23 − 3 = 20, e cada caderno custa R$ 10.">
+    <p>2 cadernos e 1 caneta custam R$ 23. 2 cadernos e 2 canetas custam R$ 26. Quanto custa um caderno?</p>
+    <button type="button" class="au-alt">R$ 3</button>
+    <button type="button" class="au-alt">R$ 11,50</button>
+    <button type="button" class="au-alt">R$ 10</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="A solução de um sistema de duas equações é o ponto que está nas duas retas ao mesmo tempo: o cruzamento.">
+    <p>No gráfico, a solução de um sistema de duas equações do 1º grau é:</p>
+    <button type="button" class="au-alt">o ponto onde uma reta corta o eixo x</button>
+    <button type="button" class="au-alt">o ponto onde as duas retas se cruzam</button>
+    <button type="button" class="au-alt">a inclinação das retas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="sistemas">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

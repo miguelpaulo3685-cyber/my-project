@@ -1,0 +1,76 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 3 · Aula 5</div>
+  <h1>Função quadrática: a parábola e o seu vértice</h1>
+  <p class="au-abre">A bola chutada sobe e desce, o lucro cresce até um ponto e depois cai, a área de um cercado é máxima numa medida certa. Tudo isso tem a forma de uma parábola, o gráfico de f(x) = ax² + bx + c. O ENEM quase sempre pergunta pelo ponto mais alto (ou mais baixo): o vértice.</p>
+</header>
+
+<section class="au-cena" aria-label="Parábola: mude a, b e c">
+  <div class="au-loja">Monte a parábola <small>mexa em a, b e c e veja o vértice e as raízes</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 220" id="au-graf" role="img" aria-label="Parábola"></svg>
+    <p class="au-formula" id="au-lei" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-a">a</label><input id="au-a" type="range" min="-2" max="2" step=".5" value="-1"><output id="au-o-a"></output></div>
+    <div class="au-controle"><label for="au-b">b</label><input id="au-b" type="range" min="-6" max="6" value="4"><output id="au-o-b"></output></div>
+    <div class="au-controle"><label for="au-c">c</label><input id="au-c" type="range" min="-6" max="6" value="0"><output id="au-o-c"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O a decide: sorriso ou tristeza</h2>
+  <p>Se <b>a &gt; 0</b>, a parábola abre para cima (∪) e o vértice é um ponto de <b>mínimo</b>. Se <b>a &lt; 0</b>, abre para baixo (∩) e o vértice é um <b>máximo</b>. O <b>c</b> é onde a parábola corta o eixo y.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>O vértice: o ponto mais alto ou mais baixo</h2>
+  <p class="au-formula">x do vértice = −b ÷ 2a</p>
+  <p>Depois, para achar o valor máximo (ou mínimo), ponha esse x na função. A parábola é <b>simétrica</b>: o vértice fica bem no meio das duas raízes.</p>
+  <div class="au-filme" data-filme="bola" aria-label="Animação: bola chutada fazendo uma parábola"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Problema clássico: a maior área com a mesma cerca</h2>
+  <p>Com 20 m de cerca, um cercado retangular de lados x e 10 − x tem área A(x) = x(10 − x) = −x² + 10x. O vértice está em x = −10 ÷ (2 · −1) = <b>5</b>: o quadrado de 5 × 5, com <b>25 m²</b>, é a maior área possível.</p>
+  <div class="au-filme" data-filme="cercado" aria-label="Animação: retângulos com o mesmo perímetro"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>"Altura máxima", "lucro máximo", "custo mínimo": é o <b>vértice</b>.</li>
+    <li>Pergunta "em que instante" pede o <b>x</b> do vértice; "qual a altura" pede o <b>y</b>.</li>
+    <li><b>Raízes</b> são onde y = 0: a bola no chão, o lucro zero.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="t do vértice = −20 ÷ (2 · −5) = 2 s. h(2) = −5·4 + 20·2 = −20 + 40 = 20 m.">
+    <p>A altura de uma bola é h(t) = −5t² + 20t (metros, t em segundos). Qual a altura máxima?</p>
+    <button type="button" class="au-alt">2 m</button>
+    <button type="button" class="au-alt">20 m</button>
+    <button type="button" class="au-alt">40 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Com a > 0 a parábola abre para cima e o vértice é o ponto mais baixo: um mínimo.">
+    <p>O gráfico de f(x) = 2x² − 8x + 3 tem:</p>
+    <button type="button" class="au-alt">concavidade para cima e um ponto de mínimo</button>
+    <button type="button" class="au-alt">concavidade para baixo e um ponto de máximo</button>
+    <button type="button" class="au-alt">forma de reta</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Lucro L(x) = −x² + 40x: x do vértice = −40 ÷ (−2) = 20 unidades.">
+    <p>O lucro de uma loja é L(x) = −x² + 40x, com x unidades vendidas. Quantas unidades dão o lucro máximo?</p>
+    <button type="button" class="au-alt">40</button>
+    <button type="button" class="au-alt">10</button>
+    <button type="button" class="au-alt">20</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="funcao-quadratica">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>
