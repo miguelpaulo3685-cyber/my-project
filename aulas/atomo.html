@@ -1,0 +1,92 @@
+<header>
+  <div class="au-trilha">Química · Módulo 1 · Aula 1</div>
+  <h1>Átomo, íons e isótopos: do que tudo é feito</h1>
+  <p class="au-abre">Tudo o que existe é feito de átomos, e todo átomo tem as mesmas três peças: prótons, nêutrons e elétrons. Mudando a quantidade de cada uma, você muda o elemento, a carga ou a massa. Aqui você vai montar átomos com as próprias mãos e entender por que o ENEM fala de "íon de sódio" e "carbono-14".</p>
+</header>
+
+<section class="au-cena" aria-label="Monte um átomo">
+  <div class="au-loja">Monte o átomo <small>ponha e tire prótons, nêutrons e elétrons</small></div>
+  <div class="au-painel">
+    <div class="au-atomo-caixa">
+      <svg viewBox="0 0 220 220" id="au-atomo" role="img" aria-label="Átomo"></svg>
+      <div class="au-ficha-atomo" id="au-ficha" aria-live="polite"></div>
+    </div>
+    <div class="au-contadores">
+      <div><b style="color:#e05252">Prótons</b><button type="button" data-p="-1">−</button><span id="au-np"></span><button type="button" data-p="1">+</button></div>
+      <div><b style="color:#9aa6b2">Nêutrons</b><button type="button" data-n="-1">−</button><span id="au-nn"></span><button type="button" data-n="1">+</button></div>
+      <div><b style="color:#62a8ea">Elétrons</b><button type="button" data-e="-1">−</button><span id="au-ne"></span><button type="button" data-e="1">+</button></div>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>As três peças</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Prótons</b> (carga +), no núcleo. A quantidade de prótons é o <b>número atômico (Z)</b> e define o elemento: todo átomo com 6 prótons é carbono.</li>
+    <li><b>Nêutrons</b> (sem carga), também no núcleo. Prótons + nêutrons = <b>número de massa (A)</b>.</li>
+    <li><b>Elétrons</b> (carga −), girando em volta, em camadas. Quase não pesam.</li>
+  </ul>
+  <p>Num átomo neutro, prótons = elétrons, e as cargas se anulam.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Como chegamos até aqui: os modelos atômicos</h2>
+  <p>Ninguém viu um átomo a olho nu. Cada modelo foi uma explicação melhor para os experimentos da época:</p>
+  <div class="au-filme" data-filme="modelos" aria-label="Animação: modelos de Dalton, Thomson, Rutherford e Bohr"></div>
+  <p>O experimento de Rutherford é o mais cobrado: ele bombardeou uma folha de ouro com partículas alfa, e quase todas atravessaram direto. Conclusão: o átomo é <b>quase todo vazio</b>, com um núcleo minúsculo, denso e positivo.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Íons: átomos que ganharam ou perderam elétrons</h2>
+  <p>Mexer nos prótons muda o elemento; mexer nos <b>elétrons</b> só muda a carga. Perdeu elétron: fica com prótons sobrando e vira <b>cátion</b> (+). Ganhou elétron: vira <b>ânion</b> (−). O sódio do sal de cozinha é Na⁺; o cloro é Cl⁻.</p>
+  <div class="au-filme" data-filme="ions" aria-label="Animação: sódio perdendo elétron e cloro ganhando"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Isótopos: mesmo elemento, massas diferentes</h2>
+  <p>O carbono-12 e o carbono-14 têm os dois <b>6 prótons</b> (por isso são carbono), mas o C-14 tem 8 nêutrons em vez de 6. São <b>isótopos</b>: mesmo Z, massas diferentes. O C-14 é radioativo e é usado para descobrir a idade de fósseis.</p>
+  <div class="au-filme" data-filme="isotopos" aria-label="Animação: núcleos do carbono-12 e do carbono-14"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Quem define o elemento é o número de prótons</b>, nunca o de nêutrons ou de elétrons.</li>
+    <li><b>Cátion tem MENOS elétrons</b> que prótons (perdeu). Parece contraintuitivo: perdeu carga negativa, ficou positivo.</li>
+    <li>Isótopos: mesmo número de <b>prótons</b>. (Isóbaros: mesma massa. Isótonos: mesmo número de nêutrons.)</li>
+    <li>Nêutrons = A − Z. No ²³Na (Z = 11): 23 − 11 = 12 nêutrons.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O Mg tem 12 prótons. O íon Mg²⁺ perdeu 2 elétrons: 12 − 2 = 10 elétrons.">
+    <p>O magnésio tem número atômico 12. Quantos elétrons tem o íon Mg²⁺?</p>
+    <button type="button" class="au-alt">14</button>
+    <button type="button" class="au-alt">10</button>
+    <button type="button" class="au-alt">12</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Isótopos têm o mesmo número de prótons (mesmo elemento) e diferente número de nêutrons, por isso massas diferentes.">
+    <p>O que dois isótopos do mesmo elemento têm em comum?</p>
+    <button type="button" class="au-alt">O mesmo número de prótons</button>
+    <button type="button" class="au-alt">O mesmo número de nêutrons</button>
+    <button type="button" class="au-alt">A mesma massa</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Quase todas as partículas alfa atravessaram a folha de ouro sem desviar: o átomo é formado principalmente por espaço vazio, com um núcleo pequeno e positivo.">
+    <p>O experimento de Rutherford, com a folha de ouro, mostrou que:</p>
+    <button type="button" class="au-alt">o átomo é uma esfera maciça e indivisível</button>
+    <button type="button" class="au-alt">os elétrons ficam espalhados numa massa positiva</button>
+    <button type="button" class="au-alt">o átomo é quase todo vazio, com um núcleo pequeno e positivo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="atomo">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

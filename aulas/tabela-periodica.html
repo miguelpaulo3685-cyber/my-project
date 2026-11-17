@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Química · Módulo 1 · Aula 2</div>
+  <h1>Tabela periódica: um mapa que prevê o comportamento</h1>
+  <p class="au-abre">A tabela não é uma lista para decorar: é um mapa. A posição de um elemento diz quantas camadas de elétrons ele tem e quantos elétrons tem na última, e isso prevê o tamanho do átomo e com que força ele puxa elétrons. Aqui você vai ver as setas que o ENEM sempre cobra.</p>
+</header>
+
+<section class="au-cena" aria-label="Tabela periódica compacta com propriedades">
+  <div class="au-loja">Tabela dos 20 primeiros <small>escolha a propriedade e toque num elemento</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Propriedade">
+      <button type="button" data-prop="familia">🏷️ Famílias</button>
+      <button type="button" data-prop="raio">⭕ Raio atômico</button>
+      <button type="button" data-prop="en">🧲 Eletronegatividade</button>
+    </div>
+    <div class="au-tabela-p" id="au-tabela" role="group" aria-label="Elementos"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Linhas e colunas</h2>
+  <p>As <b>linhas (períodos)</b> dizem quantas <b>camadas</b> de elétrons o átomo tem: o sódio está no 3º período, tem 3 camadas. As <b>colunas (famílias ou grupos)</b> juntam elementos com o mesmo número de elétrons na <b>última camada</b>, e por isso com comportamento parecido.</p>
+  <div class="au-filme" data-filme="mapa" aria-label="Animação: períodos e famílias da tabela"></div>
+  <ul class="au-pegadinhas">
+    <li><b>Família 1 (metais alcalinos)</b>: Li, Na, K. 1 elétron na última camada, perdem fácil, reagem com água.</li>
+    <li><b>Família 17 (halogênios)</b>: F, Cl. 7 elétrons na última camada, pegam um elétron fácil.</li>
+    <li><b>Família 18 (gases nobres)</b>: He, Ne, Ar. Última camada completa: quase não reagem.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Raio atômico: cresce para baixo e para a esquerda</h2>
+  <p><b>Descendo</b> na família, cada período acrescenta uma camada: o átomo fica maior. <b>Andando para a direita</b> no período, a camada é a mesma, mas há mais prótons puxando os elétrons para perto: o átomo fica <b>menor</b>.</p>
+  <div class="au-filme" data-filme="raio" aria-label="Animação: tamanho dos átomos na tabela"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Eletronegatividade: cresce para cima e para a direita</h2>
+  <p>Eletronegatividade é a <b>força para puxar elétrons</b> numa ligação. Átomo pequeno e com muitos prótons puxa forte: o campeão é o <b>flúor</b>, no canto de cima à direita (os gases nobres ficam de fora). A energia de ionização, a energia para arrancar um elétron, segue o mesmo sentido.</p>
+  <div class="au-filme" data-filme="en" aria-label="Animação: setas da eletronegatividade"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Raio: <b>↙</b> (para baixo e para a esquerda). Eletronegatividade e energia de ionização: <b>↗</b> (para cima e para a direita). São opostos.</li>
+    <li><b>Metais</b> ficam à esquerda e no meio: perdem elétrons (viram cátions). <b>Ametais</b> à direita: ganham (viram ânions).</li>
+    <li>Elementos da <b>mesma família</b> se comportam de forma parecida: o ENEM usa isso para explicar por que o estrôncio radioativo vai para os ossos (é da família do cálcio).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="O potássio está mais para baixo (4º período) e à esquerda (família 1): é o maior dos três.">
+    <p>Qual destes átomos tem o maior raio?</p>
+    <button type="button" class="au-alt">Flúor (F)</button>
+    <button type="button" class="au-alt">Carbono (C)</button>
+    <button type="button" class="au-alt">Potássio (K)</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Elementos da mesma família têm o mesmo número de elétrons na última camada e por isso propriedades químicas parecidas. O estrôncio é da família do cálcio.">
+    <p>O estrôncio radioativo se acumula nos ossos porque:</p>
+    <button type="button" class="au-alt">é da mesma família do cálcio e se comporta de forma parecida</button>
+    <button type="button" class="au-alt">tem o mesmo número de prótons que o cálcio</button>
+    <button type="button" class="au-alt">é um gás nobre</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Eletronegatividade cresce para cima e para a direita: entre esses, o oxigênio (2º período, família 16) é o mais eletronegativo.">
+    <p>Qual destes elementos é o mais eletronegativo?</p>
+    <button type="button" class="au-alt">Sódio (Na)</button>
+    <button type="button" class="au-alt">Oxigênio (O)</button>
+    <button type="button" class="au-alt">Magnésio (Mg)</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="tabela-periodica">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

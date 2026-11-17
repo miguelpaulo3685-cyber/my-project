@@ -8,7 +8,8 @@ window.TRILHAS_MM = {
   prontas: ['soma', 'subtracao', 'multiplicacao', 'divisao', 'fracoes', 'contas-fracoes', 'decimais', 'potencia',
     'razao', 'proporcao', 'regra-de-tres', 'porcentagem', 'juros', 'graficos', 'medias', 'fotossintese',
     'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais',
-    'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade'],
+    'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade',
+    'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -56,7 +57,7 @@ window.TRILHAS_MM = {
         ['botanica', 'Botânica', '🌳'], ['zoologia', 'Zoologia', '🐸'], ['parasitologia', 'Verminoses e parasitas', '🪱']] }
     ] },
     quimica: { nome: 'Química', icone: '⚗️', modulos: [
-      { id: 'qui1', nome: 'Química geral e estrutura da matéria', sobre: 'A base para entender propriedades e interações das substâncias.', aulas: [
+      { id: 'qui1', nome: 'Química geral e estrutura da matéria', sobre: 'A base para entender propriedades e interações das substâncias.', teste: true, aulas: [
         ['atomo', 'Átomo, íons e isótopos', '⚛️'], ['tabela-periodica', 'Tabela periódica', '🗂️'],
         ['ligacoes', 'Ligações químicas', '🔗'], ['forcas-intermoleculares', 'Polaridade e forças intermoleculares', '💧']] },
       { id: 'qui2', nome: 'Estequiometria e soluções', sobre: 'Os cálculos que aparecem em toda a Química do ENEM.', aulas: [

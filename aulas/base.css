@@ -489,3 +489,90 @@ i.au-bolha { position: absolute; bottom: 10px; width: 6px; height: 6px; border-r
 .au-face { font-size: 40px; line-height: 1; transition: color .3s; }
 .au-face.au-ok { color: var(--certo); }
 .au-chip.au-ok { border-color: var(--certo); }
+
+/* Química: átomo */
+.au-atomo-caixa { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.au-atomo-caixa svg { width: min(220px, 56vw); }
+.au-ficha-atomo { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 120px; text-align: center; font-size: 13px; color: var(--texto-fraco); }
+.au-ficha-atomo strong { color: var(--texto); font-size: 15px; }
+.au-simbolo { position: relative; display: inline-flex; align-items: flex-start; gap: 1px; padding: 6px 14px; border: 2px solid var(--borda); border-radius: 10px; }
+.au-simbolo small { font: 700 14px var(--fonte); margin-top: 2px; }
+.au-simbolo b { font: 800 36px/1 var(--fonte); color: var(--texto); }
+.au-simbolo i { font: 800 20px var(--fonte); font-style: normal; color: #e9b949; }
+.au-contadores { display: grid; gap: 6px; }
+.au-contadores div { display: grid; grid-template-columns: 1fr 44px 40px 44px; align-items: center; gap: 6px; }
+.au-contadores button { height: 40px; border-radius: 10px; border: 1px solid var(--borda); background: var(--superficie); color: var(--texto); font: 800 20px var(--fonte); cursor: pointer; }
+.au-contadores span { text-align: center; font: 800 18px var(--fonte); font-variant-numeric: tabular-nums; }
+.au-modelo { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 80px; white-space: normal; text-align: center; }
+.au-modelo b { font-size: 11px; } .au-modelo small { font-size: 10px; color: var(--texto-fraco); line-height: 1.2; }
+.au-modelo > i { position: relative; display: block; width: 52px; height: 52px; border-radius: 50%; }
+.au-m-dalton { background: radial-gradient(circle at 35% 30%, #d8d8d8, #6d6d6d); }
+.au-m-thomson { background: #e9a0a0; }
+.au-m-thomson b { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: #3f87c9; }
+.au-m-thomson b:nth-child(1) { left: 12px; top: 14px; } .au-m-thomson b:nth-child(2) { left: 30px; top: 10px; } .au-m-thomson b:nth-child(3) { left: 18px; top: 32px; } .au-m-thomson b:nth-child(4) { left: 36px; top: 28px; }
+.au-m-ruth, .au-m-bohr { border: 1px dashed var(--texto-fraco); }
+.au-m-ruth b, .au-m-bohr b { position: absolute; left: 22px; top: 22px; width: 8px; height: 8px; border-radius: 50%; background: #e05252; }
+.au-m-ruth em, .au-m-bohr em { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #3f87c9; }
+.au-m-ruth em:nth-of-type(1) { left: 4px; top: 30px; } .au-m-ruth em:nth-of-type(2) { left: 40px; top: 8px; }
+.au-m-bohr::after { content: ""; position: absolute; inset: 12px; border-radius: 50%; border: 1px solid var(--texto-fraco); }
+.au-m-bohr em { left: 23px; top: 9px; }
+.au-esfera { display: inline-flex; width: 64px; height: 64px; border-radius: 50%; align-items: center; justify-content: center; font: 800 18px var(--fonte); color: #1a1a1a; }
+.au-palco i.au-eletron { width: 12px; height: 12px; border-radius: 50%; background: #3f87c9; box-shadow: 0 0 0 3px rgba(98,168,234,.35); }
+.au-nucleo { display: flex; flex-wrap: wrap; width: 64px; gap: 2px; justify-content: center; }
+.au-nucleo i { width: 14px; height: 14px; border-radius: 50%; }
+.au-nucleo .au-pr { background: #e05252; } .au-nucleo .au-ne { background: #9aa6b2; }
+/* Tabela periódica */
+.au-tabela-p { display: grid; grid-template-columns: 18px repeat(8, minmax(0, 1fr)); gap: 3px; }
+.au-tabela-p .au-cab-g { display: flex; align-items: center; justify-content: center; font: 700 10px var(--fonte); font-style: normal; color: var(--texto-fraco); }
+.au-tabela-p button { position: relative; aspect-ratio: 1; min-height: 36px; border-radius: 6px; border: 1px solid var(--borda); background: var(--superficie); color: #111; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.au-tabela-p button b { position: relative; font: 800 13px var(--fonte); color: var(--tx, var(--texto)); }
+.au-tabela-p button em { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #62a8ea; }
+.au-tabela-p button.au-sel { outline: 3px solid var(--texto); outline-offset: 1px; }
+.au-grade-tab { display: grid; grid-template-columns: repeat(8, 26px); gap: 3px; }
+.au-grade-tab i { display: block; height: 26px; border-radius: 4px; background: var(--superficie); border: 1px solid var(--borda); transition: background .5s, opacity .5s; }
+.au-bolha-el { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #62a8ea; color: #fff; font: 800 12px var(--fonte); }
+.au-seta-grande { font: 900 70px var(--fonte); color: #e9b949; text-shadow: 0 2px 8px rgba(0,0,0,.4); }
+/* Ligações */
+.au-ligacao { min-height: 120px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.au-esfera-p { width: 52px; height: 52px; font-size: 15px; }
+.au-esfera sup { font-size: 12px; }
+.au-seta-lig { font: 800 14px var(--fonte); color: #62a8ea; }
+.au-cov { display: flex; align-items: center; }
+.au-cov .au-esfera + .au-par-e { margin: 0 -10px; z-index: 1; }
+.au-par-e { display: inline-flex; gap: 3px; padding: 4px 6px; border-radius: 999px; background: rgba(98,168,234,.3); }
+.au-par-e i { width: 9px; height: 9px; border-radius: 50%; background: #3f87c9; }
+.au-cov.au-polar .au-par-e { transform: translateX(10px); background: rgba(127,209,127,.35); }
+.au-mar-e { position: relative; display: grid; grid-template-columns: repeat(4, 52px); gap: 8px; padding: 6px; border-radius: 12px; background: color-mix(in srgb, #62a8ea 15%, transparent); }
+.au-mar-e i { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: #3f87c9; animation: au-vaga 2.4s infinite alternate ease-in-out; }
+@keyframes au-vaga { to { transform: translate(18px, -10px); } }
+@media (prefers-reduced-motion: reduce) { .au-mar-e i { animation: none; } }
+.au-ficha-lig { display: flex; align-items: baseline; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.au-ficha-lig b { font: 800 24px var(--fonte); } .au-ficha-lig span { color: var(--texto-fraco); font-size: 13px; }
+.au-ficha-lig em { font-style: normal; font-weight: 800; font-size: 13px; padding: 3px 10px; border-radius: 999px; color: #fff; }
+.au-tipo-iônica { background: #c96b4b; } .au-tipo-covalente { background: #2f9e6a; } .au-tipo-metálica { background: #8a6a3a; }
+.au-cristal { display: grid; grid-template-columns: repeat(4, 28px); gap: 4px; }
+.au-cristal i { display: block; width: 28px; height: 28px; border-radius: 50%; }
+.au-cristal .au-na { background: #c9a0e8; transform: scale(.7); } .au-cristal .au-cl { background: #7fd17f; }
+/* Forças intermoleculares */
+.au-frascos { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.au-frasco { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; }
+.au-vidro { position: relative; width: 40px; height: 70px; border: 2px solid var(--texto-fraco); border-top: none; border-radius: 0 0 12px 12px; overflow: hidden; }
+.au-vidro i { position: absolute; left: 0; right: 0; bottom: 0; height: 70%; transition: height .4s; }
+.au-gas .au-vidro i { height: 0; }
+.au-vidro span { position: absolute; top: 4px; left: 0; right: 0; font-size: 16px; }
+.au-frasco b { font-size: 13px; } .au-frasco small { font-size: 10px; color: var(--texto-fraco); line-height: 1.2; } .au-frasco em { font-size: 10px; font-style: normal; color: var(--texto-fraco); }
+.au-gas em { color: #e9b949; font-weight: 700; }
+.au-agua-mol { position: relative; display: inline-block; width: 64px; height: 50px; }
+.au-agua-mol b { position: absolute; left: 14px; top: 0; width: 36px; height: 36px; border-radius: 50%; background: #e05252; color: #fff; font: 800 13px/36px var(--fonte); text-align: center; }
+.au-agua-mol i { position: absolute; top: 26px; width: 24px; height: 24px; border-radius: 50%; background: #dfe6ee; color: #111; font: 800 11px/24px var(--fonte); font-style: normal; text-align: center; }
+.au-agua-mol i:nth-of-type(1) { left: 0; } .au-agua-mol i:nth-of-type(2) { right: 0; }
+.au-agua-mol sup { font-size: 9px; color: #e9b949; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); }
+.au-co2 { display: inline-flex; align-items: center; }
+.au-co2 b, .au-co2 i { display: inline-block; border-radius: 50%; font: 800 13px var(--fonte); font-style: normal; text-align: center; }
+.au-co2 b { width: 32px; height: 32px; line-height: 32px; background: #e05252; color: #fff; }
+.au-co2 i { width: 28px; height: 28px; line-height: 28px; background: #555; color: #fff; margin: 0 -4px; z-index: 1; }
+.au-ponte-h { width: 13%; height: 0; border-top: 3px dashed #e9b949; }
+.au-gordura { display: inline-flex; align-items: center; justify-content: center; width: 70px; height: 70px; border-radius: 50%; background: #d8b45a; color: #4a3a12; font: 700 11px var(--fonte); }
+.au-sabao { display: inline-flex; align-items: center; }
+.au-sabao b { width: 12px; height: 12px; border-radius: 50%; background: #3f87c9; }
+.au-sabao i { width: 18px; height: 4px; background: #e9b949; }
