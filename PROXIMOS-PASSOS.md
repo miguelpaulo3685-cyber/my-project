@@ -190,6 +190,26 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   mini-desafio, 3 questões reais. Recompensa só visual; comunidade dentro da trilha. **Pedido: tela do mapa
   numa prévia.**
 
+### Pedidos do Miguel de 17/11 (no ramo `claude/gracious-babbage-tp7kds`, esperando o "sim")
+- **Metas no topo da Comunidade** (como stories, com outro visual): cartões de papel com a bolinha da pessoa no canto,
+  ✓ quando cumprida, contorno quando não vista (`mm_metas_vistas` no aparelho). Tocar abre em tela cheia (passa sozinho
+  em 6 s, toque na esquerda volta, segurar pausa, 👏🔥💡 para apoiar). Último cartão: "Chamar amigos" (WhatsApp).
+  Sem conta: cartões de exemplo com "Criar conta". Saiu o título "Hoje na comunidade".
+- **"Da comunidade"** no lugar de "O que está rolando": as publicações do perfil (foto ou texto), com curtida ♥
+  (tabela `publicacoes_curtidas`, avisa o autor), filtro Todos/Quem eu sigo, sem nenhuma nota. Rota `GET /api/comunidade/fotos`
+  e `POST /api/publicacoes/:id/curtir` (`perfis.js`). Na Política de Privacidade.
+- **Celular sem menu de 3 barras**: embaixo só ícones (Treinar, Simulado, Comunidade no meio em destaque, Arena, Redação);
+  🎨 no topo; Configurações e Feedback no próprio perfil.
+- **Serra (vidro) é o padrão** para quem nunca escolheu estilo nem mexeu em cores/fundo (`estiloGuardado`).
+- **Simulado**: aviso das anuladas pelo INEP (2009-101, 2024-129, 2025-123/132/174; `ANULADAS_SIM` igual a `provas.js`).
+- **O site cai ao atualizar?** Não: GitHub Pages troca na hora e o Render pago só desliga a versão antiga depois que a
+  nova responde. Só as salas da Arena abertas naquele minuto se perdem (ficam na memória).
+- **Trilha "O que cai no ENEM" (PRÉVIA)**: cartão no topo do Treinar → tela `trilha` com mapa de módulos (`TRILHAS` no
+  index.html); terminar o teste do módulo (7 de 10) abre o próximo; dá para fazer o teste e pular. Primeira aula pronta:
+  `aulas/soma.*` (caixa da lanchonete com o "vai um" como troca, duplas redondas, compensação, horas). Módulos 2 a 5 são
+  exemplo até chegar a **lista de conteúdos do Miguel**. Progresso ainda só no aparelho (`mm_trilha`); depois ir para a conta.
+  Pedido de tom: linguagem simples, profundidade de cursinho forte, exemplos do dia a dia.
+
 ### Celular: toque e tamanhos (16/11, publicado)
 - Auditoria em 8 tamanhos (320 a 1366 px) e 8 telas: nada rola de lado, viewport/lang/zoom corretos, sem botão sem
   nome nem imagem sem alt. Rolar a tela nunca responde a questão (testado em iPhone 13, SE e Pixel 7); a resposta só

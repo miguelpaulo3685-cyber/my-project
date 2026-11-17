@@ -1,0 +1,146 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 1</div>
+  <h1>Soma: muito além do "vai um"</h1>
+  <p class="au-abre">Você soma todo dia: o troco, o tempo do ônibus, os pontos do jogo. Nesta aula você vai entender <b>por que</b> as regras da conta funcionam e aprender os atalhos que a turma de cursinho usa para fazer conta de cabeça e não cair em pegadinha.</p>
+</header>
+
+<section class="au-cena" aria-label="Caixa da lanchonete: notas e moedas para somar">
+  <div class="au-loja">Caixa da lanchonete <small>junte o dinheiro de duas vendas e veja de onde vem o "vai um"</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Escolha a conta">
+      <button type="button" data-conta="47,38">47 + 38</button>
+      <button type="button" data-conta="158,67">158 + 67</button>
+      <button type="button" data-conta="276,349">276 + 349</button>
+      <button type="button" data-conta="999,1">999 + 1</button>
+      <button type="button" id="au-sortear">🎲 Outra</button>
+    </div>
+    <div class="au-mesa" id="au-mesa" aria-live="polite"></div>
+    <div class="au-armada" id="au-armada" aria-label="Conta armada"></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-juntar">1. Juntar na mesa</button>
+      <button type="button" id="au-trocar" disabled>2. Trocar 10 por 1</button>
+      <button type="button" id="au-recomecar">↺ Recomeçar</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Somar é juntar coisas do mesmo tipo</h2>
+  <p>Todo número é um pacote de notas e moedas. <b>247</b> é 2 notas de 100, 4 notas de 10 e 7 moedas de 1: <b>200 + 40 + 7</b>. O lugar de cada algarismo diz quanto ele vale. O 2 de 247 vale 200, e não 2.</p>
+  <p>Por isso, na conta armada, a gente põe <b>unidade embaixo de unidade</b>, dezena embaixo de dezena. Você não junta moedas com notas de 100 e diz que tem 9 "dinheiros". Quem alinha os números pela esquerda está fazendo exatamente isso.</p>
+  <div class="au-pergunta" data-certa="1" data-porque="O 7 de 37 é unidade e tem de ficar embaixo do 5 de 125, que também é unidade. Alinhando pela esquerda, o 3 (que vale 30) ficaria embaixo do 1 (que vale 100).">
+    <p>Qual é o jeito certo de armar 125 + 37?</p>
+    <button type="button" class="au-alt">125 em cima e 37 embaixo, começando os dois do lado esquerdo</button>
+    <button type="button" class="au-alt">125 em cima e 37 embaixo, com o 7 bem embaixo do 5</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O "vai um" é uma troca</h2>
+  <p>Faça 47 + 38 no caixa. Juntando, ficam 15 moedas de 1. Ninguém guarda 15 moedas: você troca <b>10 moedas por 1 nota de 10</b> e ficam 5 moedas. Essa nota nova vai para a coluna das dezenas. É ela o "1" que sobe na conta.</p>
+  <p>Entendendo isso, você nunca mais esquece de somar o "vai um". E serve para qualquer coluna: 10 notas de 10 viram 1 nota de 100, e assim por diante. Teste o 999 + 1 e veja a troca acontecer três vezes seguidas.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Somar por partes, de cabeça</h2>
+  <p>Na escola a gente soma da direita para a esquerda. De cabeça, é mais fácil ir da <b>esquerda para a direita</b>, separando as partes:</p>
+  <p class="au-formula">247 + 138 = (200 + 100) + (40 + 30) + (7 + 8) = 300 + 70 + 15 = 385</p>
+  <p>Começar pelo maior também ajuda a estimar: logo no primeiro passo você já sabe que o resultado passa de 300.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>A ordem não importa (e isso é um superpoder)</h2>
+  <p>3 + 5 dá o mesmo que 5 + 3. E, numa soma grande, você pode juntar as parcelas na ordem que quiser. Os livros chamam isso de propriedade <b>comutativa</b> e <b>associativa</b>. O nome não cai na prova, o truque cai: procure duplas que fecham <b>número redondo</b>.</p>
+  <div class="au-cena">
+    <div class="au-painel">
+      <p class="au-legenda" style="text-align:left;margin:0">Toque em dois números para formar uma dupla. Se a dupla fecha um número redondo, ela fica verde.</p>
+      <div class="au-fichas" id="au-fichas"></div>
+      <div class="au-recado" id="au-recado2" aria-live="polite"></div>
+      <div class="au-atalhos"><button type="button" id="au-outras-fichas">↺ Outros números</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Compensação: arredonde e devolva</h2>
+  <p>198 + 47 parece chato. Mas, se você tira 2 do 47 e dá para o 198, a conta vira <b>200 + 45</b>, que dá para fazer de cabeça. O total não muda, porque o que saiu de um entrou no outro.</p>
+  <div class="au-cena">
+    <div class="au-painel">
+      <div class="au-balanca" id="au-balanca"></div>
+      <div class="au-atalhos" role="group" aria-label="Passar 1 de um número para o outro">
+        <button type="button" id="au-passa-esq">← Passa 1 para a esquerda</button>
+        <button type="button" id="au-passa-dir">Passa 1 para a direita →</button>
+      </div>
+      <div class="au-atalhos" role="group" aria-label="Escolha a conta">
+        <button type="button" data-par="198,47">198 + 47</button>
+        <button type="button" data-par="397,256">397 + 256</button>
+        <button type="button" data-par="68,99">68 + 99</button>
+        <button type="button" data-par="1995,438">1 995 + 438</button>
+      </div>
+      <div class="au-recado" id="au-recado3" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Estime antes de calcular</h2>
+  <p>No ENEM, as alternativas costumam estar longe umas das outras. Arredondando, você descobre a ordem de grandeza da resposta em segundos e ainda confere se a sua conta "faz sentido".</p>
+  <p class="au-formula">1 987 + 512 + 498 ≈ 2 000 + 500 + 500 = 3 000</p>
+  <p>A conta exata dá 2 997. Se a sua conta desse 2 497 ou 3 997, a estimativa já mostraria o erro.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Quando a troca não é de 10: horas</h2>
+  <p>Com dinheiro, 10 de uma coluna viram 1 da próxima. Com tempo, a troca é de <b>60</b>: 60 minutos viram 1 hora. Por isso 1h50 + 25 min não é "1h75". São 1h e 75 minutos, e 75 minutos = 1 hora e 15 minutos. Resultado: <b>2h15</b>.</p>
+  <div class="au-cena">
+    <div class="au-painel">
+      <div class="au-controle"><label for="au-onibus">🚌 Ônibus</label><input id="au-onibus" type="range" min="5" max="150" step="5" value="105"><output id="au-o-onibus"></output></div>
+      <div class="au-controle"><label for="au-metro">🚇 Metrô</label><input id="au-metro" type="range" min="5" max="150" step="5" value="35"><output id="au-o-metro"></output></div>
+      <div class="au-relogio" id="au-relogio" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>"A mais que"</b> não é o total. "Na quinta chegaram 72 livros a mais que na terça" quer dizer terça + 72, e não 72.</li>
+    <li><b>Unidades diferentes</b>: antes de somar, deixe tudo em grama ou tudo em quilo, tudo em minuto ou tudo em hora.</li>
+    <li><b>Tabelas</b>: some só as linhas que a pergunta pede. O ENEM coloca dados a mais de propósito.</li>
+    <li><b>Ponto e vírgula</b>: no Brasil, 1.500 é mil e quinhentos e 1,5 é um e meio. Confira antes de alinhar.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Arredondando: 2 000 + 500 + 500 = 3 000. A conta exata dá 2 997.">
+    <p>Uma família gastou R$ 1 987 de aluguel, R$ 512 de mercado e R$ 498 de luz e água. O gasto foi de mais ou menos:</p>
+    <button type="button" class="au-alt">R$ 2 000</button>
+    <button type="button" class="au-alt">R$ 3 000</button>
+    <button type="button" class="au-alt">R$ 4 000</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="13h50 + 2h = 15h50. Faltam 10 minutos para as 16h; dos 25 minutos sobram 15. Chega às 16h15.">
+    <p>Um ônibus sai às 13h50 e a viagem dura 2h25. Ele chega às:</p>
+    <button type="button" class="au-alt">15h75</button>
+    <button type="button" class="au-alt">16h15</button>
+    <button type="button" class="au-alt">16h25</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Na quinta foram 96 + 72 = 168 livros. Total: 128 + 96 + 204 + 168 = 596. Quem respondeu 500 somou só o 72 e caiu na pegadinha do &quot;a mais que&quot;.">
+    <p>Uma escola recebeu livros doados: 128 na segunda, 96 na terça e 204 na quarta. Na quinta chegaram 72 livros a mais que na terça. Quantos livros chegaram nos quatro dias?</p>
+    <button type="button" class="au-alt">428</button>
+    <button type="button" class="au-alt">500</button>
+    <button type="button" class="au-alt">596</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="soma">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

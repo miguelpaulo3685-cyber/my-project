@@ -1856,6 +1856,76 @@
       transition: border-color .18s, transform .18s;
     }
     .atalho-inicio:hover { border-color: var(--marca); transform: translateY(-2px); }
+    /* Trilha de estudo (O que cai no ENEM) */
+    .trilha-cartao {
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
+      padding: 18px 18px 16px; margin-bottom: 16px; box-shadow: var(--sombra-leve);
+    }
+    .tc-selo { display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--marca-texto); }
+    .tc-topo b { display: block; font-family: var(--fonte-titulo); font-size: 1.3rem; margin-top: 2px; }
+    .tc-topo small { display: block; color: var(--texto-fraco); font-size: .86rem; line-height: 1.45; margin-top: 2px; }
+    .tc-materias { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 12px -18px 12px; padding: 0 18px; }
+    .tc-materias span { flex: none; font-size: .78rem; font-weight: 700; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--borda); color: var(--texto-fraco); }
+    .tc-materias span.ativa { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .tc-materias i { font-style: normal; font-weight: 500; opacity: .75; }
+    .tc-atual {
+      width: 100%; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; cursor: pointer;
+      background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 16px; padding: 12px 14px; font: inherit; color: var(--texto);
+    }
+    .tc-atual:hover { border-color: var(--marca); }
+    .tc-num { width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font: 800 1.2rem var(--fonte);
+      background: var(--marca); color: var(--sobre-marca); box-shadow: 0 0 0 4px var(--marca-suave); }
+    .tc-info small { display: block; color: var(--texto-fraco); font-size: .74rem; }
+    .tc-info b { display: block; font-size: .98rem; margin: 1px 0 6px; }
+    .tc-barra { height: 7px; border-radius: 999px; background: var(--borda); overflow: hidden; margin-bottom: 4px; }
+    .tc-barra i { display: block; height: 100%; background: var(--certo); border-radius: inherit; transition: width .4s; }
+    .tc-ir { grid-column: 1 / -1; display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; border-radius: 12px;
+      background: var(--marca); color: var(--sobre-marca); font-weight: 800; font-size: .92rem; }
+    .tc-ir b { font-weight: 800; }
+    .trilha-mapa { list-style: none; margin: 8px 0 0; padding: 0; position: relative; }
+    .trilha-mapa::before { content: ""; position: absolute; left: 21px; top: 20px; bottom: 30px; border-left: 4px dotted var(--borda); }
+    .tm-modulo { position: relative; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; margin-bottom: 16px; }
+    .tm-marca { position: relative; z-index: 1; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font: 800 1.15rem var(--fonte); background: var(--superficie-2); border: 2px solid var(--borda); color: var(--texto-fraco); }
+    .tm-aberto .tm-marca { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .tm-atual .tm-marca { box-shadow: 0 0 0 6px var(--marca-suave); animation: tm-pulsa 2s ease-in-out infinite; }
+    @keyframes tm-pulsa { 50% { box-shadow: 0 0 0 11px transparent; } }
+    @media (prefers-reduced-motion: reduce) { .tm-atual .tm-marca { animation: none; } }
+    .tm-feito .tm-marca { background: var(--certo); color: #fff; border-color: var(--certo); }
+    .tm-cartao { background: var(--superficie); border: 1px solid var(--borda); border-radius: 16px; padding: 14px 16px; min-width: 0; }
+    .tm-fechado .tm-cartao { opacity: .7; }
+    .tm-cartao > small { color: var(--texto-fraco); font-size: .74rem; }
+    .tm-cartao > b { display: block; font-size: 1.05rem; margin: 2px 0 2px; }
+    .tm-cartao > p { margin: 0; color: var(--texto-fraco); font-size: .86rem; }
+    .tm-aulas { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+    .tm-aula, .tm-teste {
+      display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; cursor: pointer; min-height: 56px;
+      background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 12px; padding: 9px 12px; font: inherit; color: var(--texto);
+    }
+    .tm-aula:hover, .tm-teste:hover { border-color: var(--marca); }
+    .tm-aula > span:nth-child(2), .tm-teste > span { flex: 1; min-width: 0; }
+    .tm-aula b, .tm-teste b { display: block; font-size: .9rem; }
+    .tm-aula small, .tm-teste small { display: block; color: var(--texto-fraco); font-size: .76rem; }
+    .tm-icone { width: 34px; height: 34px; flex: none; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--marca-suave); font-weight: 800; }
+    .tm-aula.feita .tm-icone { background: var(--certo); color: #fff; }
+    .tm-aula.breve { opacity: .6; }
+    .tm-aula i { font-style: normal; color: var(--marca-texto); font-size: .9rem; }
+    .tm-teste { margin-top: 10px; border: 2px dashed var(--marca); font-size: 1.3rem; }
+    .tm-previa { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .tm-previa span { font-size: .76rem; padding: 4px 9px; border-radius: 999px; background: var(--superficie-2); color: var(--texto-fraco); }
+    .tm-teste-topo { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tm-teste-topo span { color: var(--texto-fraco); font-size: .86rem; }
+    .tm-questao { margin-top: 14px; }
+    .tm-enunciado { font-size: 1.08rem; font-weight: 600; line-height: 1.5; margin: 0 0 14px; }
+    .tm-questao .alt.certa { border-color: var(--certo); background: color-mix(in srgb, var(--certo) 14%, transparent); }
+    .tm-questao .alt.errada { border-color: var(--errado); background: color-mix(in srgb, var(--errado) 12%, transparent); }
+    .tm-porque { margin-top: 12px; padding: 12px 14px; border-radius: 12px; line-height: 1.5; font-size: .92rem; background: var(--superficie-2); border-left: 4px solid var(--certo); }
+    .tm-porque.ruim { border-left-color: var(--errado); }
+    .tm-resultado { text-align: center; padding: 30px 20px; }
+    .tm-resultado h1 { margin: 6px 0; }
+    .tm-grande { font-size: 3rem; }
+    .tm-botoes { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+    .tm-botoes .acao { margin: 0; }
     .aprender {
       background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio);
       padding: 18px 0 16px; margin-bottom: 16px; box-shadow: var(--sombra-leve);
@@ -3428,6 +3498,8 @@
 
     <div id="aviso-topo"></div>
 
+    <section class="trilha-cartao" id="trilha-cartao" aria-label="O que cai no ENEM: sua trilha de estudo"></section>
+
     <section class="guia" id="guia" aria-label="Começar a treinar">
       <b>Bora treinar?</b>
       <p>5 questões reais do ENEM, uns 10 minutos. No fim sai a sua nota.</p>
@@ -3435,8 +3507,8 @@
     </section>
 
     <section class="aprender" aria-label="Aulas interativas">
-      <b>O que cai no ENEM</b>
-      <p>Aulas curtas em que você controla a figura.</p>
+      <b>Aulas soltas</b>
+      <p>Assuntos de outras matérias, em que você controla a figura.</p>
       <div class="aprender-lista" id="aprender-lista"></div>
     </section>
 
@@ -3456,6 +3528,9 @@
 
   <!-- ===================== AULA (aba Aprender; o conteúdo vem de aulas/) ===================== -->
   <main class="pagina escondido" id="tela-aula"></main>
+
+  <!-- ===================== TRILHA (O que cai no ENEM: módulos em sequência) ===================== -->
+  <main class="pagina escondido" id="tela-trilha"></main>
 
   <!-- ===================== QUESTÃO ===================== -->
   <main class="pagina escondido" id="tela-questao">
@@ -4364,10 +4439,10 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'aula', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao'].forEach(t => {
+  ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
-  const treinando = ['treinar', 'aula', 'questao', 'resultado', 'desafio'].includes(tela);
+  const treinando = ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'desafio'].includes(tela);
   registrarUso(PARTE_DA_TELA[tela]);
   if (tela !== 'aula') fecharAula();
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
@@ -4392,7 +4467,8 @@ function irPara(tela) {
   if (tela === 'simulado') abrirSimulado();
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
-  if (tela === 'treinar') { desenharAprender(); desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
+  if (tela === 'trilha') desenharTrilha();
+  if (tela === 'treinar') { desenharCartaoTrilha(); desenharAprender(); desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
   if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') { abaComunidade = 'feed'; desenharSubabas(); abrirFeed(); }
   if (tela === 'comunidade') mostrarComunidade();
@@ -4408,7 +4484,8 @@ const AULAS = [
   { id: 'cinematica', nome: 'Cinemática', materia: 'Física', icone: '🚗' },
   { id: 'porcentagem', nome: 'Porcentagem', materia: 'Matemática', icone: '🧮' },
   { id: 'piramide-etaria', nome: 'Pirâmide etária', materia: 'Geografia', icone: '👥' },
-  { id: 'figuras-de-linguagem', nome: 'Figuras de linguagem', materia: 'Português', icone: '💬' }
+  { id: 'figuras-de-linguagem', nome: 'Figuras de linguagem', materia: 'Português', icone: '💬' },
+  { id: 'soma', nome: 'Soma', materia: 'Matemática', icone: '➕', trilha: true }
 ];
 let pararAula = null;
 let aulaPedida = null;
@@ -4417,8 +4494,169 @@ const arquivosDasAulas = {};
 function desenharAprender() {
   const alvo = document.getElementById('aprender-lista');
   if (alvo.children.length) return;
-  alvo.innerHTML = AULAS.map(a => `<button type="button" onclick="abrirAula('${a.id}')">
+  alvo.innerHTML = AULAS.filter(a => !a.trilha).map(a => `<button type="button" onclick="abrirAula('${a.id}')">
     <span class="icone" aria-hidden="true">${a.icone}</span><span><b>${a.nome}</b><small>${a.materia}</small></span></button>`).join('');
+}
+
+// ===================== TRILHA (O que cai no ENEM) =====================
+// Módulos em sequência: terminar o teste de um módulo abre o próximo. Cada aula
+// pronta é uma aula de aulas/ marcada com trilha: true em AULAS.
+// PRÉVIA: os módulos abaixo são exemplo até chegar a lista de conteúdos da equipe,
+// e o progresso fica só neste aparelho (depois vai para a conta).
+const NOTA_PARA_PASSAR = 7;
+const TRILHAS = {
+  matematica: { nome: 'Matemática', icone: '🧮', modulos: [
+    { id: 'm1', nome: 'Operações básicas e potência', sobre: 'Da soma à potência: a base de toda a Matemática do ENEM.',
+      aulas: [['soma', 'Soma', '➕'], ['subtracao', 'Subtração', '➖'], ['multiplicacao', 'Multiplicação', '✖️'], ['divisao', 'Divisão', '➗'], ['potencia', 'Potência', '²']],
+      teste: [
+        ['Quanto é 2 345 + 1 678?', ['3 913', '4 023', '4 013'], 1, 'Unidades: 5 + 8 = 13 (vai 1). Dezenas: 4 + 7 + 1 = 12 (vai 1). Centenas: 3 + 6 + 1 = 10 (vai 1). Milhar: 2 + 1 + 1 = 4.'],
+        ['Quanto é 499 + 237?', ['736', '726', '746'], 0, 'Compensação: passe 1 do 237 para o 499. Fica 500 + 236 = 736.'],
+        ['Uma compra deu R$ 37,50 e você pagou com uma nota de R$ 50. Qual é o troco?', ['R$ 13,50', 'R$ 12,50', 'R$ 22,50'], 1, 'De 37,50 até 40 faltam 2,50; de 40 até 50 faltam 10. Troco: 12,50.'],
+        ['Quanto é 1 000 − 357?', ['753', '643', '657'], 1, 'Conte para a frente: de 357 até 360 são 3, até 400 são 40, até 1 000 são 600. 3 + 40 + 600 = 643.'],
+        ['Quanto é 25 × 16?', ['380', '400', '416'], 1, '16 = 4 × 4. 25 × 4 = 100, e 100 × 4 = 400.'],
+        ['Uma caixa tem 12 ovos. Quantos ovos há em 7 caixas?', ['74', '84', '96'], 1, '7 × 12 = 7 × 10 + 7 × 2 = 70 + 14 = 84.'],
+        ['Três amigos dividem igualmente uma conta de R$ 87. Quanto cada um paga?', ['R$ 27', 'R$ 29', 'R$ 31'], 1, '87 ÷ 3 = 29. Confira: 29 × 3 = 87.'],
+        ['50 alunos vão de van a uma excursão. Cada van leva 15 alunos. Quantas vans são precisas, no mínimo?', ['3', '3,33', '4'], 2, '50 ÷ 15 = 3 e sobram 5 alunos. Esses 5 também precisam ir: são 4 vans. Não existe 0,33 de van.'],
+        ['Quanto é 2⁵?', ['10', '25', '32'], 2, '2⁵ = 2 × 2 × 2 × 2 × 2 = 32. Não é 2 × 5.'],
+        ['Quanto é 3 + 4 × 2?', ['14', '11', '10'], 1, 'Multiplicação vem antes da soma: 4 × 2 = 8, e 3 + 8 = 11.']
+      ] },
+    { id: 'm2', nome: 'Frações e números decimais', sobre: 'Pizza, dinheiro e medidas: partes de um inteiro.', aulas: [['fracoes', 'Frações', '🍕'], ['decimais', 'Números decimais', '🔢'], ['contas-fracoes', 'Contas com frações', '🧩']] },
+    { id: 'm3', nome: 'Razão, proporção e regra de três', sobre: 'Receita, mapa e velocidade: o assunto que mais cai.', aulas: [['razao', 'Razão e escala', '🗺️'], ['proporcao', 'Proporção', '⚖️'], ['regra-de-tres', 'Regra de três', '🔁']] },
+    { id: 'm4', nome: 'Porcentagem e juros', sobre: 'Desconto, aumento e juros do cartão.', aulas: [['porcentagem', 'Porcentagem', '🧮'], ['juros', 'Juros simples e compostos', '💳']] },
+    { id: 'm5', nome: 'Gráficos, tabelas e médias', sobre: 'Ler dado do jeito que o ENEM cobra.', aulas: [['graficos', 'Gráficos e tabelas', '📊'], ['medias', 'Média, moda e mediana', '📈']] }
+  ] },
+  natureza: { nome: 'Natureza', icone: '🌱', breve: true },
+  humanas: { nome: 'Humanas', icone: '🌎', breve: true },
+  linguagens: { nome: 'Linguagens', icone: '💬', breve: true }
+};
+const CHAVE_TRILHA = 'mm_trilha';
+let trilhaMateria = 'matematica';
+let testeTrilha = null; // { mod, i, acertos, resposta }
+
+function lerTrilha() {
+  let t = null;
+  try { t = JSON.parse(ler(CHAVE_TRILHA)); } catch (e) {}
+  return { aulas: {}, testes: {}, ...(t || {}) };
+}
+const salvarTrilha = t => guardar(CHAVE_TRILHA, JSON.stringify(t));
+const aulaPronta = id => AULAS.some(a => a.id === id);
+const aulasProntas = m => m.aulas.filter(([id]) => aulaPronta(id));
+const passouModulo = (t, m) => (t.testes[m.id] || 0) >= NOTA_PARA_PASSAR;
+// O primeiro módulo está sempre aberto; os outros abrem quando o anterior passa no teste.
+const moduloAberto = (t, mods, k) => k === 0 || passouModulo(t, mods[k - 1]);
+
+function moduloAtual(t) {
+  const mods = TRILHAS[trilhaMateria].modulos;
+  let k = 0;
+  while (k < mods.length - 1 && passouModulo(t, mods[k])) k++;
+  return { m: mods[k], k };
+}
+
+function desenharCartaoTrilha() {
+  const alvo = document.getElementById('trilha-cartao');
+  const t = lerTrilha(), { m, k } = moduloAtual(t);
+  const feitas = m.aulas.filter(([id]) => t.aulas[id]).length;
+  const proxima = m.aulas.find(([id]) => aulaPronta(id) && !t.aulas[id]);
+  alvo.innerHTML = `<div class="tc-topo"><span class="tc-selo">O que cai no ENEM</span>
+      <b>Sua trilha de estudo</b><small>Do básico ao nível ENEM, um módulo por vez. Com figura que você mexe e exemplo do dia a dia.</small></div>
+    <div class="tc-materias">${Object.entries(TRILHAS).map(([id, tr]) => `<span class="${id === trilhaMateria ? 'ativa' : ''}">${tr.icone} ${tr.nome}${tr.breve ? ' <i>em breve</i>' : ''}</span>`).join('')}</div>
+    <button class="tc-atual" onclick="irPara('trilha')">
+      <span class="tc-num">${k + 1}</span>
+      <span class="tc-info"><small>Módulo ${k + 1} de ${TRILHAS[trilhaMateria].modulos.length}</small><b>${escapar(m.nome)}</b>
+        <span class="tc-barra"><i style="width:${Math.round(100 * feitas / m.aulas.length)}%"></i></span>
+        <small>${feitas} de ${m.aulas.length} aulas${passouModulo(t, m) ? ' · teste feito ✓' : ''}</small></span>
+      <span class="tc-ir">${proxima ? `Continuar:<b>${escapar(proxima[1])}</b>` : 'Ver a trilha'} →</span>
+    </button>`;
+}
+
+function abrirAulaDaTrilha(id) {
+  if (!aulaPronta(id)) return avisoSim('Essa aula ainda está sendo feita. Por enquanto, a primeira aula do módulo já está pronta.');
+  abrirAula(id);
+}
+
+function concluirAulaDaTrilha(id) {
+  const t = lerTrilha();
+  t.aulas[id] = Date.now();
+  salvarTrilha(t);
+  mostrarXp('Aula concluída! ✓');
+  irPara('trilha');
+}
+
+function desenharTrilha() {
+  const alvo = document.getElementById('tela-trilha');
+  if (testeTrilha) return desenharTesteTrilha();
+  const tr = TRILHAS[trilhaMateria], t = lerTrilha(), atual = moduloAtual(t).k;
+  alvo.innerHTML = `<button class="acao discreta pequena" style="margin:0 0 14px" onclick="irPara('treinar')">← Voltar para o Treinar</button>
+    <div class="cabecalho-secao"><h1>${tr.icone} Trilha de ${tr.nome}</h1>
+      <p>Cada módulo terminado abre o próximo. Já sabe o assunto? Faça o teste do módulo e pule para o seguinte.</p></div>
+    <ol class="trilha-mapa">${tr.modulos.map((m, k) => {
+      const aberto = moduloAberto(t, tr.modulos, k), passou = passouModulo(t, m), feitas = m.aulas.filter(([id]) => t.aulas[id]).length;
+      const estado = passou ? 'feito' : aberto ? 'aberto' : 'fechado';
+      const nota = t.testes[m.id];
+      return `<li class="tm-modulo tm-${estado}${k === atual ? ' tm-atual' : ''}">
+        <span class="tm-marca" aria-hidden="true">${passou ? '✓' : aberto ? k + 1 : '🔒'}</span>
+        <div class="tm-cartao">
+          <small>Módulo ${k + 1}${passou ? ' · concluído' : aberto ? '' : ' · abre quando você passar no teste do módulo ' + k}</small>
+          <b>${escapar(m.nome)}</b><p>${escapar(m.sobre)}</p>
+          ${aberto ? `<div class="tm-aulas">${m.aulas.map(([id, nome, icone], j) => {
+              const pronta = aulaPronta(id), feita = t.aulas[id];
+              return `<button class="tm-aula${feita ? ' feita' : ''}${pronta ? '' : ' breve'}" onclick="abrirAulaDaTrilha('${id}')">
+                <span class="tm-icone">${feita ? '✓' : icone}</span><span><b>Aula ${j + 1} · ${escapar(nome)}</b>
+                <small>${feita ? 'Feita · rever' : pronta ? 'Pronta para começar' : 'Em produção'}</small></span>${pronta && !feita ? '<i>▶</i>' : ''}</button>`;
+            }).join('')}</div>
+            ${m.teste ? `<button class="tm-teste" onclick="comecarTesteTrilha('${m.id}')">📝 <span><b>Teste do módulo ${k + 1}</b>
+              <small>${m.teste.length} questões · passa com ${NOTA_PARA_PASSAR}${nota !== undefined ? ` · sua melhor nota: ${nota}/${m.teste.length}` : feitas < m.aulas.length ? ' · já sabe? faça e pule' : ''}</small></span></button>`
+              : '<p class="pista" style="margin:10px 0 0">O teste deste módulo entra junto com as aulas.</p>'}`
+          : `<div class="tm-previa">${m.aulas.map(([, nome, icone]) => `<span>${icone} ${escapar(nome)}</span>`).join('')}</div>`}
+        </div></li>`;
+    }).join('')}</ol>
+    <p class="pista" style="margin-top:18px">Prévia: os módulos de 2 a 5 são exemplo até chegar a lista de conteúdos. O progresso fica guardado neste aparelho.</p>`;
+}
+
+function comecarTesteTrilha(modId) {
+  testeTrilha = { mod: modId, i: 0, acertos: 0, resposta: null };
+  desenharTesteTrilha();
+  window.scrollTo(0, 0);
+}
+
+function desenharTesteTrilha() {
+  const alvo = document.getElementById('tela-trilha');
+  const mods = TRILHAS[trilhaMateria].modulos, k = mods.findIndex(m => m.id === testeTrilha.mod), m = mods[k];
+  const total = m.teste.length;
+  if (testeTrilha.i >= total) {
+    const passou = testeTrilha.acertos >= NOTA_PARA_PASSAR, prox = mods[k + 1];
+    alvo.innerHTML = `<div class="tm-resultado painel">
+      <span class="tm-grande">${passou ? '🎉' : '💪'}</span>
+      <h1>${testeTrilha.acertos} de ${total}</h1>
+      <p>${passou ? `Você passou no módulo ${k + 1}!${prox ? ` O <b>módulo ${k + 2}: ${escapar(prox.nome)}</b> está aberto.` : ''}`
+        : `Faltaram ${NOTA_PARA_PASSAR - testeTrilha.acertos} para passar. Reveja as aulas do módulo e tente de novo: o teste não tem limite.`}</p>
+      <div class="tm-botoes"><button class="acao" onclick="testeTrilha = null; desenharTrilha(); window.scrollTo(0, 0)">${passou ? 'Ver a trilha' : 'Voltar para as aulas'}</button>
+        ${passou ? '' : `<button class="acao discreta" onclick="comecarTesteTrilha('${m.id}')">Tentar de novo</button>`}</div></div>`;
+    return;
+  }
+  const [enunciado, alts, certa, porque] = m.teste[testeTrilha.i], r = testeTrilha.resposta;
+  alvo.innerHTML = `<button class="acao discreta pequena" style="margin:0 0 14px" onclick="testeTrilha = null; desenharTrilha()">← Sair do teste</button>
+    <div class="tm-teste-topo"><b>Teste do módulo ${k + 1}</b><span>Questão ${testeTrilha.i + 1} de ${total} · ${testeTrilha.acertos} certas</span></div>
+    <div class="tc-barra"><i style="width:${100 * testeTrilha.i / total}%"></i></div>
+    <section class="painel tm-questao"><p class="tm-enunciado">${escapar(enunciado)}</p>
+      ${alts.map((a, j) => `<button class="alt${r === null ? '' : j === certa ? ' certa' : j === r ? ' errada' : ''}" ${r === null ? `onclick="responderTesteTrilha(${j})"` : 'disabled'}>
+        <span class="letra">${'ABCDE'[j]}</span><span>${escapar(a)}</span></button>`).join('')}
+      ${r === null ? '' : `<div class="tm-porque ${r === certa ? 'bom' : 'ruim'}"><b>${r === certa ? 'Certo!' : 'Não foi dessa vez.'}</b> ${escapar(porque)}</div>
+        <button class="acao" style="margin-top:12px" onclick="testeTrilha.i++; testeTrilha.resposta = null; desenharTesteTrilha()">${testeTrilha.i + 1 < total ? 'Próxima →' : 'Ver resultado'}</button>`}
+    </section>`;
+}
+
+function responderTesteTrilha(j) {
+  const m = TRILHAS[trilhaMateria].modulos.find(x => x.id === testeTrilha.mod);
+  testeTrilha.resposta = j;
+  if (j === m.teste[testeTrilha.i][2]) testeTrilha.acertos++;
+  if (testeTrilha.i === m.teste.length - 1) {
+    const t = lerTrilha();
+    t.testes[m.id] = Math.max(t.testes[m.id] || 0, testeTrilha.acertos);
+    salvarTrilha(t);
+    if (testeTrilha.acertos >= NOTA_PARA_PASSAR) soltarConfete();
+  }
+  desenharTesteTrilha();
 }
 
 // Põe na página, uma vez só, um arquivo de estilo ou de código das aulas.
@@ -4501,7 +4739,8 @@ const olhoNaAula = typeof ResizeObserver === 'function' ? new ResizeObserver(aul
 async function abrirAula(id) {
   if (!AULAS.some(a => a.id === id)) return;
   const tela = document.getElementById('tela-aula');
-  const voltar = `<button class="acao discreta pequena" style="align-self:flex-start;margin:0" onclick="irPara('treinar')">← Voltar para o Treinar</button>`;
+  const daTrilha = AULAS.find(a => a.id === id).trilha;
+  const voltar = `<button class="acao discreta pequena" style="align-self:flex-start;margin:0" onclick="irPara('${daTrilha ? 'trilha' : 'treinar'}')">← Voltar para ${daTrilha ? 'a trilha' : 'o Treinar'}</button>`;
   irPara('aula');
   fecharAula();
   aulaPedida = id;
@@ -4521,6 +4760,7 @@ async function abrirAula(id) {
     if (blocos.length) { const texto = document.createElement('div'); texto.className = 'au-texto'; blocos[0].before(texto); texto.append(...blocos); }
     aulasMM.teste(raiz);
     raiz.querySelectorAll('[data-treinar]').forEach(b => b.addEventListener('click', () => abrirMateria(b.dataset.treinar)));
+    raiz.querySelectorAll('[data-concluir]').forEach(b => b.addEventListener('click', () => concluirAulaDaTrilha(b.dataset.concluir)));
     pararAula = aulasMM.aulas[id](raiz);
     aulaFixa();
     if (olhoNaAula) { olhoNaAula.disconnect(); const cena = raiz.querySelector(':scope > .au-cena'); if (cena) olhoNaAula.observe(cena); }
