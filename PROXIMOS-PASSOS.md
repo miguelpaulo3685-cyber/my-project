@@ -334,6 +334,14 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   corrigir; desligada enquanto houver menos de 3 redações com nota fechada).
 - Simulado: todas as provas completas no banco (menos as anuladas pelo INEP).
 
+## PLANO PRO (ideia de 17/11/2026, ainda não começado)
+- Continua GRÁTIS: aulas da trilha, comunidade, simulado e a nota estimada pela TRI (decisão do Miguel).
+- PRO (ordem de força): 1) correção de redação (limite por mês, custa por correção); 2) relatório do simulado
+  (o que derruba a nota, o que estudar primeiro); 3) revisão dos erros / cartões tipo Anki com revisão espaçada;
+  4) plano de estudos até o ENEM; 5) questões sem limite com explicação; 6) selo e estilo no perfil.
+- Quem paga é adulto responsável (menores, LGPD). Preço pensado: R$ 9,90 a 19,90/mês + plano "até o ENEM".
+- Antes de construir: lista de espera para medir interesse.
+
 ## Pendências antigas (de outubro)
 
 ### 1. Conteúdo
