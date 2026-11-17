@@ -4867,6 +4867,7 @@ async function buscarNotasTri() {
 }
 
 function desenharTudo() {
+  desenharCartaoTrilha();
   desenharAprender();
   desenharIndicadores();
   desenharAreas();
@@ -7104,6 +7105,7 @@ function esquecerConta() {
   guardar(CHAVE_USUARIO, null);
   usuarioLogado = null;
   trilhaConta = null; trilhaDeQuem = null;
+  guardar(CHAVE_INICIO, null);
   desenharPerfil();
   carregarProgresso(); // volta ao progresso de quem usa sem conta
   notasTri = {};
@@ -12902,21 +12904,29 @@ if (document.documentElement.classList.contains('com-entrada') && !pc3d.ligar())
 // Página inicial: quem chega começa pelo Treinar (as 5 questões e a nota TRI
 // convencem); quem já tem conta e já estudou um pouco abre na Comunidade, no
 // meio da sua turma. Link especial (Arena, e-mail, aviso) manda mais que isso.
+const CHAVE_INICIO = 'mm_inicio'; // 'comunidade' ou 'treinar': lembra a página inicial da conta deste aparelho
 function abrirNaPaginaCerta(linkEspecial) {
+  if (usuarioLogado) guardar(CHAVE_INICIO, totais().feitas >= 5 ? 'comunidade' : 'treinar');
   if (linkEspecial || !usuarioLogado || totais().feitas < 5) return;
   if (document.getElementById('tela-treinar').classList.contains('escondido')) return; // a pessoa já foi para outro lugar
   if (document.documentElement.classList.contains('com-entrada') || document.querySelector('.fundo-modal:not(.escondido):not([id])')) return;
   abrirComunidade('agora');
 }
 
+// A sessão começa a ser restaurada já, sem esperar a página baixar fontes, imagens e o botão do Google.
+// Quem já entrou neste aparelho e costuma abrir na Comunidade vai direto para lá, sem esperar o servidor.
+const linkEspecial = [...new URLSearchParams(location.search).keys()].some(k => !['origem', 'convite'].includes(k) && !k.startsWith('utm_')) || Boolean(location.hash);
+if (!linkEspecial && ler(CHAVE_TOKEN) && ler(CHAVE_INICIO) === 'comunidade' && !document.documentElement.classList.contains('com-entrada')) {
+  try { usuarioLogado = usuarioLogado || JSON.parse(ler(CHAVE_USUARIO)); } catch (e) {}
+  if (usuarioLogado) abrirComunidade('agora');
+}
+const sessao = restaurarSessao();
+sessao.then(() => abrirNaPaginaCerta(linkEspecial)).catch(() => {});
+tratarLinkDoEmail(sessao);
+tratarLinkDeAviso(sessao);
+sessao.then(() => setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 800)).catch(() => {});
 window.addEventListener('load', () => {
   verificarAPI(); carregarGoogle(); registrarServiceWorker(); desenharConviteApp();
-  const linkEspecial = [...new URLSearchParams(location.search).keys()].some(k => !['origem', 'convite'].includes(k) && !k.startsWith('utm_')) || Boolean(location.hash);
-  const sessao = restaurarSessao();
-  sessao.then(() => abrirNaPaginaCerta(linkEspecial)).catch(() => {});
-  tratarLinkDoEmail(sessao);
-  tratarLinkDeAviso(sessao);
-  sessao.then(() => setTimeout(async () => { if (!await talvezPerguntarTurma()) talvezMostrarVisita(); }, 800)).catch(() => {});
 });
 </script>
 </body>
