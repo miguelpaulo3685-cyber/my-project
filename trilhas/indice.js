@@ -6,7 +6,8 @@
 // Aula: [id, nome, ícone]. Módulo com teste: teste: true.
 window.TRILHAS_MM = {
   prontas: ['soma', 'subtracao', 'multiplicacao', 'divisao', 'fracoes', 'contas-fracoes', 'decimais', 'potencia',
-    'razao', 'proporcao', 'regra-de-tres', 'porcentagem', 'juros', 'graficos', 'medias', 'fotossintese'],
+    'razao', 'proporcao', 'regra-de-tres', 'porcentagem', 'juros', 'graficos', 'medias', 'fotossintese',
+    'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -32,7 +33,7 @@ window.TRILHAS_MM = {
         ['pa-pg', 'Sequências, PA e PG', '🔢'], ['trigonometria', 'Seno, cosseno e tangente', '📐'], ['ciclo-trigonometrico', 'Leis dos senos e cossenos e ondas', '〰️']] }
     ] },
     biologia: { nome: 'Biologia', icone: '🌱', modulos: [
-      { id: 'bio1', nome: 'Ecologia e impactos ambientais', sobre: 'O tópico mais cobrado: cerca de 30% das questões de Biologia.', aulas: [
+      { id: 'bio1', nome: 'Ecologia e impactos ambientais', sobre: 'O tópico mais cobrado: cerca de 30% das questões de Biologia.', teste: true, aulas: [
         ['cadeias-alimentares', 'Cadeias, teias e pirâmides', '🦗'], ['relacoes-ecologicas', 'Relações ecológicas', '🤝'],
         ['ciclos-biogeoquimicos', 'Ciclos da água, carbono e nitrogênio', '♻️'], ['impactos-ambientais', 'Impactos ambientais', '🌡️']] },
       { id: 'bio2', nome: 'Citologia e bioquímica celular', sobre: 'A base estrutural e energética dos seres vivos.', aulas: [

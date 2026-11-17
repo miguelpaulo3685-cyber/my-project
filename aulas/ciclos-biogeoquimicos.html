@@ -1,0 +1,87 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 1 · Aula 3</div>
+  <h1>Ciclos da água, do carbono e do nitrogênio</h1>
+  <p class="au-abre">A energia passa pelos seres vivos e vai embora como calor, mas a matéria fica dando voltas: o carbono do seu corpo já esteve no ar, numa planta e talvez num dinossauro. Aqui você vai seguir um átomo em cada ciclo e entender o papel das bactérias, que o ENEM adora cobrar.</p>
+</header>
+
+<section class="au-cena" aria-label="Siga o átomo pelo ciclo">
+  <div class="au-loja">Siga o átomo <small>escolha um ciclo e ande passo a passo</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Ciclo">
+      <button type="button" data-ciclo="carbono">🌫️ Carbono</button>
+      <button type="button" data-ciclo="nitrogenio">🫘 Nitrogênio</button>
+      <button type="button" data-ciclo="agua">💧 Água</button>
+    </div>
+    <svg viewBox="0 -18 320 262" id="au-ciclo" role="img" aria-label="Ciclo"></svg>
+    <div class="au-atalhos"><button type="button" id="au-passo">Próximo passo →</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Carbono: entra pela fotossíntese, sai pela respiração</h2>
+  <p>As plantas tiram CO₂ do ar na <b>fotossíntese</b> e transformam em açúcar. Pela alimentação, esse carbono passa para os animais. Na <b>respiração</b> (de plantas, animais e decompositores), ele volta ao ar como CO₂. Esse vaivém fica equilibrado há milhões de anos.</p>
+  <div class="au-filme" data-filme="fossil" aria-label="Animação: balança do carbono com a queima de combustíveis fósseis"></div>
+  <p>O problema é o carbono que estava <b>guardado</b> no subsolo, em petróleo, carvão e gás. Ao queimar esses combustíveis, devolvemos ao ar um carbono que estava fora do ciclo: o CO₂ do ar aumenta e intensifica o efeito estufa. Desmatar com queimadas faz o mesmo.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Nitrogênio: tudo depende das bactérias</h2>
+  <p>O ar tem 78% de nitrogênio (N₂), mas plantas e animais <b>não conseguem usar</b> essa forma. Quem resolve são as bactérias:</p>
+  <ul class="au-pegadinhas">
+    <li><b>Fixação</b>: bactérias (como as do gênero <i>Rhizobium</i>, nos nódulos das raízes de feijão e soja) transformam N₂ em amônia (NH₃).</li>
+    <li><b>Nitrificação</b>: outras bactérias transformam a amônia em nitrito e depois em <b>nitrato</b>, a forma que as plantas absorvem melhor.</li>
+    <li><b>Desnitrificação</b>: bactérias devolvem o nitrogênio do solo ao ar como N₂. É o caminho de volta.</li>
+  </ul>
+  <div class="au-filme" data-filme="raiz" aria-label="Animação: bactérias nas raízes do feijão fixando nitrogênio"></div>
+  <p>Por isso agricultores fazem <b>rotação de culturas</b> e <b>adubação verde</b> com feijão e outras leguminosas: elas deixam o solo rico em nitrogênio sem precisar de tanto adubo químico.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Água: o Sol move tudo</h2>
+  <p>O Sol aquece mares, rios e o solo: a água <b>evapora</b>. As plantas também soltam água pelas folhas (<b>transpiração</b>). O vapor sobe, esfria e <b>condensa</b> em nuvens, que voltam como <b>chuva</b>. Parte <b>infiltra</b> no solo e abastece os lençóis; parte <b>escorre</b> para os rios.</p>
+  <div class="au-filme" data-filme="agua" aria-label="Animação: evaporação, condensação e chuva"></div>
+  <p>Asfalto e desmatamento diminuem a infiltração: a água escorre rápido, causa enchentes e os lençóis recebem menos.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Nitrificação</b> (amônia → nitrato, para as plantas) é diferente de <b>desnitrificação</b> (nitrato → N₂, volta ao ar).</li>
+    <li>Planta <b>não</b> absorve N₂ do ar sozinha: ela depende das bactérias.</li>
+    <li><b>Reflorestar</b> tira CO₂ do ar enquanto a floresta cresce; uma floresta madura e estável respira quase tanto quanto faz fotossíntese.</li>
+    <li>O ciclo do <b>fósforo</b> não passa pelo ar: vem das rochas, vai para o solo e a água, e o excesso (de adubo e esgoto) ajuda a causar eutrofização.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="As bactérias dos nódulos das raízes das leguminosas fixam o N₂ do ar em amônia, que a planta usa e que enriquece o solo.">
+    <p>Plantar feijão entre uma safra e outra de milho deixa o solo mais fértil porque:</p>
+    <button type="button" class="au-alt">o feijão absorve o nitrogênio do ar pelas folhas</button>
+    <button type="button" class="au-alt">bactérias nas raízes do feijão fixam o nitrogênio do ar no solo</button>
+    <button type="button" class="au-alt">o feijão produz fósforo, que vai para o solo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O carbono do petróleo estava guardado fora do ciclo há milhões de anos; queimá-lo acrescenta CO₂ novo ao ar.">
+    <p>Por que queimar petróleo aumenta o CO₂ da atmosfera, enquanto a respiração dos animais não altera o equilíbrio?</p>
+    <button type="button" class="au-alt">Porque os animais não liberam CO₂</button>
+    <button type="button" class="au-alt">Porque o petróleo não tem carbono</button>
+    <button type="button" class="au-alt">Porque o carbono do petróleo estava guardado fora do ciclo e volta todo de uma vez</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Desnitrificação: bactérias transformam nitrato em N₂, que volta para a atmosfera.">
+    <p>Qual processo devolve o nitrogênio do solo para a atmosfera?</p>
+    <button type="button" class="au-alt">Desnitrificação</button>
+    <button type="button" class="au-alt">Nitrificação</button>
+    <button type="button" class="au-alt">Fixação</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="ciclos-biogeoquimicos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

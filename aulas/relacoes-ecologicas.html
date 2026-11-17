@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 1 · Aula 2</div>
+  <h1>Relações ecológicas: quem ganha e quem perde</h1>
+  <p class="au-abre">Tubarão e rêmora, abelha e flor, carrapato e cachorro: toda convivência entre seres vivos pode ser lida com dois sinais, um para cada lado. Aqui você vai aprender a classificar qualquer relação sem decorar lista, só perguntando quem ganha, quem perde e quem nem liga.</p>
+</header>
+
+<section class="au-cena" aria-label="Jogo: classifique a relação">
+  <div class="au-loja">Classifique a relação <small>para cada dupla, escolha o que acontece com cada lado</small></div>
+  <div class="au-painel">
+    <div class="au-caso" id="au-caso" aria-live="polite"></div>
+    <div class="au-opcoes" id="au-opcoes" role="group" aria-label="Sinais"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+    <div class="au-atalhos"><button type="button" id="au-proximo">Próximo exemplo →</button><span class="au-placar" id="au-placar"></span></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Dois sinais resolvem tudo</h2>
+  <p>Para cada lado da relação, use <b>+</b> (ganha), <b>−</b> (perde) ou <b>0</b> (nem ganha, nem perde). Se ninguém perde, a relação é <b>harmônica</b>; se alguém perde, é <b>desarmônica</b>.</p>
+  <div class="au-filme" data-filme="sinais" aria-label="Animação: tabela dos sinais das relações"></div>
+  <ul class="au-pegadinhas">
+    <li><b>+ / +</b> obrigatório: <b>mutualismo</b> (cupim e os protozoários do intestino que digerem a madeira; líquen = alga + fungo).</li>
+    <li><b>+ / +</b> que não é obrigatório: <b>protocooperação</b> (anu e boi: o anu come os carrapatos, o boi fica limpo, mas cada um vive sozinho).</li>
+    <li><b>+ / 0</b>: <b>comensalismo</b> (rêmora come as sobras do tubarão) e <b>inquilinismo</b> (orquídea apoiada na árvore, sem roubar seiva).</li>
+    <li><b>+ / −</b>: <b>predação</b> (mata e come), <b>parasitismo</b> (vive à custa do outro, em geral sem matar) e <b>esclavagismo</b> (formigas que capturam larvas de outra espécie para trabalhar).</li>
+    <li><b>− / −</b>: <b>competição</b> pelo mesmo recurso (comida, luz, território).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Predador e presa sobem e descem juntos</h2>
+  <p>Com muitas presas, os predadores comem bem e aumentam. Com muitos predadores, as presas diminuem. Aí falta comida, os predadores diminuem, e as presas voltam a crescer. No gráfico, duas ondas: a do predador vem <b>um pouco depois</b> da onda da presa.</p>
+  <div class="au-filme" data-filme="ondas" aria-label="Animação: populações de lebres e linces"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Competição: dois não cabem no mesmo lugar</h2>
+  <p>Duas espécies que usam exatamente o mesmo recurso, no mesmo lugar, não convivem por muito tempo: uma acaba eliminando a outra (é o chamado princípio de Gause). Quando convivem, é porque dividem o recurso de algum jeito (horários, alturas da árvore, tipos de semente).</p>
+  <div class="au-filme" data-filme="gause" aria-label="Animação: duas espécies de paramécio competindo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Mesma espécie</b> também tem relações: <b>colônia</b> e <b>sociedade</b> (harmônicas, como abelhas) e <b>competição intraespecífica</b> e <b>canibalismo</b> (desarmônicas).</li>
+    <li><b>Parasita</b> que mata o hospedeiro rápido perde a própria casa: por isso a maioria não mata.</li>
+    <li><b>Controle biológico</b> usa predadores ou parasitas de uma praga no lugar de veneno.</li>
+    <li>"Benefício mútuo" no enunciado: veja se a relação é <b>obrigatória</b> (mutualismo) ou não (protocooperação).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="A bromélia só se apoia na árvore para pegar luz e não tira nada dela: + para a bromélia, 0 para a árvore. É inquilinismo, um tipo de comensalismo.">
+    <p>Bromélias crescem sobre galhos de árvores para ficar mais perto da luz, sem tirar nutrientes delas. Essa relação é:</p>
+    <button type="button" class="au-alt">parasitismo</button>
+    <button type="button" class="au-alt">inquilinismo</button>
+    <button type="button" class="au-alt">mutualismo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Vespas que botam ovos dentro da lagarta da praga (parasitas) diminuem a praga sem veneno: é controle biológico, com uma relação + / −.">
+    <p>Para combater uma lagarta que ataca a cana, usam-se vespas que botam ovos dentro dela. A relação entre a vespa e a lagarta e o nome da técnica são:</p>
+    <button type="button" class="au-alt">parasitismo; controle biológico</button>
+    <button type="button" class="au-alt">mutualismo; adubação verde</button>
+    <button type="button" class="au-alt">competição; monocultura</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Os dois disputam o mesmo recurso (luz) e os dois perdem com isso: − / −, competição.">
+    <p>Numa floresta, árvores jovens de duas espécies disputam a luz que passa pelas copas. Essa relação é:</p>
+    <button type="button" class="au-alt">predação</button>
+    <button type="button" class="au-alt">protocooperação</button>
+    <button type="button" class="au-alt">competição</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="relacoes-ecologicas">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

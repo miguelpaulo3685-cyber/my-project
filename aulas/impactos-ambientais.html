@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 1 · Aula 4</div>
+  <h1>Impactos ambientais: o que a gente faz volta para a gente</h1>
+  <p class="au-abre">Lagoa verde e com peixes mortos, chuva que corrói estátua, mercúrio no peixe que você come, planeta mais quente: o ENEM cobra esses temas todo ano, quase sempre misturando Biologia, Química e Geografia. Aqui você vai entender a causa e o mecanismo de cada um.</p>
+</header>
+
+<section class="au-cena" aria-label="Lagoa: esgoto e adubo causando eutrofização">
+  <div class="au-loja">A lagoa da cidade <small>aumente o esgoto e o adubo que chegam à lagoa e veja o que acontece</small></div>
+  <div class="au-painel">
+    <div class="au-lagoa" id="au-lagoa" role="img"></div>
+    <div class="au-medidores" id="au-medidores"></div>
+    <div class="au-controle"><label for="au-nutri">Esgoto e adubo</label><input id="au-nutri" type="range" min="0" max="10" value="2"><output id="au-o-nutri"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Eutrofização: excesso de "comida" mata a lagoa</h2>
+  <p>Esgoto e adubo carregam <b>nitrogênio e fósforo</b>, nutrientes das algas. Com nutriente sobrando, as algas da superfície explodem e formam um tapete verde. A luz não chega ao fundo, as plantas de lá morrem, e tudo o que morre é decomposto por <b>bactérias aeróbias</b>, que gastam o oxigênio da água. Sem oxigênio, os peixes morrem.</p>
+  <p>Repare no detalhe que o ENEM cobra: os peixes não morrem envenenados pelo adubo, morrem por <b>falta de oxigênio</b>, consumido pela decomposição.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Efeito estufa: um cobertor que ficou grosso demais</h2>
+  <p>O efeito estufa é <b>natural e necessário</b>: gases como CO₂, metano e vapor de água seguram parte do calor que a Terra devolve ao espaço. Sem ele, a média do planeta seria de uns −18 °C. O problema é a <b>intensificação</b>: queimar combustíveis fósseis, desmatar e criar gado em larga escala aumentam esses gases, e mais calor fica preso.</p>
+  <div class="au-filme" data-filme="estufa" aria-label="Animação: calor sendo segurado pelos gases do efeito estufa"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Biomagnificação: o veneno sobe na cadeia</h2>
+  <p>Algumas substâncias, como <b>mercúrio</b> e o inseticida <b>DDT</b>, não são eliminadas pelo corpo: ficam guardadas na gordura. Um peixe pequeno come muito plâncton e acumula o mercúrio de todos. O peixe grande come muitos peixes pequenos. Quanto mais alto na cadeia, <b>maior a concentração</b>.</p>
+  <div class="au-filme" data-filme="bioacumula" aria-label="Animação: mercúrio concentrando ao longo da cadeia"></div>
+  <p>Por isso garimpo com mercúrio nos rios da Amazônia é um risco para quem come peixe carnívoro, como o tucunaré, mesmo longe do garimpo.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Chuva ácida</h2>
+  <p>Fábricas, usinas a carvão e veículos soltam <b>óxidos de enxofre (SO₂) e de nitrogênio (NOₓ)</b>. No ar, eles reagem com a água e viram ácidos que caem com a chuva, às vezes longe de onde foram produzidos. Resultado: lagos ácidos, florestas danificadas e estátuas e prédios de mármore corroídos.</p>
+  <div class="au-filme" data-filme="chuva" aria-label="Animação: fumaça da fábrica virando chuva ácida"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Efeito estufa ≠ buraco na camada de ozônio.</b> O ozônio filtra raios ultravioleta e foi destruído por gases CFC (de geladeiras e sprays antigos); não é a causa do aquecimento.</li>
+    <li><b>Lixão</b> contamina o solo e a água com <b>chorume</b>; o <b>aterro sanitário</b> tem manta impermeável e trata o chorume e o gás. Reduzir, reutilizar e reciclar vem antes.</li>
+    <li><b>Eutrofização</b>: a solução é tratar esgoto e controlar adubo, não "pôr mais oxigênio" no lago.</li>
+    <li><b>Biomagnificação</b> vale para substâncias que se acumulam; o que o corpo elimina não se concentra.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="A decomposição da enorme quantidade de algas mortas por bactérias aeróbias consome o oxigênio dissolvido: os peixes morrem asfixiados.">
+    <p>Numa lagoa que recebe esgoto sem tratamento, as algas se multiplicam e depois os peixes morrem. A principal causa da morte dos peixes é:</p>
+    <button type="button" class="au-alt">o veneno do esgoto</button>
+    <button type="button" class="au-alt">a falta de luz para os peixes enxergarem</button>
+    <button type="button" class="au-alt">a falta de oxigênio, consumido pelas bactérias que decompõem a matéria orgânica</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O mercúrio se acumula e se concentra a cada nível: o peixe carnívoro, no topo, tem a maior concentração.">
+    <p>Num rio contaminado por mercúrio de garimpo, quem deve ter a maior concentração do metal no corpo?</p>
+    <button type="button" class="au-alt">Peixes carnívoros, no topo da cadeia</button>
+    <button type="button" class="au-alt">As algas do rio</button>
+    <button type="button" class="au-alt">Todos têm a mesma quantidade</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O ozônio filtra a radiação ultravioleta. A destruição foi causada principalmente por CFCs, não pelo CO₂.">
+    <p>Qual é a função da camada de ozônio?</p>
+    <button type="button" class="au-alt">Segurar o calor da Terra</button>
+    <button type="button" class="au-alt">Filtrar parte da radiação ultravioleta do Sol</button>
+    <button type="button" class="au-alt">Produzir o oxigênio que respiramos</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="impactos-ambientais">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

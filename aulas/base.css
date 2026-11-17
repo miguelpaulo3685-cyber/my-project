@@ -386,3 +386,53 @@ i.au-um { width: 13px; height: 13px; background: radial-gradient(circle at 35% 3
 .au-linha-media { width: 88%; height: 0; border-top: 3px dashed #62a8ea; }
 .au-linha-media.au-linha-mediana { border-top-color: #e9b949; }
 .au-bloquinho-media { width: 16%; height: 16%; border-radius: 4px; background: #e9b949; }
+
+/* Biologia */
+.au-rotulo-filme { display: block; max-width: 84px; white-space: normal; text-align: center; font: 700 11px/1.25 var(--fonte); color: var(--texto-fraco); }
+.au-caso p { margin: 8px 0 0 !important; font-weight: 600; text-align: center; }
+.au-dupla { display: flex; justify-content: center; align-items: center; gap: 16px; }
+.au-dupla span { display: flex; flex-direction: column; align-items: center; font-size: 13px; color: var(--texto-fraco); }
+.au-dupla span b { font-size: 40px; line-height: 1.1; }
+.au-dupla i { font-style: normal; color: var(--texto-fraco); }
+.au-opcoes .au-alt small { display: block; font-size: 11px; color: var(--texto-fraco); font-weight: 500; }
+.au-opcoes .au-alt { font-size: 18px; font-weight: 800; }
+.au-placar { align-self: center; }
+.au-linha-relacao { display: grid; grid-template-columns: 48px 58px minmax(0, 1fr); align-items: center; gap: 8px; width: min(320px, 86vw); padding: 6px 10px; border-radius: 10px; border-left: 5px solid var(--c); background: var(--superficie); white-space: normal; }
+.au-linha-relacao b { font: 800 18px var(--fonte); color: var(--c); }
+.au-linha-relacao span { font-size: 20px; }
+.au-linha-relacao em { font: 700 12px/1.25 var(--fonte); font-style: normal; }
+.au-haste { position: relative; width: min(240px, 66vw); height: 6px; border-radius: 3px; background: var(--texto-fraco); transition: transform .9s !important; }
+.au-haste i { position: absolute; top: 6px; width: 64px; height: 26px; border: 3px solid var(--texto-fraco); border-top: none; border-radius: 0 0 32px 32px; }
+.au-prato-e { left: -10px; } .au-prato-d { right: -10px; }
+.au-base-balanca { width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent; border-bottom: 34px solid var(--texto-fraco); }
+.au-ator.au-base-balanca { transform: translate(-50%, -100%); }
+.au-solo { width: 100%; height: 40%; background: linear-gradient(#6b4a2a, #4a321c); opacity: .75; }
+.au-palco i.au-nodulo { width: 14px; height: 14px; border-radius: 50%; background: #e2a0a0; box-shadow: inset -2px -2px 0 rgba(0,0,0,.2); }
+.au-molecula { display: inline-block; padding: 2px 6px; border-radius: 999px; background: #62a8ea; color: #fff; font: 800 11px var(--fonte); }
+.au-mar { width: 64%; height: 22%; background: linear-gradient(#4a94d8, #2c6aa8); border-radius: 30px 30px 0 0; }
+.au-morro { width: 44%; height: 26%; background: #4f7f4a; border-radius: 60% 60% 0 0; }
+.au-palco i.au-gota { width: 8px; height: 12px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; background: #7fbaf0; transition: top 1.2s ease-in !important; }
+.au-palco i.au-vapor { background: #dfeefc; border-radius: 50%; width: 10px; height: 10px; }
+/* Impactos ambientais */
+.au-lagoa { border-radius: 14px; overflow: hidden; }
+.au-agua-lagoa { position: relative; height: 170px; background: linear-gradient(rgba(74,148,216,calc(.4 + var(--luz) * .5)), rgba(20,50,80,calc(1.1 - var(--luz) * .6))); }
+.au-tapete { position: absolute; left: 0; right: 0; top: 0; background: repeating-linear-gradient(90deg, #3fae4a 0 10px, #2f8f3a 10px 18px); transition: height .4s; }
+.au-peixe { position: absolute; font-size: 20px; transition: all .4s; }
+.au-peixe.au-morto { top: auto; bottom: 18px; transform: rotate(180deg); filter: grayscale(1); opacity: .8; }
+i.au-bolha { position: absolute; bottom: 10px; width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid #cfe8ff; animation: au-sobe 3s infinite linear; }
+@keyframes au-sobe { to { transform: translateY(-120px); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { i.au-bolha { animation: none; } }
+.au-plantas-fundo { position: absolute; bottom: 0; left: 0; right: 0; text-align: center; font-size: 22px; letter-spacing: 10px; transition: opacity .4s; }
+.au-medidores { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; }
+.au-medidor { display: grid; grid-template-columns: minmax(0, 1fr) 38px; gap: 2px 8px; align-items: center; font-size: 12px; }
+.au-medidor small { grid-column: 1 / -1; color: var(--texto-fraco); }
+.au-medidor div { height: 8px; border-radius: 4px; background: var(--superficie-2); overflow: hidden; }
+.au-medidor i { display: block; height: 100%; transition: width .4s; }
+.au-medidor b { text-align: right; font-variant-numeric: tabular-nums; }
+.au-terra { width: 140%; height: 70%; border-radius: 50%; background: radial-gradient(circle at 50% 20%, #4f8f5a, #2c5f8f); }
+.au-camada-gases { width: 100%; height: 10px; background: color-mix(in srgb, #c9971d 45%, transparent); transition: height .8s !important; }
+.au-camada-gases.au-grossa { height: 28px; background: color-mix(in srgb, #c94b4b 55%, transparent); }
+.au-palco i.au-raio { width: 4px; height: 26px; border-radius: 2px; background: #ffd75e; transition: top 1.2s linear, opacity .45s !important; }
+.au-palco i.au-raio.au-calor { background: #ff7a45; }
+.au-mercurio { display: flex; flex-wrap: wrap; gap: 2px; width: 46px; justify-content: center; }
+.au-mercurio i { display: block; width: 6px; height: 6px; border-radius: 50%; background: #e05252; }
