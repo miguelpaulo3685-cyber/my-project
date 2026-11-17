@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 4 · Aula 3</div>
+  <h1>Análise combinatória: contar sem listar</h1>
+  <p class="au-abre">Quantas senhas de 4 dígitos existem? Quantos lanches diferentes dá para montar? De quantos jeitos sai um pódio? Contar um por um é impossível; a combinatória ensina a contar multiplicando. O segredo é uma pergunta só: trocar a ordem muda o resultado?</p>
+</header>
+
+<section class="au-cena" aria-label="Escolher pessoas: com ordem ou sem ordem">
+  <div class="au-loja">Escolher da turma <small>escolha quantas pessoas pegar e se a ordem importa</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="A ordem importa?">
+      <button type="button" data-ordem="1">🏆 Pódio (ordem importa)</button>
+      <button type="button" data-ordem="0">👥 Comissão (ordem não importa)</button>
+    </div>
+    <div class="au-turma" id="au-turma"></div>
+    <div class="au-controle"><label for="au-k">Escolher</label><input id="au-k" type="range" min="1" max="3" value="2"><output id="au-o-k"></output></div>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-lista-comb" id="au-lista" aria-live="polite"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O princípio fundamental: "e" vira vezes</h2>
+  <p>3 camisetas <b>e</b> 2 bermudas: para cada camiseta há 2 bermudas, então são 3 × 2 = <b>6 roupas</b>. Quando as escolhas acontecem uma <b>e</b> depois a outra, multiplique as possibilidades de cada etapa. Isso é o <b>Princípio Fundamental da Contagem</b>.</p>
+  <div class="au-filme" data-filme="pfc" aria-label="Animação: árvore de 3 camisetas e 2 bermudas"></div>
+  <p>Senha de 4 dígitos (0 a 9, pode repetir): 10 × 10 × 10 × 10 = 10 000 senhas. Se for "uma coisa <b>ou</b> outra" (ir de ônibus ou de metrô), as possibilidades <b>somam</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Permutação: arrumar todo mundo</h2>
+  <p>De quantas formas 4 pessoas fazem uma fila? Para o 1º lugar há 4 opções, para o 2º sobram 3, depois 2, depois 1: 4 × 3 × 2 × 1 = <b>24</b>. Essa conta tem nome: <b>4!</b> (quatro fatorial). Anagramas de AMOR também são 4! = 24.</p>
+  <div class="au-filme" data-filme="anagramas" aria-label="Animação: lugares sendo preenchidos para os anagramas de AMOR"></div>
+  <p>Com letras repetidas, divida pelas trocas que não mudam nada: em ARARA, trocar um A por outro A dá a mesma palavra. São 5! ÷ (3! × 2!) = 120 ÷ 12 = <b>10</b> anagramas.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Arranjo ou combinação: a ordem importa?</h2>
+  <p>Escolher 2 de 4 pessoas para <b>presidente e vice</b>: Ana-Bia é diferente de Bia-Ana. São 4 × 3 = <b>12</b> (arranjo). Escolher 2 para uma <b>comissão</b>: Ana-Bia é a mesma dupla que Bia-Ana. Cada dupla foi contada 2 vezes, então são 12 ÷ 2 = <b>6</b> (combinação).</p>
+  <div class="au-filme" data-filme="ordem" aria-label="Animação: pares com ordem e sem ordem"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Faça sempre a pergunta: <b>se eu trocar a ordem, vira outra coisa?</b> Sim: arranjo (multiplica e pronto). Não: combinação (multiplica e divide pelas trocas).</li>
+    <li><b>Restrição primeiro</b>: "começa com vogal", "o goleiro é fixo". Preencha a posição com restrição antes das outras.</li>
+    <li><b>Pode repetir?</b> Senha pode (10 × 10 × …); pódio não (cada pessoa ocupa um lugar só).</li>
+    <li>Times, comissões, grupos, saladas de frutas e apertos de mão são <b>combinação</b>. Filas, senhas, placas e pódios são de <b>ordem</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Etapa por etapa: 3 pães × 4 recheios × 2 bebidas = 24 combos.">
+    <p>Uma lanchonete oferece 3 pães, 4 recheios e 2 bebidas. Quantos combos diferentes (um de cada) dá para montar?</p>
+    <button type="button" class="au-alt">9</button>
+    <button type="button" class="au-alt">24</button>
+    <button type="button" class="au-alt">12</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Ordem não importa (aperto de mão de A com B é o mesmo de B com A): 5 × 4 ÷ 2 = 10.">
+    <p>Numa reunião com 5 pessoas, cada uma aperta a mão de todas as outras uma vez. Quantos apertos de mão acontecem?</p>
+    <button type="button" class="au-alt">20</button>
+    <button type="button" class="au-alt">25</button>
+    <button type="button" class="au-alt">10</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A ordem importa (1º, 2º e 3º lugares) e ninguém repete: 8 × 7 × 6 = 336.">
+    <p>Uma corrida tem 8 atletas. De quantas formas diferentes pode sair o pódio (1º, 2º e 3º)?</p>
+    <button type="button" class="au-alt">336</button>
+    <button type="button" class="au-alt">56</button>
+    <button type="button" class="au-alt">24</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="combinatoria">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

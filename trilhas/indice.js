@@ -7,7 +7,8 @@
 window.TRILHAS_MM = {
   prontas: ['soma', 'subtracao', 'multiplicacao', 'divisao', 'fracoes', 'contas-fracoes', 'decimais', 'potencia',
     'razao', 'proporcao', 'regra-de-tres', 'porcentagem', 'juros', 'graficos', 'medias', 'fotossintese',
-    'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais'],
+    'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais',
+    'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [

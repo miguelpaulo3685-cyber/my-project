@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 9</div>
+  <h1>Raiz, propriedades das potências e notação científica</h1>
+  <p class="au-abre">A raiz quadrada é a pergunta "qual é o lado deste quadrado?". As propriedades das potências são atalhos para contar fatores. E a notação científica é o jeito de escrever o tamanho de um vírus ou a distância até uma estrela sem se perder nos zeros. Tudo isso cai no ENEM dentro de problemas do dia a dia.</p>
+</header>
+
+<section class="au-cena" aria-label="Quadrado: escolha a área e veja o lado">
+  <div class="au-loja">Piso quadrado <small>escolha a área do piso e descubra quanto mede o lado</small></div>
+  <div class="au-painel">
+    <div class="au-quadrado-raiz" id="au-quadrado" role="img"></div>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-area">Área (m²)</label><input id="au-area" type="range" min="1" max="144" value="49"><output id="au-o-area"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Raiz quadrada é o lado do quadrado</h2>
+  <p>Um quadrado de 49 m² tem lado 7 m, porque 7 × 7 = 49. Por isso <b>√49 = 7</b>: a raiz desfaz o "ao quadrado". Quando a área não é um quadrado perfeito, a raiz fica entre dois inteiros: √50 está entre 7 (√49) e 8 (√64), bem pertinho de 7.</p>
+  <div class="au-filme" data-filme="estimar" aria-label="Animação: estimando a raiz de 50"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Propriedades das potências: é só contar fatores</h2>
+  <p>2³ × 2² = (2 × 2 × 2) × (2 × 2): são <b>cinco</b> 2 multiplicados, ou seja, 2⁵. Mesma base multiplicando: <b>soma os expoentes</b>. Dividindo: <b>subtrai</b> (2⁵ ÷ 2² = 2³, porque dois 2 se cancelam). Potência de potência: <b>multiplica</b> ((2³)² = 2⁶).</p>
+  <div class="au-filme" data-filme="fatores" aria-label="Animação: 2 ao cubo vezes 2 ao quadrado"></div>
+  <p>E o expoente negativo? Continue a escada dividindo por 2: 2¹ = 2, 2⁰ = 1, 2⁻¹ = 1/2, 2⁻² = 1/4. <b>Expoente negativo é "1 dividido por"</b>: 2⁻³ = 1/8.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Notação científica: um número entre 1 e 10 vezes uma potência de 10</h2>
+  <p>A distância da Terra ao Sol é 150 000 000 km = <b>1,5 × 10⁸ km</b>. Um vírus mede 0,0000001 m = <b>1 × 10⁻⁷ m</b>. Regra: deixe <b>um algarismo antes da vírgula</b> e conte quantas casas a vírgula andou. Andou para a esquerda (número grande), expoente positivo; para a direita (número pequeno), expoente negativo.</p>
+  <div class="au-filme" data-filme="cientifica" aria-label="Animação: 0,00025 virando 2,5 vezes 10 elevado a menos 4"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Racionalizar: tirar a raiz de baixo</h2>
+  <p>1/√2 é um número legítimo, mas difícil de calcular. Multiplique em cima e embaixo por √2 (é como multiplicar por 1): fica <b>√2/2</b>, que é ≈ 1,41 ÷ 2 ≈ 0,71. Racionalizar é só isso: trocar a forma da fração para a raiz sair do denominador.</p>
+  <div class="au-filme" data-filme="racionalizar" aria-label="Animação: 1 sobre raiz de 2 virando raiz de 2 sobre 2"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>√(9 + 16) = √25 = 5</b>, e não √9 + √16 = 7. Raiz não se distribui na soma.</li>
+    <li><b>Área e lado</b>: se a área de um terreno quadrado quadruplica, o lado só <b>dobra</b> (√4 = 2).</li>
+    <li>Na notação científica, <b>1,2 × 10⁻³</b> é 0,0012 (a vírgula anda 3 casas para a esquerda).</li>
+    <li>Comparar números grandes: compare primeiro os <b>expoentes</b>. 9 × 10⁵ é menor que 1 × 10⁶.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O lado é √81 = 9 m. Cercar o quadrado inteiro: 4 × 9 = 36 m.">
+    <p>Um terreno quadrado tem 81 m² de área. Quantos metros de cerca são precisos para contorná-lo?</p>
+    <button type="button" class="au-alt">9 m</button>
+    <button type="button" class="au-alt">36 m</button>
+    <button type="button" class="au-alt">81 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A vírgula anda 5 casas para a direita até ficar 3,2: 3,2 × 10⁻⁵.">
+    <p>Uma bactéria mede 0,000032 m. Em notação científica, isso é:</p>
+    <button type="button" class="au-alt">3,2 × 10⁵ m</button>
+    <button type="button" class="au-alt">32 × 10⁻⁶ m</button>
+    <button type="button" class="au-alt">3,2 × 10⁻⁵ m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Mesma base multiplicando: soma os expoentes. 10³ × 10⁴ = 10⁷.">
+    <p>Quanto é 10³ × 10⁴?</p>
+    <button type="button" class="au-alt">10⁷</button>
+    <button type="button" class="au-alt">10¹²</button>
+    <button type="button" class="au-alt">100⁷</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="radiciacao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

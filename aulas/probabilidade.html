@@ -1,0 +1,91 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 4 · Aula 4</div>
+  <h1>Probabilidade: medir a chance</h1>
+  <p class="au-abre">Qual a chance de ganhar no sorteio, de chover amanhã, de um filho nascer com olhos claros? Probabilidade é contar casos: quantos me interessam, de quantos possíveis. Aqui você vai jogar dados, ver a sorte virar estatística e aprender os três atalhos que o ENEM cobra: "e", "ou" e "pelo menos um".</p>
+</header>
+
+<section class="au-cena" aria-label="Dois dados: soma e frequência">
+  <div class="au-loja">Mesa de dados <small>escolha um evento, jogue os dados e compare com a conta</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Evento">
+      <button type="button" data-ev="sete">Soma 7</button>
+      <button type="button" data-ev="doze">Soma 12</button>
+      <button type="button" data-ev="dupla">Dois iguais</button>
+      <button type="button" data-ev="maior">Soma maior que 9</button>
+    </div>
+    <div class="au-grade-dados" id="au-grade" role="img"></div>
+    <div class="au-atalhos">
+      <button type="button" data-jogar="1">🎲 Jogar 1 vez</button>
+      <button type="button" data-jogar="100">Jogar 100 vezes</button>
+      <button type="button" data-jogar="1000">Jogar 1 000 vezes</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Casos que interessam ÷ casos possíveis</h2>
+  <p>Uma urna tem 3 bolas vermelhas e 7 azuis. A chance de tirar vermelha é <b>3 em 10</b>: P = 3/10 = 0,3 = <b>30%</b>. Só vale se todos os casos tiverem a mesma chance (bolas iguais, dado não viciado).</p>
+  <div class="au-filme" data-filme="urna" aria-label="Animação: urna com 3 bolas vermelhas e 7 azuis"></div>
+  <p>Probabilidade fica sempre entre <b>0</b> (impossível) e <b>1</b> (certeza). Na mesa de dados, cada quadradinho é um resultado possível: são 6 × 6 = 36.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>"E": multiplica. "Ou": soma.</h2>
+  <p>Jogar uma moeda duas vezes e dar <b>cara e cara</b>: 1/2 × 1/2 = <b>1/4</b>. Quando um resultado não interfere no outro (são <b>independentes</b>), a chance de os dois acontecerem é a multiplicação.</p>
+  <div class="au-filme" data-filme="moedas" aria-label="Animação: árvore de duas moedas"></div>
+  <p>Tirar um dado e sair <b>1 ou 2</b>: 1/6 + 1/6 = <b>2/6 = 1/3</b>. Quando os casos não podem acontecer juntos, a chance de um <b>ou</b> outro é a soma.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>"Pelo menos um": faça pelo contrário</h2>
+  <p>Chance de tirar <b>pelo menos uma cara</b> em 3 moedas? Contar os casos com 1, 2 ou 3 caras dá trabalho. É mais fácil calcular o contrário (<b>nenhuma</b> cara = três coroas = 1/2 × 1/2 × 1/2 = 1/8) e tirar de 1: <b>1 − 1/8 = 7/8</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Condicional: a informação muda o total</h2>
+  <p>Jogaram um dado e disseram: "deu número par". Qual a chance de ter dado 4? Agora os casos possíveis não são mais 6, são só <b>2, 4 e 6</b>. A chance é <b>1/3</b>, e não 1/6. Saber de algo <b>diminui o total</b> de casos.</p>
+  <div class="au-filme" data-filme="condicional" aria-label="Animação: dado sabendo que deu par"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>"Sabendo que…"</b> ou <b>"dado que…"</b>: é condicional. Troque o total pelo novo total.</li>
+    <li><b>Com ou sem reposição</b>: tirou uma bola e não devolveu? Na segunda retirada, o total diminuiu 1.</li>
+    <li><b>Soma 7</b> é a soma mais provável de dois dados (6 jeitos de 36). Soma 2 e soma 12 só têm 1 jeito cada.</li>
+    <li>Na genética (Aa × Aa), a chance de filho aa é 1/4: é o mesmo raciocínio das duas moedas.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Casos favoráveis: 5 números premiados. Total: 50. P = 5/50 = 1/10 = 10%.">
+    <p>Numa rifa de 50 números, 5 são premiados. Quem compra um número tem qual chance de ganhar?</p>
+    <button type="button" class="au-alt">10%</button>
+    <button type="button" class="au-alt">5%</button>
+    <button type="button" class="au-alt">50%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Independentes: 0,8 × 0,5 = 0,4 = 40%.">
+    <p>A chance de chover sábado é de 80% e a de o time jogar bem é de 50%, uma não afeta a outra. Qual a chance de chover e o time jogar bem?</p>
+    <button type="button" class="au-alt">130%</button>
+    <button type="button" class="au-alt">65%</button>
+    <button type="button" class="au-alt">40%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Condicional: os novos casos possíveis são só as 20 meninas. 8 delas usam óculos: 8/20 = 2/5.">
+    <p>Numa turma de 35 alunos, 20 são meninas, e 8 dessas meninas usam óculos. Sorteando uma <b>menina</b>, qual a chance de ela usar óculos?</p>
+    <button type="button" class="au-alt">8/35</button>
+    <button type="button" class="au-alt">2/5</button>
+    <button type="button" class="au-alt">4/7</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="probabilidade">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

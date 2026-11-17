@@ -1,0 +1,84 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 10</div>
+  <h1>Múltiplos, divisores, MMC e MDC</h1>
+  <p class="au-abre">Quando os dois ônibus vão sair juntos de novo? Qual o maior tamanho de pedaço para cortar duas fitas sem sobrar nada? No ENEM, MMC e MDC quase nunca aparecem com esse nome: aparecem como problema de "coincidir" ou de "dividir no maior tamanho possível". Aqui você aprende a reconhecer cada um.</p>
+</header>
+
+<section class="au-cena" aria-label="Dois ônibus saindo do terminal">
+  <div class="au-loja">Terminal de ônibus <small>escolha de quanto em quanto tempo sai cada linha</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 120" id="au-linhas" role="img" aria-label="Horários das duas linhas"></svg>
+    <div class="au-controle"><label for="au-a">🚌 Linha A</label><input id="au-a" type="range" min="2" max="30" value="12"><output id="au-o-a"></output></div>
+    <div class="au-controle"><label for="au-b">🚍 Linha B</label><input id="au-b" type="range" min="2" max="30" value="18"><output id="au-o-b"></output></div>
+    <p class="au-formula" id="au-fatores" style="margin:0"></p>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Múltiplo e divisor são a mesma conta, vista de lados opostos</h2>
+  <p>Os <b>múltiplos</b> de 6 são os resultados da tabuada do 6: 6, 12, 18, 24… Os <b>divisores</b> de 12 são os números que dividem 12 sem sobrar resto: 1, 2, 3, 4, 6 e 12. Se 12 é múltiplo de 6, então 6 é divisor de 12.</p>
+  <p>Atalhos para saber se divide (os <b>critérios de divisibilidade</b>):</p>
+  <div class="au-filme" data-filme="criterios" aria-label="Animação: critérios de divisibilidade por 2, 3, 5 e 10"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Fatorar: quebrar em primos</h2>
+  <p>Um <b>número primo</b> só é divisível por 1 e por ele mesmo: 2, 3, 5, 7, 11, 13… (o 1 não é primo, e o 2 é o único primo par). Todo número pode ser escrito como multiplicação de primos, como se os primos fossem as peças de Lego dos números.</p>
+  <div class="au-filme" data-filme="arvore" aria-label="Animação: árvore de fatores do 60"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>MDC: o maior pedaço que cabe nos dois</h2>
+  <p>Duas fitas, de 12 m e 18 m, vão ser cortadas em pedaços iguais, do maior tamanho possível, sem sobrar nada. O tamanho do pedaço tem de dividir 12 e 18 ao mesmo tempo: é um <b>divisor comum</b>. O maior deles é o <b>MDC</b>: 6 m.</p>
+  <div class="au-filme" data-filme="fitas" aria-label="Animação: fitas de 12 e 18 metros cortadas em pedaços de 6"></div>
+  <p>Pela fatoração: 12 = 2² × 3 e 18 = 2 × 3². O MDC pega só os primos <b>comuns</b>, com o <b>menor</b> expoente: 2 × 3 = 6.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>MMC: quando vão coincidir de novo</h2>
+  <p>Um ônibus sai a cada 12 min e outro a cada 18 min. Saíram juntos agora. Quando saem juntos de novo? Na primeira vez em que o tempo é <b>múltiplo dos dois</b>: o <b>MMC</b>, 36 min. Brinque com o terminal lá em cima.</p>
+  <p>Pela fatoração: o MMC pega <b>todos</b> os primos, com o <b>maior</b> expoente: 2² × 3² = 36.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>"Juntos de novo", "coincidir", "próxima vez ao mesmo tempo"</b>: MMC.</li>
+    <li><b>"Maior tamanho possível", "mesmo número em cada", "sem sobrar"</b>: MDC.</li>
+    <li>Pergunta pela <b>quantidade de pedaços</b>? Depois do MDC, divida: fitas de 12 m e 18 m em pedaços de 6 m dão 2 + 3 = 5 pedaços.</li>
+    <li>Horário: MMC de 40 min e 60 min é 120 min = 2 h. Some ao horário de partida.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="MMC(4, 6) = 12: tomando os dois remédios às 8h, vão coincidir de novo 12 horas depois, às 20h.">
+    <p>Uma pessoa toma um remédio a cada 4 horas e outro a cada 6 horas. Tomou os dois às 8h. Quando vai tomar os dois juntos de novo?</p>
+    <button type="button" class="au-alt">Às 10h</button>
+    <button type="button" class="au-alt">Às 18h</button>
+    <button type="button" class="au-alt">Às 20h</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="MDC(24, 36) = 12 alunos por grupo. Grupos: 24 ÷ 12 + 36 ÷ 12 = 2 + 3 = 5.">
+    <p>Uma escola quer dividir 24 alunos do 1º ano e 36 do 2º ano em grupos do mesmo tamanho, o maior possível, sem misturar as séries. Quantos grupos vão ser formados?</p>
+    <button type="button" class="au-alt">5</button>
+    <button type="button" class="au-alt">12</button>
+    <button type="button" class="au-alt">6</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="1 + 2 + 3 + 4 = 10, e 10 não é múltiplo de 3. Já 7 + 2 + 3 = 12, que é múltiplo de 3: 723 é divisível por 3.">
+    <p>Qual destes números é divisível por 3?</p>
+    <button type="button" class="au-alt">1 234</button>
+    <button type="button" class="au-alt">723</button>
+    <button type="button" class="au-alt">505</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="divisores">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>
