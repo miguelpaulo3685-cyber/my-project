@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Química · Módulo 7 · Aula 1</div>
+  <h1>Química ambiental: as reações por trás dos problemas</h1>
+  <p class="au-abre">Na Biologia você viu os efeitos de chuva ácida, efeito estufa e esgoto. Aqui você vai ver a química: que gás reage com o quê, por que o ozônio protege e o CFC destrói, e o que é a tal DBO que aparece nas questões sobre rios poluídos.</p>
+</header>
+
+<section class="au-cena" aria-label="Medidor de pH da chuva">
+  <div class="au-loja">Chuva da cidade <small>aumente a poluição do ar e veja o pH da chuva cair</small></div>
+  <div class="au-painel">
+    <div class="au-escala-ph" id="au-escala" role="img"></div>
+    <div class="au-controle"><label for="au-pol">SO₂ e NOₓ no ar</label><input id="au-pol" type="range" min="0" max="10" value="0"><output id="au-o-pol"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Chuva ácida: os óxidos viram ácidos</h2>
+  <p>Até a chuva limpa é um pouco ácida (pH ≈ 5,6), porque o CO₂ do ar forma ácido carbônico, fraco. A chuva ácida de verdade (pH abaixo de 5,6) vem de <b>óxidos de enxofre e de nitrogênio</b>, que reagem com a água do ar:</p>
+  <p class="au-formula">SO₃ + H₂O → H₂SO₄ (ácido sulfúrico)</p>
+  <p class="au-formula">2 NO₂ + H₂O → HNO₃ + HNO₂</p>
+  <div class="au-filme" data-filme="marmore" aria-label="Animação: ácido reagindo com mármore"></div>
+  <p>O ácido ataca o mármore e o calcário (carbonato de cálcio) e solta CO₂: é por isso que estátuas e monumentos "derretem". Para reduzir: filtros nas chaminés, combustível com menos enxofre (como o diesel S10) e catalisador nos carros.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Camada de ozônio: o CFC quebra o O₃</h2>
+  <p>O ozônio (O₃) lá em cima, na estratosfera, absorve boa parte da radiação <b>ultravioleta</b>. Os CFCs (gases de geladeiras e sprays antigos) sobem, a luz UV solta deles átomos de <b>cloro</b>, e cada cloro destrói milhares de moléculas de ozônio, porque ele sai da reação inteiro e volta a atacar (age como catalisador).</p>
+  <div class="au-filme" data-filme="ozonio" aria-label="Animação: átomo de cloro destruindo várias moléculas de ozônio"></div>
+  <p>O Protocolo de Montreal (1987) proibiu os CFCs, e a camada está se recuperando devagar. Ozônio aqui embaixo, perto do chão, é poluente; lá em cima, é proteção.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>DBO: quanto oxigênio a sujeira vai gastar</h2>
+  <p><b>DBO (demanda bioquímica de oxigênio)</b> é a quantidade de oxigênio que as bactérias vão consumir para decompor a matéria orgânica da água. Esgoto tem DBO alta: muita "comida" para bactéria, muito oxigênio gasto, peixe sem ar. Quanto <b>maior a DBO, mais poluída</b> está a água.</p>
+  <div class="au-filme" data-filme="dbo" aria-label="Animação: DBO do rio limpo e do rio com esgoto"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Chuva ácida vem de <b>SO₂ e NOₓ</b>; efeito estufa vem de <b>CO₂ e CH₄</b>; camada de ozônio é destruída por <b>CFC</b>. Não misture.</li>
+    <li><b>pH menor = mais ácido</b>. Cada ponto a menos é 10 vezes mais ácido.</li>
+    <li><b>DBO alta = água ruim</b> (muita matéria orgânica). Oxigênio dissolvido alto = água boa.</li>
+    <li>Calcário (CaCO₃) é usado para <b>corrigir solos e lagos ácidos</b>: ele neutraliza o ácido.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O SO₂ e o SO₃ das chaminés reagem com a água do ar formando ácido sulfúrico: chuva ácida.">
+    <p>Uma usina queima carvão rico em enxofre. Qual problema ambiental é mais diretamente causado pelos gases dessa queima?</p>
+    <button type="button" class="au-alt">Destruição da camada de ozônio</button>
+    <button type="button" class="au-alt">Chuva ácida</button>
+    <button type="button" class="au-alt">Eutrofização</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="DBO alta indica muita matéria orgânica, que as bactérias vão decompor gastando o oxigênio da água.">
+    <p>Num rio, a DBO medida perto da saída de esgoto é muito maior que a medida perto da nascente. Isso indica que, perto do esgoto:</p>
+    <button type="button" class="au-alt">há mais oxigênio dissolvido</button>
+    <button type="button" class="au-alt">a água é mais limpa</button>
+    <button type="button" class="au-alt">há mais matéria orgânica, que vai consumir o oxigênio da água</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O cloro liberado dos CFCs reage com o ozônio e sai inteiro da reação, voltando a atacar: um só átomo destrói milhares de moléculas de O₃.">
+    <p>Por que uma quantidade pequena de CFC destrói tanto ozônio?</p>
+    <button type="button" class="au-alt">Porque cada átomo de cloro liberado destrói o ozônio e volta inteiro, podendo reagir de novo</button>
+    <button type="button" class="au-alt">Porque o CFC é mais pesado que o ozônio</button>
+    <button type="button" class="au-alt">Porque o CFC produz chuva ácida</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="quimica-ambiental">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

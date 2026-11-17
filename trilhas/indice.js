@@ -9,7 +9,8 @@ window.TRILHAS_MM = {
     'razao', 'proporcao', 'regra-de-tres', 'porcentagem', 'juros', 'graficos', 'medias', 'fotossintese',
     'cadeias-alimentares', 'relacoes-ecologicas', 'ciclos-biogeoquimicos', 'impactos-ambientais',
     'radiciacao', 'divisores', 'unidades', 'combinatoria', 'probabilidade',
-    'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares'],
+    'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares',
+    'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -74,7 +75,7 @@ window.TRILHAS_MM = {
       { id: 'qui6', nome: 'Química orgânica II', sobre: 'Isomeria, reações e polímeros.', aulas: [
         ['isomeria-plana', 'Isomeria plana', '🔀'], ['isomeria-espacial', 'Isomeria espacial', '🪞'],
         ['reacoes-organicas', 'Reações orgânicas', '🧪'], ['polimeros', 'Polímeros', '🧴']] },
-      { id: 'qui7', nome: 'Química ambiental e tópicos especiais', sobre: 'A Química do cotidiano e das notícias.', aulas: [
+      { id: 'qui7', nome: 'Química ambiental e tópicos especiais', sobre: 'A Química do cotidiano e das notícias.', teste: true, aulas: [
         ['quimica-ambiental', 'Química ambiental', '🌍'], ['tratamento-agua', 'Tratamento de água e esgoto', '🚰'],
         ['combustiveis', 'Combustíveis e energia', '⛽'], ['radioatividade', 'Radioatividade', '☢️']] }
     ] }

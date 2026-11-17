@@ -208,7 +208,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   cada. O índice fica em `trilhas/indice.js` (baixado só quando o cartão da trilha aparece), o teste de cada módulo em
   `trilhas/teste-<id>.js` (baixado só ao começar o teste) e cada aula em `aulas/` (baixada só ao abrir): o site continua
   leve. Para uma aula nova ficar disponível: os dois arquivos em `aulas/` e o id em `prontas` no índice. Módulo sem
-  teste não trava o seguinte. Prontas: 29 aulas (Matemática: Módulos 1, 2 e 4; Biologia: Ecologia e Fotossíntese; Química: Módulo 1). Testes: mat1, mat2, mat4, bio1, qui1 (os nomes
+  teste não trava o seguinte. Prontas: 33 aulas (Matemática: Módulos 1, 2 e 4; Biologia: Ecologia e Fotossíntese; Química: Módulos 1 e 7). Testes: mat1, mat2, mat4, bio1, qui1, qui7 (os nomes
   antigos m1/m3/m5 continuam valendo para quem já passou). **Faltam ~65 aulas** ("Em produção" na própria trilha).
 - **Trilha "O que cai no ENEM"** (feita em 17/11): cartão no topo do Treinar → tela `trilha` com o mapa dos módulos
   (`TRILHAS` no index.html). O teste de cada módulo (10 questões, passa com 7, alternativas embaralhadas a cada tentativa)

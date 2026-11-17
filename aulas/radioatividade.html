@@ -1,0 +1,84 @@
+<header>
+  <div class="au-trilha">Química · Módulo 7 · Aula 4</div>
+  <h1>Radioatividade: núcleos que se desmancham</h1>
+  <p class="au-abre">Alguns núcleos atômicos são instáveis e, com o tempo, soltam pedaços ou energia até virarem estáveis. Isso serve para datar fósseis, tratar câncer, gerar energia e também pode causar acidentes, como o de Goiânia em 1987. Aqui você vai entender as emissões e a ideia mais cobrada no ENEM: a meia-vida.</p>
+</header>
+
+<section class="au-cena" aria-label="Meia-vida: amostra radioativa decaindo">
+  <div class="au-loja">Meia-vida <small>avance o tempo e veja quantos núcleos ainda não decaíram</small></div>
+  <div class="au-painel">
+    <div class="au-amostra" id="au-amostra" role="img"></div>
+    <div class="au-controle"><label for="au-meias">Meias-vidas passadas</label><input id="au-meias" type="range" min="0" max="5" value="0"><output id="au-o-meias"></output></div>
+    <div class="au-atalhos" role="group" aria-label="Isótopo">
+      <button type="button" data-iso="iodo">Iodo-131 (8 dias)</button>
+      <button type="button" data-iso="cesio">Césio-137 (30 anos)</button>
+      <button type="button" data-iso="carbono">Carbono-14 (5 730 anos)</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>As três emissões</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Alfa (α)</b>: o núcleo solta 2 prótons e 2 nêutrons (um núcleo de hélio). Pesada e lenta: uma <b>folha de papel</b> já para.</li>
+    <li><b>Beta (β)</b>: um nêutron vira próton e solta um elétron em alta velocidade. Atravessa papel, para numa <b>placa de alumínio</b>.</li>
+    <li><b>Gama (γ)</b>: energia pura, uma onda eletromagnética, sem massa. Muito penetrante: só <b>chumbo grosso ou concreto</b> seguram.</li>
+  </ul>
+  <div class="au-filme" data-filme="emissoes" aria-label="Animação: alfa, beta e gama atravessando papel, alumínio e chumbo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Meia-vida: a metade some, de novo e de novo</h2>
+  <p>Meia-vida é o tempo para <b>metade</b> dos núcleos de uma amostra decair. Depois de outra meia-vida, cai pela metade de novo: 100% → 50% → 25% → 12,5%… Nunca chega exatamente a zero, mas fica muito pequeno. O carbono-14, com meia-vida de 5 730 anos, permite saber a idade de fósseis e objetos antigos.</p>
+  <div class="au-filme" data-filme="metade" aria-label="Animação: 16 núcleos virando 8, 4, 2"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Fissão e fusão</h2>
+  <p><b>Fissão</b>: um núcleo grande (como o urânio-235) é atingido por um nêutron e se parte em dois menores, soltando energia e mais nêutrons, que quebram outros núcleos: uma <b>reação em cadeia</b>. É o que acontece nas usinas nucleares (como Angra) e nas bombas atômicas.</p>
+  <p><b>Fusão</b>: núcleos pequenos (de hidrogênio) se juntam e formam um maior (hélio), liberando ainda mais energia. É o que acontece no <b>Sol</b>.</p>
+  <div class="au-filme" data-filme="fissao" aria-label="Animação: reação em cadeia da fissão"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Contaminação ≠ irradiação</b>. Alimento irradiado (para conservar) não fica radioativo. Contaminado é quem tem material radioativo em si (como em Goiânia, com o césio-137).</li>
+    <li>Meia-vida não depende da quantidade: 1 g ou 1 kg de iodo-131 caem pela metade em 8 dias.</li>
+    <li>Cálculo de idade: restou 1/4 do C-14? Passaram 2 meias-vidas: 2 × 5 730 = 11 460 anos.</li>
+    <li>Usinas nucleares não emitem CO₂, mas geram <b>lixo radioativo</b> que precisa ser guardado por muito tempo.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Restou 1/8: 1 → 1/2 → 1/4 → 1/8 são 3 meias-vidas. 3 × 5 730 = 17 190 anos.">
+    <p>Um osso tem 1/8 do carbono-14 que tinha quando o animal morreu. A meia-vida do C-14 é de 5 730 anos. Qual a idade aproximada do osso?</p>
+    <button type="button" class="au-alt">5 730 anos</button>
+    <button type="button" class="au-alt">11 460 anos</button>
+    <button type="button" class="au-alt">17 190 anos</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A radiação gama não tem massa nem carga e é muito penetrante: exige barreiras grossas de chumbo ou concreto.">
+    <p>Qual emissão exige uma parede grossa de chumbo ou concreto para ser barrada?</p>
+    <button type="button" class="au-alt">Gama</button>
+    <button type="button" class="au-alt">Alfa</button>
+    <button type="button" class="au-alt">Beta</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Na irradiação, a radiação atravessa o alimento e mata microrganismos, mas não deixa material radioativo nele.">
+    <p>Um alimento irradiado com raios gama para durar mais:</p>
+    <button type="button" class="au-alt">fica radioativo e perigoso</button>
+    <button type="button" class="au-alt">não fica radioativo</button>
+    <button type="button" class="au-alt">vira césio-137</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="radioatividade">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
