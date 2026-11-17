@@ -166,6 +166,30 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   banco de imagens e pôr a música pelo próprio TikTok/Instagram. Os arquivos de edição ficam só na sessão do
   Claude (temporários); se sumirem, é preciso mandar os vídeos de novo.
 
+### Divulgação (17/11, em andamento)
+- Perfis @mmestudos no TikTok e no Instagram; foto de perfil 1080x1080 pronta. TikTok fica **pessoal** (a conta
+  comercial pede CNPJ e limita as músicas). Link clicável no Instagram com `?origem=instagram`; no TikTok,
+  escrever "mmestudos.com.br" na bio e num comentário fixado.
+- Vídeo **"23h47"** (Fotossíntese, 37 s, em pé): 100% material nosso, pode postar. Hashtags sugeridas:
+  #enem #enem2027 #estudos #biologia #fotossintese.
+- Vídeo no estilo da referência (deitado 17,5 s e em pé 1080x1920): **só teste**. Já tem o cartão da nota TRI no
+  lugar do gráfico de bolsa (o "780" é exemplo), "ENEM 2027" e o fecho "Ninguém passa no ENEM sozinho.". Ainda
+  tem trechos de outro criador (rosto, esqueleto, câmera, fumaça): trocar por gravações nossas antes de publicar.
+
+### Plano do Miguel (17/11)
+- Até janeiro: 4 a 5 vídeos por semana, testando formatos. Começo de fevereiro: propor um **piloto grátis** à
+  antiga escola pública, já com números. Escola pública quase não paga (licitação); o dinheiro vem de escolas
+  particulares, cursinhos, plano pago e editais.
+- Abril: plano grátis (o que já existe) + **Pro a R$ 15** (questões de outros vestibulares, como UECE e UERJ, e
+  extras). Sugestões: comunidade e aulas continuam grátis; no Pro o que custa por uso (mais correções de redação
+  por IA, "Por que errei?" sem limite, relatório por assunto). Antes de construir, medir o interesse com um botão
+  "Quero o Pro". Antes de cobrar: CNPJ e contador, pagamento pelo responsável (menores) e direito de arrependimento.
+- Concorrente: Plataforma Assaad (ciclos de estudo e créditos de redação). Falta comparar planos e preços.
+- **Trilha de estudo guiada** (ideia nova): mapa de estações com aulas que se mexem. Começar por Matemática:
+  Porcentagem → Proporção → Regra de três → Gráficos. Cada estação: "uau" nos 10 primeiros segundos, mexer,
+  mini-desafio, 3 questões reais. Recompensa só visual; comunidade dentro da trilha. **Pedido: tela do mapa
+  numa prévia.**
+
 ### Celular: toque e tamanhos (16/11, publicado)
 - Auditoria em 8 tamanhos (320 a 1366 px) e 8 telas: nada rola de lado, viewport/lang/zoom corretos, sem botão sem
   nome nem imagem sem alt. Rolar a tela nunca responde a questão (testado em iPhone 13, SE e Pixel 7); a resposta só
