@@ -176,6 +176,10 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   lugar do gráfico de bolsa (o "780" é exemplo), "ENEM 2027" e o fecho "Ninguém passa no ENEM sozinho.". Ainda
   tem trechos de outro criador (rosto, esqueleto, câmera, fumaça): trocar por gravações nossas antes de publicar.
 
+- Vídeo **"Estude para o ENEM"** (17/11, 21 s, em pé 1080x1920): estilo do template "Explore the City" (capa de revista +
+  cortes rápidos na batida), só com telas do nosso site gravadas quadro a quadro + "Ninguém passa no ENEM sozinho.".
+  Material 100% nosso; a música da referência é só para teste: postar a versão sem música e pôr o som pelo TikTok/Instagram.
+
 ### Plano do Miguel (17/11)
 - Até janeiro: 4 a 5 vídeos por semana, testando formatos. Começo de fevereiro: propor um **piloto grátis** à
   antiga escola pública, já com números. Escola pública quase não paga (licitação); o dinheiro vem de escolas
