@@ -137,7 +137,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
       Matemática.** Pontos fracos: as linhas das alternativas erradas às vezes são vagas ("errou a conta") e a
       2012-147 tem uma frase confusa ("353485 metros cúbicos"; o certo é 3 534,85 m³): apagar pelo botão
       "Está errada: apagar e gerar outra"; (3) resolução da 2017-160 escrita à mão em `resolucoes.json`.
-- [ ] Render pago (~US$ 7/mês), se der.
+- [x] Render pago (plano Starter, US$ 7/mês): feito em 17/11; API respondendo em ~0,3 s e questões carregando.
 - [ ] Acompanhar o painel de erros e o Feedback.
 
 ### Navegação (16/11)
@@ -303,7 +303,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 ### 3. Infraestrutura (Miguel e Matheus)
 - [ ] Conferir as variáveis do Render: BREVO_API_KEY, SITE_URL, SEGREDO_IMAGENS, ADMIN_KEY.
 - [ ] Rodar no Neon o UPDATE que deixa a conta de vocês como admin.
-- [ ] Render pago (~US$ 7/mês) antes de divulgar: o grátis reinicia e as salas da Arena ficam na memória.
+- [x] Render pago (Starter, 17/11): o grátis reiniciava e as salas da Arena ficam na memória.
 - [x] Domínio mmestudos.com.br (registro.br) apontado para o GitHub Pages (11/11); SITE_URL e CORS no código.
 - [x] Autenticar o domínio no Brevo (11/11): domínio autenticado, remetente `nao-responda@mmestudos.com.br`.
 - [x] Aviso automático de erros do site (e-mail e celular para os administradores; lista na Administração).
