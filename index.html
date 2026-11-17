@@ -1865,8 +1865,10 @@
     .tc-topo b { display: block; font-family: var(--fonte-titulo); font-size: 1.3rem; margin-top: 2px; }
     .tc-topo small { display: block; color: var(--texto-fraco); font-size: .86rem; line-height: 1.45; margin-top: 2px; }
     .tc-materias { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 12px -18px 12px; padding: 0 18px; }
-    .tc-materias span { flex: none; font-size: .78rem; font-weight: 700; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--borda); color: var(--texto-fraco); }
-    .tc-materias span.ativa { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .tc-materias span, .tc-materias button { flex: none; font-family: inherit; background: transparent; cursor: pointer; font-size: .78rem; font-weight: 700; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--borda); color: var(--texto-fraco); }
+    .tc-materias button.ativa { background: var(--marca); color: var(--sobre-marca); border-color: var(--marca); }
+    .tc-materias span { cursor: default; opacity: .75; }
+    .tm-materias { margin: 12px 0 0; padding: 0; }
     .tc-materias i { font-style: normal; font-weight: 500; opacity: .75; }
     .tc-atual {
       width: 100%; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; align-items: center; text-align: left; cursor: pointer;
@@ -4480,25 +4482,9 @@ function irPara(tela) {
 // Cada aula mora em aulas/<id>.html e aulas/<id>.js e só é baixada quando o
 // aluno abre. Para acrescentar uma aula: os dois arquivos e uma linha aqui.
 const AULAS = [
-  { id: 'fotossintese', nome: 'Fotossíntese', materia: 'Biologia', icone: '🌱' },
   { id: 'cinematica', nome: 'Cinemática', materia: 'Física', icone: '🚗' },
-  { id: 'porcentagem', nome: 'Porcentagem', materia: 'Matemática', icone: '🧮', trilha: true },
   { id: 'piramide-etaria', nome: 'Pirâmide etária', materia: 'Geografia', icone: '👥' },
-  { id: 'figuras-de-linguagem', nome: 'Figuras de linguagem', materia: 'Português', icone: '💬' },
-  { id: 'soma', nome: 'Soma', materia: 'Matemática', icone: '➕', trilha: true },
-  { id: 'subtracao', nome: 'Subtração', materia: 'Matemática', icone: '➖', trilha: true },
-  { id: 'multiplicacao', nome: 'Multiplicação', materia: 'Matemática', icone: '✖️', trilha: true },
-  { id: 'divisao', nome: 'Divisão', materia: 'Matemática', icone: '➗', trilha: true },
-  { id: 'potencia', nome: 'Potência', materia: 'Matemática', icone: '²', trilha: true },
-  { id: 'fracoes', nome: 'Frações', materia: 'Matemática', icone: '🍕', trilha: true },
-  { id: 'decimais', nome: 'Números decimais', materia: 'Matemática', icone: '🔢', trilha: true },
-  { id: 'contas-fracoes', nome: 'Contas com frações', materia: 'Matemática', icone: '🧩', trilha: true },
-  { id: 'razao', nome: 'Razão e escala', materia: 'Matemática', icone: '🗺️', trilha: true },
-  { id: 'proporcao', nome: 'Proporção', materia: 'Matemática', icone: '⚖️', trilha: true },
-  { id: 'regra-de-tres', nome: 'Regra de três', materia: 'Matemática', icone: '🔁', trilha: true },
-  { id: 'juros', nome: 'Juros simples e compostos', materia: 'Matemática', icone: '💳', trilha: true },
-  { id: 'graficos', nome: 'Gráficos e tabelas', materia: 'Matemática', icone: '📊', trilha: true },
-  { id: 'medias', nome: 'Média, moda e mediana', materia: 'Matemática', icone: '📈', trilha: true }
+  { id: 'figuras-de-linguagem', nome: 'Figuras de linguagem', materia: 'Português', icone: '💬' }
 ];
 let pararAula = null;
 let aulaPedida = null;
@@ -4507,7 +4493,7 @@ const arquivosDasAulas = {};
 function desenharAprender() {
   const alvo = document.getElementById('aprender-lista');
   if (alvo.children.length) return;
-  alvo.innerHTML = AULAS.filter(a => !a.trilha).map(a => `<button type="button" onclick="abrirAula('${a.id}')">
+  alvo.innerHTML = AULAS.map(a => `<button type="button" onclick="abrirAula('${a.id}')">
     <span class="icone" aria-hidden="true">${a.icone}</span><span><b>${a.nome}</b><small>${a.materia}</small></span></button>`).join('');
 }
 
@@ -4517,81 +4503,18 @@ function desenharAprender() {
 // A ordem dos módulos pode mudar quando chegar a lista de conteúdos da equipe.
 // O progresso fica na conta (/api/trilha) e, sem conta, só no aparelho.
 const NOTA_PARA_PASSAR = 7;
-const TRILHAS = {
-  matematica: { nome: 'Matemática', icone: '🧮', modulos: [
-    { id: 'm1', nome: 'Operações básicas e potência', sobre: 'Da soma à potência: a base de toda a Matemática do ENEM.',
-      aulas: [['soma', 'Soma', '➕'], ['subtracao', 'Subtração', '➖'], ['multiplicacao', 'Multiplicação', '✖️'], ['divisao', 'Divisão', '➗'], ['potencia', 'Potência', '²']],
-      teste: [
-        ['Quanto é 2 345 + 1 678?', ['3 913', '4 023', '4 013'], 1, 'Unidades: 5 + 8 = 13 (vai 1). Dezenas: 4 + 7 + 1 = 12 (vai 1). Centenas: 3 + 6 + 1 = 10 (vai 1). Milhar: 2 + 1 + 1 = 4.'],
-        ['Quanto é 499 + 237?', ['736', '726', '746'], 0, 'Compensação: passe 1 do 237 para o 499. Fica 500 + 236 = 736.'],
-        ['Uma compra deu R$ 37,50 e você pagou com uma nota de R$ 50. Qual é o troco?', ['R$ 13,50', 'R$ 12,50', 'R$ 22,50'], 1, 'De 37,50 até 40 faltam 2,50; de 40 até 50 faltam 10. Troco: 12,50.'],
-        ['Quanto é 1 000 − 357?', ['753', '643', '657'], 1, 'Conte para a frente: de 357 até 360 são 3, até 400 são 40, até 1 000 são 600. 3 + 40 + 600 = 643.'],
-        ['Quanto é 25 × 16?', ['380', '400', '416'], 1, '16 = 4 × 4. 25 × 4 = 100, e 100 × 4 = 400.'],
-        ['Uma caixa tem 12 ovos. Quantos ovos há em 7 caixas?', ['74', '84', '96'], 1, '7 × 12 = 7 × 10 + 7 × 2 = 70 + 14 = 84.'],
-        ['Três amigos dividem igualmente uma conta de R$ 87. Quanto cada um paga?', ['R$ 27', 'R$ 29', 'R$ 31'], 1, '87 ÷ 3 = 29. Confira: 29 × 3 = 87.'],
-        ['50 alunos vão de van a uma excursão. Cada van leva 15 alunos. Quantas vans são precisas, no mínimo?', ['3', '3,33', '4'], 2, '50 ÷ 15 = 3 e sobram 5 alunos. Esses 5 também precisam ir: são 4 vans. Não existe 0,33 de van.'],
-        ['Quanto é 2⁵?', ['10', '25', '32'], 2, '2⁵ = 2 × 2 × 2 × 2 × 2 = 32. Não é 2 × 5.'],
-        ['Quanto é 3 + 4 × 2?', ['14', '11', '10'], 1, 'Multiplicação vem antes da soma: 4 × 2 = 8, e 3 + 8 = 11.']
-      ] },
-    { id: 'm2', nome: 'Frações e números decimais', sobre: 'Pizza, dinheiro e medidas: partes de um inteiro.', aulas: [['fracoes', 'Frações', '🍕'], ['decimais', 'Números decimais', '🔢'], ['contas-fracoes', 'Contas com frações', '🧩']],
-      teste: [
-        ['Quanto é 3/4 de 20?', ['12', '15', '16'], 1, '20 ÷ 4 = 5 em cada parte; 3 partes = 15.'],
-        ['Qual é maior: 2/3 ou 3/5?', ['2/3', '3/5', 'São iguais'], 0, 'Em quinze avos: 2/3 = 10/15 e 3/5 = 9/15. 2/3 é maior.'],
-        ['Quanto é 1/2 + 1/3?', ['2/5', '5/6', '1/6'], 1, 'Em sextos: 3/6 + 2/6 = 5/6. Não se somam os de baixo.'],
-        ['Qual é o maior número?', ['0,65', '0,7', '0,659'], 1, 'Complete com zeros: 0,650; 0,700; 0,659. O maior é 0,7.'],
-        ['Quanto é 2,5 × 4?', ['10', '8', '100'], 0, '2 × 4 + 0,5 × 4 = 8 + 2 = 10.'],
-        ['Quanto é 3/8 em número decimal?', ['0,375', '0,38', '3,8'], 0, '3 ÷ 8 = 0,375.'],
-        ['Uma família gasta 1/4 da renda com aluguel e 2/5 com outras contas. Que fração da renda sobra?', ['7/20', '13/20', '3/9'], 0, 'Em vinte avos: 5/20 + 8/20 = 13/20 gastos. Sobram 20/20 − 13/20 = 7/20.'],
-        ['Quantos minutos tem 1,5 hora?', ['150', '90', '105'], 1, '0,5 hora é meia hora, 30 minutos. 60 + 30 = 90.'],
-        ['Como fica 6/9 simplificada?', ['2/3', '3/4', '1/3'], 0, 'Divida em cima e embaixo por 3: 6/9 = 2/3.'],
-        ['Quantos copos de 1/5 de litro dá para encher com 3 litros?', ['15', '3/5', '8'], 0, 'Cada litro enche 5 copos. 3 × 5 = 15. É 3 ÷ 1/5 = 3 × 5.']
-      ] },
-    { id: 'm3', nome: 'Razão, proporção e regra de três', sobre: 'Receita, mapa e velocidade: o assunto que mais cai.', aulas: [['razao', 'Razão e escala', '🗺️'], ['proporcao', 'Proporção', '⚖️'], ['regra-de-tres', 'Regra de três', '🔁']],
-      teste: [
-        ['Num mapa de escala 1 : 200 000, duas cidades estão a 3 cm. Qual é a distância real?', ['6 km', '600 m', '60 km'], 0, '3 × 200 000 = 600 000 cm = 6 000 m = 6 km.'],
-        ['5 cadernos custam R$ 40. Quanto custam 8 cadernos iguais?', ['R$ 64', 'R$ 56', 'R$ 72'], 0, 'Cada caderno custa 40 ÷ 5 = R$ 8. 8 × 8 = R$ 64.'],
-        ['6 operários fazem uma obra em 10 dias. Em quantos dias 4 operários fazem a mesma obra?', ['15', '6,7', '12'], 0, 'Inversa: 6 × 10 = 60 dias de trabalho de 1 operário. 60 ÷ 4 = 15 dias.'],
-        ['Um carro rodou 150 km em 2,5 horas. Qual foi a velocidade média?', ['60 km/h', '75 km/h', '50 km/h'], 0, '150 ÷ 2,5 = 60 km/h.'],
-        ['Numa turma de 30 alunos, a razão de meninos para meninas é 2 : 3. Quantos são os meninos?', ['12', '18', '10'], 0, 'Grupos de 2 + 3 = 5 alunos. 30 ÷ 5 = 6 grupos. Meninos: 6 × 2 = 12.'],
-        ['Uma receita para 4 pessoas usa 300 g de farinha. Quanto para 10 pessoas?', ['750 g', '600 g', '1 200 g'], 0, 'Por pessoa: 300 ÷ 4 = 75 g. 10 × 75 = 750 g.'],
-        ['Um táxi cobra R$ 4 de bandeirada mais R$ 3 por km. Quanto custa uma corrida de 10 km?', ['R$ 34', 'R$ 70', 'R$ 30'], 0, '4 + 3 × 10 = 34. A taxa fixa entra uma vez só: não é proporcional.'],
-        ['A 90 km/h uma viagem dura 4 horas. Quanto dura a 120 km/h?', ['3 h', '5 h', '3,5 h'], 0, 'Inversa: a distância é 90 × 4 = 360 km. 360 ÷ 120 = 3 horas.'],
-        ['R$ 600 serão divididos em partes proporcionais a 1, 2 e 3. Qual é a maior parte?', ['R$ 300', 'R$ 200', 'R$ 360'], 0, 'São 1 + 2 + 3 = 6 partes de 600 ÷ 6 = R$ 100. A maior tem 3 partes: R$ 300.'],
-        ['Uma impressora imprime 30 páginas em 2 minutos. Quantas imprime em 15 minutos?', ['225', '450', '150'], 0, 'Por minuto: 30 ÷ 2 = 15 páginas. 15 × 15 = 225.']
-      ] },
-    { id: 'm4', nome: 'Porcentagem e juros', sobre: 'Desconto, aumento e juros do cartão.', aulas: [['porcentagem', 'Porcentagem', '🧮'], ['juros', 'Juros simples e compostos', '💳']],
-      teste: [
-        ['Quanto é 15% de 80?', ['12', '15', '8'], 0, '10% de 80 = 8; 5% = 4. 8 + 4 = 12.'],
-        ['Um produto de R$ 50 teve aumento de 20%. Qual é o novo preço?', ['R$ 60', 'R$ 70', 'R$ 52'], 0, '50 × 1,2 = 60.'],
-        ['Uma camisa de R$ 120 está com 25% de desconto. Quanto custa?', ['R$ 90', 'R$ 95', 'R$ 100'], 0, 'Paga 75%: 0,75 × 120 = 90.'],
-        ['Um preço subiu 10% e depois mais 10%. Qual foi o aumento total?', ['21%', '20%', '11%'], 0, '1,1 × 1,1 = 1,21: aumento de 21%. O segundo aumento é sobre o preço já aumentado.'],
-        ['Um preço passou de R$ 40 para R$ 50. Qual foi o aumento percentual?', ['25%', '20%', '10%'], 0, 'Aumentou 10 sobre 40: 10 ÷ 40 = 0,25 = 25%. A base é o valor antigo.'],
-        ['Qual é o juro de R$ 1 000 a juros simples de 3% ao mês durante 5 meses?', ['R$ 150', 'R$ 159', 'R$ 30'], 0, '3% de 1 000 = R$ 30 por mês. 5 × 30 = R$ 150.'],
-        ['R$ 500 a juros compostos de 10% ao mês. Quanto haverá depois de 2 meses?', ['R$ 605', 'R$ 600', 'R$ 550'], 0, '500 × 1,1 = 550; 550 × 1,1 = 605.'],
-        ['Numa escola, 30 de 120 alunos são canhotos. Que porcentagem é essa?', ['25%', '30%', '40%'], 0, '30 ÷ 120 = 0,25 = 25%.'],
-        ['Um produto custava R$ 80 e passou a custar R$ 60. Qual foi o desconto?', ['25%', '20%', '33%'], 0, 'Caiu 20 sobre 80: 20 ÷ 80 = 25%.'],
-        ['A taxa de desemprego foi de 8% para 10%. Como descrever corretamente essa mudança?', ['Subiu 2 pontos percentuais', 'Subiu 2%', 'Subiu 25 pontos percentuais'], 0, 'De 8 para 10 são 2 pontos percentuais. Em relação ao que era, subiu 25% (2 ÷ 8).']
-      ] },
-    { id: 'm5', nome: 'Gráficos, tabelas e médias', sobre: 'Ler dado do jeito que o ENEM cobra.', aulas: [['graficos', 'Gráficos e tabelas', '📊'], ['medias', 'Média, moda e mediana', '📈']],
-      teste: [
-        ['Qual é a média de 5, 7, 9 e 3?', ['6', '5', '7'], 0, 'Soma 24, dividida por 4 valores: 6.'],
-        ['Qual é a mediana de 8, 2, 5, 9 e 1?', ['5', '8', '2'], 0, 'Em ordem: 1, 2, 5, 8, 9. O do meio é 5.'],
-        ['Qual é a mediana de 4, 10, 6 e 2?', ['5', '6', '8'], 0, 'Em ordem: 2, 4, 6, 10. Quantidade par: média dos dois do meio, (4 + 6) ÷ 2 = 5.'],
-        ['Qual é a moda de 3, 5, 5, 7, 5 e 3?', ['5', '3', '4,67'], 0, 'O 5 aparece três vezes, mais que qualquer outro.'],
-        ['Nota 6 com peso 1 e nota 8 com peso 3. Qual é a média ponderada?', ['7,5', '7', '14'], 0, '(6 × 1 + 8 × 3) ÷ (1 + 3) = 30 ÷ 4 = 7,5.'],
-        ['Para ter média 7 em 3 provas, quem tirou 6 e 8 precisa de quanto na terceira?', ['7', '8', '6'], 0, 'Média 7 em 3 provas: soma 21. Já tem 14. Falta 7.'],
-        ['Num gráfico de setores, uma fatia representa 30%. Qual é o ângulo dela?', ['108°', '30°', '120°'], 0, '30 × 3,6 = 108°.'],
-        ['Um gráfico diz "vendas (em milhares)" e a barra de março marca 25. Quantas vendas houve em março?', ['25 000', '2 500', '25'], 0, '25 milhares = 25 000.'],
-        ['Cinco pessoas ganham 1, 1, 1, 1 e 16 mil reais. O que é verdade?', ['Média 4 mil e mediana 1 mil', 'Média 1 mil e mediana 4 mil', 'As duas são 4 mil'], 0, 'Média: 20 ÷ 5 = 4 mil, puxada pelo 16. Mediana: o do meio, 1 mil.'],
-        ['As vendas foram: janeiro 50, fevereiro 80, março 70, abril 95. Entre quais meses houve o maior aumento?', ['Janeiro e fevereiro', 'Março e abril', 'Fevereiro e março'], 0, 'Jan → fev: +30. Fev → mar: −10. Mar → abr: +25. O maior aumento foi de janeiro para fevereiro.']
-      ] }
-  ] },
-  natureza: { nome: 'Natureza', icone: '🌱', breve: true },
-  humanas: { nome: 'Humanas', icone: '🌎', breve: true },
-  linguagens: { nome: 'Linguagens', icone: '💬', breve: true }
-};
+const QUESTOES_POR_TESTE = 10;
+// O índice (matérias, módulos e aulas) fica em trilhas/indice.js e só é baixado quando
+// o cartão da trilha aparece. Os testes de cada módulo ficam em trilhas/teste-<id>.js.
+let TRILHAS = null, PRONTAS = new Set();
+function indiceTrilhas() {
+  if (TRILHAS) return Promise.resolve();
+  return arquivoDaAula('trilhas/indice.js').then(() => { TRILHAS = window.TRILHAS_MM.materias; PRONTAS = new Set(window.TRILHAS_MM.prontas); });
+}
+// Nomes antigos dos testes (antes da lista de conteúdos de 17/11): quem já passou continua passado.
+const TESTES_ANTIGOS = { mat1: 'm1', mat2: 'm3', mat4: 'm5' };
 const CHAVE_TRILHA = 'mm_trilha';
-let trilhaMateria = 'matematica';
+let trilhaMateria = ler('mm_trilha_materia') || 'matematica';
 let testeTrilha = null; // { mod, i, acertos, resposta }
 
 // Com conta, o progresso vem do servidor (vale em qualquer aparelho) e fica só na memória;
@@ -4633,33 +4556,50 @@ function salvarTrilha(t) {
   api('/api/trilha', { method: 'PUT', body: JSON.stringify(t) }).then(d => { if (usuarioLogado) trilhaConta = d.progresso; })
     .catch(() => avisoSim('Não consegui salvar o progresso da trilha agora. Ele fica nesta tela até a próxima tentativa.'));
 }
-const aulaPronta = id => AULAS.some(a => a.id === id);
-const aulasProntas = m => m.aulas.filter(([id]) => aulaPronta(id));
-const passouModulo = (t, m) => (t.testes[m.id] || 0) >= NOTA_PARA_PASSAR;
+const aulaPronta = id => PRONTAS.has(id);
+const passouModulo = (t, m) => (t.testes[m.id] || t.testes[TESTES_ANTIGOS[m.id]] || 0) >= NOTA_PARA_PASSAR;
 // O primeiro módulo está sempre aberto; os outros abrem quando o anterior passa no teste.
-const moduloAberto = (t, mods, k) => k === 0 || passouModulo(t, mods[k - 1]);
+// Módulo anterior ainda sem teste (aulas em produção) não segura ninguém.
+const moduloAberto = (t, mods, k) => k === 0 || passouModulo(t, mods[k - 1]) || !mods[k - 1].teste;
+const temPendencia = (t, m) => m.aulas.some(([id]) => aulaPronta(id) && !t.aulas[id]) || (m.teste && !passouModulo(t, m));
 
+// O módulo da vez: o primeiro aberto que ainda tem aula pronta para fazer ou teste para passar.
 function moduloAtual(t) {
   const mods = TRILHAS[trilhaMateria].modulos;
-  let k = 0;
-  while (k < mods.length - 1 && passouModulo(t, mods[k])) k++;
+  let k = mods.findIndex((m, i) => moduloAberto(t, mods, i) && temPendencia(t, m));
+  if (k < 0) k = mods.every(m => !temPendencia(t, m) && m.aulas.every(([id]) => aulaPronta(id))) ? mods.length - 1 : 0;
   return { m: mods[k], k };
+}
+
+function trocarMateriaTrilha(id) {
+  trilhaMateria = id;
+  guardar('mm_trilha_materia', id);
+  testeTrilha = null;
+  desenharCartaoTrilha();
+  if (!document.getElementById('tela-trilha').classList.contains('escondido')) desenharTrilha();
 }
 
 function desenharCartaoTrilha() {
   const alvo = document.getElementById('trilha-cartao');
+  if (!TRILHAS) {
+    if (!alvo.innerHTML) alvo.innerHTML = '<div class="tc-topo"><span class="tc-selo">O que cai no ENEM</span><b>Sua trilha de estudo</b><small>Carregando…</small></div>';
+    indiceTrilhas().then(desenharCartaoTrilha).catch(() => { alvo.querySelector('small').textContent = 'Não consegui abrir a trilha agora. Confira a internet.'; });
+    return;
+  }
+  if (!TRILHAS[trilhaMateria]) trilhaMateria = 'matematica';
   const t = lerTrilha(), { m, k } = moduloAtual(t);
   const feitas = m.aulas.filter(([id]) => t.aulas[id]).length;
   const proxima = m.aulas.find(([id]) => aulaPronta(id) && !t.aulas[id]);
   alvo.innerHTML = `<div class="tc-topo"><span class="tc-selo">O que cai no ENEM</span>
       <b>Sua trilha de estudo</b><small>Do básico ao nível ENEM, um módulo por vez. Com figura que você mexe e exemplo do dia a dia.</small></div>
-    <div class="tc-materias">${Object.entries(TRILHAS).map(([id, tr]) => `<span class="${id === trilhaMateria ? 'ativa' : ''}">${tr.icone} ${tr.nome}${tr.breve ? ' <i>em breve</i>' : ''}</span>`).join('')}</div>
+    <div class="tc-materias" role="group" aria-label="Matéria">${Object.entries(TRILHAS).map(([id, tr]) => `<button type="button" aria-pressed="${id === trilhaMateria}" class="${id === trilhaMateria ? 'ativa' : ''}" onclick="trocarMateriaTrilha('${id}')">${tr.icone} ${tr.nome}</button>`).join('')}
+      <span>📚 Outras matérias <i>em breve</i></span></div>
     <button class="tc-atual" onclick="irPara('trilha')">
       <span class="tc-num">${k + 1}</span>
       <span class="tc-info"><small>Módulo ${k + 1} de ${TRILHAS[trilhaMateria].modulos.length}</small><b>${escapar(m.nome)}</b>
         <span class="tc-barra"><i style="width:${Math.round(100 * feitas / m.aulas.length)}%"></i></span>
         <small>${feitas} de ${m.aulas.length} aulas${passouModulo(t, m) ? ' · teste feito ✓' : ''}</small></span>
-      <span class="tc-ir">${proxima ? `Continuar:<b>${escapar(proxima[1])}</b>` : 'Ver a trilha'} →</span>
+      <span class="tc-ir">${proxima ? `Continuar:<b>${escapar(proxima[1])}</b>` : m.aulas.some(([id]) => aulaPronta(id)) ? 'Ver a trilha' : 'Ver o que vem por aí'} →</span>
     </button>`;
 }
 
@@ -4678,19 +4618,21 @@ function concluirAulaDaTrilha(id) {
 
 function desenharTrilha() {
   const alvo = document.getElementById('tela-trilha');
+  if (!TRILHAS) { alvo.innerHTML = '<p class="pista">Abrindo a trilha…</p>'; indiceTrilhas().then(desenharTrilha); return; }
   if (testeTrilha) return desenharTesteTrilha();
   const tr = TRILHAS[trilhaMateria], t = lerTrilha(), atual = moduloAtual(t).k;
   alvo.innerHTML = `<button class="acao discreta pequena" style="margin:0 0 14px" onclick="irPara('treinar')">← Voltar para o Treinar</button>
     <div class="cabecalho-secao"><h1>${tr.icone} Trilha de ${tr.nome}</h1>
-      <p>Cada módulo terminado abre o próximo. Já sabe o assunto? Faça o teste do módulo e pule para o seguinte.</p></div>
+      <p>Cada módulo terminado abre o próximo. Já sabe o assunto? Faça o teste do módulo e pule para o seguinte.</p>
+      <div class="tc-materias tm-materias" role="group" aria-label="Matéria">${Object.entries(TRILHAS).map(([id, x]) => `<button type="button" aria-pressed="${id === trilhaMateria}" class="${id === trilhaMateria ? 'ativa' : ''}" onclick="trocarMateriaTrilha('${id}')">${x.icone} ${x.nome}</button>`).join('')}</div></div>
     <ol class="trilha-mapa">${tr.modulos.map((m, k) => {
       const aberto = moduloAberto(t, tr.modulos, k), passou = passouModulo(t, m), feitas = m.aulas.filter(([id]) => t.aulas[id]).length;
       const estado = passou ? 'feito' : aberto ? 'aberto' : 'fechado';
-      const nota = t.testes[m.id];
+      const nota = t.testes[m.id] ?? t.testes[TESTES_ANTIGOS[m.id]];
       return `<li class="tm-modulo tm-${estado}${k === atual ? ' tm-atual' : ''}">
         <span class="tm-marca" aria-hidden="true">${passou ? '✓' : aberto ? k + 1 : '🔒'}</span>
         <div class="tm-cartao">
-          <small>Módulo ${k + 1}${passou ? ' · concluído' : aberto ? '' : ' · abre quando você passar no teste do módulo ' + k}</small>
+          <small>Módulo ${k + 1}${passou ? ' · concluído' : aberto ? '' : ' · abre quando você passar no teste do módulo ' + k}${m.aulas.some(([id]) => aulaPronta(id)) ? '' : ' · aulas em produção'}</small>
           <b>${escapar(m.nome)}</b><p>${escapar(m.sobre)}</p>
           ${aberto ? `<div class="tm-aulas">${m.aulas.map(([id, nome, icone], j) => {
               const pronta = aulaPronta(id), feita = t.aulas[id];
@@ -4699,7 +4641,7 @@ function desenharTrilha() {
                 <small>${feita ? 'Feita · rever' : pronta ? 'Pronta para começar' : 'Em produção'}</small></span>${pronta && !feita ? '<i>▶</i>' : ''}</button>`;
             }).join('')}</div>
             ${m.teste ? `<button class="tm-teste" onclick="comecarTesteTrilha('${m.id}')">📝 <span><b>Teste do módulo ${k + 1}</b>
-              <small>${m.teste.length} questões · passa com ${NOTA_PARA_PASSAR}${nota !== undefined ? ` · sua melhor nota: ${nota}/${m.teste.length}` : feitas < m.aulas.length ? ' · já sabe? faça e pule' : ''}</small></span></button>`
+              <small>${QUESTOES_POR_TESTE} questões · passa com ${NOTA_PARA_PASSAR}${nota !== undefined ? ` · sua melhor nota: ${nota}/${QUESTOES_POR_TESTE}` : feitas < m.aulas.length ? ' · já sabe? faça e pule' : ''}</small></span></button>`
               : '<p class="pista" style="margin:10px 0 0">O teste deste módulo entra junto com as aulas.</p>'}`
           : `<div class="tm-previa">${m.aulas.map(([, nome, icone]) => `<span>${icone} ${escapar(nome)}</span>`).join('')}</div>`}
         </div></li>`;
@@ -4707,10 +4649,10 @@ function desenharTrilha() {
     <p class="pista" style="margin-top:18px">${usuarioLogado ? 'Seu progresso fica salvo na sua conta.' : 'Sem conta, o progresso fica só neste aparelho. Crie uma conta para guardar.'}</p>`;
 }
 
-function comecarTesteTrilha(modId) {
+async function comecarTesteTrilha(modId) {
+  try { await arquivoDaAula(`trilhas/teste-${modId}.js`); } catch (e) { return avisoSim('Não consegui abrir o teste agora. Confira a internet e tente de novo.'); }
   // As alternativas são embaralhadas a cada tentativa: a certa não fica sempre no mesmo lugar.
-  const m = TRILHAS[trilhaMateria].modulos.find(x => x.id === modId);
-  const ordens = m.teste.map(q => { const o = q[1].map((_, j) => j); for (let i = o.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [o[i], o[k]] = [o[k], o[i]]; } return o; });
+  const ordens = window.TESTES_MM[modId].map(q => { const o = q[1].map((_, j) => j); for (let i = o.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [o[i], o[k]] = [o[k], o[i]]; } return o; });
   testeTrilha = { mod: modId, i: 0, acertos: 0, resposta: null, ordens };
   desenharTesteTrilha();
   window.scrollTo(0, 0);
@@ -4719,7 +4661,7 @@ function comecarTesteTrilha(modId) {
 function desenharTesteTrilha() {
   const alvo = document.getElementById('tela-trilha');
   const mods = TRILHAS[trilhaMateria].modulos, k = mods.findIndex(m => m.id === testeTrilha.mod), m = mods[k];
-  const total = m.teste.length;
+  const questoes = window.TESTES_MM[m.id], total = questoes.length;
   if (testeTrilha.i >= total) {
     const passou = testeTrilha.acertos >= NOTA_PARA_PASSAR, prox = mods[k + 1];
     alvo.innerHTML = `<div class="tm-resultado painel">
@@ -4731,7 +4673,7 @@ function desenharTesteTrilha() {
         ${passou ? '' : `<button class="acao discreta" onclick="comecarTesteTrilha('${m.id}')">Tentar de novo</button>`}</div></div>`;
     return;
   }
-  const [enunciado, alts, certa, porque] = m.teste[testeTrilha.i], r = testeTrilha.resposta;
+  const [enunciado, alts, certa, porque] = questoes[testeTrilha.i], r = testeTrilha.resposta;
   alvo.innerHTML = `<button class="acao discreta pequena" style="margin:0 0 14px" onclick="testeTrilha = null; desenharTrilha()">← Sair do teste</button>
     <div class="tm-teste-topo"><b>Teste do módulo ${k + 1}</b><span>Questão ${testeTrilha.i + 1} de ${total} · ${testeTrilha.acertos} certas</span></div>
     <div class="tc-barra"><i style="width:${100 * testeTrilha.i / total}%"></i></div>
@@ -4744,10 +4686,10 @@ function desenharTesteTrilha() {
 }
 
 function responderTesteTrilha(j) {
-  const m = TRILHAS[trilhaMateria].modulos.find(x => x.id === testeTrilha.mod);
+  const m = TRILHAS[trilhaMateria].modulos.find(x => x.id === testeTrilha.mod), questoes = window.TESTES_MM[m.id];
   testeTrilha.resposta = j;
-  if (j === m.teste[testeTrilha.i][2]) testeTrilha.acertos++;
-  if (testeTrilha.i === m.teste.length - 1) {
+  if (j === questoes[testeTrilha.i][2]) testeTrilha.acertos++;
+  if (testeTrilha.i === questoes.length - 1) {
     const t = lerTrilha();
     t.testes[m.id] = Math.max(t.testes[m.id] || 0, testeTrilha.acertos);
     salvarTrilha(t);
@@ -4834,9 +4776,10 @@ addEventListener('resize', aulaFixa);
 const olhoNaAula = typeof ResizeObserver === 'function' ? new ResizeObserver(aulaFixa) : null; // o carrinho do mercadinho cresce
 
 async function abrirAula(id) {
-  if (!AULAS.some(a => a.id === id)) return;
+  const solta = AULAS.some(a => a.id === id);
+  if (!solta && !PRONTAS.has(id)) { if (!TRILHAS) return indiceTrilhas().then(() => { if (PRONTAS.has(id)) abrirAula(id); }); return; }
   const tela = document.getElementById('tela-aula');
-  const daTrilha = AULAS.find(a => a.id === id).trilha;
+  const daTrilha = !solta;
   const voltar = `<button class="acao discreta pequena" style="align-self:flex-start;margin:0" onclick="irPara('${daTrilha ? 'trilha' : 'treinar'}')">← Voltar para ${daTrilha ? 'a trilha' : 'o Treinar'}</button>`;
   irPara('aula');
   fecharAula();

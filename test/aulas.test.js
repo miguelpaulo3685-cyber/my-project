@@ -6,7 +6,26 @@ const path = require('node:path');
 const raiz = path.join(__dirname, '..');
 const pagina = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
 const lista = pagina.match(/const AULAS = \[([\s\S]*?)\];/)[1];
-const ids = [...lista.matchAll(/id: '([a-z-]+)'/g)].map(m => m[1]);
+// Aulas soltas (AULAS no index.html) e as aulas prontas das trilhas (trilhas/indice.js).
+global.window = {};
+require(path.join(raiz, 'trilhas', 'indice.js'));
+const trilhas = global.window.TRILHAS_MM;
+const ids = [...new Set([...[...lista.matchAll(/id: '([a-z-]+)'/g)].map(m => m[1]), ...trilhas.prontas])];
+
+test('trilhas: toda aula pronta está em algum módulo, ids não se repetem e cada teste existe e é válido', () => {
+  const todas = [];
+  for (const materia of Object.values(trilhas.materias)) for (const m of materia.modulos) {
+    for (const [id] of m.aulas) todas.push(id);
+    if (m.teste) {
+      require(path.join(raiz, 'trilhas', `teste-${m.id}.js`));
+      const q = global.window.TESTES_MM[m.id];
+      assert.strictEqual(q.length, 10, `${m.id}: o teste precisa de 10 questões`);
+      for (const [enun, alts, certa, porque] of q) assert.ok(enun && alts.length >= 3 && certa < alts.length && porque, `${m.id}: questão incompleta: ${enun}`);
+    }
+  }
+  assert.strictEqual(new Set(todas).size, todas.length, 'aula repetida entre módulos');
+  for (const id of trilhas.prontas) assert.ok(todas.includes(id), `${id} está pronta mas não aparece em nenhum módulo`);
+});
 
 test('aulas: cada aula da lista tem os dois arquivos e se registra com o mesmo nome', () => {
   assert.ok(ids.length >= 1);
