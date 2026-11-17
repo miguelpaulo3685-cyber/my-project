@@ -190,7 +190,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   mini-desafio, 3 questões reais. Recompensa só visual; comunidade dentro da trilha. **Pedido: tela do mapa
   numa prévia.**
 
-### Pedidos do Miguel de 17/11 (publicados em 18/11 com o "faça e publique" dele)
+### Pedidos do Miguel de 17/11 (publicados em 17/11 com o "faça e publique" dele)
 - **Metas no topo da Comunidade** (como stories, com outro visual): cartões de papel com a bolinha da pessoa no canto,
   ✓ quando cumprida, contorno quando não vista (`mm_metas_vistas` no aparelho). Tocar abre em tela cheia (passa sozinho
   em 6 s, toque na esquerda volta, segurar pausa, 👏🔥💡 para apoiar). Último cartão: "Chamar amigos" (WhatsApp).
@@ -204,7 +204,7 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
 - **Simulado**: aviso das anuladas pelo INEP (2009-101, 2024-129, 2025-123/132/174; `ANULADAS_SIM` igual a `provas.js`).
 - **O site cai ao atualizar?** Não: GitHub Pages troca na hora e o Render pago só desliga a versão antiga depois que a
   nova responde. Só as salas da Arena abertas naquele minuto se perdem (ficam na memória).
-- **Trilha "O que cai no ENEM"** (feita em 17-18/11): cartão no topo do Treinar → tela `trilha` com o mapa dos módulos
+- **Trilha "O que cai no ENEM"** (feita em 17/11): cartão no topo do Treinar → tela `trilha` com o mapa dos módulos
   (`TRILHAS` no index.html). O teste de cada módulo (10 questões, passa com 7, alternativas embaralhadas a cada tentativa)
   abre o próximo; dá para fazer o teste e pular. **Matemática completa, 18 aulas em 5 módulos:**
   1. Operações básicas e potência: soma, subtração, multiplicação, divisão, potência (com ordem das operações).
