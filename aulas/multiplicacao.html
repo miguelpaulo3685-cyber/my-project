@@ -1,0 +1,90 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 3</div>
+  <h1>Multiplicação: grupos iguais e retângulos</h1>
+  <p class="au-abre">Caixa de ovos, fileiras de cadeiras, preço por quilo: multiplicar é contar grupos iguais de uma vez. Aqui você vai ver a multiplicação como um retângulo e aprender três atalhos que resolvem quase toda conta do ENEM de cabeça.</p>
+</header>
+
+<section class="au-cena" aria-label="Plateia de cadeiras: linhas vezes colunas">
+  <div class="au-loja">Plateia do auditório <small>escolha quantas fileiras e quantas cadeiras por fileira</small></div>
+  <div class="au-painel">
+    <div class="au-plateia" id="au-plateia" role="img"></div>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-linhas">Fileiras</label><input id="au-linhas" type="range" min="1" max="12" value="7"><output id="au-o-linhas"></output></div>
+    <div class="au-controle"><label for="au-colunas">Cadeiras por fileira</label><input id="au-colunas" type="range" min="1" max="24" value="12"><output id="au-o-colunas"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-quebrar" aria-pressed="false">✂️ Quebrar em 10 + o resto</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Multiplicar é somar grupos iguais</h2>
+  <p>4 caixas com 6 ovos cada: você pode somar 6 + 6 + 6 + 6, ou dizer de uma vez <b>4 × 6 = 24</b>. A multiplicação é um atalho para uma soma em que todas as parcelas são iguais.</p>
+  <div class="au-filme" data-filme="grupos" aria-label="Animação: 4 caixas de 6 ovos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Todo produto é um retângulo</h2>
+  <p>Arrume os ovos em fileiras e aparece um retângulo: <b>linhas × colunas</b>. Por isso área de sala, de terreno e de piso também é multiplicação. E girar o retângulo não muda quantos quadradinhos ele tem: <b>3 × 5 = 5 × 3</b>.</p>
+  <div class="au-filme" data-filme="girar" aria-label="Animação: retângulo 3 por 5 girando"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Quebrar a conta em pedaços</h2>
+  <p>23 × 4 de cabeça parece difícil. Corte o retângulo: <b>20 × 4</b> e <b>3 × 4</b>. Cada pedaço é fácil: 80 e 12. Juntando, <b>92</b>. Os livros chamam isso de propriedade <b>distributiva</b>.</p>
+  <div class="au-filme" data-filme="quebrar" aria-label="Animação: 23 vezes 4 quebrado em 20 vezes 4 mais 3 vezes 4"></div>
+  <p>A conta armada que você aprendeu na escola faz exatamente isso: cada linha da conta é um pedaço do retângulo. Teste no auditório o botão "Quebrar em 10 + o resto".</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Dobro e metade</h2>
+  <p>Se você corta um retângulo ao meio e cola um pedaço do lado do outro, a forma muda, mas a área não. Na conta: <b>dobra um número e divide o outro por 2</b>. 25 × 16 = 50 × 8 = 100 × 4 = <b>400</b>.</p>
+  <div class="au-filme" data-filme="dobro" aria-label="Animação: 25 vezes 16 virando 100 vezes 4"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Os zeros no fim</h2>
+  <p>30 × 400: tire os zeros, faça <b>3 × 4 = 12</b> e devolva os zeros (um do 30 e dois do 400): <b>12 000</b>. Muito erro no ENEM é de zero esquecido, não de tabuada.</p>
+  <div class="au-filme" data-filme="zeros" aria-label="Animação: 30 vezes 400 com os zeros separados"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>"Por"</b> quase sempre é multiplicação: R$ 12 <b>por</b> quilo, 3 quilos: 12 × 3 = R$ 36.</li>
+    <li><b>Área</b> tem unidade ao quadrado: uma sala de 4 m por 5 m tem 20 <b>m²</b>, e não 20 m.</li>
+    <li><b>Dobrar os lados</b> de um quadrado multiplica a área por <b>4</b>, e não por 2 (vire o retângulo e conte).</li>
+    <li><b>Estime</b>: 49 × 21 é perto de 50 × 20 = 1 000. Alternativa de 10 000 ou de 100 já está fora.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Quebre: 18 × 5 = 10 × 5 + 8 × 5 = 50 + 40 = 90. Ou dobro e metade: 9 × 10 = 90.">
+    <p>Um ingresso custa R$ 18. Quanto custam 5 ingressos?</p>
+    <button type="button" class="au-alt">R$ 80</button>
+    <button type="button" class="au-alt">R$ 85</button>
+    <button type="button" class="au-alt">R$ 90</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O quadrado de 3 m tem 9 m². Com lado 6 m tem 36 m²: 4 vezes mais. Dobrar o lado dobra as fileiras e dobra as colunas.">
+    <p>Uma sala quadrada de 3 m de lado vai ganhar o dobro de lado. A área do piso fica:</p>
+    <button type="button" class="au-alt">2 vezes maior</button>
+    <button type="button" class="au-alt">4 vezes maior</button>
+    <button type="button" class="au-alt">6 vezes maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="2 × 5 = 10 e devolvem-se os três zeros (dois do 200 e um do 50): 10 000.">
+    <p>Quanto é 200 × 50?</p>
+    <button type="button" class="au-alt">10 000</button>
+    <button type="button" class="au-alt">1 000</button>
+    <button type="button" class="au-alt">100 000</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="multiplicacao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

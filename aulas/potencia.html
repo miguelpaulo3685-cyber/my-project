@@ -1,0 +1,102 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 5</div>
+  <h1>Potência: multiplicar o mesmo número de novo e de novo</h1>
+  <p class="au-abre">Uma mensagem repassada no grupo, um vírus que se espalha, uma folha dobrada ao meio: coisas que crescem multiplicando sempre pelo mesmo número. Isso é potência. No fim, a ordem certa de fazer as contas, que o ENEM cobra muito.</p>
+</header>
+
+<section class="au-cena" aria-label="Corrente de mensagem: cada pessoa repassa para outras">
+  <div class="au-loja">A corrente do grupo <small>cada pessoa repassa a mensagem para o mesmo número de amigos</small></div>
+  <div class="au-painel">
+    <div class="au-corrente" id="au-corrente" aria-live="polite"></div>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-base">Repassa para</label><input id="au-base" type="range" min="2" max="6" value="3"><output id="au-o-base"></output></div>
+    <div class="au-controle"><label for="au-rodadas">Rodadas</label><input id="au-rodadas" type="range" min="0" max="6" value="4"><output id="au-o-rodadas"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que o número pequeno quer dizer</h2>
+  <p>Em <b>3⁴</b>, o 3 é a <b>base</b> (o número que se repete) e o 4 é o <b>expoente</b> (quantas vezes ele aparece na multiplicação): 3⁴ = 3 × 3 × 3 × 3 = <b>81</b>.</p>
+  <p>O nome "ao quadrado" vem da figura: 3² é um quadrado de 3 por 3. E "ao cubo" é um cubo: 3³ são 3 camadas desse quadrado.</p>
+  <div class="au-filme" data-filme="quadrado" aria-label="Animação: 3 ao quadrado e 3 ao cubo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>O erro mais comum</h2>
+  <p>2⁵ <b>não é</b> 2 × 5. É o 2 multiplicado por ele mesmo 5 vezes. A diferença é enorme e cresce rápido.</p>
+  <div class="au-filme" data-filme="erro" aria-label="Animação: 2 elevado a 5 contra 2 vezes 5"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Por que cresce tão rápido</h2>
+  <p>Dobre uma folha de papel ao meio: 2 camadas. De novo: 4. Depois 8, 16, 32… Cada dobra <b>multiplica</b> por 2, em vez de somar 2. Com 10 dobras seriam 2¹⁰ = <b>1 024</b> camadas.</p>
+  <div class="au-filme" data-filme="dobras" aria-label="Animação: camadas de papel dobrando"></div>
+  <p>Quando uma notícia fala em "crescimento exponencial", é isso: a quantidade é multiplicada pelo mesmo número a cada etapa.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Potências de 10: conte os zeros</h2>
+  <p>10² = 100, 10³ = 1 000, 10⁶ = 1 000 000. O expoente é o <b>número de zeros</b>. Por isso números gigantes (e minúsculos) aparecem assim no ENEM: a distância da Terra ao Sol é cerca de <b>1,5 × 10⁸ km</b>, ou 150 000 000 km.</p>
+  <div class="au-filme" data-filme="dez" aria-label="Animação: potências de 10 e os zeros"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Expoente 1, expoente 0 e raiz quadrada</h2>
+  <p>Desça a escada dividindo por 2: 2³ = 8, 2² = 4, 2¹ = 2, e o próximo degrau é 2 ÷ 2 = 1. Por isso <b>qualquer número (menos o zero) elevado a 0 dá 1</b>, e elevado a 1 dá ele mesmo.</p>
+  <p>A <b>raiz quadrada</b> faz o caminho de volta: √49 é o lado de um quadrado de área 49. Como 7² = 49, √49 = <b>7</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>A ordem das contas</h2>
+  <p>Numa expressão com várias contas, a ordem não é da esquerda para a direita. É assim:</p>
+  <ol class="au-pegadinhas">
+    <li><b>Parênteses</b> primeiro.</li>
+    <li>Depois as <b>potências</b> (e raízes).</li>
+    <li>Depois <b>multiplicação e divisão</b>, na ordem em que aparecem.</li>
+    <li>Por último, <b>soma e subtração</b>.</li>
+  </ol>
+  <div class="au-filme" data-filme="ordem" aria-label="Animação: 2 mais 3 ao quadrado vezes 2 resolvido na ordem certa"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>(−3)² = 9</b>, mas <b>−3² = −9</b>: sem parênteses, o expoente vale só para o 3.</li>
+    <li>"Dobra a cada hora" depois de 5 horas é <b>× 2⁵ = × 32</b>, e não × 10.</li>
+    <li>Na notação científica, <b>2 × 10³</b> é 2 000, e não 20³.</li>
+    <li>Calculadora de celular às vezes faz a conta na ordem errada: confie na regra.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Depois de 6 horas: 100 × 2⁶ = 100 × 64 = 6 400.">
+    <p>Uma cultura tem 100 bactérias e o número dobra a cada hora. Quantas haverá depois de 6 horas?</p>
+    <button type="button" class="au-alt">1 200</button>
+    <button type="button" class="au-alt">3 200</button>
+    <button type="button" class="au-alt">6 400</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Potência primeiro: 4² = 16. Depois multiplicação: 16 × 2 = 32. Por último a subtração: 50 − 32 = 18.">
+    <p>Quanto é 50 − 4² × 2?</p>
+    <button type="button" class="au-alt">18</button>
+    <button type="button" class="au-alt">92</button>
+    <button type="button" class="au-alt">1 152</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="3,8 × 10⁵ é 3,8 com a vírgula andando 5 casas para a direita: 380 000.">
+    <p>A distância da Terra à Lua é de cerca de 3,8 × 10⁵ km. Isso é igual a:</p>
+    <button type="button" class="au-alt">38 000 km</button>
+    <button type="button" class="au-alt">380 000 km</button>
+    <button type="button" class="au-alt">3 800 000 km</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="potencia">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

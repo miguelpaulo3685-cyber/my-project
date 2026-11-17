@@ -1,0 +1,105 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 2</div>
+  <h1>Subtração: tirar, comparar e completar</h1>
+  <p class="au-abre">Troco, saldo, diferença de pontos, quanto falta para a meta: tudo isso é subtração. Aqui você vai ver de onde vem o "pedir emprestado" e aprender o jeito de fazer conta de troco que os caixas usam de cabeça.</p>
+</header>
+
+<section class="au-cena" aria-label="Caixa: tirar dinheiro e destrocar notas">
+  <div class="au-loja">Pagando uma conta <small>tire o valor da conta do dinheiro que você tem</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Escolha a conta">
+      <button type="button" data-conta="85,32">85 − 32</button>
+      <button type="button" data-conta="52,17">52 − 17</button>
+      <button type="button" data-conta="300,128">300 − 128</button>
+      <button type="button" data-conta="1000,357">1000 − 357</button>
+    </div>
+    <div class="au-mesa" id="au-mesa" aria-live="polite"></div>
+    <div class="au-armada" id="au-armada" aria-label="Conta armada"></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-destrocar" disabled>Destrocar 1 nota</button>
+      <button type="button" id="au-tirar">Tirar</button>
+      <button type="button" id="au-recomecar">↺ Recomeçar</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Três jeitos de ver a mesma conta</h2>
+  <p>A subtração responde a três perguntas diferentes, e o ENEM usa as três:</p>
+  <ul class="au-pegadinhas">
+    <li><b>Tirar:</b> tinha 12 figurinhas e deu 5. Quantas sobraram?</li>
+    <li><b>Comparar:</b> Ana tem 12 e Bia tem 5. Quantas Ana tem <b>a mais</b>?</li>
+    <li><b>Completar:</b> a meta é 12 e você já fez 5. Quanto <b>falta</b>?</li>
+  </ul>
+  <div class="au-filme" data-filme="sentidos" aria-label="Animação: os três sentidos da subtração"></div>
+  <p>As três têm a mesma conta, 12 − 5 = 7. Quando o problema fala em "a mais", "a menos", "diferença" ou "falta", é subtração.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>"Pedir emprestado" é destrocar</h2>
+  <p>Em 52 − 17, você precisa tirar 7 moedas, mas só tem 2. Ninguém "pega emprestado" do vizinho de verdade: você <b>destroca</b> uma nota de 10 por 10 moedas. Agora tem 12 moedas e 4 notas.</p>
+  <div class="au-filme" data-filme="empresta" aria-label="Animação: 52 menos 17 destrocando uma nota"></div>
+  <p>É o contrário do "vai um" da soma. Na soma você troca 10 moedas por 1 nota; na subtração, 1 nota por 10 moedas. Faça o 1000 − 357 no caixa e veja a destroca acontecer em cadeia.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>O jeito do troco: contar para a frente</h2>
+  <p>Caixa de padaria não arma conta. Para dar troco de 100 numa compra de 63, ele <b>completa</b>: de 63 até 70 faltam 7; de 70 até 100 faltam 30. Troco: 7 + 30 = <b>37</b>.</p>
+  <div class="au-filme" data-filme="troco" aria-label="Animação: contar de 63 até 100"></div>
+  <p>Funciona para qualquer conta e quase nunca precisa de "emprestar". É o método mais rápido para dinheiro e horário.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Compensação: mova os dois juntos</h2>
+  <p>Na subtração, o que importa é a <b>distância</b> entre os números. Se você soma (ou tira) o mesmo valor dos dois, a distância não muda. Então 402 − 198 vira 404 − 200, que é fácil: <b>204</b>.</p>
+  <div class="au-filme" data-filme="distancia" aria-label="Animação: 402 menos 198 vira 404 menos 200"></div>
+  <p>Cuidado: na soma você tira de um e dá para o outro. Na subtração, você mexe nos dois <b>do mesmo jeito</b>.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Confira somando</h2>
+  <p>Toda subtração tem a sua prova: se 85 − 38 = 47, então <b>47 + 38</b> tem de dar 85. Na prova, essa conferência leva 5 segundos e salva questão.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Variação</b> é sempre final − inicial. A temperatura foi de −3 °C para 5 °C: variou 5 − (−3) = <b>8</b> graus.</li>
+    <li><b>"Quanto a mais"</b> pede a diferença, e não o total dos dois.</li>
+    <li><b>Ordem importa</b>: 10 − 4 não é igual a 4 − 10. Sempre o maior menos o menor quando a pergunta é "diferença".</li>
+    <li><b>Horas</b>: de 9h40 até 11h15 conte para a frente (20 min até 10h, 1 h até 11h, mais 15 min) = 1h35.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Conte para a frente: de 27,40 até 28 são 0,60; de 28 até 30 são 2; de 30 até 50 são 20. Troco: 22,60.">
+    <p>Uma compra deu R$ 27,40 e foi paga com R$ 50. Qual é o troco?</p>
+    <button type="button" class="au-alt">R$ 22,60</button>
+    <button type="button" class="au-alt">R$ 23,60</button>
+    <button type="button" class="au-alt">R$ 33,40</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Variação = final − inicial = 4 − (−6) = 10 graus. Quem fez 6 − 4 = 2 esqueceu que −6 está abaixo de zero.">
+    <p>De madrugada fazia −6 °C numa cidade. À tarde, 4 °C. De quantos graus foi o aumento?</p>
+    <button type="button" class="au-alt">2 graus</button>
+    <button type="button" class="au-alt">4 graus</button>
+    <button type="button" class="au-alt">10 graus</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Compensação: some 2 nos dois. 1 002 − 498 = 1 004 − 500 = 504.">
+    <p>Quanto é 1 002 − 498?</p>
+    <button type="button" class="au-alt">494</button>
+    <button type="button" class="au-alt">504</button>
+    <button type="button" class="au-alt">514</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="subtracao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

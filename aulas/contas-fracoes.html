@@ -1,0 +1,92 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 2 · Aula 3</div>
+  <h1>Contas com frações: somar, multiplicar e dividir pedaços</h1>
+  <p class="au-abre">Meia xícara mais um terço de xícara, a metade de três quartos do terreno, quantos copos de meio litro enchem 3 litros: aqui você vai ver por que precisa cortar em pedaços do mesmo tamanho antes de somar, e por que dividir por 1/2 dobra.</p>
+</header>
+
+<section class="au-cena" aria-label="Barras de frações: somar e subtrair">
+  <div class="au-loja">Bancada das frações <small>escolha a conta e veja os pedaços virarem do mesmo tamanho</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Escolha a conta">
+      <button type="button" data-conta="1,2,+,1,4">1/2 + 1/4</button>
+      <button type="button" data-conta="1,3,+,1,2">1/3 + 1/2</button>
+      <button type="button" data-conta="2,3,+,3,4">2/3 + 3/4</button>
+      <button type="button" data-conta="3,4,-,1,3">3/4 − 1/3</button>
+    </div>
+    <div class="au-bancada" id="au-bancada" aria-live="polite"></div>
+    <div class="au-atalhos"><button type="button" id="au-cortar" aria-pressed="false">✂️ Cortar tudo do mesmo tamanho</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Somar com o mesmo denominador</h2>
+  <p>Se os pedaços já são do mesmo tamanho, é só contar: 1 quinto + 2 quintos = <b>3 quintos</b>. Some os de cima e mantenha o de baixo. O denominador é o <b>nome do pedaço</b>, não entra na soma.</p>
+  <div class="au-filme" data-filme="mesmo" aria-label="Animação: 1/5 mais 2/5"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Denominadores diferentes: corte de novo</h2>
+  <p>1/2 + 1/3 não dá 2/5. Não dá para somar meio com terço, assim como não se soma metro com centímetro sem converter. Corte tudo em <b>sextos</b> (6 é múltiplo de 2 e de 3): 1/2 = 3/6 e 1/3 = 2/6. Agora sim: <b>5/6</b>.</p>
+  <div class="au-filme" data-filme="diferentes" aria-label="Animação: 1/2 mais 1/3 em sextos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Multiplicar: a fração de uma fração</h2>
+  <p>"Metade de três quartos" é <b>1/2 × 3/4</b>. No retângulo, pinte 3/4 numa direção e pegue metade disso na outra. Contam-se 3 pedaços de 8: <b>3/8</b>. Por isso, na multiplicação, é <b>cima vezes cima e baixo vezes baixo</b>.</p>
+  <div class="au-filme" data-filme="vezes" aria-label="Animação: metade de três quartos de um retângulo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Dividir: quantos pedaços cabem</h2>
+  <p>3 ÷ 1/2 pergunta: <b>quantas metades cabem em 3?</b> Cada inteiro tem 2 metades, então são 6. Dividir por 1/2 é o mesmo que multiplicar por 2. A regra "inverte a segunda e multiplica" vem daí.</p>
+  <div class="au-filme" data-filme="dividir" aria-label="Animação: quantas metades cabem em 3 pizzas"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que sobrou do salário</h2>
+  <p>Problema clássico do ENEM: gastou 1/3 do salário com aluguel e 1/4 com mercado. Que fração sobrou? Corte o salário em 12 (múltiplo de 3 e de 4): aluguel 4/12, mercado 3/12, sobram <b>5/12</b>.</p>
+  <div class="au-filme" data-filme="sobrou" aria-label="Animação: salário em 12 partes"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Nunca some os de baixo</b>: 1/2 + 1/2 = 2/2 = 1, e não 2/4.</li>
+    <li><b>"Do que sobrou"</b>: gastou 1/2 e depois 1/3 <b>do resto</b>. O segundo gasto é 1/3 de 1/2 = 1/6, e não 1/3 do total.</li>
+    <li>Multiplicar por uma fração menor que 1 <b>diminui</b>; dividir por ela <b>aumenta</b>.</li>
+    <li>Quando ficar confuso, passe para decimal: 1/4 = 0,25 e 1/5 = 0,2.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Em quartos: 1/2 = 2/4. Então 2/4 + 1/4 = 3/4.">
+    <p>Uma receita leva 1/2 xícara de açúcar e mais 1/4 xícara na cobertura. Quanto açúcar ao todo?</p>
+    <button type="button" class="au-alt">2/6 de xícara</button>
+    <button type="button" class="au-alt">3/4 de xícara</button>
+    <button type="button" class="au-alt">1/8 de xícara</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Quantos copos de 1/4 cabem em 2 litros? Cada litro tem 4 quartos: 2 × 4 = 8 copos. 2 ÷ 1/4 = 2 × 4.">
+    <p>Quantos copos de 1/4 de litro dá para encher com 2 litros de suco?</p>
+    <button type="button" class="au-alt">1/2</button>
+    <button type="button" class="au-alt">4</button>
+    <button type="button" class="au-alt">8</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Gastou 1/2 e sobrou 1/2. Depois gastou 1/3 dessa metade: 1/3 × 1/2 = 1/6. Sobra 1/2 − 1/6 = 3/6 − 1/6 = 2/6 = 1/3.">
+    <p>Ana gastou metade da mesada e depois 1/3 do que sobrou. Que fração da mesada ainda tem?</p>
+    <button type="button" class="au-alt">1/3</button>
+    <button type="button" class="au-alt">1/6</button>
+    <button type="button" class="au-alt">1/2</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="contas-fracoes">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

@@ -1,0 +1,96 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 2 · Aula 2</div>
+  <h1>Números decimais: o que vem depois da vírgula</h1>
+  <p class="au-abre">Preço no mercado, nota da prova, altura, tempo de corrida: o número com vírgula está em todo lugar. Aqui você vai ver que cada casa depois da vírgula é um pedaço 10 vezes menor, e por que 0,5 é maior que 0,45.</p>
+</header>
+
+<section class="au-cena" aria-label="Cofrinho: reais, moedas de 10 centavos e de 1 centavo">
+  <div class="au-loja">Cofrinho <small>ponha e tire moedas e veja o número com vírgula mudar</small></div>
+  <div class="au-painel">
+    <div class="au-valor-grande" id="au-valor" aria-live="polite"></div>
+    <div class="au-cofre" id="au-cofre"></div>
+    <div class="au-atalhos" role="group" aria-label="Pôr moedas">
+      <button type="button" data-mais="100">+ R$ 1</button>
+      <button type="button" data-mais="10">+ 10 centavos</button>
+      <button type="button" data-mais="1">+ 1 centavo</button>
+    </div>
+    <div class="au-atalhos" role="group" aria-label="Tirar moedas">
+      <button type="button" data-mais="-100">− R$ 1</button>
+      <button type="button" data-mais="-10">− 10 centavos</button>
+      <button type="button" data-mais="-1">− 1 centavo</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Cada casa tem o seu nome</h2>
+  <p>Do lado esquerdo da vírgula ficam os inteiros. Do lado direito, os pedaços: a 1ª casa são os <b>décimos</b> (cada um é 1/10 do inteiro, como uma moeda de 10 centavos) e a 2ª casa são os <b>centésimos</b> (1/100, como 1 centavo).</p>
+  <div class="au-filme" data-filme="casas" aria-label="Animação: 2,35 separado em inteiros, décimos e centésimos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Uma lupa na reta</h2>
+  <p>Entre 0 e 1 cabem 10 décimos. Entre 0,3 e 0,4 cabem mais 10 centésimos. Cada casa nova é uma lupa 10 vezes mais forte: por isso dá para ser tão preciso quanto se queira.</p>
+  <div class="au-filme" data-filme="lupa" aria-label="Animação: dando zoom entre 0,3 e 0,4 para achar 0,35"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>0,5 ou 0,45: quem é maior?</h2>
+  <p>Muita gente diz 0,45 "porque 45 é maior que 5". Mas 0,5 são 5 <b>décimos</b>, e 0,45 são só 4 décimos e uns centésimos. Para comparar, <b>complete com zero</b>: 0,50 contra 0,45. Agora é fácil.</p>
+  <div class="au-filme" data-filme="comparar" aria-label="Animação: 0,50 contra 0,45 em quadradinhos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Vezes 10: a vírgula anda</h2>
+  <p>Multiplicar por 10 faz cada pedaço virar o pedaço da casa ao lado, 10 vezes maior. Na prática, <b>a vírgula anda uma casa para a direita</b>. Por 100, duas casas. Dividir por 10 faz ela andar para a esquerda.</p>
+  <div class="au-filme" data-filme="virgula" aria-label="Animação: a vírgula de 3,75 andando"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Contas com vírgula</h2>
+  <p><b>Somar e subtrair:</b> vírgula embaixo de vírgula (é o "unidade embaixo de unidade" da soma). Complete com zeros se precisar: 12,5 + 3,75 = 12,50 + 3,75 = 16,25.</p>
+  <p><b>Multiplicar:</b> faça a conta sem vírgula e depois conte as casas. 0,3 × 0,2: 3 × 2 = 6, e são 2 casas no total: <b>0,06</b>. Parece estranho dar menor, mas faz sentido: é "três décimos de dois décimos".</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Mais casas não é maior</b>: 0,8 &gt; 0,75 &gt; 0,705.</li>
+    <li><b>Ponto e vírgula</b>: no Brasil, 1.250,50 é mil duzentos e cinquenta reais e cinquenta centavos.</li>
+    <li><b>Medidas</b>: 1,5 m = 150 cm. Para trocar de unidade, a vírgula anda.</li>
+    <li><b>Tempo não é decimal</b>: 1,5 hora é 1h30, e não 1h50.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Complete com zeros: 0,600; 0,580; 0,612. O maior é 0,612.">
+    <p>Três atletas saltaram 0,6 m, 0,58 m e 0,612 m no teste de impulsão. Qual foi o maior salto?</p>
+    <button type="button" class="au-alt">0,58 m</button>
+    <button type="button" class="au-alt">0,6 m</button>
+    <button type="button" class="au-alt">0,612 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Vírgula embaixo de vírgula: 4,50 + 2,35 + 0,99 = 7,84.">
+    <p>Um lanche custa R$ 4,50, o suco R$ 2,35 e a sobremesa R$ 0,99. Quanto dá tudo?</p>
+    <button type="button" class="au-alt">R$ 7,84</button>
+    <button type="button" class="au-alt">R$ 7,74</button>
+    <button type="button" class="au-alt">R$ 8,84</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="0,5 hora é metade de 60 minutos: 30 minutos. 2,5 h = 2h30.">
+    <p>Uma viagem durou 2,5 horas. Isso é igual a:</p>
+    <button type="button" class="au-alt">2h50</button>
+    <button type="button" class="au-alt">2h30</button>
+    <button type="button" class="au-alt">2h05</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="decimais">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

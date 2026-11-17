@@ -1,0 +1,86 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 2 · Aula 1</div>
+  <h1>Frações: partes de um inteiro</h1>
+  <p class="au-abre">Metade da pizza, um terço da turma, três quartos do tanque: fração é o jeito de falar de pedaços. Aqui você vai entender o que cada número da fração quer dizer, por que 1/8 é menor que 1/3 e como calcular "dois quintos de 30".</p>
+</header>
+
+<section class="au-cena" aria-label="Pizza: em quantas fatias cortar e quantas pegar">
+  <div class="au-loja">Pizzaria M&amp;M <small>corte a pizza e escolha quantas fatias pegar</small></div>
+  <div class="au-painel">
+    <div class="au-mesa-pizza">
+      <div class="au-pizza-grande" id="au-pizza" role="img"></div>
+      <div class="au-fracao-grande" id="au-fracao" aria-live="polite"></div>
+    </div>
+    <div class="au-barra-fracao" id="au-barra" aria-hidden="true"></div>
+    <div class="au-controle"><label for="au-partes">Cortar em</label><input id="au-partes" type="range" min="2" max="12" value="8"><output id="au-o-partes"></output></div>
+    <div class="au-controle"><label for="au-pegar">Pegar</label><input id="au-pegar" type="range" min="0" max="8" value="3"><output id="au-o-pegar"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O de baixo corta, o de cima pega</h2>
+  <p>Em <b>3/8</b>, o número de baixo (<b>denominador</b>) diz em quantas partes <b>iguais</b> o inteiro foi cortado: 8. O de cima (<b>numerador</b>) diz quantas dessas partes você pegou: 3.</p>
+  <div class="au-filme" data-filme="barra" aria-label="Animação: barra de chocolate em 8 pedaços, 3 comidos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Mais pedaços, pedaços menores</h2>
+  <p>Um erro clássico é achar que 1/8 é maior que 1/3 "porque 8 é maior que 3". É o contrário: cortar a mesma pizza em 8 dá fatias <b>menores</b> do que cortar em 3.</p>
+  <div class="au-filme" data-filme="menores" aria-label="Animação: um terço e um oitavo da mesma pizza"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Frações iguais com cara diferente</h2>
+  <p>Metade da pizza é metade, cortando em 2, em 4 ou em 8 fatias: <b>1/2 = 2/4 = 4/8</b>. Multiplicar (ou dividir) o de cima e o de baixo pelo mesmo número não muda o tamanho, só o número de fatias.</p>
+  <div class="au-filme" data-filme="equivalentes" aria-label="Animação: metade da pizza com 2, 4 e 8 fatias"></div>
+  <p>Fazer o caminho de volta é <b>simplificar</b>: 6/8 dividido por 2 em cima e embaixo vira 3/4. Mesma quantidade de pizza, menos fatias para contar.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>"Dois quintos de 30"</h2>
+  <p>Fração de uma quantidade: divida pelo de baixo e multiplique pelo de cima. 2/5 de 30 alunos: 30 ÷ 5 = 6 alunos em cada parte; 2 partes = <b>12 alunos</b>.</p>
+  <div class="au-filme" data-filme="de" aria-label="Animação: dois quintos de 30 alunos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Fração de quê?</b> "1/3 dos alunos que foram" é diferente de "1/3 de todos os alunos".</li>
+    <li><b>Partes iguais</b>: fração só vale se o inteiro foi cortado em pedaços do mesmo tamanho.</li>
+    <li>Para comparar frações, deixe <b>o mesmo denominador</b> (ou passe para decimal): 2/3 = 8/12 e 3/4 = 9/12, então 3/4 é maior.</li>
+    <li><b>O que sobrou</b>: se gastou 3/8, sobraram 5/8 (o inteiro é 8/8).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="40 ÷ 8 = 5 em cada parte; 3 partes = 15 reais.">
+    <p>Você gastou 3/8 de R$ 40. Quanto gastou?</p>
+    <button type="button" class="au-alt">R$ 15</button>
+    <button type="button" class="au-alt">R$ 12</button>
+    <button type="button" class="au-alt">R$ 24</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Mais partes, pedaços menores. Entre 1/4, 1/6 e 1/9, o maior pedaço é 1/4, e o menor é 1/9.">
+    <p>Qual destas frações é a <b>menor</b>?</p>
+    <button type="button" class="au-alt">1/4</button>
+    <button type="button" class="au-alt">1/9</button>
+    <button type="button" class="au-alt">1/6</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Divida o 12 e o 18 por 6: 12/18 = 2/3.">
+    <p>Numa turma de 18 alunos, 12 são meninas. Que fração da turma isso representa, simplificada?</p>
+    <button type="button" class="au-alt">12/18 não simplifica</button>
+    <button type="button" class="au-alt">3/4</button>
+    <button type="button" class="au-alt">2/3</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="fracoes">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

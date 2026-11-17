@@ -1,0 +1,91 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 1 · Aula 4</div>
+  <h1>Divisão: repartir, caber e o resto</h1>
+  <p class="au-abre">Rachar a conta, montar times, saber quantas viagens o ônibus vai fazer: tudo é divisão. Aqui você vai ver os dois sentidos da divisão e o que fazer com o resto, que é onde o ENEM mais derruba gente.</p>
+</header>
+
+<section class="au-cena" aria-label="Repartir balas entre amigos">
+  <div class="au-loja">Repartir as balas <small>escolha quantas balas e quantos amigos, e reparta</small></div>
+  <div class="au-painel">
+    <div class="au-pratos" id="au-pratos" aria-live="polite"></div>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-balas">Balas</label><input id="au-balas" type="range" min="1" max="60" value="23"><output id="au-o-balas"></output></div>
+    <div class="au-controle"><label for="au-amigos">Amigos</label><input id="au-amigos" type="range" min="1" max="8" value="4"><output id="au-o-amigos"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Dois jeitos de dividir</h2>
+  <p><b>Repartir:</b> 12 balas para 3 amigos, todo mundo igual. Quanto cada um ganha? Você distribui uma para cada, rodada por rodada, até acabar.</p>
+  <div class="au-filme" data-filme="repartir" aria-label="Animação: 12 balas repartidas para 3 amigos"></div>
+  <p><b>Caber:</b> 12 balas, saquinhos de 3. Quantos saquinhos dá para fazer? Agora você conta quantos grupos de 3 cabem em 12.</p>
+  <div class="au-filme" data-filme="caber" aria-label="Animação: quantos grupos de 3 cabem em 12"></div>
+  <p>As duas perguntas têm a mesma conta: <b>12 ÷ 3 = 4</b>. Reconhecer qual delas o problema faz ajuda a montar a conta certa.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Divisão é a multiplicação ao contrário</h2>
+  <p>Se um retângulo de 42 quadradinhos tem 7 colunas, quantas fileiras ele tem? A pergunta é: <b>7 vezes quanto dá 42?</b> A resposta é 6, porque 6 × 7 = 42. Por isso saber a tabuada é saber dividir.</p>
+  <div class="au-filme" data-filme="inversa" aria-label="Animação: 42 dividido por 7 como lado de um retângulo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>O resto: arredondar para cima ou para baixo?</h2>
+  <p>50 alunos, vans de 15 lugares. 50 ÷ 15 dá 3 e sobram 5 alunos. A resposta é 3 ou 4? Depende da pergunta, e é aqui que o ENEM pega.</p>
+  <div class="au-filme" data-filme="resto" aria-label="Animação: 50 alunos em vans de 15"></div>
+  <ul class="au-pegadinhas">
+    <li><b>Quantas vans preciso?</b> Ninguém fica para trás: arredonde <b>para cima</b>, 4 vans.</li>
+    <li><b>Quantas vans ficam cheias?</b> Só as completas: arredonde <b>para baixo</b>, 3 vans.</li>
+    <li><b>Dinheiro</b> se divide em centavos: R$ 10 para 4 pessoas dá R$ 2,50 para cada, sem resto.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Cortar zeros dos dois lados</h2>
+  <p>Se você divide os <b>dois</b> números pelo mesmo valor, a resposta não muda (é como repartir metade das balas para metade dos amigos). Então 1 200 ÷ 40 = 120 ÷ 4 = <b>30</b>.</p>
+  <div class="au-filme" data-filme="cortar" aria-label="Animação: 1200 dividido por 40 vira 120 dividido por 4"></div>
+  <p>E uma regra que não tem exceção: <b>não existe dividir por zero</b>. Repartir balas entre zero amigos não tem resposta.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Leia o que a pergunta quer fazer com o <b>resto</b>: sobra, arredonda para cima ou vira centavo.</li>
+    <li><b>"Por pessoa", "por dia", "cada"</b> costumam pedir divisão do total.</li>
+    <li><b>Confira multiplicando</b>: se 87 ÷ 3 = 29, então 29 × 3 tem de dar 87.</li>
+    <li>A ordem importa: 20 ÷ 4 = 5, mas 4 ÷ 20 = 0,2.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="200 ÷ 45 dá 4 e sobram 20 pessoas. Elas também precisam ir: 5 viagens.">
+    <p>Um barco leva 45 pessoas por viagem. Quantas viagens são precisas para levar 200 pessoas?</p>
+    <button type="button" class="au-alt">4</button>
+    <button type="button" class="au-alt">4,4</button>
+    <button type="button" class="au-alt">5</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Corte um zero dos dois: 2 400 ÷ 60 = 240 ÷ 6 = 40.">
+    <p>Quanto é 2 400 ÷ 60?</p>
+    <button type="button" class="au-alt">40</button>
+    <button type="button" class="au-alt">400</button>
+    <button type="button" class="au-alt">4</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Só valem as caixas completas: 100 ÷ 12 dá 8 e sobram 4 ovos, que não enchem uma caixa.">
+    <p>Uma granja tem 100 ovos e vende em caixas de 12. Quantas caixas completas ela consegue montar?</p>
+    <button type="button" class="au-alt">9</button>
+    <button type="button" class="au-alt">8</button>
+    <button type="button" class="au-alt">8,3</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="divisao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

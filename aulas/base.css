@@ -181,7 +181,7 @@ body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(-
 .au-filme { background: var(--superficie-2); border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; margin: 6px 0 12px; }
 .au-palco { position: relative; width: 100%; aspect-ratio: 16 / 10; max-width: 100%; overflow: hidden;
   background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--marca) 8%, transparent), transparent 70%); }
-.au-ator { position: absolute; transform: translate(-50%, -50%) scale(var(--au-s, 1)); white-space: nowrap;
+.au-ator { position: absolute; transform: translate(-50%, -50%) scale(var(--au-s, 1)) rotate(var(--au-r, 0deg)); white-space: nowrap;
   transition: left .7s cubic-bezier(.3,.8,.3,1), top .7s cubic-bezier(.3,.8,.3,1), opacity .45s, transform .45s, background .3s, color .3s; }
 .au-sem-transicao .au-ator, .au-sem-transicao .au-ator * { transition: none !important; }
 .au-filme-rodape { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 10px 12px 12px; border-top: 1px solid var(--borda); }
@@ -212,3 +212,116 @@ body.com-imagem .au-cena, html[data-estilo="serra"] .au-cena { background: var(-
 .au-armadinha { display: grid; grid-template-columns: repeat(3, 22px); font: 800 clamp(16px, 5vw, 24px)/1.3 var(--fonte); text-align: center; font-variant-numeric: tabular-nums; }
 .au-armadinha i { grid-column: 1 / -1; border-top: 2px solid var(--texto); margin: 2px 0; }
 .au-armadinha .au-r1, .au-armadinha .au-r2 { color: var(--certo); min-height: 1.3em; }
+
+/* Peças comuns das aulas da trilha */
+.au-pilha.au-atual { border: 2px solid var(--marca); }
+.au-pilha.au-fantasma { opacity: .55; border-style: dotted; }
+.au-ok-col { margin: auto; font: 800 18px var(--fonte); color: var(--certo); }
+.au-armada-grade .au-riscado { text-decoration: line-through; text-decoration-color: var(--errado); text-decoration-thickness: 2px; opacity: .6; }
+.au-armadinha .au-riscado { text-decoration: line-through; text-decoration-color: var(--errado); opacity: .6; }
+.au-armadinha .au-v1, .au-armadinha .au-v2 { color: var(--errado); font-size: .6em; align-self: end; }
+.au-palco i.au-fig { width: 16px; height: 22px; border-radius: 3px; background: linear-gradient(160deg, #e9b949, #d0812c); box-shadow: 0 1px 0 rgba(0,0,0,.25); }
+.au-palco i.au-fig.au-destaque { background: linear-gradient(160deg, #6fe0a1, #22a35b); }
+.au-palco i.au-fig.au-vaga { background: transparent; border: 2px dashed var(--certo); }
+.au-reta { width: 84%; height: 3px; border-radius: 2px; background: var(--texto-fraco); }
+.au-marca-reta { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.au-tique { display: block; width: 3px; height: 14px; border-radius: 2px; background: var(--texto); }
+.au-pulo { height: 30px; border-radius: 15px 15px 4px 4px; border: 3px solid var(--marca); border-bottom: none; color: var(--texto); font: 800 15px/24px var(--fonte); text-align: center; }
+.au-pulo.au-pulo2 { border-color: var(--certo); }
+.au-barra-filme { height: 30px; border-radius: 6px; color: #fff; font: 800 13px/30px var(--fonte); text-align: center; overflow: hidden; transition: width .7s, left .7s, top .7s, opacity .45s !important; }
+.au-grade-filme { display: grid; gap: 3px; }
+.au-grade-filme b { display: block; width: 14px; height: 14px; border-radius: 3px; background: var(--borda); transition: background .3s; }
+.au-grade-filme b.au-on { background: #e9b949; }
+.au-grade-filme b.au-on2 { background: #62a8ea; }
+.au-pizza { width: 30%; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--texto); transition: background .6s; }
+
+/* Multiplicação */
+.au-plateia { display: grid; grid-template-columns: repeat(var(--au-cols), minmax(0, 1fr)); gap: 3px; max-width: 520px; width: 100%; margin: 0 auto; }
+.au-plateia i { aspect-ratio: 1; border-radius: 3px 3px 6px 6px; background: #62a8ea; transition: background .3s; }
+.au-plateia i.au-b { background: #e9b949; }
+.au-palco i.au-ovo { width: 12px; height: 15px; border-radius: 50% 50% 46% 46% / 60% 60% 40% 40%; background: #fff8e8; box-shadow: inset -2px -2px 0 rgba(0,0,0,.12); }
+.au-caixa-ovos { display: grid; grid-template-columns: repeat(3, 12px); gap: 4px; padding: 7px; border-radius: 8px; background: #b98a52; }
+.au-palco .au-grade-filme b { width: var(--au-cel, 14px); height: var(--au-cel, 14px); }
+.au-palco .au-grade-filme b.au-on { background: #62a8ea; }
+.au-palco .au-grade-filme b.au-on2 { background: #e9b949; }
+
+/* Divisão */
+.au-pratos { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
+.au-prato { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 6px; border-radius: 50% / 22%; background: var(--superficie); border: 1px solid var(--borda); min-height: 84px; }
+.au-prato > div { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; align-content: flex-start; flex: 1; }
+.au-prato small { font-size: 11px; color: var(--texto-fraco); text-align: center; line-height: 1.2; }
+.au-prato small b { display: block; font-size: 16px; color: var(--texto); }
+.au-prato.au-sobra { border: 2px dashed var(--errado); }
+i.au-bala { display: block; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #ff9ecf, #d6337f); animation: au-cai .35s backwards; }
+i.au-bala.au-bala-sobra { background: radial-gradient(circle at 35% 30%, #ffd59e, #d6873a); }
+@keyframes au-cai { from { transform: translateY(-10px); opacity: 0; } }
+.au-palco i.au-bala { width: 14px; height: 14px; animation: none; }
+.au-prato-filme { width: 24%; height: 24px; border-radius: 50%; background: var(--superficie); border: 2px solid var(--borda); }
+.au-saco { width: 19%; height: 30%; border-radius: 12px; border: 2px dashed var(--marca); }
+.au-van { padding: 8px 10px; border-radius: 10px 18px 8px 8px; border: 2px solid var(--texto-fraco); background: var(--superficie); }
+.au-van.au-van-extra { border-style: dashed; border-color: var(--certo); }
+.au-palco .au-van .au-grade-filme b.au-on { background: #62a8ea; }
+.au-riscado-filme { text-decoration: line-through; text-decoration-color: var(--errado); text-decoration-thickness: 3px; opacity: .35; }
+
+/* Potência */
+.au-corrente { display: flex; flex-direction: column; gap: 6px; }
+.au-nivel { display: grid; grid-template-columns: 70px minmax(0, 1fr); gap: 8px; align-items: center; }
+.au-nivel small { font-size: 11px; color: var(--texto-fraco); line-height: 1.2; }
+.au-nivel small b { display: block; font-size: 15px; color: var(--texto); font-variant-numeric: tabular-nums; }
+.au-nivel > div { display: flex; flex-wrap: wrap; gap: 2px; align-items: center; }
+.au-nivel i { width: 7px; height: 7px; border-radius: 50%; background: #62a8ea; animation: au-cai .3s backwards; }
+.au-nivel em { font: 700 11px var(--fonte); font-style: normal; color: var(--texto-fraco); margin-left: 4px; }
+.au-papel { width: 26%; height: calc(var(--au-camadas, 1) * 3px + 4px); max-height: 130px; border-radius: 3px;
+  background: repeating-linear-gradient(180deg, #f3ead6 0 2px, #a99a7a 2px 3px); transition: height .6s !important; }
+.au-foco { border-radius: 8px; padding: 0 4px; transition: background .3s; }
+.au-aceso-filme { background: color-mix(in srgb, var(--marca) 30%, transparent); }
+.au-camada { padding: 4px; border-radius: 6px; background: #2c5f8f; border: 2px solid #9cc9f2; transform: skewX(-12deg); }
+
+/* Frações */
+.au-mesa-pizza { display: flex; align-items: center; justify-content: center; gap: 22px; flex-wrap: wrap; }
+.au-pizza-grande { width: min(190px, 52vw); aspect-ratio: 1; border-radius: 50%; border: 6px solid #c98d4b; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+.au-pizza-filme { aspect-ratio: 1; border-radius: 50%; border: 4px solid #c98d4b; }
+.au-fracao-grande { display: flex; align-items: center; gap: 12px; }
+.au-fracao-grande small { font: 600 15px/1.5 var(--fonte); color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+.au-fr { display: inline-flex; flex-direction: column; align-items: center; font: 800 40px/1 var(--fonte); font-variant-numeric: tabular-nums; }
+.au-fr i { display: block; width: 100%; min-width: 36px; height: 4px; border-radius: 2px; background: currentColor; margin: 5px 0; }
+.au-fr b:first-child { color: #e9b949; } .au-fr b:last-child { color: #62a8ea; }
+.au-fr-filme { font-size: clamp(22px, 6.5vw, 32px); }
+.au-barra-fracao { display: grid; grid-template-columns: repeat(var(--au-n), minmax(0, 1fr)); gap: 3px; height: 26px; }
+.au-barra-fracao i { border-radius: 4px; background: var(--borda); transition: background .25s; }
+.au-barra-fracao i.au-on { background: #e9b949; }
+.au-palco i.au-choco { width: 30px; height: 30px; border-radius: 4px; background: linear-gradient(145deg, #7b4a2a, #4f2c16); box-shadow: inset 0 0 0 2px rgba(255,255,255,.12); }
+.au-palco i.au-aluno { width: 14px; height: 18px; border-radius: 7px 7px 3px 3px; background: var(--texto-fraco); transition: background .3s; }
+.au-palco i.au-aluno.au-on { background: #e9b949; }
+
+/* Decimais */
+.au-valor-grande { text-align: center; font: 800 clamp(30px, 9vw, 44px)/1.1 var(--fonte); font-variant-numeric: tabular-nums; }
+.au-cofre { display: grid; grid-template-columns: minmax(0, 1fr) 10px minmax(0, 1fr) minmax(0, 1fr); gap: 6px; align-items: stretch; }
+.au-col-cofre { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px; border-radius: 10px; background: var(--superficie); border: 1px solid var(--borda); }
+.au-col-cofre small { font-size: 10px; color: var(--texto-fraco); text-align: center; line-height: 1.2; }
+.au-col-cofre > div { display: flex; flex-wrap: wrap; gap: 3px; justify-content: center; min-height: 40px; }
+.au-col-cofre b { font: 800 16px var(--fonte); }
+.au-virgula-cofre { align-self: center; font: 800 28px var(--fonte); }
+i.au-real, i.au-dez, i.au-um { display: block; border-radius: 50%; font: 700 8px/1 var(--fonte); font-style: normal; display: flex; align-items: center; justify-content: center; }
+i.au-real { width: 24px; height: 24px; background: radial-gradient(circle at 35% 30%, #f6f0e0, #b8a46a 60%, #c99a36); color: #4a3a12; box-shadow: inset 0 0 0 3px #d9b45a; }
+i.au-dez { width: 18px; height: 18px; background: radial-gradient(circle at 35% 30%, #ffe08a, #c9971d); color: #5a3d00; }
+i.au-um { width: 13px; height: 13px; background: radial-gradient(circle at 35% 30%, #f0b48a, #b9653a); color: #fff; font-size: 7px; }
+.au-janela { width: 8.4%; height: 26px; border: 3px solid var(--marca); border-radius: 6px; }
+.au-palco i.au-ponto { width: 16px; height: 16px; border-radius: 50%; background: var(--certo); box-shadow: 0 0 0 4px color-mix(in srgb, var(--certo) 35%, transparent); }
+
+/* Contas com frações */
+.au-bancada { display: flex; flex-direction: column; gap: 10px; }
+.au-linha-fr { display: grid; grid-template-columns: 34px minmax(0, 1fr) 44px; gap: 8px; align-items: center; }
+.au-linha-fr > span:first-child { font: 700 13px var(--fonte); color: var(--texto-fraco); }
+.au-linha-fr > div { display: flex; flex-direction: column; gap: 4px; }
+.au-barra-fr { display: grid; grid-template-columns: repeat(var(--au-n), minmax(0, 1fr)); gap: 2px; height: 28px; padding: 2px; border-radius: 6px; border: 2px solid var(--texto-fraco); }
+.au-barra-fr i { border-radius: 3px; background: var(--superficie-2); transition: background .35s; }
+.au-barra-fr i.au-on { background: #62a8ea; }
+.au-barra-fr i.au-on2 { background: #e9b949; }
+.au-barra-fr i.au-fora { background: repeating-linear-gradient(45deg, transparent 0 4px, var(--errado) 4px 6px); }
+.au-barra-fr i.au-sobra-fr { background: var(--certo); }
+.au-fr-p { font-size: 20px; }
+.au-fr-p i { min-width: 22px; height: 3px; margin: 3px 0; }
+.au-barra-filme-fr { height: 34px; }
+.au-palco .au-grade-filme b.au-on { background: #62a8ea; }
+.au-preto { color: #3a2a16 !important; }
