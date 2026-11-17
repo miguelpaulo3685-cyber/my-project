@@ -6,18 +6,20 @@
 // escondem a publicação e administradores revisam.
 
 const imagens = require('./imagens');
-const { notificarSeguidores } = require('./social');
+const { notificar, notificarSeguidores } = require('./social');
 const { lerEscola, lerCidade } = require('./acolhimento');
 
 const DENUNCIAS_PARA_ESCONDER = 3;
 const MAXIMO_DE_PUBLICACOES = 60; // por pessoa: o banco grátis tem pouco espaço
 const TAMANHO = { titulo: 80, texto: 2000, bio: 300 };
+const FOTOS_POR_PAGINA = 12;
 
 module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogin, exigirModerador }) {
   const porConta = req => `u${req.usuario.id}`;
   const freioFotos = limitar(auth.criarFreio(30, 60 * 60 * 1000), 'Você enviou muitas fotos agora. Espere um pouco.', porConta);
   const freioPublicar = limitar(auth.criarFreio(15, 60 * 60 * 1000), 'Você publicou muito em pouco tempo. Espere um pouco.', porConta);
   const freioDenuncias = limitar(auth.criarFreio(20, 60 * 60 * 1000), 'Você fez muitas denúncias. Espere um pouco.', porConta);
+  const freioCurtir = limitar(auth.criarFreio(120, 60 * 60 * 1000), 'Calma! Muitas curtidas em pouco tempo.', porConta);
 
   const idValido = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
   const urlDaImagem = id => imagens.urlAssinada(id);
@@ -263,6 +265,68 @@ module.exports = function registrarPerfis(app, { pool, auth, limitar, exigirLogi
     } catch (erro) {
       console.error('Erro ao denunciar publicação:', erro.message);
       res.status(500).json({ error: 'Não consegui registrar a denúncia agora.' });
+    }
+  });
+
+  // ---------- fotos da comunidade ----------
+  // As publicações de todos (ou só de quem eu sigo), da mais nova para a mais
+  // velha, no lugar do antigo "O que está rolando". Nada de nota: só o que a
+  // pessoa escolheu postar no perfil. Quem bloqueou ou foi bloqueado não aparece.
+  app.get('/api/comunidade/fotos', exigirLogin, async (req, res) => {
+    const eu = req.usuario;
+    const seguindo = req.query.filtro === 'seguindo';
+    const antes = idValido(req.query.antes);
+    try {
+      const { rows } = await pool.query(
+        `SELECT p.id, p.titulo, p.texto, p.capa_id, p.capa_posicao, p.created_at,
+                u.id AS autor_id, u.username AS autor, u.foto_id,
+                (SELECT COUNT(*)::int FROM publicacoes_curtidas c WHERE c.publicacao_id = p.id) AS curtidas,
+                EXISTS (SELECT 1 FROM publicacoes_curtidas c WHERE c.publicacao_id = p.id AND c.usuario_id = $1) AS curti,
+                EXISTS (SELECT 1 FROM denuncias_publicacoes d WHERE d.publicacao_id = p.id AND d.usuario_id = $1) AS denunciei
+           FROM publicacoes p JOIN usuarios u ON u.id = p.autor_id
+          WHERE NOT p.oculto
+            AND ($2::int IS NULL OR p.id < $2)
+            AND (NOT $3 OR p.autor_id = $1 OR p.autor_id IN (SELECT seguido_id FROM seguidores WHERE seguidor_id = $1))
+            AND NOT EXISTS (SELECT 1 FROM bloqueios b WHERE (b.usuario_id = $1 AND b.bloqueado_id = u.id)
+                                                       OR (b.usuario_id = u.id AND b.bloqueado_id = $1))
+          ORDER BY p.id DESC
+          LIMIT ${FOTOS_POR_PAGINA}`,
+        [eu.id, antes, seguindo]
+      );
+      res.json({
+        fotos: rows.map(p => ({
+          id: p.id, titulo: p.titulo, texto: p.texto, capa: urlDaImagem(p.capa_id), capa_posicao: p.capa_posicao,
+          created_at: p.created_at, curtidas: p.curtidas, curti: p.curti, denunciei: p.denunciei,
+          meu: p.autor_id === eu.id, pode_apagar: p.autor_id === eu.id || Boolean(eu.admin),
+          autor: { id: p.autor_id, nome: p.autor, foto: urlDaImagem(p.foto_id) }
+        })),
+        mais: rows.length === FOTOS_POR_PAGINA,
+        filtro: seguindo ? 'seguindo' : 'todos'
+      });
+    } catch (erro) {
+      console.error('Erro ao listar fotos da comunidade:', erro.message);
+      res.status(500).json({ error: 'Não consegui carregar as publicações agora.' });
+    }
+  });
+
+  // Curtir e descurtir (o mesmo botão). O autor é avisado uma vez só.
+  app.post('/api/publicacoes/:id/curtir', exigirLogin, freioCurtir, async (req, res) => {
+    const id = idValido(req.params.id);
+    if (!id) return res.status(404).json({ error: 'Publicação não encontrada.' });
+    try {
+      const pub = await pool.query('SELECT autor_id, titulo FROM publicacoes WHERE id = $1 AND NOT oculto', [id]);
+      if (!pub.rows[0]) return res.status(404).json({ error: 'Publicação não encontrada.' });
+      const saiu = await pool.query('DELETE FROM publicacoes_curtidas WHERE publicacao_id = $1 AND usuario_id = $2', [id, req.usuario.id]);
+      if (!saiu.rowCount) {
+        await pool.query('INSERT INTO publicacoes_curtidas (publicacao_id, usuario_id) VALUES ($1, $2) ON CONFLICT DO NOTHING', [id, req.usuario.id]);
+        await notificar(pool, { usuarioId: pub.rows[0].autor_id, atorId: req.usuario.id, tipo: 'curtida_publicacao',
+          alvoTipo: 'perfil', alvoId: pub.rows[0].autor_id, texto: pub.rows[0].titulo });
+      }
+      const { rows } = await pool.query('SELECT COUNT(*)::int AS n FROM publicacoes_curtidas WHERE publicacao_id = $1', [id]);
+      res.json({ curti: !saiu.rowCount, curtidas: rows[0].n });
+    } catch (erro) {
+      console.error('Erro ao curtir publicação:', erro.message);
+      res.status(500).json({ error: 'Não consegui curtir agora.' });
     }
   });
 

@@ -1302,27 +1302,137 @@
     .ritual span { flex: 1; min-width: 180px; }
     .ritual button.acao { margin: 0; }
 
-    .stories { display: flex; gap: 14px; overflow-x: auto; padding: 4px 2px 10px; margin-bottom: 14px; scrollbar-width: none; }
-    .stories::-webkit-scrollbar { display: none; }
-    .story {
-      flex-shrink: 0; width: 74px; display: flex; flex-direction: column; align-items: center; gap: 6px;
-      background: none; border: none; cursor: pointer; font: inherit; color: var(--texto); padding: 0;
+    /* Metas de hoje: cartões de papel com a bolinha da pessoa no canto. Cada
+       pessoa tem a sua cor (--h). Não vista: contorno da cor do site. */
+    .faixa-metas { margin: 0 0 16px; }
+    .titulo-metas { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 0 2px 8px; }
+    .titulo-metas b { font-size: .95rem; }
+    .titulo-metas small { color: var(--texto-fraco); font-size: .74rem; }
+    .metas-rolagem {
+      display: flex; gap: 14px; overflow-x: auto; padding: 10px 10px 6px; margin: 0 -10px;
+      scrollbar-width: none; scroll-snap-type: x proximity; overscroll-behavior-x: contain;
     }
-    .story .anel {
-      width: 64px; height: 64px; border-radius: 50%; padding: 3px; display: flex;
-      background: conic-gradient(from 200deg, #f97316, #ec4899, var(--marca), #f97316);
+    .metas-rolagem::-webkit-scrollbar { display: none; }
+    .meta-cartao {
+      position: relative; flex: 0 0 auto; width: 92px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: none; border: none; padding: 0; font: inherit; color: var(--texto); cursor: pointer; scroll-snap-align: start;
+      -webkit-tap-highlight-color: transparent;
     }
-    .story.feito .anel { background: var(--certo); }
-    .story.minha-vazia .anel { background: var(--borda); }
-    .story .anel span {
-      flex: 1; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+    .meta-papel {
+      position: relative; width: 92px; height: 116px; border-radius: 16px 16px 16px 4px; overflow: hidden;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 22px 8px 9px; text-align: left;
+      background: linear-gradient(160deg, hsl(var(--h, 220) 70% 62%), hsl(calc(var(--h, 220) + 40) 65% 42%));
+      box-shadow: 0 0 0 2px var(--fundo), 0 0 0 4.5px var(--marca), 0 8px 18px rgba(0,0,0,.18);
+      transition: transform .15s;
+    }
+    /* linhas de caderno bem leves no fundo do cartão */
+    .meta-papel::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .18;
+      background: repeating-linear-gradient(180deg, transparent 0 15px, #fff 15px 16px);
+    }
+    .meta-cartao:active .meta-papel { transform: scale(.96); }
+    .meta-cartao.vista .meta-papel { box-shadow: 0 0 0 1px var(--borda), 0 6px 14px rgba(0,0,0,.12); filter: saturate(.55); }
+    .meta-texto {
+      position: relative; color: #fff; font-size: .7rem; font-weight: 700; line-height: 1.25; text-shadow: 0 1px 2px rgba(0,0,0,.25);
+      display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: break-word; hyphens: auto;
+    }
+    .meta-bolha {
+      position: absolute; top: -6px; left: -6px; width: 34px; height: 34px; border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: .9rem;
       background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca);
-      font-weight: 800; font-size: 1.2rem; border: 3px solid var(--fundo);
+      border: 3px solid var(--fundo); z-index: 1;
     }
-    .story.minha-vazia .anel span { background: var(--superficie-2); color: var(--marca-texto); font-size: 1.6rem; }
-    .story img { width: 100%; height: 100%; object-fit: cover; }
-    .story small { font-size: .72rem; max-width: 74px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto-fraco); }
-    .story .selo-feito { position: relative; }
+    .meta-bolha img { width: 100%; height: 100%; object-fit: cover; }
+    .meta-ok {
+      position: absolute; right: 6px; top: 6px; width: 22px; height: 22px; border-radius: 50%; font-style: normal;
+      display: flex; align-items: center; justify-content: center; font-size: .78rem; font-weight: 900;
+      background: var(--certo); color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    }
+    .meta-cartao small { font-size: .72rem; max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--texto-fraco); }
+    .meta-cartao.nova .meta-papel, .meta-cartao.convite .meta-papel {
+      background: var(--superficie-2); box-shadow: none; border: 2px dashed var(--borda); justify-content: center; align-items: center; text-align: center; padding: 10px 8px;
+    }
+    .meta-cartao.nova .meta-papel::before, .meta-cartao.convite .meta-papel::before { display: none; }
+    .meta-cartao.nova .meta-texto, .meta-cartao.convite .meta-texto { color: var(--texto-fraco); text-shadow: none; font-weight: 600; font-size: .7rem; }
+    .meta-mais { font-size: 1.7rem; line-height: 1; margin-bottom: 6px; color: var(--marca-texto); }
+    .meta-cartao.nova .meta-papel { border-color: var(--marca); }
+    .meta-cartao.exemplo .meta-papel { box-shadow: 0 0 0 1px var(--borda); filter: blur(.4px) saturate(.7); }
+
+    /* Visor das metas em tela cheia */
+    body.com-visor { overflow: hidden; }
+    .visor-metas {
+      position: fixed; inset: 0; z-index: 400; display: flex; flex-direction: column; color: #fff; user-select: none; touch-action: none;
+      background: radial-gradient(120% 80% at 20% 10%, hsl(var(--h) 70% 55%), hsl(calc(var(--h) + 40) 60% 22%) 70%, #0b0b0f);
+      padding: calc(10px + env(safe-area-inset-top, 0px)) 14px calc(18px + env(safe-area-inset-bottom, 0px));
+      animation: visor-entra .2s ease-out;
+    }
+    @keyframes visor-entra { from { opacity: 0; transform: scale(.97); } }
+    .visor-barras { display: flex; gap: 4px; }
+    .visor-barras i { flex: 1; height: 3px; border-radius: 3px; background: rgba(255,255,255,.3); overflow: hidden; }
+    .visor-barras b { display: block; height: 100%; background: #fff; }
+    .visor-cabeca { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+    .visor-cabeca .meta-bolha { position: static; border-color: rgba(255,255,255,.7); width: 38px; height: 38px; }
+    .visor-cabeca .autor-link { color: #fff; }
+    .visor-cabeca small { color: rgba(255,255,255,.75); font-size: .78rem; }
+    .visor-fechar { margin-left: auto; width: 44px; height: 44px; border: none; background: none; color: #fff; font-size: 1.3rem; cursor: pointer; }
+    .visor-cartaz {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px;
+      max-width: 560px; width: 100%; margin: 0 auto; padding: 0 10px;
+    }
+    .visor-cartaz small { font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+    .visor-cartaz p { margin: 0; font-size: clamp(1.5rem, 6.5vw, 2.4rem); font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; text-shadow: 0 2px 12px rgba(0,0,0,.25); }
+    .visor-feito { background: var(--certo); color: #fff; font-weight: 800; padding: 6px 14px; border-radius: 999px; font-size: .9rem; }
+    .visor-rodape { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px; max-width: 560px; width: 100%; margin: 0 auto; text-align: center; }
+    .visor-rodape small { flex-basis: 100%; color: rgba(255,255,255,.8); font-size: .8rem; }
+    .visor-rodape .acao { margin: 0; }
+    .visor-rodape .acao.discreta { background: rgba(255,255,255,.14); color: #fff; border-color: rgba(255,255,255,.3); }
+    .visor-reacoes { display: flex; gap: 10px; }
+    .visor-reacoes button {
+      min-width: 64px; min-height: 52px; border-radius: 999px; border: 1px solid rgba(255,255,255,.35); background: rgba(255,255,255,.12);
+      color: #fff; font: inherit; font-size: 1.35rem; cursor: pointer;
+    }
+    .visor-reacoes button b { font-size: .85rem; }
+    .visor-reacoes button.minha { background: #fff; color: #111; }
+    .visor-mais { background: none; border: none; color: rgba(255,255,255,.6); font: inherit; font-size: .78rem; text-decoration: underline; cursor: pointer; padding: 8px; }
+    @media (min-width: 701px) {
+      .visor-metas { inset: 4vh auto 4vh 50%; width: min(440px, 92vw); transform: translateX(-50%); border-radius: 22px; box-shadow: 0 30px 80px rgba(0,0,0,.5); animation: none; }
+      body.com-visor::after { content: ""; position: fixed; inset: 0; z-index: 399; background: rgba(0,0,0,.6); }
+    }
+
+    /* Fotos da comunidade */
+    .coluna-fotos { min-width: 0; }
+    .postar-foto {
+      display: flex; align-items: center; gap: 10px; width: 100%; margin-bottom: 12px; padding: 10px 12px; cursor: pointer; text-align: left;
+      background: var(--superficie); border: 1px solid var(--borda); border-radius: 14px; font: inherit; color: var(--texto-fraco); font-size: .88rem;
+    }
+    .postar-foto span:not(.bolha-autor) { flex: 1; }
+    .postar-foto > b { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--marca); color: var(--sobre-marca); font-size: 1.1rem; flex-shrink: 0; }
+    .postar-foto .bolha-autor, .post-foto .bolha-autor {
+      width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800;
+    }
+    .postar-foto .bolha-autor img, .post-foto .bolha-autor img { width: 100%; height: 100%; object-fit: cover; }
+    .post-foto { background: var(--superficie); border: 1px solid var(--borda); border-radius: 18px; overflow: hidden; margin-bottom: 14px; }
+    .post-foto header { display: flex; align-items: center; gap: 10px; padding: 10px 12px; }
+    .post-foto header > span:not(.bolha-autor) { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .post-foto header small { color: var(--texto-fraco); font-size: .74rem; }
+    .post-foto header .autor-link { text-align: left; padding: 0; align-self: flex-start; }
+    .post-foto header .mais { background: none; border: none; color: var(--texto-fraco); font: inherit; font-size: .76rem; cursor: pointer; padding: 10px 4px; }
+    .foto-imagem, .foto-texto { display: block; width: 100%; border: none; padding: 0; margin: 0; cursor: pointer; }
+    .foto-imagem { aspect-ratio: 1 / 1; background: var(--superficie-2); }
+    .foto-imagem img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .foto-texto {
+      aspect-ratio: 4 / 3; padding: 24px; color: #fff; font: inherit; font-size: 1.15rem; font-weight: 800; line-height: 1.35; text-align: center;
+      background: linear-gradient(150deg, hsl(var(--h) 65% 55%), hsl(calc(var(--h) + 40) 60% 35%)); overflow: hidden; overflow-wrap: anywhere;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .foto-acoes { display: flex; gap: 6px; padding: 6px 8px 0; }
+    .curtir { display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 8px; border: none; background: none; color: var(--texto); font: inherit; cursor: pointer; }
+    .curtir span { font-size: 1.5rem; line-height: 1; }
+    .curtir.ligado span { color: #e0245e; }
+    .foto-legenda { margin: 0; padding: 0 14px 14px; font-size: .9rem; line-height: 1.45; overflow-wrap: anywhere;
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .fotos-vazio { padding: 26px 16px; }
 
     .boas-vindas { margin-bottom: 18px; padding: 20px 22px; border-color: var(--marca); }
     .boas-vindas .topo-bv { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
@@ -1357,7 +1467,10 @@
     .lado-agora .sugestao .autor-link { display: flex !important; flex-direction: column; align-items: flex-start; min-width: 0; flex: 1; }
 
     .grade-agora { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
-    .lado-agora { display: grid; gap: 14px; }
+    .grade-agora > .coluna-fotos { grid-column: 1; grid-row: 1; }
+    .grade-agora > .lado-agora { grid-column: 2; grid-row: 1; }
+    .lado-agora { display: grid; gap: 14px; min-width: 0; grid-template-columns: minmax(0, 1fr); }
+    .lado-agora:empty, .lado-agora > div:empty { display: none; }
     .lado-agora .painel { padding: 18px; }
     .titulo-bloco { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     .titulo-bloco b { font-size: 1rem; }
@@ -1712,7 +1825,8 @@
     @keyframes subir-xp { 0% { opacity: 0; transform: translate(-50%, 20px); } 15%, 75% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -20px); } }
 
     @media (max-width: 900px) {
-      .grade-agora, .sala-aberta { grid-template-columns: 1fr; }
+      .grade-agora, .sala-aberta { grid-template-columns: minmax(0, 1fr); }
+      .grade-agora > .coluna-fotos, .grade-agora > .lado-agora { grid-column: 1; grid-row: auto; }
       .chat-sala { height: 420px; }
     }
     @media (max-width: 640px) {
@@ -2528,14 +2642,20 @@
     .gaveta .aba svg { width: 21px; height: 21px; }
     .gaveta .aba-extra { display: flex; }
     .gaveta .avatar-aba { width: 22px; height: 22px; }
-    /* Celular: embaixo Treinar, Comunidade (no meio) e Simulado; no topo perfil, mensagens e sino.
-       Arena, Redação, Aparência, Feedback e Configurações ficam no menu de 3 barras, sem repetir nada. */
+    /* Celular (pedido do Miguel em 17/11): sem menu de 3 barras. Embaixo, só os ícones das
+       cinco partes, com a Comunidade no meio e em destaque. No topo: Aparência (🎨), mensagens,
+       sino e o perfil (no perfil ficam Configurações e Feedback). O nome continua para leitor de tela. */
     @media (max-width: 700px) {
-      #btn-menu { display: flex; }
-      #btn-menu.no-menu { border-color: var(--marca); background: var(--marca-suave); color: var(--marca-texto); }
-      #aba-arena, #aba-redacao, #btn-aparencia { display: none; }
-      .abas { grid-template-columns: repeat(3, 1fr) !important; }
-      #aba-treinar { order: 1; } #aba-feed { order: 2; } #aba-simulado { order: 3; }
+      .abas { grid-template-columns: repeat(5, 1fr) !important; align-items: center; padding-top: 4px !important; padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px)) !important; }
+      .abas .aba { min-height: 52px; padding: 6px 2px; }
+      .abas .aba svg { width: 25px; height: 25px; }
+      .abas .nome-aba { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .abas .aba.ativa { background: none; color: var(--marca-texto); }
+      .abas .aba.ativa::after { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; margin-top: 1px; }
+      #aba-treinar { order: 1; } #aba-simulado { order: 2; } #aba-feed { order: 3; } #aba-arena { order: 4; } #aba-redacao { order: 5; }
+      #aba-feed svg { width: 46px; height: 46px; padding: 11px; border-radius: 50%; background: var(--marca); color: var(--sobre-marca); box-shadow: 0 6px 16px var(--marca-sombra); }
+      #aba-feed.ativa::after { display: none; }
+      body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); --altura-nav: 60px; }
     }
     @media (prefers-reduced-motion: reduce) { .gaveta, .gaveta-fundo { transition: none; } }
 
@@ -2587,6 +2707,8 @@
     html[data-estilo="serra"] .marca em { color: #fff; }
     html[data-estilo="serra"] :is(input, textarea):not([type=checkbox]):not([type=range]):not([type=color]) { border-radius: 14px; }
     .estilos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .aviso-anuladas { margin: 16px 0; padding: 12px 14px; border-radius: 14px; background: var(--marca-suave); border: 1px solid var(--borda); font-size: .86rem; line-height: 1.5; }
+    .aviso-anuladas b { display: block; margin-bottom: 2px; }
     .estilo-op {
       border: 2px solid var(--borda); border-radius: 12px; padding: 0; overflow: hidden; cursor: pointer;
       background: var(--superficie-2); color: var(--texto); font: inherit; font-size: .82rem; font-weight: 600; text-align: left;
@@ -2630,7 +2752,12 @@
       if (sala.length === 6 && !localStorage.getItem('mm_token')) sessionStorage.setItem('mm_arena_pendente', sala);
     } catch (e) {}
     // Estilo escolhido em Aparência, aplicado já aqui para a página não piscar.
-    try { if (localStorage.getItem('mm_estilo') === 'serra') document.documentElement.dataset.estilo = 'serra'; } catch (e) {}
+    // Serra (vidro) é o padrão desde 17/11: vale para quem nunca escolheu um estilo
+    // nem mexeu em cores ou imagem de fundo (quem já personalizou continua como estava).
+    try {
+      const e = localStorage.getItem('mm_estilo');
+      if (e === 'serra' || (!e && !localStorage.getItem('mm_cores') && !localStorage.getItem('mm_fundo_img'))) document.documentElement.dataset.estilo = 'serra';
+    } catch (e) { document.documentElement.dataset.estilo = 'serra'; }
   </script>
 </head>
 <body>
@@ -3390,6 +3517,7 @@
       <p>Gente estudando junto, agora. Ninguém passa no ENEM sozinho.</p>
     </div>
     <div class="subabas" id="subabas-comunidade"></div>
+    <div id="metas-topo"></div>
     <div class="atalhos-inicio atalhos-comunidade" id="atalhos-comunidade"></div>
     <div id="faixa-reels"></div>
     <div id="conteudo-comunidade"></div>
@@ -3813,7 +3941,7 @@ function escolherTemaPronto(i) {
   const t = TEMAS_PRONTOS[i];
   if (!t) return;
   // No estilo Serra as cores ficam guardadas: volta para o Preto & Bege para o tema aparecer.
-  if (document.documentElement.dataset.estilo === 'serra') { guardar(CHAVE_ESTILO, null); aplicarEstilo('classico'); }
+  if (document.documentElement.dataset.estilo === 'serra') { guardar(CHAVE_ESTILO, 'classico'); aplicarEstilo('classico'); }
   cores = { principal: t.principal, secundaria: t.secundaria, fundo: t.fundo };
   salvarCores();
 }
@@ -4160,8 +4288,15 @@ function aplicarEstilo(estilo) {
   if (camada) camada.hidden = !serra;
 }
 
+// Sem escolha guardada vale o padrão (Serra), menos para quem já personalizou cores ou fundo.
+function estiloGuardado() {
+  const e = ler(CHAVE_ESTILO);
+  if (e === 'serra' || e === 'classico') return e;
+  return ler(CHAVE_CORES) || ler(CHAVE_IMAGEM) ? 'classico' : 'serra';
+}
+
 function escolherEstilo(estilo) {
-  guardar(CHAVE_ESTILO, estilo === 'serra' ? 'serra' : null);
+  guardar(CHAVE_ESTILO, estilo === 'serra' ? 'serra' : 'classico');
   aplicarEstilo(estilo);
   desenharAparencia();
 }
@@ -6994,6 +7129,26 @@ const DIAS_SIM = {
 };
 const AREA_DA_DISCIPLINA = { 'linguagens': 'linguagens', 'ciencias-humanas': 'humanas', 'ciencias-natureza': 'natureza', 'matematica': 'matematica' };
 const AVISOS_SIM = [60, 30, 15, 5]; // minutos restantes em que o fiscal avisa
+// Questões anuladas pelo INEP (iguais às de provas.js), pelo dia do simulado em que
+// cairiam. Elas não têm resposta certa e ficam fora da prova, como no ENEM de verdade:
+// o aviso explica por que o dia tem menos de 90.
+const ANULADAS_SIM = { 2009: { 1: [101] }, 2024: { 2: [129] }, 2025: { 2: [123, 132, 174] } };
+const anuladasDoDia = (ano, dia) => ((ANULADAS_SIM[ano] || {})[dia]) || [];
+const anuladasDoAno = ano => [...anuladasDoDia(ano, 1), ...anuladasDoDia(ano, 2)];
+function textoQuestoesDoDia(ano, dia, n) {
+  if (n >= 90) return '90 questões';
+  const anuladas = anuladasDoDia(ano, dia);
+  if (anuladas.length && n + anuladas.length >= 90) return `${n} questões · ${anuladas.length === 1 ? '1 anulada' : anuladas.length + ' anuladas'} pelo INEP`;
+  return `${n} de 90 questões no banco`;
+}
+function avisoAnuladas(ano) {
+  const lista = anuladasDoAno(ano);
+  if (!lista.length) return '';
+  const nums = lista.map(n => `${n}`).join(', ').replace(/, (\d+)$/, ' e $1');
+  return `<div class="aviso-anuladas" role="note"><b>ℹ️ ${lista.length === 1 ? 'Falta 1 questão' : `Faltam ${lista.length} questões`}, e está certo assim.</b>
+    O INEP anulou ${lista.length === 1 ? 'a questão' : 'as questões'} ${nums} do ENEM ${ano} (depois da prova, viu que não ${lista.length === 1 ? 'tinha' : 'tinham'} uma resposta certa).
+    Questão anulada não vale ponto para ninguém, então ela fica fora do simulado. A prova não está incompleta.</div>`;
+}
 
 // Temas da redação de cada ENEM (aplicação regular, prova impressa).
 const TEMAS_REDACAO = {
@@ -7108,14 +7263,16 @@ function listaDeEnems() {
   const anos = anosSim === null ? null : anosSim.filter(a => a.dia1 || a.dia2);
   const cartao = a => {
     const feito = [1, 2].map(d => ultimoDoDia(a.ano, d));
-    const incompleta = a.dia1 < 90 || a.dia2 < 90;
+    const faltam = 180 - a.dia1 - a.dia2;
+    const soAnuladas = faltam > 0 && faltam <= anuladasDoAno(a.ano).length;
     return `<button class="cartao-enem" onclick="abrirEnem(${a.ano})">
       <span class="ano-enem">ENEM ${a.ano}</span>
       <span class="tema-enem">Redação: ${escapar(TEMAS_REDACAO[a.ano] || '—')}</span>
       <span class="dias-enem">
         ${[1, 2].map(d => `<span class="${feito[d - 1] ? 'feito' : ''}">${feito[d - 1] ? `✓ Dia ${d} · ${feito[d - 1].acertos}/${feito[d - 1].total}` : `Dia ${d}`}</span>`).join('')}
       </span>
-      ${incompleta ? `<small>${a.dia1 + a.dia2} de 180 questões no banco</small>` : ''}
+      ${soAnuladas ? `<small>${a.dia1 + a.dia2} questões · ${faltam === 1 ? '1 anulada' : faltam + ' anuladas'} pelo INEP</small>`
+        : faltam > 0 ? `<small>${a.dia1 + a.dia2} de 180 questões no banco</small>` : ''}
     </button>`;
   };
   return `
@@ -7148,7 +7305,7 @@ function paginaDoEnem(ano) {
       : `<button class="acao${f ? ' discreta' : ''}" onclick="comecarSimulado(${dia}, this)" ${ocupado || !info['dia' + dia] ? 'disabled' : ''}>${f ? 'Refazer' : 'Começar'} ${d.nome}</button>`;
     return `<div class="dia-sim">
       <b>${d.nome}</b>
-      <span>${d.sobre}<br>${info['dia' + dia] >= 90 ? '90 questões' : `${info['dia' + dia]} de 90 questões no banco`}${dia === 1 && temLingua ? ' · 5 de língua estrangeira' : ''}</span>
+      <span>${d.sobre}<br>${ano === 'misto' ? '90 questões' : textoQuestoesDoDia(ano, dia, info['dia' + dia])}${dia === 1 && temLingua ? ' · 5 de língua estrangeira' : ''}</span>
       <span class="tempo">⏱ ${duracaoTexto(d.minutos)}</span>
       ${f ? `<span class="ultimo">Último resultado: <b>${f.acertos}/${f.total}</b> · ${f.areas.map(a => `${escapar(nomeDaArea(a.area))} ${a.nota ? 'TRI ' + a.nota : a.acertos + '/' + a.total}`).join(' · ')}</span>` : ''}
       ${botao}
@@ -7164,6 +7321,7 @@ function paginaDoEnem(ano) {
     </div>
     ${completo ? resultadoDoEnem(feitos) : ''}
     <div class="dias-sim">${diaCartao(1)}${diaCartao(2)}</div>
+    ${ano === 'misto' ? '' : avisoAnuladas(ano)}
     ${temLingua ? `<div class="opcoes-sim" style="grid-template-columns:1fr">
       <div>
         <label>Língua estrangeira (dia 1)</label>
@@ -7465,7 +7623,10 @@ function abrirGrade() {
     : `<span><i style="background:var(--marca-suave);border-color:var(--marca)"></i>respondida</span>
        <span><i style="background:var(--aviso);border-color:var(--aviso);border-radius:50%"></i>marcada para revisar</span>
        <span><i></i>sem resposta</span>`;
-  document.getElementById('conteudo-grade').innerHTML = redacao + blocos + `<div class="legenda-grade">${legenda}</div>`;
+  const anuladas = anuladasDoDia(sim.ano, sim.dia);
+  const nota = anuladas.length ? `<p class="aviso-anuladas" style="margin:12px 0 0">ℹ️ Este dia tem ${sim.questoes.length} questões porque o INEP anulou
+    ${anuladas.length === 1 ? 'a questão' : 'as questões'} ${anuladas.join(', ').replace(/, (\d+)$/, ' e $1')} do ENEM ${escapar(String(sim.ano))}. Não falta nada.</p>` : '';
+  document.getElementById('conteudo-grade').innerHTML = redacao + blocos + `<div class="legenda-grade">${legenda}</div>` + nota;
   abrirModal('modal-grade');
 }
 
@@ -8413,6 +8574,7 @@ function desenharPaginaPerfil() {
         <button class="acao" onclick="abrirEditorPublicacao()">＋ Nova publicação</button>
         <button class="acao discreta" onclick="abrirEdicaoPerfil()">Editar perfil</button>
         <button class="acao discreta config-no-perfil" onclick="abrirConta('logado')">⚙️ Configurações</button>
+        <button class="acao discreta config-no-perfil" onclick="abrirFeedback()">💬 Feedback</button>
       </div>` : ''}
     <div class="rotulo-galeria">Publicações</div>
     <div class="galeria">${cartoes || `<div class="vazio galeria-vazia"><span class="cara">🖼️</span>
@@ -8456,7 +8618,8 @@ async function acaoPublicacao(id, acao) {
     if (!r.ok) throw { daApi: dados.error };
     fecharModal('modal-ver');
     if (acao === 'denunciar') avisoTopo(dados.message, 'bom');
-    abrirPerfil(perfilAberto.perfil.id);
+    if (perfilAberto.daComunidade) { fotos.lista = null; abrirComunidade('agora'); }
+    else abrirPerfil(perfilAberto.perfil.id);
   } catch (e) {
     document.getElementById('recado-ver').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
   }
@@ -8489,9 +8652,11 @@ async function fotoParaEnviar(arquivo, { lado = 1280, quadrado = false } = {}) {
 }
 
 // ---------- editor de publicação ----------
-function abrirEditorPublicacao(id) {
+function abrirEditorPublicacao(id, origem) {
+  if (!usuarioLogado) return abrirConta('criar');
   const p = id ? perfilAberto.publicacoes.find(x => x.id === id) : null;
-  editorPub = { id: p ? p.id : null, capa: p && p.capa ? urlImagem(p.capa) : null, capaMudou: false, posicao: p ? p.capa_posicao : 50 };
+  editorPub = { id: p ? p.id : null, capa: p && p.capa ? urlImagem(p.capa) : null, capaMudou: false, posicao: p ? p.capa_posicao : 50,
+    daComunidade: origem === 'comunidade' || Boolean(perfilAberto && perfilAberto.daComunidade) };
   document.getElementById('titulo-modal-pub').textContent = p ? 'Editar publicação' : 'Nova publicação';
   document.getElementById('salvar-pub').textContent = p ? 'Salvar' : 'Publicar';
   document.getElementById('pub-titulo').value = p ? p.titulo : '';
@@ -8586,7 +8751,8 @@ async function salvarPublicacao() {
     const dados = await r.json();
     if (!r.ok) throw { daApi: dados.error };
     fecharModal('modal-pub');
-    abrirPerfil(perfilAberto.perfil.id);
+    if (editorPub.daComunidade) { mostrarXp(editorPub.id ? 'Publicação salva!' : 'Publicado na comunidade! 📸'); fotos.lista = null; abrirComunidade('agora'); }
+    else abrirPerfil(perfilAberto.perfil.id);
   } catch (e) {
     document.getElementById('recado-pub').innerHTML = `<div class="recado ruim">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
   } finally {
@@ -8800,6 +8966,7 @@ const TEXTO_DA_NOTIFICACAO = {
   util: n => `<b>${escapar(n.ator)}</b> achou sua explicação útil 👍`,
   fixado: () => 'A equipe fixou a sua explicação como a melhor da questão 📌',
   publicacao: n => `<b>${escapar(n.ator)}</b> publicou: “${escapar(n.texto || '')}”`,
+  curtida_publicacao: n => `<b>${escapar(n.ator)}</b> curtiu a sua publicação “${escapar(n.texto || '')}” ♥`,
   reel_aprovado: n => `Seu reel “${escapar(n.texto || '')}” foi aprovado e está no ar 🎬`,
   reel_recusado: n => `Seu reel “${escapar(n.texto || '')}” não foi aprovado desta vez.`,
   apoio: n => `<b>${escapar(n.ator)}</b> apoiou a sua meta de hoje ${escapar(n.texto || '')}`,
@@ -9331,8 +9498,6 @@ async function desenharRankingDesafio() {
 let abaComunidade = 'agora';
 let agora = null;          // resposta de /api/comunidade/agora
 let meuProgresso = null;   // resposta de /api/comunidade/eu
-let filtroAtividade = 'todos';
-let verTodasAtividades = false;
 let relogioPresenca = null;
 let salaAtual = null;      // sala em que a pessoa está (continua nela ao navegar pelo site)
 let dadosSala = null;
@@ -9469,7 +9634,7 @@ function desenharSubabas() {
   document.getElementById('subabas-feed').innerHTML = voltar;
   const faixa = document.getElementById('faixa-reels');
   const atalhos = document.getElementById('atalhos-comunidade');
-  if (abaComunidade !== 'agora') { faixa.innerHTML = ''; atalhos.innerHTML = ''; return; }
+  if (abaComunidade !== 'agora') { faixa.innerHTML = ''; atalhos.innerHTML = ''; document.getElementById('metas-topo').innerHTML = ''; return; }
   atalhos.innerHTML = ATALHOS_COMUNIDADE.map(([id, icone, nome, sobre]) =>
     `<button class="atalho-inicio" onclick="trocarAbaComunidade('${id}')"><span class="icone">${icone}</span>
       <span><b>${id === 'salas' && salaAtual ? 'Sua sala' : nome}</b><small>${sobre}</small></span></button>`).join('');
@@ -9619,22 +9784,26 @@ async function desenharAgora() {
   const alvo = document.getElementById('conteudo-comunidade');
   if (!agora) alvo.innerHTML = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
   try {
-    [agora] = await Promise.all([api(`/api/comunidade/agora?filtro=${filtroAtividade}`), atualizarMeuProgresso()]);
+    [agora] = await Promise.all([api('/api/comunidade/agora'), atualizarMeuProgresso()]);
   } catch (e) {
     alvo.innerHTML = `<div class="vazio"><span class="cara">🔌</span>${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
     return;
   }
   if (abaComunidade !== 'agora' || !comunidadeNaTela()) return;
-  if (!usuarioLogado || !agora.metas) { alvo.innerHTML = htmlPulsoGrande() + htmlConvite(); return; }
-  // Duas partes: o que é seu (dupla, colegas) e o que está acontecendo hoje.
+  const topo = document.getElementById('metas-topo');
+  if (!usuarioLogado || !agora.metas) { topo.innerHTML = htmlMetasConvite(); alvo.innerHTML = htmlPulsoGrande() + htmlConvite(); return; }
+  // No topo, as metas do dia (como stories). Depois: a sua turma e as fotos
+  // que a comunidade posta no perfil. No computador, o seu progresso, quem
+  // chegou e o que comemorar ficam ao lado das fotos.
+  topo.innerHTML = htmlStories();
   alvo.innerHTML = htmlPulsoGrande()
-    + '<h2 class="titulo-parte">Minha turma</h2>' + htmlBoasVindas() + '<div id="bloco-dupla"></div><div id="bloco-colegas"></div>'
-    + '<h2 class="titulo-parte">Hoje na comunidade</h2>' + htmlStories() + '<div id="bloco-comemorar"></div><div id="bloco-chegaram"></div>' + `
+    + '<h2 class="titulo-parte">Minha turma</h2>' + htmlBoasVindas() + '<div id="bloco-dupla"></div><div id="bloco-colegas"></div>' + `
     <div class="grade-agora">
-      <section>${htmlAtividades()}</section>
-      <aside class="lado-agora">${htmlMeuProgresso()}</aside>
+      <aside class="lado-agora">${htmlMeuProgresso()}<div id="bloco-comemorar"></div><div id="bloco-chegaram"></div></aside>
+      <section class="coluna-fotos" id="fotos-comunidade">${htmlFotos()}</section>
     </div>`;
   carregarAcolhimento();
+  carregarFotos();
 }
 
 // ---------- acolhimento: quem chegou, colegas da escola, estudando junto ----------
@@ -9903,18 +10072,259 @@ function htmlPulsoGrande() {
     <button class="acao pequena" onclick="entrarNaSala('geral')">Entrar na Sala geral</button></div></section>`;
 }
 
-// Metas do dia em bolinhas, como os stories: some em 24 horas.
-function htmlStories() {
-  const minha = agora.metas.find(m => m.meu);
+// Metas do dia, como os stories, mas em cartões: a bolinha da pessoa no
+// canto, o começo da meta escrito no cartão e um ✓ quando foi cumprida.
+// Somem em 24 horas. Tocar abre em tela cheia e passa de uma para a outra.
+const CHAVE_METAS_VISTAS = 'mm_metas_vistas';
+let metasVistas = new Set();
+try { metasVistas = new Set(JSON.parse(ler(CHAVE_METAS_VISTAS) || '[]')); } catch (e) {}
+function marcarMetaVista(id) {
+  if (metasVistas.has(id)) return;
+  metasVistas.add(id);
+  guardar(CHAVE_METAS_VISTAS, JSON.stringify([...metasVistas].slice(-300)));
+}
+// Cada pessoa tem a sua cor (a mesma sempre), para os cartões não ficarem iguais.
+const corDaPessoa = id => (Number(id) * 47) % 360;
+
+// A sua primeiro; depois as que você ainda não viu; por último as já vistas.
+function metasNaOrdem() {
   const outras = agora.metas.filter(m => !m.meu);
+  return [...agora.metas.filter(m => m.meu), ...outras.filter(m => !metasVistas.has(m.id)), ...outras.filter(m => metasVistas.has(m.id))];
+}
+
+function cartaoMeta(m) {
+  const visto = !m.meu && metasVistas.has(m.id);
+  return `<button class="meta-cartao${visto ? ' vista' : ''}${m.feito ? ' feita' : ''}" style="--h:${corDaPessoa(m.autor.id)}"
+      onclick="abrirVisorMetas(${m.id})" aria-label="${m.meu ? 'Sua meta' : `Meta de ${escapar(m.autor.nome)}`}: ${escapar(m.texto)}${m.feito ? ' (cumprida)' : ''}">
+    <span class="meta-papel"><span class="meta-texto">${escapar(m.texto)}</span>${m.feito ? '<i class="meta-ok" aria-hidden="true">✓</i>' : ''}</span>
+    ${bolha(m.meu ? { ...m.autor, foto: usuarioLogado.foto || m.autor.foto } : m.autor, 'meta-bolha')}
+    <small>${m.meu ? 'Você' : escapar(m.autor.nome.split(' ')[0])}</small></button>`;
+}
+
+function htmlStories() {
+  const lista = metasNaOrdem();
+  const minha = lista.find(m => m.meu);
   const eu = { nome: usuarioLogado.username, foto: usuarioLogado.foto };
-  return `<div class="stories" aria-label="Metas de hoje">
-    <button class="story${minha ? (minha.feito ? ' feito' : '') : ' minha-vazia'}" onclick="${minha ? `verMeta(${minha.id})` : 'escreverMeta()'}">
-      <span class="anel">${minha ? bolha(eu, '') : '<span>＋</span>'}</span><small>${minha ? 'Sua meta' : 'Postar meta'}</small></button>
-    ${outras.map(m => `<button class="story${m.feito ? ' feito' : ''}" onclick="verMeta(${m.id})" title="${escapar(m.texto)}">
-      <span class="anel">${bolha(m.autor, '')}</span><small>${escapar(m.autor.nome)}</small></button>`).join('')}
-    ${outras.length ? '' : '<span class="pista" style="align-self:center;margin:0 0 18px">Ninguém postou a meta de hoje ainda. Comece você!</span>'}
-  </div>`;
+  const sozinho = !lista.some(m => !m.meu);
+  return `<section class="faixa-metas" aria-label="Metas de hoje">
+    <div class="titulo-metas"><b>Metas de hoje</b><small>o que a turma vai estudar · somem em 24 h</small></div>
+    <div class="metas-rolagem">
+      ${minha ? '' : `<button class="meta-cartao nova" onclick="escreverMeta()" aria-label="Postar a sua meta de hoje">
+        <span class="meta-papel"><span class="meta-mais">＋</span><span class="meta-texto">O que você vai estudar hoje?</span></span>
+        ${bolha(eu, 'meta-bolha')}<small>Postar meta</small></button>`}
+      ${lista.map(cartaoMeta).join('')}
+      <button class="meta-cartao convite" onclick="convidarColegas()" aria-label="Chamar amigos para a comunidade">
+        <span class="meta-papel"><span class="meta-mais">📲</span><span class="meta-texto">${sozinho ? 'Chame a turma para postar também' : 'Chamar amigos'}</span></span>
+        <small>Convidar</small></button>
+    </div></section>`;
+}
+
+// Sem conta: o mesmo lugar, com o convite (nenhuma meta de verdade aparece).
+function htmlMetasConvite() {
+  const exemplos = ['3 blocos de Matemática', 'Redação sobre o tema do ano', 'Revisar Fotossíntese'];
+  return `<section class="faixa-metas" aria-label="Metas de hoje">
+    <div class="titulo-metas"><b>Metas de hoje</b><small>crie a sua conta para ver as da turma</small></div>
+    <div class="metas-rolagem">
+      ${exemplos.map((t, i) => `<button class="meta-cartao exemplo" style="--h:${corDaPessoa(i + 3)}" onclick="abrirConta('criar')" aria-label="Criar conta para ver as metas">
+        <span class="meta-papel"><span class="meta-texto">${t}</span></span><span class="meta-bolha">?</span><small>Exemplo</small></button>`).join('')}
+      <button class="meta-cartao nova" onclick="abrirConta('criar')"><span class="meta-papel"><span class="meta-mais">＋</span>
+        <span class="meta-texto">Criar conta e postar a minha</span></span><small>Entrar</small></button>
+    </div></section>`;
+}
+
+// ---------- visor das metas (tela cheia) ----------
+const TEMPO_POR_META = 6000;
+const visor = { lista: [], i: 0, inicio: 0, gasto: 0, pausado: false, quadro: null };
+
+function abrirVisorMetas(id) {
+  visor.lista = metasNaOrdem();
+  visor.i = Math.max(0, visor.lista.findIndex(m => m.id === id));
+  let el = document.getElementById('visor-metas');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'visor-metas';
+    el.className = 'visor-metas';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.setAttribute('aria-label', 'Metas de hoje');
+    document.body.appendChild(el);
+    // Segurar o dedo pausa; tocar na esquerda volta, na direita avança.
+    let apertou = 0;
+    el.addEventListener('pointerdown', e => { if (e.target.closest('button')) return; apertou = Date.now(); visor.pausado = true; pausarVisor(); });
+    el.addEventListener('pointerup', e => {
+      if (e.target.closest('button') || !apertou) return;
+      const rapido = Date.now() - apertou < 250;
+      apertou = 0; visor.pausado = false;
+      if (rapido) passarMeta(e.clientX < innerWidth * .33 ? -1 : 1); else seguirVisor();
+    });
+    el.addEventListener('pointercancel', () => { apertou = 0; visor.pausado = false; seguirVisor(); });
+  }
+  document.body.classList.add('com-visor');
+  mostrarMetaNoVisor();
+}
+
+function mostrarMetaNoVisor() {
+  const m = visor.lista[visor.i];
+  if (!m) return fecharVisorMetas();
+  if (!m.meu) marcarMetaVista(m.id);
+  const el = document.getElementById('visor-metas');
+  el.style.setProperty('--h', corDaPessoa(m.autor.id));
+  const apoios = totalReacoes(m);
+  el.innerHTML = `<div class="visor-barras">${visor.lista.map((x, k) => `<i><b style="width:${k < visor.i ? 100 : 0}%"></b></i>`).join('')}</div>
+    <div class="visor-cabeca">${bolha(m.meu ? { ...m.autor, foto: usuarioLogado.foto || m.autor.foto } : m.autor, 'meta-bolha')}
+      <button class="autor-link" onclick="fecharVisorMetas(); abrirPerfil(${m.autor.id})"><b>${m.meu ? 'Sua meta' : escapar(m.autor.nome)}</b></button>
+      <small>${tempoAtras(m.created_at)}</small>
+      <button class="visor-fechar" onclick="fecharVisorMetas()" aria-label="Fechar">✕</button></div>
+    <div class="visor-cartaz">
+      <small>${m.feito ? 'Meta de hoje' : 'Hoje eu vou estudar'}</small>
+      <p>${escapar(m.texto)}</p>
+      ${m.feito ? '<span class="visor-feito">✓ Cumprida</span>' : ''}
+    </div>
+    <div class="visor-rodape">${m.meu
+      ? `${m.feito ? '' : '<button class="acao" onclick="fecharVisorMetas(); cumprirMeta()">✓ Cumpri!</button>'}
+         <button class="acao discreta" onclick="fecharVisorMetas(); escreverMeta()">Trocar</button>
+         <button class="acao discreta" onclick="fecharVisorMetas(); apagarAtividade(${m.id})">Apagar</button>
+         <small>${apoios ? `${plural(apoios, 'pessoa apoiando', 'pessoas apoiando')} você` : 'Quem apoiar, você fica sabendo.'}</small>`
+      : `<span class="visor-reacoes botoes-reacao">${botoesReacao(m)}</span>
+         <small>Apoie! ${escapar(m.autor.nome.split(' ')[0])} recebe um aviso.</small>
+         <button class="visor-mais" onclick="fecharVisorMetas(); denunciarAtividade(${m.id})">Denunciar</button>`}
+    </div>`;
+  visor.gasto = 0;
+  seguirVisor();
+}
+
+function seguirVisor() {
+  cancelAnimationFrame(visor.quadro);
+  if (visor.pausado || !document.getElementById('visor-metas')) return;
+  visor.inicio = performance.now() - visor.gasto;
+  const reduzir = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const passo = agoraMs => {
+    if (!document.body.classList.contains('com-visor')) return;
+    visor.gasto = agoraMs - visor.inicio;
+    const barra = document.querySelectorAll('#visor-metas .visor-barras b')[visor.i];
+    if (barra) barra.style.width = Math.min(100, 100 * visor.gasto / TEMPO_POR_META) + '%';
+    // Com "reduzir movimento" não passa sozinho: a pessoa toca para avançar.
+    if (visor.gasto >= TEMPO_POR_META && !reduzir) return passarMeta(1);
+    visor.quadro = requestAnimationFrame(passo);
+  };
+  visor.quadro = requestAnimationFrame(passo);
+}
+function pausarVisor() { cancelAnimationFrame(visor.quadro); visor.gasto = performance.now() - visor.inicio; }
+
+function passarMeta(direcao) {
+  const novo = visor.i + direcao;
+  if (novo < 0) { visor.gasto = 0; return seguirVisor(); }
+  if (novo >= visor.lista.length) return fecharVisorMetas();
+  visor.i = novo;
+  mostrarMetaNoVisor();
+}
+
+function fecharVisorMetas() {
+  cancelAnimationFrame(visor.quadro);
+  document.body.classList.remove('com-visor');
+  document.getElementById('visor-metas')?.remove();
+  // Os cartões já vistos vão para o fim da fila.
+  if (agora && agora.metas && usuarioLogado && comunidadeNaTela() && abaComunidade === 'agora') document.getElementById('metas-topo').innerHTML = htmlStories();
+}
+document.addEventListener('keydown', e => {
+  if (!document.body.classList.contains('com-visor')) return;
+  if (e.key === 'Escape') fecharVisorMetas();
+  else if (e.key === 'ArrowRight') passarMeta(1);
+  else if (e.key === 'ArrowLeft') passarMeta(-1);
+});
+
+// ---------- fotos da comunidade ----------
+// O que as pessoas postam no perfil (foto do caderno, resumo, conquista), no
+// lugar do antigo "O que está rolando". Nada de nota aparece aqui.
+const fotos = { lista: null, filtro: 'todos', mais: false, carregando: false, erro: null };
+
+function htmlFotos() {
+  const abas = [['todos', 'Todos'], ['seguindo', 'Quem eu sigo']].map(([id, n]) =>
+    `<button aria-pressed="${fotos.filtro === id}" onclick="trocarFiltroFotos('${id}')">${n}</button>`).join('');
+  let corpo;
+  if (fotos.erro) corpo = `<div class="vazio"><span class="cara">🔌</span>${escapar(fotos.erro)}</div>`;
+  else if (!fotos.lista) corpo = '<div class="vazio"><span class="cara">⏳</span>Carregando…</div>';
+  else if (!fotos.lista.length) corpo = `<div class="vazio fotos-vazio"><span class="cara">📸</span>${fotos.filtro === 'seguindo'
+    ? 'Quem você segue ainda não postou nada. Siga mais gente ou veja "Todos".'
+    : 'Ninguém postou ainda. Seja a primeira pessoa: uma foto do caderno, um resumo ou uma conquista.'}</div>`;
+  else corpo = fotos.lista.map(htmlFoto).join('')
+    + (fotos.mais ? `<button class="acao discreta" style="margin:6px auto 0;display:block" onclick="carregarFotos(true)" ${fotos.carregando ? 'disabled' : ''}>Ver mais</button>` : '');
+  return `<div class="titulo-bloco"><b>📸 Da comunidade</b><div class="abas-feed">${abas}</div></div>
+    <button class="postar-foto" onclick="abrirEditorPublicacao(null, 'comunidade')">${bolha({ nome: usuarioLogado.username, foto: usuarioLogado.foto })}
+      <span>Poste uma foto do caderno, um resumo ou uma conquista…</span><b aria-hidden="true">＋</b></button>
+    ${corpo}`;
+}
+
+function htmlFoto(p) {
+  return `<article class="post-foto" id="foto-${p.id}">
+    <header>${bolha(p.autor)}<span><button class="autor-link" onclick="abrirPerfil(${p.autor.id})"><b>${p.meu ? 'Você' : escapar(p.autor.nome)}</b></button>
+      <small>${tempoAtras(p.created_at)}</small></span>
+      ${p.pode_apagar ? `<button class="mais" onclick="acaoFoto(${p.id}, 'apagar')">Apagar</button>`
+        : p.denunciei ? '<span class="mais">Denunciada</span>' : `<button class="mais" onclick="acaoFoto(${p.id}, 'denunciar')">Denunciar</button>`}
+    </header>
+    ${p.capa
+      ? `<button class="foto-imagem" onclick="verFoto(${p.id})" aria-label="Abrir: ${escapar(p.titulo)}"><img src="${escapar(urlImagem(p.capa))}" alt="" loading="lazy" style="object-position:50% ${Number(p.capa_posicao)}%"></button>`
+      : `<button class="foto-texto" style="--h:${corDaPessoa(p.autor.id)}" onclick="verFoto(${p.id})">${escapar(p.texto || p.titulo)}</button>`}
+    <div class="foto-acoes"><button class="curtir${p.curti ? ' ligado' : ''}" onclick="curtirFoto(${p.id}, this)" aria-pressed="${p.curti}" aria-label="Curtir">
+      <span aria-hidden="true">${p.curti ? '♥' : '♡'}</span> <b>${p.curtidas || ''}</b></button></div>
+    <p class="foto-legenda"><b>${escapar(p.titulo)}</b>${p.capa && p.texto ? ` ${escapar(p.texto)}` : ''}</p>
+  </article>`;
+}
+
+async function carregarFotos(maisAntigas) {
+  if (fotos.carregando) return;
+  fotos.carregando = true;
+  const antes = maisAntigas && fotos.lista && fotos.lista.length ? `&antes=${fotos.lista[fotos.lista.length - 1].id}` : '';
+  try {
+    const d = await api(`/api/comunidade/fotos?filtro=${fotos.filtro}${antes}`);
+    if (d.filtro === fotos.filtro) {
+      fotos.lista = maisAntigas ? [...(fotos.lista || []), ...d.fotos] : d.fotos;
+      fotos.mais = d.mais;
+      fotos.erro = null;
+    }
+  } catch (e) { fotos.erro = e.daApi || SEM_SERVIDOR; }
+  fotos.carregando = false;
+  const alvo = document.getElementById('fotos-comunidade');
+  if (alvo) alvo.innerHTML = htmlFotos();
+}
+
+function trocarFiltroFotos(filtro) {
+  if (fotos.filtro === filtro) return;
+  fotos.filtro = filtro;
+  fotos.lista = null;
+  document.getElementById('fotos-comunidade').innerHTML = htmlFotos();
+  carregarFotos();
+}
+
+async function curtirFoto(id, botao) {
+  const p = (fotos.lista || []).find(x => x.id === id);
+  if (!p) return;
+  // Muda na hora e confere com o servidor depois.
+  p.curti = !p.curti; p.curtidas = Math.max(0, (p.curtidas || 0) + (p.curti ? 1 : -1));
+  const desenhar = () => { const b = document.querySelector(`#foto-${id} .curtir`); if (b) b.outerHTML = htmlFoto(p).match(/<button class="curtir[\s\S]*?<\/button>/)[0]; };
+  desenhar();
+  try { Object.assign(p, await postar(`/api/publicacoes/${id}/curtir`)); }
+  catch (e) { p.curti = !p.curti; p.curtidas += p.curti ? 1 : -1; avisoSim(e.daApi || SEM_SERVIDOR); }
+  desenhar();
+}
+
+// Abre a publicação no mesmo quadro do perfil.
+function verFoto(id) {
+  const p = (fotos.lista || []).find(x => x.id === id);
+  if (!p) return;
+  perfilAberto = { perfil: { id: p.autor.id, nome: p.autor.nome }, publicacoes: [p], moderador: false, daComunidade: true };
+  verPublicacao(id);
+}
+
+async function acaoFoto(id, acao) {
+  if (acao === 'apagar' && !await confirmar('Apagar esta publicação? Não dá para desfazer.', { sim: 'Apagar', perigo: true })) return;
+  if (acao === 'denunciar' && !await confirmar('Denunciar esta publicação? Com 3 denúncias ela some até a equipe revisar.', { sim: 'Denunciar' })) return;
+  try {
+    const d = await api(`/api/publicacoes/${id}${acao === 'apagar' ? '' : '/denunciar'}`, { method: acao === 'apagar' ? 'DELETE' : 'POST' });
+    if (acao === 'denunciar') { avisoSim(d.message); const p = fotos.lista.find(x => x.id === id); if (p) p.denunciei = true; }
+    else fotos.lista = fotos.lista.filter(x => x.id !== id);
+    document.getElementById('fotos-comunidade').innerHTML = htmlFotos();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
 }
 
 const botoesReacao = a => REACOES.map((e, i) =>
@@ -10051,28 +10461,6 @@ const TEXTO_ATIVIDADE = {
   correcoes: a => `já corrigiu <b>${plural(a.alvo_id, 'redação', 'redações')}</b> da comunidade ✍️`,
   pomodoros: a => `completou <b>${a.alvo_id} pomodoros</b> hoje${a.texto ? ` na sala ${escapar(a.texto)}` : ''} ⏱️`
 };
-
-function htmlAtividades() {
-  const lista = agora.atividades;
-  return `<div class="titulo-bloco"><b>O que está rolando</b>
-      <div class="abas-feed">${[['todos', 'Todos'], ['seguindo', 'Quem eu sigo']].map(([id, n]) =>
-        `<button aria-pressed="${filtroAtividade === id}" onclick="filtroAtividade = '${id}'; desenharAgora()">${n}</button>`).join('')}</div></div>
-    ${lista.length ? lista.slice(0, verTodasAtividades ? 40 : 8).map(htmlAtividade).join('')
-      + (lista.length > 8 && !verTodasAtividades ? '<button class="acao discreta" style="margin:4px auto 0;display:block" onclick="verTodasAtividades = true; desenharAgora()">Ver mais</button>' : '')
-    : `<div class="vazio"><span class="cara">🌱</span>${filtroAtividade === 'seguindo'
-      ? 'Quem você segue ainda não fez nada por aqui. Siga mais gente!'
-      : 'Ainda está calmo por aqui. Faça o desafio da semana, uma pergunta ou entre numa sala: vai aparecer aqui!'}</div>`}`;
-}
-
-function htmlAtividade(a) {
-  const frase = (TEXTO_ATIVIDADE[a.tipo] || (() => 'fez algo novo'))(a);
-  return `<article class="atividade">${bolha(a.autor)}<div>
-    <div class="frase"><button class="autor-link" onclick="abrirPerfil(${a.autor.id})">${escapar(a.meu ? 'Você' : a.autor.nome)}</button> ${frase}</div>
-    <small>${tempoAtras(a.created_at)}</small>
-    <div class="reacoes">${a.meu ? resumoReacoes(a) : `<span class="botoes-reacao" style="display:contents">${botoesReacao(a)}</span>`}
-      <button class="mais" onclick="${a.meu ? `apagarAtividade(${a.id})">Apagar` : `denunciarAtividade(${a.id})">Denunciar`}</button></div>
-  </div></article>`;
-}
 
 function htmlMeuProgresso() {
   const p = meuProgresso;
@@ -12223,7 +12611,7 @@ function verificarAPI() {
 // ===================== INÍCIO =====================
 iniciarTema();
 aplicarImagemFundo();
-aplicarEstilo(ler(CHAVE_ESTILO));
+aplicarEstilo(estiloGuardado());
 carregarProgresso();
 desenharTudo();
 // Prepara o formulário da tela de entrada (se ela estiver aparecendo, já fica pronta).

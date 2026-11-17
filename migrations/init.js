@@ -197,6 +197,16 @@ async function runMigrations() {
         created_at TIMESTAMP DEFAULT NOW(),
         PRIMARY KEY (publicacao_id, usuario_id)
       );
+
+      -- Curtidas das publicações (fotos da comunidade). Só o número aparece;
+      -- quem curtiu fica guardado para não contar duas vezes.
+      CREATE TABLE IF NOT EXISTS publicacoes_curtidas (
+        publicacao_id INT NOT NULL REFERENCES publicacoes(id) ON DELETE CASCADE,
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        PRIMARY KEY (publicacao_id, usuario_id)
+      );
+      CREATE INDEX IF NOT EXISTS idx_publicacoes_recentes ON publicacoes(created_at DESC) WHERE NOT oculto;
     `);
     console.log('✅ Tabelas do perfil criadas');
 
