@@ -22,6 +22,8 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - Muitos usuários são **menores de idade**: recompensas só visuais; mensagens privadas com freios
   (padrão "só quem eu sigo", bloquear, denunciar, sem links, limites por dia); site a partir de 13 anos.
 - Respostas em português, simples e diretas.
+- **Divulgação (Miguel, 18/11):** nunca falar de quem criou o site ("dois estudantes/amigos que criaram..."),
+  nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
 ## ONDE PARAMOS (18/11/2026) — leia primeiro
 - **Conversa anterior:** "M&M Estudos — pós-lançamento". Ramo de trabalho: `claude/gracious-babbage-tp7kds` (em dia com o master).
