@@ -3148,6 +3148,7 @@
 
       <div class="painel-aba" role="tabpanel" id="ap-imagem" aria-labelledby="aba-ap-imagem" hidden>
         <div class="rotulo-modal">Imagem de fundo</div>
+        <p class="pista" style="margin:0 0 10px">A imagem fica por cima da cor de fundo. Se depois você escolher Claro, Escuro, um tema pronto ou outra cor de fundo, a imagem sai.</p>
         <div class="imagem-fundo">
           <label class="acao secundaria botao-arquivo">📷 Enviar imagem
             <input type="file" accept="image/*" onchange="enviarImagemFundo(this)" hidden>
@@ -3979,9 +3980,18 @@ function sairDaSerra() {
   aplicarEstilo('classico');
 }
 
+// Uma imagem de fundo fica por cima da cor do fundo: quem escolhe outro fundo
+// (Claro, Escuro, tema pronto ou cor de fundo) quer ver essa cor, então a imagem sai.
+function tirarImagemParaCor() {
+  if (!imagemValida(ler(CHAVE_IMAGEM))) return;
+  try { localStorage.removeItem(CHAVE_IMAGEM); } catch (e) {}
+  aplicarImagemFundo();
+}
+
 function escolherFundo(cor) {
   if (cor !== null && !COR_VALIDA.test(cor)) return;
   sairDaSerra();
+  tirarImagemParaCor();
   cores.fundo = cor;
   salvarCores();
 }
@@ -3989,6 +3999,7 @@ function escolherFundo(cor) {
 // Escolher Escuro ou Claro volta ao fundo padrão daquele tema.
 function escolherTema(tema) {
   sairDaSerra();
+  tirarImagemParaCor();
   cores.fundo = null;
   guardar(CHAVE_CORES, JSON.stringify(cores));
   aplicarTema(tema);
@@ -4013,6 +4024,7 @@ function escolherTemaPronto(i) {
   if (!t) return;
   // No estilo Serra as cores ficam guardadas: volta para o Preto & Bege para o tema aparecer.
   sairDaSerra();
+  tirarImagemParaCor();
   cores = { principal: t.principal, secundaria: t.secundaria, fundo: t.fundo };
   salvarCores();
 }
