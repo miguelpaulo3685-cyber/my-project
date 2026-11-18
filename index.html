@@ -4560,7 +4560,8 @@ const aulaPronta = id => PRONTAS.has(id);
 const passouModulo = (t, m) => (t.testes[m.id] || t.testes[TESTES_ANTIGOS[m.id]] || 0) >= NOTA_PARA_PASSAR;
 // O primeiro módulo está sempre aberto; os outros abrem quando o anterior passa no teste.
 // Módulo anterior ainda sem teste (aulas em produção) não segura ninguém.
-const moduloAberto = (t, mods, k) => k === 0 || passouModulo(t, mods[k - 1]) || !mods[k - 1].teste;
+// Administradores (a equipe) veem todos os módulos abertos, para conferir as aulas.
+const moduloAberto = (t, mods, k) => k === 0 || !!(usuarioLogado && usuarioLogado.admin) || passouModulo(t, mods[k - 1]) || !mods[k - 1].teste;
 const temPendencia = (t, m) => m.aulas.some(([id]) => aulaPronta(id) && !t.aulas[id]) || (m.teste && !passouModulo(t, m));
 
 // O módulo da vez: o primeiro aberto que ainda tem aula pronta para fazer ou teste para passar.
