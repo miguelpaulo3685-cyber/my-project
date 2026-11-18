@@ -23,6 +23,28 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   (padrão "só quem eu sigo", bloquear, denunciar, sem links, limites por dia); site a partir de 13 anos.
 - Respostas em português, simples e diretas.
 
+## ONDE PARAMOS (18/11/2026) — leia primeiro
+- **Conversa anterior:** "M&M Estudos — pós-lançamento". Ramo de trabalho: `claude/gracious-babbage-tp7kds` (em dia com o master).
+- **Combinado do Miguel (17/11):** parar de criar funções novas no site e focar em **anunciar**; só aulas e consertos.
+  As aulas da trilha continuam: "continue com as aulas e publique" vale como "sim" para publicar aulas.
+- **Próximas aulas:** Biologia Módulo 3 (genética), depois Matemática 5, 6 e 7, Biologia 4 a 7 e Química 2 a 6.
+  Cada módulo pronto ganha `trilhas/teste-<id>.js` (10 questões) e `teste: true` no índice.
+- **Publicado em 17-18/11:** Matemática Módulo 3 (6 aulas + teste mat3, 47 aulas no total); estilo Serra sai sozinho
+  quando o aluno escolhe tema/cor/imagem; escolher Claro/Escuro/tema pronto/cor de fundo tira a imagem de fundo
+  (era o bug do "tema claro não funciona"); "Aulas soltas" saiu da tela Treinar (as 3 aulas seguem em `aulas/`);
+  **administradores veem a trilha toda sem cadeado** (`moduloAberto` em `index.html`).
+- **Ideias anotadas, não começadas:** plano PRO (seção abaixo; TRI fica grátis) e um "Anki" (cartões das aulas grátis;
+  cartões dos erros e cartões próprios no PRO). Painel de admin: falta a conta "voltou em até 3 dias".
+- **Relatório de dados pedido pelo Miguel (18/11) ficou pendente:** o painel `/api/admin/crescimento` e `/api/admin/resumo`
+  pede login de admin. A chave de sessão salva no ambiente do Claude foi recusada (401). Para tentar de novo: a chave é o
+  `localStorage.mm_token` de uma conta admin, colada no formulário seguro (nunca no chat).
+- **Vídeo "Estude para o ENEM" (deitado, 1920x1080, 19,3 s):** cópia da edição do template do CapCut "Explore the City"
+  (@kazukiii_22). Começo e fim são da referência (0-5 s e 17-19,3 s), com o título trocado para "ESTUDE para o ENEM"
+  em vermelho e o parágrafo em português; no meio: médica recortada com as fotos do Miguel, site em preto e verde,
+  nota TRI e de redação subindo (números de exemplo), homem olhando o mar, formatura. Cores vivas puxadas para o azul.
+  Os arquivos ficaram só na sessão antiga do Claude (temporários): baixar do chat se ainda precisar. Postar a versão
+  sem música e pôr o som pelo TikTok/Instagram; o começo e o fim ainda são do criador do template.
+
 ## OS DOIS DIFERENCIAIS (Miguel, 16/11, dia do lançamento)
 
 1. **A comunidade (o maior, o site nasceu dela).** "Não é apenas um site de questões, vai além disso." A conexão
