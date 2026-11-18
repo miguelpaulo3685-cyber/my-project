@@ -385,6 +385,14 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
     dia a dia). Ou seja: pergunta "e se...?" que prende, situação do cotidiano brasileiro, número de impacto,
     1 a 2 minutos, vertical. Casa com o diferencial das simulações: cada aula do plano poderia ter um vídeo
     assim + a simulação para mexer. Os vídeos servem também de divulgação no TikTok (com o endereço no fim).
+  - **Provas próprias "no estilo" e a confiança do aluno (18/11):** o medo é o aluno desconfiar e não pagar R$ 15.
+    Como passar confiança: (1) simulado "estilo UECE" curto grátis para provar a qualidade; (2) mostrar a base de
+    cada questão ("assunto mais cobrado pela UECE nos últimos 5 anos: Genética, 12%"); (3) "revisada por
+    professor(a) de X" com nome (os mesmos professores da redação); (4) % de acerto e comentários da comunidade
+    em cada questão; (5) nome honesto: "no estilo UECE", nunca "prova da UECE"; (6) anunciar a devolução em
+    7 dias (o Código de Defesa do Consumidor já obriga nas compras pela internet). E o PRO não se vende pelas
+    questões: vende o pacote que ninguém tem junto (redação com professor, plano com aulas animadas, cartões
+    dos erros, treino do vestibular da sua cidade). As questões "no estilo" são bônus.
 
 ## Pendências antigas (de outubro)
 
