@@ -367,6 +367,24 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
   4) plano de estudos até o ENEM; 5) questões sem limite com explicação; 6) selo e estilo no perfil.
 - Quem paga é adulto responsável (menores, LGPD). Preço pensado: R$ 9,90 a 19,90/mês + plano "até o ENEM".
 - Antes de construir: lista de espera para medir interesse.
+- **Decisões do Miguel (18/11):**
+  - Redação: grátis = correção da comunidade + IA leve (Haiku 5.5, ~1 centavo por correção; antes, comparar
+    ~10 redações Haiku × Opus); PRO = IA forte (Opus 5.5) + **correção por professor** (~2 por mês, até 72 h;
+    o professor vê só o texto, nunca contato com o aluno). A parte do professor já existe em `redacoes.js`.
+  - **Trilhas continuam grátis** (diferencial nº 2).
+  - PRO também: cartões com revisão espaçada (dos erros e próprios), relatório do simulado, plano de estudos, selo.
+  - **Outros vestibulares no PRO (UECE, UERJ...):** só a parte de múltipla escolha, sem TRI. Risco de direitos
+    autorais (sobretudo os textos de terceiros dentro das questões), maior por ser pago. Ideia do Miguel: adaptar
+    alternativas e textos. Mais seguro: questões novas "no estilo" do vestibular, ou resolução comentada com link
+    para a prova oficial; ou pedir autorização por e-mail à CEV/UECE e ao vestibular da UERJ.
+  - **IDEIA (Miguel, 18/11) — aulas em vídeo animado no plano de estudos do PRO.** Referências que ele mandou
+    (TikTok): **@fragmentosdarazao** ("E se um buraco negro do tamanho de uma moeda aparecesse na sua mesa?":
+    cena 3D de almoço de domingo, números grandes na tela — "1,1 TERRAS", "46 TRILHÕES g" —, legenda curta
+    embaixo, contagem regressiva, o fenômeno acontecendo na frente do aluno) e **@frutasocultas.ai** (desenho
+    animado 2D com personagens simples, uma palavra grande por vez na tela no ritmo da narração, história do
+    dia a dia). Ou seja: pergunta "e se...?" que prende, situação do cotidiano brasileiro, número de impacto,
+    1 a 2 minutos, vertical. Casa com o diferencial das simulações: cada aula do plano poderia ter um vídeo
+    assim + a simulação para mexer. Os vídeos servem também de divulgação no TikTok (com o endereço no fim).
 
 ## Pendências antigas (de outubro)
 
