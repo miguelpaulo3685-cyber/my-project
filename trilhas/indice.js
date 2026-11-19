@@ -17,7 +17,8 @@ window.TRILHAS_MM = {
     'angulos-tales', 'triangulos', 'poligonos', 'areas',
     'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular',
     'leis-newton', 'atrito', 'gravitacao',
-    'trabalho-energia', 'conservacao-energia', 'potencia-rendimento', 'impulso'],
+    'trabalho-energia', 'conservacao-energia', 'potencia-rendimento', 'impulso',
+    'pressao', 'empuxo'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -95,7 +96,7 @@ window.TRILHAS_MM = {
       { id: 'fis3', nome: 'Energia e quantidade de movimento', sobre: 'Transformações de energia, potência e colisões.', teste: true, aulas: [
         ['trabalho-energia', 'Trabalho, energia cinética e potencial', '🎢'], ['conservacao-energia', 'Conservação e usinas de energia', '⚡'],
         ['potencia-rendimento', 'Potência e rendimento', '🏋️'], ['impulso', 'Impulso e colisões', '🎱']] },
-      { id: 'fis4', nome: 'Hidrostática', sobre: 'Pressão, prensa hidráulica e o que boia ou afunda.', aulas: [
+      { id: 'fis4', nome: 'Hidrostática', sobre: 'Pressão, prensa hidráulica e o que boia ou afunda.', teste: true, aulas: [
         ['pressao', 'Pressão e prensa hidráulica', '🛞'], ['empuxo', 'Empuxo: boiar ou afundar', '🚢']] },
       { id: 'fis5', nome: 'Calor e termodinâmica', sobre: 'Temperatura, trocas de calor e máquinas térmicas.', aulas: [
         ['calor-temperatura', 'Calor, temperatura e propagação', '🌡️'], ['calorimetria', 'Calorimetria e mudanças de estado', '🧊'],

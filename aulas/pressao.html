@@ -1,0 +1,77 @@
+<header>
+  <div class="au-trilha">Física · Módulo 4 · Aula 1</div>
+  <h1>Pressão e prensa hidráulica</h1>
+  <p class="au-abre">Por que a faca afiada corta e a cega não? Por que o ouvido dói no fundo da piscina? Como o macaco do borracheiro levanta um carro com o empurrão de uma mão? Tudo é pressão: força espalhada (ou concentrada) numa área.</p>
+</header>
+
+<section class="au-cena" aria-label="Pressão da água com a profundidade e prensa hidráulica">
+  <div class="au-loja">Pressão nos líquidos <small>escolha o caso e arraste o controle</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Caso">
+      <button type="button" data-modo="mergulho">🤿 Mergulho</button>
+      <button type="button" data-modo="prensa">🚗 Prensa hidráulica</button>
+    </div>
+    <svg viewBox="0 0 320 200" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-v" id="au-rot"></label><input id="au-v" type="range"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Pressão = força ÷ área</h2>
+  <p><b>p = F ÷ A</b>, em pascal (Pa = N/m²). A mesma força numa área pequena dá pressão grande (faca afiada, salto agulha, prego); numa área grande dá pressão pequena (raquete de neve, pneu largo de trator, deitar na cama de pregos).</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Pressão nos líquidos (Stevin)</h2>
+  <p>Num líquido parado, a pressão aumenta com a profundidade: <b>p = p_atm + d · g · h</b>. Na água, cada <b>10 metros</b> de profundidade somam cerca de <b>1 atmosfera</b>. Só a profundidade importa, não o formato do recipiente: por isso a caixa-d'água fica no alto, e por isso a parede da barragem é mais grossa embaixo.</p>
+  <div class="au-filme" data-filme="garrafa" aria-label="Animação: furos numa garrafa com água, o jato de baixo sai mais forte"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Pascal e a prensa hidráulica</h2>
+  <p>Um aumento de pressão num líquido se transmite <b>igual para todos os pontos</b> dele (Pascal). Na prensa hidráulica, a mesma pressão age nos dois pistões: <b>F₁ ÷ A₁ = F₂ ÷ A₂</b>. Se o pistão grande tem área 100 vezes maior, a força sai 100 vezes maior. É o freio do carro, o macaco hidráulico e a cadeira do dentista. Não há mágica: o pistão grande sobe 100 vezes menos.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Pressão da água: <b>+1 atm a cada 10 m</b>. A 30 m de profundidade, a pressão total é 4 atm (1 do ar + 3 da água).</li>
+    <li>O formato do recipiente não importa, só a <b>altura da coluna</b> de líquido (paradoxo hidrostático).</li>
+    <li>Canudinho: você tira o ar da boca e é a <b>pressão atmosférica</b> que empurra o líquido para cima.</li>
+    <li>Na prensa, ganha-se força, mas se <b>perde em deslocamento</b>: o trabalho é o mesmo dos dois lados.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Cada 10 m de água soma cerca de 1 atm. A 20 m: 1 atm do ar + 2 atm da água = 3 atm.">
+    <p>A pressão total sobre um mergulhador a 20 m de profundidade no mar é de aproximadamente:</p>
+    <button type="button" class="au-alt">2 atm</button>
+    <button type="button" class="au-alt">3 atm</button>
+    <button type="button" class="au-alt">20 atm</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="F₁/A₁ = F₂/A₂: 100/5 = F₂/500 → F₂ = 10 000 N.">
+    <p>Numa prensa hidráulica, uma força de 100 N age num pistão de 5 cm². O pistão maior tem 500 cm². A força nele é:</p>
+    <button type="button" class="au-alt">10 000 N</button>
+    <button type="button" class="au-alt">1 N</button>
+    <button type="button" class="au-alt">500 N</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A força (o peso) é a mesma, mas a área de contato do salto agulha é muito menor, e p = F ÷ A fica muito maior.">
+    <p>Um salto agulha afunda mais na grama que um tênis da mesma pessoa porque:</p>
+    <button type="button" class="au-alt">o peso da pessoa aumenta</button>
+    <button type="button" class="au-alt">a força do salto é maior</button>
+    <button type="button" class="au-alt">a mesma força age numa área menor, e a pressão fica maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="pressao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

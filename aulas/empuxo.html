@@ -1,0 +1,74 @@
+<header>
+  <div class="au-trilha">Física · Módulo 4 · Aula 2</div>
+  <h1>Empuxo: boiar ou afundar</h1>
+  <p class="au-abre">Um navio de aço com milhares de toneladas boia, e um prego de aço afunda. Um ovo afunda na água da torneira e boia na água bem salgada. Quem decide é o empuxo, a força que o líquido faz para cima, e uma comparação simples de densidades.</p>
+</header>
+
+<section class="au-cena" aria-label="Objeto num líquido: escolha o objeto e o líquido">
+  <div class="au-loja">Boia ou afunda? <small>escolha o objeto e o líquido</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Objeto" id="au-objs"></div>
+    <div class="au-atalhos" role="group" aria-label="Líquido" id="au-liqs"></div>
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Princípio de Arquimedes</h2>
+  <p>Todo corpo mergulhado num líquido recebe uma força para cima, o <b>empuxo</b>, igual ao <b>peso do líquido que ele desloca</b>: <b>E = d_líquido · V_submerso · g</b>. Quanto mais volume embaixo d'água e mais denso o líquido, maior o empuxo.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>A regra das densidades</h2>
+  <ul class="au-pegadinhas">
+    <li>Densidade do objeto <b>menor</b> que a do líquido: <b>boia</b>, com só uma parte submersa.</li>
+    <li><b>Igual</b>: fica parado em qualquer profundidade (como o peixe e o submarino ajustando a bexiga natatória e os tanques).</li>
+    <li><b>Maior</b>: afunda.</li>
+    <li>A fração submersa de quem boia é a razão das densidades: gelo (0,92) na água (1,0) fica 92% embaixo, por isso só a "ponta do iceberg" aparece.</li>
+  </ul>
+  <div class="au-filme" data-filme="navio" aria-label="Animação: um bloco de aço afunda, mas o mesmo aço em forma de casco boia porque desloca muita água"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>O navio boia porque o casco é oco: o conjunto aço + ar tem densidade média <b>menor</b> que a da água.</li>
+    <li>Na água do mar (mais densa), um navio afunda <b>menos</b> do que no rio, e a gente boia mais fácil no Mar Morto.</li>
+    <li>Peso aparente: dentro da água um objeto "pesa" menos, porque o empuxo ajuda a segurar.</li>
+    <li>Teste do ovo: ovo velho tem mais ar dentro e boia; ovo fresco afunda.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="A densidade média do navio (aço mais o ar do casco) é menor que a da água; ele desloca um volume de água cujo peso iguala o dele.">
+    <p>Um navio de aço boia porque:</p>
+    <button type="button" class="au-alt">o aço do navio é mais leve que o comum</button>
+    <button type="button" class="au-alt">a água do mar puxa o navio para cima</button>
+    <button type="button" class="au-alt">por ser oco, a densidade média dele é menor que a da água</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Fração submersa = densidade do objeto ÷ densidade do líquido = 0,6 ÷ 1,0 = 60%.">
+    <p>Um bloco de madeira de densidade 0,6 g/cm³ boia na água (1,0 g/cm³). A parte submersa é:</p>
+    <button type="button" class="au-alt">60% do volume</button>
+    <button type="button" class="au-alt">40% do volume</button>
+    <button type="button" class="au-alt">100% do volume</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="A água do mar é mais densa: para deslocar o mesmo peso de água, o navio precisa afundar menos.">
+    <p>Um navio sai do rio e entra no mar. Ele passa a ficar:</p>
+    <button type="button" class="au-alt">mais afundado</button>
+    <button type="button" class="au-alt">menos afundado</button>
+    <button type="button" class="au-alt">com o mesmo calado</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="empuxo">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
