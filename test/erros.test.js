@@ -18,6 +18,8 @@ test('chave: números diferentes contam como o mesmo erro', () => {
 test('ignora barulho: internet caindo, extensão do navegador', () => {
   assert.ok(e.deveIgnorar('TypeError: Failed to fetch', ''));
   assert.ok(e.deveIgnorar('Script error.', ''));
+  assert.ok(e.deveIgnorar('Script error. [tela: treinar]', ''), 'o site acrescenta a tela no fim da mensagem');
+  assert.ok(!e.deveIgnorar('Script errors everywhere', ''));
   assert.ok(e.deveIgnorar('algo', 'chrome-extension://abc/x.js:1'));
   assert.ok(!e.deveIgnorar('x is not a function', 'index.html:10'));
 });

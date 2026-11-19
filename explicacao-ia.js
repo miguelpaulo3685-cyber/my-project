@@ -49,7 +49,7 @@ const MODELO = () => estado.modelo || process.env.GEMINI_MODELO || MODELOS_RESER
 const LIMITE_DO_DIA = () => Number(process.env.EXPLICACAO_LIMITE_DIARIO) || 400;
 const ligada = () => Boolean(process.env.GEMINI_API_KEY);
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
-const MAX_FIGURAS = 4;
+const MAX_FIGURAS = 6; // a do enunciado + uma por alternativa (questões com alternativas em desenho)
 const MAX_BYTES_FIGURA = 4 * 1024 * 1024;
 
 const INSTRUCOES = `Você é um professor de cursinho que explica questões do ENEM para estudantes, muitos adolescentes.
@@ -87,6 +87,10 @@ function montarPergunta(q) {
   const alternativas = (q.alternativas || []).map((a, i) => `${LETRAS[i]}) ${semFiguras(a) || '[figura]'}`).join('\n');
   return `ENEM ${q.ano || ''}${q.numero ? `, questão ${q.numero}` : ''}\n\n${semFiguras(q.contexto)}\n\nAlternativas:\n${alternativas}\n\nGabarito: ${LETRAS[q.correta]}`;
 }
+
+// IA do Google sobrecarregada (503), sem cota (429), fora do ar (5xx) ou demorando demais.
+const iaForaDoAr = erro => [429, 500, 502, 503, 504].includes(erro?.response?.status)
+  || ['ECONNABORTED', 'ETIMEDOUT', 'ECONNRESET'].includes(erro?.code) || /timeout/i.test(erro?.message || '');
 
 // ---------- trava de qualidade ----------
 // Uma explicação errada com cara de certa é pior do que nenhuma. Antes de
@@ -228,9 +232,12 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPER
             [id, texto, modelo]);
           return { texto };
         } catch (erro) {
-          // Recusa da trava de qualidade não é defeito do site: já aparece no status da IA
-          // (Administração) e não deve encher a lista de erros nem disparar alerta.
-          if (erro.recusada) {
+          // Recusa da trava de qualidade e IA do Google sobrecarregada ou sem cota (passa sozinho)
+          // não são defeito do site: já aparecem no status da IA (Administração) e não devem
+          // encher a lista de erros nem disparar alerta.
+          if (!erro.recusada && iaForaDoAr(erro)) {
+            console.log(`Explicação por IA da questão ${id} adiada (IA fora do ar):`, motivoDoErro(erro));
+          } else if (erro.recusada) {
             console.log(`Explicação por IA da questão ${id} barrada pela trava:`, erro.recusada);
             recusadas.set(id, Date.now());
           } else console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));

@@ -26,7 +26,7 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
 ## ONDE PARAMOS (18/11/2026) — leia primeiro
-- **Pendente (19/11, noite):** (1) ler a lista de "Erros do site" para corrigir: a chave de sessão (mm_token, sem aspas)
+- **Pendente (19/11, noite):** (1) [feito 20/11, pelos prints do Miguel] ler a lista de "Erros do site" para corrigir: a chave de sessão (mm_token, sem aspas)
   colada no formulário seguro foi recusada (401); Miguel vai pegar de novo no notebook, ou mandar prints da lista pelo
   celular. (2) [feito] Conserto "recusa da trava da IA não conta como erro" publicado.
   (3) [feito] Física do ENEM escolhida; Módulo 1 publicado.

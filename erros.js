@@ -20,7 +20,7 @@ const MAX_NO_BUFFER = 200;
 // Barulho que não é defeito do site: extensão do navegador, internet caindo,
 // aviso inofensivo do próprio navegador.
 const IGNORAR = [
-  /^Script error\.?$/i, /ResizeObserver loop/i, /Failed to fetch/i, /Load failed/i, /NetworkError/i,
+  /^Script error\.?(\s|$)/i, /ResizeObserver loop/i, /Failed to fetch/i, /Load failed/i, /NetworkError/i,
   /The (operation|request) was aborted/i, /AbortError/i, /network connection was lost/i, /cancelad[oa]/i
 ];
 
