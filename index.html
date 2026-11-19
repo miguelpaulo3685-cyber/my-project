@@ -41,11 +41,11 @@
       /* Cores escolhidas pelo aluno em Aparência; o JavaScript recalcula
          --marca-suave, --marca-sombra, --marca-texto e --sobre-marca para
          manter o contraste com qualquer combinação. */
-      --marca: #c8a96e;
-      --marca-forte: #e4cfa3;
-      --marca-suave: rgba(200, 169, 110, 0.14);
-      --marca-sombra: rgba(200, 169, 110, 0.32);
-      --marca-texto: #e4cfa3;
+      --marca: #22c55e;
+      --marca-forte: #86efac;
+      --marca-suave: rgba(34, 197, 94, 0.14);
+      --marca-sombra: rgba(34, 197, 94, 0.32);
+      --marca-texto: #86efac;
       --sobre-marca: #17130d;
       --certo: #22c55e;
       --errado: #ef4444;
@@ -2812,12 +2812,11 @@
       if (sala.length === 6 && !localStorage.getItem('mm_token')) sessionStorage.setItem('mm_arena_pendente', sala);
     } catch (e) {}
     // Estilo escolhido em Aparência, aplicado já aqui para a página não piscar.
-    // Serra (vidro) é o padrão desde 17/11: vale para quem nunca escolheu um estilo
-    // nem mexeu em cores ou imagem de fundo (quem já personalizou continua como estava).
+    // Desde 19/11 o padrão é o Preto & Verde (estilo clássico): a Serra (vidro)
+    // aparece só para quem a escolheu.
     try {
-      const e = localStorage.getItem('mm_estilo');
-      if (e === 'serra' || (!e && !localStorage.getItem('mm_cores') && !localStorage.getItem('mm_fundo_img'))) document.documentElement.dataset.estilo = 'serra';
-    } catch (e) { document.documentElement.dataset.estilo = 'serra'; }
+      if (localStorage.getItem('mm_estilo') === 'serra') document.documentElement.dataset.estilo = 'serra';
+    } catch (e) {}
   </script>
 </head>
 <body>
@@ -3100,7 +3099,7 @@
         <div class="rotulo-modal">Estilo</div>
         <div class="estilos">
           <button class="estilo-op" id="estilo-classico" onclick="escolherEstilo('classico')">
-            <i style="background:linear-gradient(135deg,#0e0d0b 55%,#c8a96e 55% 70%,#e4cfa3 70%)"></i><span>Preto &amp; Bege</span>
+            <i style="background:linear-gradient(135deg,#0e0d0b 55%,#22c55e 55% 70%,#86efac 70%)"></i><span>Preto &amp; Verde</span>
           </button>
           <button class="estilo-op" id="estilo-serra" onclick="escolherEstilo('serra')">
             <i style="background:linear-gradient(180deg,#5c5c5c,#9a9a9a 45%,#3f3f3f 46%,#222 100%)"></i><span>Serra (vidro)</span>
@@ -3109,7 +3108,7 @@
         <div class="rotulo-modal">Temas prontos</div>
         <div class="temas-prontos" id="lista-temas"></div>
         <p class="aviso-estilo" id="aviso-estilo">O estilo Serra é sempre escuro. Se você escolher um tema, uma cor ou uma imagem,
-          o site troca sozinho para o Preto &amp; Bege.</p>
+          o site troca sozinho para o Preto &amp; Verde.</p>
       </div>
 
       <div class="painel-aba" role="tabpanel" id="ap-cores" aria-labelledby="aba-ap-cores" hidden>
@@ -3143,7 +3142,7 @@
           <a>Link de exemplo</a>
         </div>
 
-        <button class="acao discreta" style="width:100%;margin-top:18px" onclick="restaurarCores()">Voltar ao padrão (Preto &amp; Bege, fundo do tema)</button>
+        <button class="acao discreta" style="width:100%;margin-top:18px" onclick="restaurarCores()">Voltar ao padrão (Preto &amp; Verde, fundo do tema)</button>
       </div>
 
       <div class="painel-aba" role="tabpanel" id="ap-imagem" aria-labelledby="aba-ap-imagem" hidden>
@@ -3826,6 +3825,7 @@ function aplicarTema(tema) {
 // cor, e links/rótulos coloridos ganham contraste com o fundo do tema.
 const CHAVE_CORES = 'mm_cores';
 const PALETAS = [
+  { nome: 'Preto & Verde', principal: '#22c55e', secundaria: '#86efac' },
   { nome: 'Preto & Bege', principal: '#c8a96e', secundaria: '#e4cfa3' },
   { nome: 'Roxo', principal: '#6d5efc', secundaria: '#8b7cff' },
   { nome: 'Azul', principal: '#2563eb', secundaria: '#38bdf8' },
@@ -3973,7 +3973,7 @@ function salvarCores() {
 }
 
 // O estilo Serra trava as cores (fundo cinza, texto claro). Quando o aluno escolhe
-// tema, cor ou imagem, troca sozinho para o Preto & Bege para a escolha aparecer.
+// tema, cor ou imagem, troca sozinho para o Preto & Verde para a escolha aparecer.
 function sairDaSerra() {
   if (document.documentElement.dataset.estilo !== 'serra') return;
   guardar(CHAVE_ESTILO, 'classico');
@@ -4022,7 +4022,7 @@ function escolherPaleta(i) {
 function escolherTemaPronto(i) {
   const t = TEMAS_PRONTOS[i];
   if (!t) return;
-  // No estilo Serra as cores ficam guardadas: volta para o Preto & Bege para o tema aparecer.
+  // No estilo Serra as cores ficam guardadas: volta para o Preto & Verde para o tema aparecer.
   sairDaSerra();
   tirarImagemParaCor();
   cores = { principal: t.principal, secundaria: t.secundaria, fundo: t.fundo };
@@ -4372,11 +4372,9 @@ function aplicarEstilo(estilo) {
   if (camada) camada.hidden = !serra;
 }
 
-// Sem escolha guardada vale o padrão (Serra), menos para quem já personalizou cores ou fundo.
+// Sem escolha guardada vale o padrão (clássico, Preto & Verde).
 function estiloGuardado() {
-  const e = ler(CHAVE_ESTILO);
-  if (e === 'serra' || e === 'classico') return e;
-  return ler(CHAVE_CORES) || ler(CHAVE_IMAGEM) ? 'classico' : 'serra';
+  return ler(CHAVE_ESTILO) === 'serra' ? 'serra' : 'classico';
 }
 
 function escolherEstilo(estilo) {
@@ -4441,9 +4439,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') fecharAparen
 function iniciarTema() {
   const salvo = ler(CHAVE_TEMA);
   if (salvo) return aplicarTema(salvo);
-  // sem escolha salva, segue a preferência do sistema
-  const prefereClaro = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-  aplicarTema(prefereClaro ? 'claro' : 'escuro');
+  // sem escolha salva, o padrão é o escuro (Preto & Verde)
+  aplicarTema('escuro');
 }
 
 // ===================== NAVEGAÇÃO =====================

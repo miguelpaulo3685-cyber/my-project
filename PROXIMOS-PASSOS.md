@@ -35,6 +35,8 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   quando o aluno escolhe tema/cor/imagem; escolher Claro/Escuro/tema pronto/cor de fundo tira a imagem de fundo
   (era o bug do "tema claro não funciona"); "Aulas soltas" saiu da tela Treinar (as 3 aulas seguem em `aulas/`);
   **administradores veem a trilha toda sem cadeado** (`moduloAberto` em `index.html`).
+- **Publicado em 19/11 (pedido do Miguel):** o padrão do site virou **Preto & Verde** (estilo clássico, fundo preto,
+  verde #22c55e/#86efac). A Serra só para quem a escolheu; sem escolha salva, o tema é o escuro. "Preto & Bege" segue como opção.
 - **Ideias anotadas, não começadas:** plano PRO (seção abaixo; TRI fica grátis) e um "Anki" (cartões das aulas grátis;
   cartões dos erros e cartões próprios no PRO). Painel de admin: falta a conta "voltou em até 3 dias".
 - **Relatório de dados pedido pelo Miguel (18/11) ficou pendente:** o painel `/api/admin/crescimento` e `/api/admin/resumo`
