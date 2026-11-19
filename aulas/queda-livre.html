@@ -1,0 +1,79 @@
+<header>
+  <div class="au-trilha">Física · Módulo 1 · Aula 3</div>
+  <h1>Queda livre e lançamentos</h1>
+  <p class="au-abre">Solte uma pedra de um prédio: ela cai cada vez mais rápido. Se não houvesse ar, uma pena e um martelo chegariam ao chão juntos. A queda livre é um movimento com aceleração constante, a gravidade, e o ENEM gosta de perguntar o tempo de queda e a velocidade de chegada.</p>
+</header>
+
+<section class="au-cena" aria-label="Bola caindo de uma altura escolhida">
+  <div class="au-loja">Solte a bola <small>escolha a altura e o planeta; as marcas mostram onde a bola estava a cada 0,5 s</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Planeta">
+      <button type="button" data-g="10">🌎 Terra (g = 10)</button>
+      <button type="button" data-g="1.6">🌙 Lua (g = 1,6)</button>
+      <button type="button" data-g="3.7">🔴 Marte (g = 3,7)</button>
+    </div>
+    <svg viewBox="0 0 320 240" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-h">Altura</label><input id="au-h" type="range" min="5" max="80" step="5" value="45"><output id="au-o"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-soltar">▶ Soltar a bola</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A gravidade acelera tudo igual</h2>
+  <p>Perto da superfície da Terra, sem ar atrapalhando, todo corpo cai com a mesma aceleração: <b>g ≈ 10 m/s²</b>. Isso quer dizer que a velocidade aumenta <b>10 m/s a cada segundo</b>: 10, 20, 30… O peso não importa: a pena só cai devagar por causa da <b>resistência do ar</b>.</p>
+  <ul class="au-pegadinhas">
+    <li>Velocidade depois de t segundos: <b>v = g · t</b>.</li>
+    <li>Distância caída: <b>h = g · t² ÷ 2</b>. Em 1 s cai 5 m; em 2 s, 20 m; em 3 s, 45 m.</li>
+    <li>Velocidade ao chegar: <b>v² = 2 · g · h</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Lançamentos: dois movimentos ao mesmo tempo</h2>
+  <p>Uma bola chutada para frente faz dois movimentos independentes: na <b>horizontal</b> segue com velocidade constante; na <b>vertical</b> cai como se tivesse sido solta. Por isso uma bala disparada na horizontal e outra solta da mesma altura chegam ao chão <b>juntas</b>. No lançamento para cima, a bola sobe perdendo 10 m/s a cada segundo, para no alto (velocidade zero, mas a aceleração continua g) e volta.</p>
+  <div class="au-filme" data-filme="juntas" aria-label="Animação: uma bola solta e outra lançada na horizontal chegam ao chão ao mesmo tempo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Corpo pesado e leve, sem ar, caem <b>juntos</b>. Com ar, o mais aerodinâmico ganha.</li>
+    <li>No ponto mais alto de um lançamento vertical, a velocidade é <b>zero</b>, mas a aceleração <b>não</b>: continua g para baixo.</li>
+    <li>Dobrar a altura <b>não dobra</b> o tempo de queda: o tempo cresce com a raiz da altura.</li>
+    <li>Paraquedista: com o paraquedas aberto, a resistência do ar equilibra o peso e ele desce com velocidade constante (velocidade terminal).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="h = g · t² ÷ 2 → 80 = 10 · t² ÷ 2 → t² = 16 → t = 4 s.">
+    <p>Desprezando o ar e com g = 10 m/s², uma pedra solta de 80 m de altura chega ao chão em:</p>
+    <button type="button" class="au-alt">8 s</button>
+    <button type="button" class="au-alt">4 s</button>
+    <button type="button" class="au-alt">16 s</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="v = g · t = 10 × 3 = 30 m/s.">
+    <p>Um objeto cai em queda livre durante 3 s. A velocidade dele ao final é:</p>
+    <button type="button" class="au-alt">30 m/s</button>
+    <button type="button" class="au-alt">45 m/s</button>
+    <button type="button" class="au-alt">10 m/s</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O movimento vertical das duas é igual (começam com velocidade vertical zero e caem com g); a horizontal não interfere.">
+    <p>Da mesma altura, uma bola é solta e outra é lançada na horizontal. Desprezando o ar:</p>
+    <button type="button" class="au-alt">a solta chega primeiro</button>
+    <button type="button" class="au-alt">a lançada chega primeiro</button>
+    <button type="button" class="au-alt">as duas chegam juntas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="queda-livre">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

@@ -1,0 +1,79 @@
+<header>
+  <div class="au-trilha">Física · Módulo 1 · Aula 4</div>
+  <h1>Movimento circular: engrenagens e as marchas da bicicleta</h1>
+  <p class="au-abre">Por que a marcha "pesada" da bicicleta faz você andar mais rápido? Como a roda-gigante, o ventilador e o liquidificador giram? Movimento circular é o assunto preferido do ENEM em Física, quase sempre com engrenagens, polias ou a corrente da bicicleta.</p>
+</header>
+
+<section class="au-cena" aria-label="Bicicleta: coroa, catraca e corrente">
+  <div class="au-loja">Marchas da bicicleta <small>mude os dentes da coroa (pedal) e da catraca (roda) e a sua pedalada</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-z1">Coroa (dentes)</label><input id="au-z1" type="range" min="22" max="52" step="2" value="44"><output id="au-o1"></output></div>
+    <div class="au-controle"><label for="au-z2">Catraca (dentes)</label><input id="au-z2" type="range" min="11" max="34" step="1" value="22"><output id="au-o2"></output></div>
+    <div class="au-controle"><label for="au-f">Pedaladas</label><input id="au-f" type="range" min="30" max="100" step="5" value="60"><output id="au-o3"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Período e frequência</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Período (T)</b>: o tempo de uma volta completa. <b>Frequência (f)</b>: quantas voltas por segundo (em hertz, Hz) ou por minuto (rpm). Uma é o inverso da outra: <b>f = 1 / T</b>.</li>
+    <li><b>Velocidade angular</b>: quanto o ângulo gira por segundo, ω = 2πf.</li>
+    <li><b>Velocidade linear</b> (a de um ponto na borda): <b>v = 2πR · f</b> = ω · R. Numa mesma roda, quem está mais longe do centro anda mais rápido.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Ligadas por corrente ou encostadas: mesma velocidade na borda</h2>
+  <p>Coroa e catraca ligadas pela corrente (ou duas engrenagens encostadas) têm a <b>mesma velocidade linear</b> na borda: a corrente anda igual nas duas. Por isso a menor gira <b>mais vezes</b>: <b>f₁ · R₁ = f₂ · R₂</b> (ou, contando dentes, f₁ · Z₁ = f₂ · Z₂). Já polias presas no <b>mesmo eixo</b> (a catraca e a roda traseira) têm a <b>mesma frequência</b>.</p>
+  <div class="au-filme" data-filme="engrenagens" aria-label="Animação: engrenagem grande dá uma volta enquanto a pequena dá duas"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Força centrípeta</h2>
+  <p>Para fazer curva é preciso uma força apontando para o <b>centro</b>: a <b>força centrípeta</b>. No carro, é o atrito dos pneus; na Lua, a gravidade da Terra; no balde girando, a sua mão. Se ela some (pneu na pista molhada), o corpo segue <b>reto pela tangente</b>, e não "jogado para fora".</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Bicicleta: maior velocidade com <b>coroa grande e catraca pequena</b>. Subida: coroa pequena e catraca grande (pedala mais, faz menos força).</li>
+    <li>Corrente ou contato: mesma <b>velocidade linear</b>. Mesmo eixo: mesma <b>frequência</b>.</li>
+    <li>Um ponto na borda da roda percorre <b>2πR</b> a cada volta: é assim que o velocímetro da bicicleta calcula a distância.</li>
+    <li>Converta rpm em voltas por segundo dividindo por 60.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Ligadas pela corrente, f₁ · Z₁ = f₂ · Z₂: 1 × 48 = f₂ × 16, então a catraca dá 3 voltas.">
+    <p>Uma bicicleta tem coroa de 48 dentes e catraca de 16 dentes. A cada pedalada completa, a roda traseira dá:</p>
+    <button type="button" class="au-alt">1 volta</button>
+    <button type="button" class="au-alt">1/3 de volta</button>
+    <button type="button" class="au-alt">3 voltas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Encostadas, as duas têm a mesma velocidade na borda; a de raio 3 vezes menor gira 3 vezes mais: 300 rpm.">
+    <p>Duas engrenagens encostadas têm raios de 30 cm e 10 cm. Se a grande gira a 100 rpm, a pequena gira a:</p>
+    <button type="button" class="au-alt">300 rpm</button>
+    <button type="button" class="au-alt">100 rpm</button>
+    <button type="button" class="au-alt">33 rpm</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Sem a força centrípeta (o atrito), não há nada puxando para o centro: o carro segue em linha reta, pela tangente da curva.">
+    <p>Um carro entra numa curva sobre óleo e perde totalmente o atrito com a pista. Ele:</p>
+    <button type="button" class="au-alt">é jogado para fora, na direção do raio</button>
+    <button type="button" class="au-alt">segue em linha reta, pela tangente da curva</button>
+    <button type="button" class="au-alt">continua fazendo a curva</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="movimento-circular">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

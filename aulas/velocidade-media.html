@@ -1,0 +1,70 @@
+<header>
+  <div class="au-trilha">Física · Módulo 1 · Aula 1</div>
+  <h1>Velocidade média e unidades</h1>
+  <p class="au-abre">Quanto tempo a viagem vai levar? Vale a pena pegar a estrada mais rápida, mas mais longa? A física do movimento começa numa divisão: distância por tempo. E numa pegadinha que derruba muita gente: a velocidade média quase nunca é a média das velocidades.</p>
+</header>
+
+<section class="au-cena" aria-label="Viagem em dois trechos iguais com velocidades diferentes">
+  <div class="au-loja">Viagem de 120 km em dois trechos <small>escolha a velocidade em cada metade do caminho</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 120" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-v1">1º trecho (60 km)</label><input id="au-v1" type="range" min="20" max="120" step="10" value="60"><output id="au-o1"></output></div>
+    <div class="au-controle"><label for="au-v2">2º trecho (60 km)</label><input id="au-v2" type="range" min="20" max="120" step="10" value="120"><output id="au-o2"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Distância ÷ tempo</h2>
+  <p>A <b>velocidade média</b> é a distância total dividida pelo tempo total: <b>v = Δs ÷ Δt</b>. Paradas no caminho (o pedágio, o almoço) entram no tempo total e <b>baixam</b> a média.</p>
+  <p>Se a viagem tem trechos com velocidades diferentes, <b>não</b> faça a média das velocidades. Calcule o tempo de cada trecho, some e divida a distância total pelo tempo total. Como o trecho lento demora mais, ele "pesa" mais na média.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>km/h e m/s: multiplique ou divida por 3,6</h2>
+  <p>1 km = 1000 m e 1 h = 3600 s, então <b>1 m/s = 3,6 km/h</b>. De km/h para m/s, <b>divida por 3,6</b>; de m/s para km/h, <b>multiplique por 3,6</b>. Valores que caem muito: 36 km/h = 10 m/s; 72 km/h = 20 m/s; 108 km/h = 30 m/s.</p>
+  <div class="au-filme" data-filme="unidades" aria-label="Animação: 72 quilômetros por hora viram 20 metros por segundo dividindo por 3,6"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Metade do <b>caminho</b> a 60 e metade a 120 dá média de <b>80 km/h</b>, não 90. Metade do <b>tempo</b> a 60 e metade a 120 aí sim dá 90.</li>
+    <li>Confira as unidades antes de dividir: km com h, m com s. Misturar minutos e horas é o erro mais comum.</li>
+    <li>Radar e "velocidade média" em trechos com fiscalização: o tempo entre dois pontos já denuncia quem correu.</li>
+    <li>Tempo em horas com vírgula: 1,5 h = 1 h 30 min (e não 1 h 50 min).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Tempo: 60/60 = 1 h e 60/30 = 2 h. Total: 120 km em 3 h, média de 40 km/h.">
+    <p>Um carro faz 60 km a 60 km/h e mais 60 km a 30 km/h. A velocidade média na viagem toda é:</p>
+    <button type="button" class="au-alt">40 km/h</button>
+    <button type="button" class="au-alt">45 km/h</button>
+    <button type="button" class="au-alt">50 km/h</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="De km/h para m/s divide por 3,6: 90 ÷ 3,6 = 25 m/s.">
+    <p>90 km/h equivalem a:</p>
+    <button type="button" class="au-alt">324 m/s</button>
+    <button type="button" class="au-alt">25 m/s</button>
+    <button type="button" class="au-alt">9 m/s</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Tempo total = 2 h de estrada + 0,5 h parado = 2,5 h. Média = 200 ÷ 2,5 = 80 km/h.">
+    <p>Um ônibus percorre 200 km em 2 h, mas antes fica 30 min parado na rodoviária, já com o cronômetro da viagem ligado. A velocidade média na viagem toda é:</p>
+    <button type="button" class="au-alt">100 km/h</button>
+    <button type="button" class="au-alt">90 km/h</button>
+    <button type="button" class="au-alt">80 km/h</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="velocidade-media">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

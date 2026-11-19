@@ -14,7 +14,8 @@ window.TRILHAS_MM = {
     'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico',
     'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log',
     'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia',
-    'angulos-tales', 'triangulos', 'poligonos', 'areas'],
+    'angulos-tales', 'triangulos', 'poligonos', 'areas',
+    'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -82,6 +83,26 @@ window.TRILHAS_MM = {
       { id: 'qui7', nome: 'Química ambiental e tópicos especiais', sobre: 'A Química do cotidiano e das notícias.', teste: true, aulas: [
         ['quimica-ambiental', 'Química ambiental', '🌍'], ['tratamento-agua', 'Tratamento de água e esgoto', '🚰'],
         ['combustiveis', 'Combustíveis e energia', '⛽'], ['radioatividade', 'Radioatividade', '☢️']] }
+    ] },
+    fisica: { nome: 'Física', icone: '⚙️', modulos: [
+      { id: 'fis1', nome: 'Movimento (cinemática)', sobre: 'Velocidade, aceleração, queda e giros: a base de toda a Física do ENEM.', teste: true, aulas: [
+        ['velocidade-media', 'Velocidade média e unidades', '🚗'], ['cinematica', 'MRU e MRUV: os gráficos do movimento', '📈'],
+        ['queda-livre', 'Queda livre e lançamentos', '🍎'], ['movimento-circular', 'Movimento circular e engrenagens', '🚲']] },
+      { id: 'fis2', nome: 'Leis de Newton', sobre: 'Força, massa e aceleração no dia a dia: freio, cinto de segurança, elevador.', aulas: [
+        ['leis-newton', 'As três leis de Newton', '🚀'], ['atrito', 'Atrito e plano inclinado', '🛷'], ['gravitacao', 'Gravitação e satélites', '🛰️']] },
+      { id: 'fis3', nome: 'Energia e quantidade de movimento', sobre: 'Transformações de energia, potência e colisões.', aulas: [
+        ['trabalho-energia', 'Trabalho, energia cinética e potencial', '🎢'], ['conservacao-energia', 'Conservação e usinas de energia', '⚡'],
+        ['potencia-rendimento', 'Potência e rendimento', '🏋️'], ['impulso', 'Impulso e colisões', '🎱']] },
+      { id: 'fis4', nome: 'Hidrostática', sobre: 'Pressão, prensa hidráulica e o que boia ou afunda.', aulas: [
+        ['pressao', 'Pressão e prensa hidráulica', '🛞'], ['empuxo', 'Empuxo: boiar ou afundar', '🚢']] },
+      { id: 'fis5', nome: 'Calor e termodinâmica', sobre: 'Temperatura, trocas de calor e máquinas térmicas.', aulas: [
+        ['calor-temperatura', 'Calor, temperatura e propagação', '🌡️'], ['calorimetria', 'Calorimetria e mudanças de estado', '🧊'],
+        ['termodinamica', 'Gases e máquinas térmicas', '🚂']] },
+      { id: 'fis6', nome: 'Ondas e óptica', sobre: 'Som, luz, espelhos, lentes e a visão.', aulas: [
+        ['ondas-som', 'Ondas e som', '🔊'], ['luz-espelhos', 'Luz, reflexão e espelhos', '🪞'], ['lentes-visao', 'Refração, lentes e visão', '👓']] },
+      { id: 'fis7', nome: 'Eletricidade e magnetismo', sobre: 'O tema de Física que mais cai: circuitos, consumo e geradores.', aulas: [
+        ['circuitos', 'Corrente, resistência e circuitos', '🔌'], ['consumo-energia', 'Potência elétrica e conta de luz', '🧾'],
+        ['magnetismo', 'Magnetismo e geradores', '🧲']] }
     ] }
   }
 };
