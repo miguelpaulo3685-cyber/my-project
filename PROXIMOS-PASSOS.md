@@ -33,6 +33,7 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Conversa anterior:** "M&M Estudos — pós-lançamento". Ramo de trabalho: `claude/gracious-babbage-tp7kds` (em dia com o master).
 - **Combinado do Miguel (17/11):** parar de criar funções novas no site e focar em **anunciar**; só aulas e consertos.
   As aulas da trilha continuam: "continue com as aulas e publique" vale como "sim" para publicar aulas.
+- **Bloco adaptativo no Treinar (publicado em 19/11, com o "sim" do Miguel):** cada área tem um nível guardado no aparelho (Fácil, Médio, Difícil; começa no Médio). Acertou 4 ou 5 de 5, sobe; 3, fica; 2 ou menos, desce. Quem está no Difícil e acertou 4 ou 5 no último bloco pode ganhar, sem aviso (chance de 40% por bloco), uma **questão surpresa** de desafio num ponto sorteado do bloco; errar a surpresa não derruba o nível. Só no bloco de 5, não no simulado. O site pede `?niveis=` a `/api/questoes/:area` (server.js) e usa as faixas da TRI (`tri.faixaDoNivel`).
 - **Trilhas completas (19/11):** Matemática, Física, Biologia e Química, 7 módulos cada, todos com aulas e teste do módulo. Próximo passo possível: revisar com alunos e trocar o que não estiver claro.
   Cada módulo pronto ganha `trilhas/teste-<id>.js` (10 questões) e `teste: true` no índice.
 - **Publicado em 17-18/11:** Matemática Módulo 3 (6 aulas + teste mat3, 47 aulas no total); estilo Serra sai sozinho
