@@ -1,0 +1,79 @@
+<header>
+  <div class="au-trilha">Física · Módulo 6 · Aula 1</div>
+  <h1>Ondas e som</h1>
+  <p class="au-abre">Som, luz, sinal de celular, ondas do mar e o micro-ondas: tudo é onda, uma perturbação que leva energia de um lugar para outro sem levar matéria junto. Com uma fórmula só (v = λ · f) e algumas palavras certas (frequência, amplitude, timbre), dá para resolver as questões de ondas do ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Onda: mude a frequência e a amplitude">
+  <div class="au-loja">Monte a onda sonora <small>mude a frequência e a amplitude; troque o meio</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Meio">
+      <button type="button" data-v="340">🌬️ No ar (340 m/s)</button>
+      <button type="button" data-v="1500">🌊 Na água (1 500 m/s)</button>
+    </div>
+    <svg viewBox="0 0 320 140" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-f">Frequência</label><input id="au-f" type="range" min="100" max="1000" step="50" value="340"><output id="au-of"></output></div>
+    <div class="au-controle"><label for="au-a">Amplitude</label><input id="au-a" type="range" min="1" max="5" step="1" value="3"><output id="au-oa"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que cada medida da onda faz</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Frequência</b> (f, em hertz): quantas oscilações por segundo. No som, decide se ele é <b>grave</b> (baixa) ou <b>agudo</b> (alta). Isso é a <b>altura</b> do som.</li>
+    <li><b>Amplitude</b>: o "tamanho" da oscilação. No som, decide se ele é <b>forte ou fraco</b> (a <b>intensidade</b>, medida em decibéis).</li>
+    <li><b>Comprimento de onda</b> (λ): a distância entre duas cristas.</li>
+    <li><b>Timbre</b>: o formato da onda. É o que diferencia um violão de um piano tocando a mesma nota.</li>
+    <li>Fórmula de tudo: <b>v = λ · f</b>. A velocidade depende do <b>meio</b>, não da frequência.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Som é onda mecânica; luz é eletromagnética</h2>
+  <p>O som precisa de um meio material (ar, água, metal) para viajar: no vácuo não há som. É uma onda <b>longitudinal</b> (o ar vibra na mesma direção em que a onda anda). A luz, o rádio e o micro-ondas são ondas <b>eletromagnéticas</b>, que atravessam o vácuo a 300 000 km/s.</p>
+  <div class="au-filme" data-filme="eco" aria-label="Animação: o morcego emite um som que volta como eco; pelo tempo de volta ele calcula a distância"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>"Abaixe o volume" = diminuir a <b>amplitude</b> (intensidade), não a frequência. Voz "fina" = frequência alta.</li>
+    <li>Quando a onda muda de meio, a <b>frequência não muda</b>; mudam a velocidade e o comprimento de onda.</li>
+    <li>Eco, sonar e ultrassom: distância = velocidade × tempo ÷ 2 (o som vai e volta).</li>
+    <li>Ressonância: um objeto vibra muito quando recebe a sua frequência natural (a taça que quebra com a voz).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="v = λ · f → λ = 340 ÷ 680 = 0,5 m.">
+    <p>Um som de 680 Hz se propaga no ar a 340 m/s. Seu comprimento de onda é:</p>
+    <button type="button" class="au-alt">2 m</button>
+    <button type="button" class="au-alt">0,5 m</button>
+    <button type="button" class="au-alt">231 200 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A altura (grave ou agudo) depende da frequência. A voz mais aguda tem frequência maior.">
+    <p>Uma pessoa com voz "fina" emite sons com:</p>
+    <button type="button" class="au-alt">frequência mais alta</button>
+    <button type="button" class="au-alt">amplitude maior</button>
+    <button type="button" class="au-alt">velocidade maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O som vai e volta: distância = 1 500 × 0,4 ÷ 2 = 300 m.">
+    <p>Um sonar emite um pulso que volta do fundo do mar em 0,4 s. Com o som a 1 500 m/s na água, a profundidade é:</p>
+    <button type="button" class="au-alt">600 m</button>
+    <button type="button" class="au-alt">3 750 m</button>
+    <button type="button" class="au-alt">300 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="ondas-som">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

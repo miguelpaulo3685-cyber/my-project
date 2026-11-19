@@ -1,0 +1,76 @@
+<header>
+  <div class="au-trilha">Física · Módulo 6 · Aula 3</div>
+  <h1>Refração, lentes e visão</h1>
+  <p class="au-abre">O canudo parece quebrado dentro do copo, a piscina parece mais rasa do que é e o arco-íris aparece depois da chuva: é a luz mudando de direção ao trocar de meio. As lentes usam isso para corrigir a visão, e o ENEM sempre pergunta qual lente vai em qual problema.</p>
+</header>
+
+<section class="au-cena" aria-label="Olho: onde a imagem se forma em cada problema de visão">
+  <div class="au-loja">Óculos para cada olho <small>escolha o olho e coloque ou tire os óculos</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Olho">
+      <button type="button" data-olho="normal">👁️ Normal</button>
+      <button type="button" data-olho="miopia">🔍 Miopia</button>
+      <button type="button" data-olho="hiper">📖 Hipermetropia</button>
+    </div>
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-atalhos"><button type="button" id="au-oculos" aria-pressed="false">👓 Colocar os óculos</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Refração: a luz muda de velocidade e de direção</h2>
+  <p>Ao passar do ar para a água ou o vidro, a luz fica mais lenta e <b>desvia</b>. Quanto mais o meio "freia" a luz, maior o <b>índice de refração</b>. Cada cor desvia um pouco diferente: por isso o prisma e as gotas de chuva separam a luz branca nas cores do arco-íris (<b>dispersão</b>).</p>
+  <div class="au-filme" data-filme="canudo" aria-label="Animação: o canudo parece quebrado na superfície da água por causa da refração"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Lentes</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Convergente</b> (mais grossa no meio): junta os raios num ponto (o foco). Lupa, câmera, projetor, e a própria lente do olho (o cristalino).</li>
+    <li><b>Divergente</b> (mais fina no meio): espalha os raios.</li>
+    <li>O olho forma a imagem na <b>retina</b>, no fundo do olho. Quando ela se forma fora da retina, a visão fica embaçada.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Os problemas de visão</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Miopia</b>: olho "comprido" demais; a imagem se forma <b>antes</b> da retina. Vê mal de <b>longe</b>. Corrige com lente <b>divergente</b>.</li>
+    <li><b>Hipermetropia</b>: olho "curto"; a imagem se forma <b>depois</b> da retina. Vê mal de <b>perto</b>. Corrige com lente <b>convergente</b>.</li>
+    <li><b>Presbiopia</b> (vista cansada, com a idade): o cristalino perde a flexibilidade. Lente convergente para ler.</li>
+    <li><b>Astigmatismo</b>: córnea irregular, imagem distorcida. Lente cilíndrica.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="No míope a imagem se forma antes da retina; a lente divergente espalha os raios e empurra a imagem para a retina.">
+    <p>Uma pessoa míope enxerga mal de longe. Para corrigir, ela deve usar lentes:</p>
+    <button type="button" class="au-alt">convergentes</button>
+    <button type="button" class="au-alt">divergentes</button>
+    <button type="button" class="au-alt">de vidro escuro</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A luz que vem do fundo da piscina refrata ao sair da água e se afasta da normal; o olho interpreta o fundo como mais perto.">
+    <p>A piscina parece mais rasa do que realmente é por causa da:</p>
+    <button type="button" class="au-alt">refração da luz ao passar da água para o ar</button>
+    <button type="button" class="au-alt">reflexão da luz no fundo</button>
+    <button type="button" class="au-alt">absorção da luz pela água</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Cada cor tem um índice de refração um pouco diferente e desvia de um jeito; a luz branca se separa nas cores (dispersão).">
+    <p>O arco-íris aparece porque, nas gotas de chuva, a luz branca:</p>
+    <button type="button" class="au-alt">é absorvida</button>
+    <button type="button" class="au-alt">ganha novas cores</button>
+    <button type="button" class="au-alt">se separa em cores, pois cada cor desvia diferente</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="lentes-visao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
