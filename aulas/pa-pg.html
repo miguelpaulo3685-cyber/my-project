@@ -1,0 +1,73 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 7 · Aula 1</div>
+  <h1>Sequências: PA e PG</h1>
+  <p class="au-abre">Uma escada em que cada degrau sobe o mesmo tanto, ou uma bactéria que dobra a cada hora? A primeira cresce somando sempre o mesmo número: é uma PA. A segunda cresce multiplicando: é uma PG, e ela dispara muito mais rápido. Juros compostos, epidemias e prestações vivem disso.</p>
+</header>
+
+<section class="au-cena" aria-label="Sequência: escolha PA ou PG, o primeiro termo e a razão">
+  <div class="au-loja">Monte a sequência <small>escolha o tipo, o primeiro termo e a razão</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Tipo">
+      <button type="button" data-tipo="pa">➕ PA (soma)</button>
+      <button type="button" data-tipo="pg">✖️ PG (multiplica)</button>
+    </div>
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-a1">1º termo</label><input id="au-a1" type="range" min="1" max="10" value="2"><output id="au-o1"></output></div>
+    <div class="au-controle"><label for="au-r">Razão</label><input id="au-r" type="range" min="1" max="5" value="2"><output id="au-o2"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Progressão aritmética (PA)</h2>
+  <ul class="au-pegadinhas">
+    <li>Cada termo = o anterior <b>+ r</b>. Ex.: 3, 7, 11, 15… (r = 4).</li>
+    <li>Termo geral: <b>aₙ = a₁ + (n − 1) · r</b>. O 20º termo de 3, 7, 11… é 3 + 19 × 4 = 79.</li>
+    <li>Soma dos n primeiros: <b>Sₙ = (a₁ + aₙ) · n ÷ 2</b>. Truque de Gauss: o primeiro + o último = o segundo + o penúltimo…</li>
+    <li>No gráfico, os pontos de uma PA ficam numa <b>reta</b>: é uma função afim.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Progressão geométrica (PG)</h2>
+  <ul class="au-pegadinhas">
+    <li>Cada termo = o anterior <b>× q</b>. Ex.: 3, 6, 12, 24… (q = 2).</li>
+    <li>Termo geral: <b>aₙ = a₁ · qⁿ⁻¹</b>.</li>
+    <li>Com q &gt; 1, cresce como a <b>exponencial</b>; com 0 &lt; q &lt; 1, vai diminuindo (meia-vida, depreciação).</li>
+    <li>Juros compostos são uma PG: a cada mês, o valor é multiplicado por (1 + taxa).</li>
+  </ul>
+  <div class="au-filme" data-filme="corrida" aria-label="Animação: somar 10 por dia contra dobrar por dia; a PG ultrapassa a PA rapidamente"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="a₁₀ = a₁ + 9 · r = 5 + 9 × 3 = 32.">
+    <p>Na PA 5, 8, 11, 14…, o 10º termo é:</p>
+    <button type="button" class="au-alt">30</button>
+    <button type="button" class="au-alt">35</button>
+    <button type="button" class="au-alt">32</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="É uma PG de razão 2: 100 · 2⁵ = 100 × 32 = 3 200.">
+    <p>Uma colônia de 100 bactérias dobra a cada hora. Depois de 5 horas, são:</p>
+    <button type="button" class="au-alt">3 200</button>
+    <button type="button" class="au-alt">1 000</button>
+    <button type="button" class="au-alt">600</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="S = (1 + 100) × 100 ÷ 2 = 5 050.">
+    <p>A soma 1 + 2 + 3 + … + 100 vale:</p>
+    <button type="button" class="au-alt">10 000</button>
+    <button type="button" class="au-alt">5 050</button>
+    <button type="button" class="au-alt">5 000</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="pa-pg">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

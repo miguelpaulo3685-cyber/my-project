@@ -1,0 +1,74 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 7 · Aula 3</div>
+  <h1>Leis dos senos e cossenos e ondas</h1>
+  <p class="au-abre">A altura de uma cadeira da roda-gigante, a maré subindo e descendo, a temperatura ao longo do ano: tudo isso se repete, e o ENEM descreve com funções seno e cosseno. Aqui o seno sai do triângulo e vira uma onda. No fim, as duas leis que resolvem triângulos que não são retângulos.</p>
+</header>
+
+<section class="au-cena" aria-label="Roda-gigante: a altura da cadeira ao longo do tempo é uma onda">
+  <div class="au-loja">A roda-gigante <small>gire a roda e veja a altura da cadeira desenhar uma onda</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-a">Giro</label><input id="au-a" type="range" min="0" max="720" step="5" value="90"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O ciclo trigonométrico</h2>
+  <ul class="au-pegadinhas">
+    <li>Num círculo de raio 1, o ponto que gira um ângulo x tem altura <b>sen x</b> e posição horizontal <b>cos x</b>.</li>
+    <li>Seno e cosseno vão de <b>−1 a 1</b> e se repetem a cada volta: 360°, ou <b>2π radianos</b> (π rad = 180°).</li>
+    <li>Na função <b>f(x) = A + B · sen(k · x)</b>: A é o valor do meio, B é a amplitude (o máximo é A + B, o mínimo A − B) e o período é 2π ÷ k.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Triângulos quaisquer</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Lei dos senos</b>: a ÷ sen A = b ÷ sen B = c ÷ sen C. Use quando conhece dois ângulos e um lado.</li>
+    <li><b>Lei dos cossenos</b>: a² = b² + c² − 2 · b · c · cos A. Use quando conhece dois lados e o ângulo entre eles. Com A = 90°, vira Pitágoras.</li>
+  </ul>
+  <div class="au-filme" data-filme="mare" aria-label="Animação: a maré sobe e desce como uma onda de seno, com máximo, mínimo e período"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Máximo da função: quando o seno vale 1; mínimo: quando vale −1.</li>
+    <li>O <b>período</b> é o tempo de uma volta completa (de um pico ao próximo).</li>
+    <li>Leia o gráfico: o meio da onda é A, a distância do meio ao pico é B.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="O seno vale no máximo 1: h = 20 + 18 × 1 = 38 m.">
+    <p>A altura de uma cadeira de roda-gigante é h(t) = 20 + 18 · sen(t). A altura máxima é:</p>
+    <button type="button" class="au-alt">38 m</button>
+    <button type="button" class="au-alt">20 m</button>
+    <button type="button" class="au-alt">18 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O mínimo é quando o seno vale −1: 3 − 2 = 1 m.">
+    <p>A maré num porto segue h(t) = 3 + 2 · sen(πt/6), em metros. A altura mínima da maré é:</p>
+    <button type="button" class="au-alt">3 m</button>
+    <button type="button" class="au-alt">5 m</button>
+    <button type="button" class="au-alt">1 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Lei dos cossenos: a² = 5² + 8² − 2 × 5 × 8 × cos 60° = 25 + 64 − 40 = 49, então a = 7.">
+    <p>Um triângulo tem lados de 5 cm e 8 cm com um ângulo de 60° entre eles (cos 60° = 1/2). O terceiro lado mede:</p>
+    <button type="button" class="au-alt">13 cm</button>
+    <button type="button" class="au-alt">7 cm</button>
+    <button type="button" class="au-alt">9,4 cm</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="ciclo-trigonometrico">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

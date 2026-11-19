@@ -22,7 +22,8 @@ window.TRILHAS_MM = {
     'calor-temperatura', 'calorimetria', 'termodinamica',
     'ondas-som', 'luz-espelhos', 'lentes-visao',
     'circuitos', 'consumo-energia', 'magnetismo',
-    'projecoes', 'solidos', 'capacidade'],
+    'projecoes', 'solidos', 'capacidade',
+    'pa-pg', 'trigonometria', 'ciclo-trigonometrico'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -44,7 +45,7 @@ window.TRILHAS_MM = {
         ['poligonos', 'Polígonos e circunferência', '⭕'], ['areas', 'Áreas de figuras planas', '🟩']] },
       { id: 'mat6', nome: 'Geometria espacial e projeções', sobre: 'Embalagens, reservatórios e visão espacial.', teste: true, aulas: [
         ['projecoes', 'Posição e projeções (sombras)', '🔦'], ['solidos', 'Áreas e volumes dos sólidos', '📦'], ['capacidade', 'Troncos, inscrição e capacidade', '🥤']] },
-      { id: 'mat7', nome: 'Sequências e trigonometria', sobre: 'Tópicos de nível médio a difícil.', aulas: [
+      { id: 'mat7', nome: 'Sequências e trigonometria', sobre: 'Tópicos de nível médio a difícil.', teste: true, aulas: [
         ['pa-pg', 'Sequências, PA e PG', '🔢'], ['trigonometria', 'Seno, cosseno e tangente', '📐'], ['ciclo-trigonometrico', 'Leis dos senos e cossenos e ondas', '〰️']] }
     ] },
     biologia: { nome: 'Biologia', icone: '🌱', modulos: [

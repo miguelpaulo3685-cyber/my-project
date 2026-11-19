@@ -1,0 +1,80 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 7 · Aula 2</div>
+  <h1>Seno, cosseno e tangente</h1>
+  <p class="au-abre">Qual a altura de um prédio que você não consegue subir? Qual a inclinação máxima de uma rampa de acessibilidade? No triângulo retângulo, conhecendo um ângulo e um lado, dá para descobrir todos os outros. Essas três razões fazem isso.</p>
+</header>
+
+<section class="au-cena" aria-label="Rampa: mude o ângulo e veja a altura e o avanço">
+  <div class="au-loja">A rampa de 10 m <small>mude o ângulo de subida; o comprimento da rampa fica fixo</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-ang">Ângulo</label><input id="au-ang" type="range" min="5" max="75" step="1" value="30"><output id="au-o"></output></div>
+    <div class="au-atalhos" role="group" aria-label="Ângulos notáveis">
+      <button type="button" data-ang="30">30°</button><button type="button" data-ang="45">45°</button><button type="button" data-ang="60">60°</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>As três razões</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Seno</b> = cateto <b>oposto</b> ÷ hipotenusa.</li>
+    <li><b>Cosseno</b> = cateto <b>adjacente</b> ÷ hipotenusa.</li>
+    <li><b>Tangente</b> = oposto ÷ adjacente (a inclinação: quanto sobe para cada 1 que avança).</li>
+    <li>Para lembrar: <b>SOH-CAH-TOA</b> (Seno = Oposto/Hipotenusa, Cosseno = Adjacente/Hipotenusa, Tangente = Oposto/Adjacente).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Os ângulos notáveis</h2>
+  <ul class="au-pegadinhas">
+    <li><b>30°</b>: sen = 1/2; cos = √3/2 ≈ 0,87; tg = √3/3 ≈ 0,58.</li>
+    <li><b>45°</b>: sen = cos = √2/2 ≈ 0,71; tg = 1 (sobe o mesmo que avança).</li>
+    <li><b>60°</b>: sen = √3/2 ≈ 0,87; cos = 1/2; tg = √3 ≈ 1,73.</li>
+  </ul>
+  <div class="au-filme" data-filme="predio" aria-label="Animação: medindo a altura de um prédio com o ângulo e a distância"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Inclinação em porcentagem é a <b>tangente</b> × 100: rampa de 8% sobe 8 cm a cada 1 m.</li>
+    <li>Se a questão dá a distância no chão e o ângulo, use a <b>tangente</b> para achar a altura.</li>
+    <li>Sombra e altura: tg do ângulo do Sol = altura ÷ sombra.</li>
+    <li>sen² + cos² = 1, para qualquer ângulo.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="sen 30° = altura ÷ rampa → altura = 8 × 1/2 = 4 m.">
+    <p>Uma rampa de 8 m de comprimento faz 30° com o chão. A altura que ela atinge é:</p>
+    <button type="button" class="au-alt">8 m</button>
+    <button type="button" class="au-alt">4 m</button>
+    <button type="button" class="au-alt">6,9 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="tg 45° = 1: a altura é igual à distância no chão, 20 m.">
+    <p>De um ponto a 20 m da base de um prédio, vê-se o topo sob um ângulo de 45°. A altura do prédio é:</p>
+    <button type="button" class="au-alt">20 m</button>
+    <button type="button" class="au-alt">10 m</button>
+    <button type="button" class="au-alt">28 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A tangente da inclinação é 1 ÷ 12 ≈ 0,083 = 8,3%.">
+    <p>Uma rampa sobe 1 m para cada 12 m de avanço horizontal. Sua inclinação é de aproximadamente:</p>
+    <button type="button" class="au-alt">12%</button>
+    <button type="button" class="au-alt">1%</button>
+    <button type="button" class="au-alt">8,3%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="trigonometria">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

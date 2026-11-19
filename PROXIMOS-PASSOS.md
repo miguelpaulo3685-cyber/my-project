@@ -33,7 +33,7 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Conversa anterior:** "M&M Estudos — pós-lançamento". Ramo de trabalho: `claude/gracious-babbage-tp7kds` (em dia com o master).
 - **Combinado do Miguel (17/11):** parar de criar funções novas no site e focar em **anunciar**; só aulas e consertos.
   As aulas da trilha continuam: "continue com as aulas e publique" vale como "sim" para publicar aulas.
-- **Próximas aulas:** Matemática 6 e 7, Biologia 4 a 7 e Química 2 a 6. (Física completa em 20/11: 7 módulos, 22 aulas.)
+- **Próximas aulas:** Biologia 4 a 7 e Química 2 a 6. (Em 20/11 ficaram completas a Física, 7 módulos, e a Matemática, 7 módulos.)
   Cada módulo pronto ganha `trilhas/teste-<id>.js` (10 questões) e `teste: true` no índice.
 - **Publicado em 17-18/11:** Matemática Módulo 3 (6 aulas + teste mat3, 47 aulas no total); estilo Serra sai sozinho
   quando o aluno escolhe tema/cor/imagem; escolher Claro/Escuro/tema pronto/cor de fundo tira a imagem de fundo
