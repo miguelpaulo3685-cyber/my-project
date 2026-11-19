@@ -731,3 +731,6 @@ button.au-gen-base:hover { outline: 2px solid var(--texto); outline-offset: 1px;
 .au-gen-faixa.au-gen-falta { background: var(--errado); box-shadow: 0 0 9px var(--errado); }
 .au-gen-poco.au-gen-escolhido small { color: #b4f28c; font-weight: 700; }
 @media (max-width: 420px) { .au-gen-base { width: 24px; height: 28px; line-height: 28px; font-size: 13px; } .au-gen-quadro { grid-template-columns: 44px repeat(2, minmax(0, 1fr)); } }
+
+/* Leituras com palavras (não números): letra menor para caber no celular */
+.au-leituras-txt .au-leitura strong { font-size: 14px; line-height: 1.25; overflow-wrap: break-word; hyphens: auto; }

@@ -24,7 +24,8 @@ window.TRILHAS_MM = {
     'circuitos', 'consumo-energia', 'magnetismo',
     'projecoes', 'solidos', 'capacidade',
     'pa-pg', 'trigonometria', 'ciclo-trigonometrico',
-    'teorias-evolutivas', 'neodarwinismo', 'especiacao', 'filogenia'],
+    'teorias-evolutivas', 'neodarwinismo', 'especiacao', 'filogenia',
+    'digestorio', 'respiratorio-circulatorio', 'excretor-endocrino', 'nervoso'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -62,7 +63,7 @@ window.TRILHAS_MM = {
       { id: 'bio4', nome: 'Evolução e filogenia', sobre: 'Como as espécies mudam e como ler árvores evolutivas.', teste: true, aulas: [
         ['teorias-evolutivas', 'Lamarck e Darwin', '🦒'], ['neodarwinismo', 'Teoria sintética da evolução', '🧩'],
         ['especiacao', 'Especiação e órgãos homólogos', '🐦'], ['filogenia', 'Cladogramas', '🌳']] },
-      { id: 'bio5', nome: 'Fisiologia humana', sobre: 'Como o corpo mantém o equilíbrio interno.', aulas: [
+      { id: 'bio5', nome: 'Fisiologia humana', sobre: 'Como o corpo mantém o equilíbrio interno.', teste: true, aulas: [
         ['digestorio', 'Digestão e nutrição', '🍎'], ['respiratorio-circulatorio', 'Respiração e circulação', '🫀'],
         ['excretor-endocrino', 'Rins e hormônios', '🧫'], ['nervoso', 'Sistema nervoso e sentidos', '🧠']] },
       { id: 'bio6', nome: 'Saúde, imunologia e microbiologia', sobre: 'Doenças, prevenção e defesa do organismo.', aulas: [

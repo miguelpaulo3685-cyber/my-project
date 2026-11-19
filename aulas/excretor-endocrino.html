@@ -1,0 +1,76 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 5 · Aula 3</div>
+  <h1>Rins e hormônios</h1>
+  <p class="au-abre">O corpo vive tentando manter tudo no ponto certo: a quantidade de açúcar no sangue, de água, de sais. Os hormônios são os mensageiros desse controle, e os rins são o filtro que decide o que fica e o que sai na urina.</p>
+</header>
+
+<section class="au-cena" aria-label="Glicose no sangue ao longo de 6 horas">
+  <div class="au-loja">Açúcar no sangue <small>faça uma refeição ou fique em jejum; depois tire a insulina e compare</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-comer">🍝 Refeição</button>
+      <button type="button" id="au-jejum">⏳ Jejum</button>
+      <button type="button" id="au-diab" aria-pressed="false">Sem insulina (diabetes tipo 1)</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Insulina e glucagon</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Insulina</b> (pâncreas): depois de comer, a glicose sobe; a insulina faz as células absorverem glicose e o fígado guardar o excesso como glicogênio. A glicose <b>baixa</b>.</li>
+    <li><b>Glucagon</b> (pâncreas): no jejum, a glicose cai; o glucagon faz o fígado quebrar o glicogênio e soltar glicose. A glicose <b>sobe</b>.</li>
+    <li>Isso é <b>retroalimentação negativa</b>: a resposta corrige o desvio e traz de volta ao normal.</li>
+    <li><b>Diabetes tipo 1</b>: o pâncreas não produz insulina (tratamento com insulina). <b>Tipo 2</b>: as células respondem mal à insulina (ligado a sedentarismo e obesidade).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>O rim, um filtro inteligente</h2>
+  <p>Cada rim tem cerca de um milhão de <b>néfrons</b>. O sangue é filtrado e depois quase tudo que é útil volta (reabsorção): glicose, sais e a maior parte da água. O que sobra, com a <b>ureia</b> (resto da quebra das proteínas), vira urina.</p>
+  <div class="au-filme" data-filme="nefron" aria-label="Animação: filtração, reabsorção e formação da urina"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>ADH</b> (hormônio antidiurético): bebeu pouca água ou suou muito → mais ADH → o rim devolve mais água ao sangue → urina pouca e escura. O álcool inibe o ADH: por isso faz urinar mais.</li>
+    <li>Glicose na urina é sinal de glicemia muito alta: o rim não consegue reabsorver tudo.</li>
+    <li>Outros hormônios clássicos: <b>adrenalina</b> (luta ou fuga), <b>tiroxina</b> (metabolismo), <b>estrogênio, progesterona e testosterona</b> (sexuais).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Depois de comer, a glicose sobe e o pâncreas libera insulina, que faz as células absorverem a glicose.">
+    <p>Logo depois de uma refeição rica em carboidratos, o pâncreas libera:</p>
+    <button type="button" class="au-alt">glucagon, para aumentar a glicose</button>
+    <button type="button" class="au-alt">insulina, para baixar a glicose no sangue</button>
+    <button type="button" class="au-alt">ADH, para concentrar a urina</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Sem água suficiente, aumenta o ADH e o rim reabsorve mais água: a urina fica pouca e concentrada.">
+    <p>Num dia muito quente, quem bebeu pouca água tende a ter:</p>
+    <button type="button" class="au-alt">mais ADH e urina mais concentrada</button>
+    <button type="button" class="au-alt">menos ADH e muita urina clara</button>
+    <button type="button" class="au-alt">mais insulina e urina com glicose</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A ureia vem da quebra das proteínas (dos aminoácidos) no fígado e é eliminada pelos rins.">
+    <p>A ureia, principal resto eliminado na urina, vem da quebra de:</p>
+    <button type="button" class="au-alt">gorduras</button>
+    <button type="button" class="au-alt">carboidratos</button>
+    <button type="button" class="au-alt">proteínas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="excretor-endocrino">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
