@@ -26,7 +26,8 @@ window.TRILHAS_MM = {
     'pa-pg', 'trigonometria', 'ciclo-trigonometrico',
     'teorias-evolutivas', 'neodarwinismo', 'especiacao', 'filogenia',
     'digestorio', 'respiratorio-circulatorio', 'excretor-endocrino', 'nervoso',
-    'microbiologia', 'imunologia', 'vacinas-soros', 'ists'],
+    'microbiologia', 'imunologia', 'vacinas-soros', 'ists',
+    'botanica', 'zoologia', 'parasitologia'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -70,7 +71,7 @@ window.TRILHAS_MM = {
       { id: 'bio6', nome: 'Saúde, imunologia e microbiologia', sobre: 'Doenças, prevenção e defesa do organismo.', teste: true, aulas: [
         ['microbiologia', 'Vírus, bactérias, protozoários e fungos', '🦠'], ['imunologia', 'Sistema imune', '🛡️'],
         ['vacinas-soros', 'Vacina ou soro?', '💉'], ['ists', 'ISTs', '🩺']] },
-      { id: 'bio7', nome: 'Botânica, zoologia e biodiversidade', sobre: 'Os grandes grupos de seres vivos e suas adaptações.', aulas: [
+      { id: 'bio7', nome: 'Botânica, zoologia e biodiversidade', sobre: 'Os grandes grupos de seres vivos e suas adaptações.', teste: true, aulas: [
         ['botanica', 'Botânica', '🌳'], ['zoologia', 'Zoologia', '🐸'], ['parasitologia', 'Verminoses e parasitas', '🪱']] }
     ] },
     quimica: { nome: 'Química', icone: '⚗️', modulos: [

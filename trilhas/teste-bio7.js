@@ -1,0 +1,14 @@
+// Teste do módulo bio7 (botânica, zoologia e parasitas): [enunciado, alternativas, índice da certa, explicação].
+window.TESTES_MM = window.TESTES_MM || {};
+window.TESTES_MM['bio7'] = [
+  ['As samambaias são maiores que os musgos principalmente porque têm:', ['flores', 'vasos condutores de seiva', 'sementes'], 1, 'Com xilema e floema, a água e o alimento chegam longe, e a planta pode crescer. Musgos não têm vasos.'],
+  ['O pinhão, semente da araucária, não fica dentro de um fruto porque a araucária é:', ['uma gimnosperma', 'uma angiosperma', 'uma briófita'], 0, 'Gimnospermas têm sementes "nuas", sem fruto. Fruto é exclusivo das angiospermas.'],
+  ['A diminuição das populações de abelhas preocupa os agricultores porque:', ['as abelhas fazem a fotossíntese das plantas', 'muitas plantas dependem delas para a polinização e a formação dos frutos', 'as abelhas controlam as pragas do solo'], 1, 'Sem polinização não há fecundação, e o ovário não vira fruto.'],
+  ['A seiva elaborada, rica em açúcares produzidos nas folhas, é transportada pelo:', ['xilema', 'estômato', 'floema'], 2, 'O floema leva os açúcares da fotossíntese para o resto da planta; o xilema leva água e sais da raiz para cima.'],
+  ['A conquista definitiva do ambiente terrestre pelos vertebrados está ligada ao surgimento, nos répteis, de:', ['brânquias', 'ovo com casca e anexos embrionários', 'metamorfose'], 1, 'O ovo amniótico protege o embrião do ressecamento, e a reprodução deixa de depender da água.'],
+  ['Os anfíbios são considerados bons bioindicadores porque:', ['têm pele fina e permeável, sensível a poluentes', 'vivem só em ambientes poluídos', 'têm temperatura do corpo constante'], 0, 'A pele úmida, que também respira, absorve substâncias do ambiente; os anfíbios somem cedo onde há poluição.'],
+  ['Aves e mamíferos conseguem manter a temperatura do corpo constante. Isso é favorecido por:', ['coração com 3 cavidades e mistura de sangue', 'respiração pela pele', 'coração com 4 cavidades, sem mistura de sangue arterial e venoso'], 2, 'Sem mistura, o sangue que chega ao corpo é rico em oxigênio, o que sustenta o metabolismo alto da endotermia.'],
+  ['Uma campanha de saúde orienta: "use calçados". Ela previne principalmente:', ['o amarelão', 'a malária', 'a teníase'], 0, 'A larva do ancilóstomo vive no solo contaminado e entra pela pele dos pés.'],
+  ['A medida mais eficaz para reduzir a esquistossomose numa região é:', ['vacinar a população', 'construir rede de esgoto e evitar contato com lagoas contaminadas', 'usar repelente contra mosquitos'], 1, 'Sem fezes chegando à água, os ovos não alcançam os caramujos e o ciclo se quebra.'],
+  ['A doença de Chagas é transmitida principalmente:', ['pela picada do mosquito Anopheles', 'pela ingestão de carne de porco crua', 'pelas fezes do barbeiro, que entram pela ferida da picada'], 2, 'O Trypanosoma cruzi está nas fezes do barbeiro; ao coçar a picada, a pessoa leva o parasita para dentro.']
+];
