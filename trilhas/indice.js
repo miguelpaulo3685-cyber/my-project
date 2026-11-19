@@ -28,7 +28,8 @@ window.TRILHAS_MM = {
     'digestorio', 'respiratorio-circulatorio', 'excretor-endocrino', 'nervoso',
     'microbiologia', 'imunologia', 'vacinas-soros', 'ists',
     'botanica', 'zoologia', 'parasitologia',
-    'mol', 'estequiometria', 'concentracao', 'diluicao'],
+    'mol', 'estequiometria', 'concentracao', 'diluicao',
+    'termoquimica', 'cinetica', 'equilibrio', 'ph'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -82,7 +83,7 @@ window.TRILHAS_MM = {
       { id: 'qui2', nome: 'Estequiometria e soluções', sobre: 'Os cálculos que aparecem em toda a Química do ENEM.', teste: true, aulas: [
         ['mol', 'Mol e massa molar', '⚖️'], ['estequiometria', 'Cálculo estequiométrico', '🧮'],
         ['concentracao', 'Concentração das soluções', '🥤'], ['diluicao', 'Diluição e mistura', '🫗']] },
-      { id: 'qui3', nome: 'Físico-química', sobre: 'Calor, velocidade das reações e equilíbrio.', aulas: [
+      { id: 'qui3', nome: 'Físico-química', sobre: 'Calor, velocidade das reações e equilíbrio.', teste: true, aulas: [
         ['termoquimica', 'Termoquímica', '🔥'], ['cinetica', 'Cinética química', '⏱️'],
         ['equilibrio', 'Equilíbrio químico', '⚖️'], ['ph', 'pH e equilíbrio iônico', '🍋']] },
       { id: 'qui4', nome: 'Eletroquímica', sobre: 'Baterias, corrosão e indústria.', aulas: [

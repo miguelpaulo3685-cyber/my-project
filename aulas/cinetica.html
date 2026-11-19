@@ -1,0 +1,76 @@
+<header>
+  <div class="au-trilha">Química · Módulo 3 · Aula 2</div>
+  <h1>Cinética química: a velocidade das reações</h1>
+  <p class="au-abre">Por que guardamos comida na geladeira? Por que o comprimido efervescente em pó some mais rápido? A cinética estuda o que acelera ou freia uma reação. A ideia central: para reagir, as partículas precisam se chocar, com energia e na posição certa.</p>
+</header>
+
+<section class="au-cena" aria-label="Comprimido efervescente na água: mude temperatura, superfície e catalisador">
+  <div class="au-loja">Mais rápido ou mais devagar? <small>mude as condições e compare com a reação de referência (tracejada)</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-t">Temperatura</label><input id="au-t" type="range" min="0" max="60" step="10" value="20"><output id="au-to"></output></div>
+    <div class="au-controle"><label for="au-c">Concentração</label><input id="au-c" type="range" min="1" max="4" step="1" value="2"><output id="au-co"></output></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-po" aria-pressed="false">🧂 Em pó</button>
+      <button type="button" id="au-cat" aria-pressed="false">⚗️ Catalisador</button>
+    </div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O que acelera uma reação</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Temperatura</b>: partículas mais rápidas se chocam mais e com mais energia. Uma regra prática: +10 °C, velocidade quase dobra.</li>
+    <li><b>Concentração</b>: mais partículas no mesmo espaço, mais choques.</li>
+    <li><b>Superfície de contato</b>: picar ou moer expõe mais partículas. Lenha em gravetos queima mais rápido que um tronco.</li>
+    <li><b>Catalisador</b>: cria um caminho com energia de ativação menor. Acelera sem ser consumido.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>O morro da energia de ativação</h2>
+  <div class="au-filme" data-filme="catalisador" aria-label="Animação: o catalisador baixa o morro da energia de ativação"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Geladeira e congelador <b>baixam a temperatura</b>: as reações que estragam o alimento ficam lentas.</li>
+    <li>As <b>enzimas</b> são catalisadores biológicos. O catalisador do escapamento dos carros transforma gases tóxicos em menos tóxicos.</li>
+    <li>O catalisador <b>não muda o ΔH</b> da reação nem a quantidade de produto: só a rapidez.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Em pó, a superfície de contato com a água é muito maior: mais choques ao mesmo tempo.">
+    <p>Um comprimido efervescente triturado se dissolve mais rápido que um inteiro porque:</p>
+    <button type="button" class="au-alt">a temperatura da água aumenta</button>
+    <button type="button" class="au-alt">o pó funciona como catalisador</button>
+    <button type="button" class="au-alt">a superfície de contato é maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O catalisador diminui a energia de ativação, oferecendo outro caminho para a reação; ele não é consumido.">
+    <p>Um catalisador acelera a reação porque:</p>
+    <button type="button" class="au-alt">diminui a energia de ativação</button>
+    <button type="button" class="au-alt">aumenta a temperatura do sistema</button>
+    <button type="button" class="au-alt">é consumido e vira produto</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="No frio, as partículas se movem mais devagar e se chocam menos: as reações de decomposição ficam lentas.">
+    <p>Guardar alimentos na geladeira faz eles durarem mais porque:</p>
+    <button type="button" class="au-alt">o frio mata todas as bactérias</button>
+    <button type="button" class="au-alt">a baixa temperatura deixa as reações mais lentas</button>
+    <button type="button" class="au-alt">a geladeira aumenta a superfície de contato</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="cinetica">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

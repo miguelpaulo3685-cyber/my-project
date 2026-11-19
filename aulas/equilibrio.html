@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Química · Módulo 3 · Aula 3</div>
+  <h1>Equilíbrio químico</h1>
+  <p class="au-abre">Muitas reações não vão até o fim: os produtos também reagem de volta. Chega um momento em que as duas reações, a direta e a inversa, acontecem na mesma velocidade, e as quantidades param de mudar. É o equilíbrio. E se você mexe nele, ele reage para compensar.</p>
+</header>
+
+<section class="au-cena" aria-label="Equilíbrio entre NO₂ castanho e N₂O₄ incolor: mude temperatura e pressão">
+  <div class="au-loja">2 NO₂ (castanho) ⇌ N₂O₄ (incolor) <small>a reação direta é exotérmica. Mexa no sistema e veja a cor</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-atalhos">
+      <button type="button" data-acao="T+">🔥 Aquecer</button>
+      <button type="button" data-acao="T-">❄️ Esfriar</button>
+      <button type="button" data-acao="P+">⬇️ Comprimir</button>
+      <button type="button" data-acao="P-">⬆️ Expandir</button>
+      <button type="button" data-acao="0">↺</button>
+    </div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O princípio de Le Chatelier</h2>
+  <p>Quando uma perturbação atinge um sistema em equilíbrio, ele se desloca no sentido que <b>diminui</b> essa perturbação.</p>
+  <ul class="au-pegadinhas">
+    <li><b>Concentração</b>: adicionou um reagente? O equilíbrio anda para os produtos, consumindo o que foi adicionado. Retirou um produto? Também anda para os produtos.</li>
+    <li><b>Temperatura</b>: aquecer favorece o sentido <b>endotérmico</b>; esfriar favorece o <b>exotérmico</b>.</li>
+    <li><b>Pressão</b> (gases): aumentar a pressão favorece o lado com <b>menos mols de gás</b>.</li>
+    <li><b>Catalisador</b> não desloca: só faz chegar ao equilíbrio mais rápido.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Equilíbrio é dinâmico</h2>
+  <div class="au-filme" data-filme="dinamico" aria-label="Animação: no equilíbrio as reações direta e inversa continuam acontecendo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Constante de equilíbrio</b> K = [produtos] ÷ [reagentes] (cada um elevado ao seu coeficiente). K grande: no equilíbrio há mais produtos.</li>
+    <li>Síntese da amônia (N₂ + 3 H₂ ⇌ 2 NH₃, exotérmica): pressão alta favorece a amônia (4 mols de gás → 2 mols).</li>
+    <li>No sangue, o equilíbrio do CO₂ com a água controla a acidez. Prender a respiração aumenta CO₂ e acidifica.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Aquecer favorece o sentido endotérmico. Se a reação direta é exotérmica, a inversa é endotérmica: o equilíbrio vai para os reagentes.">
+    <p>Numa reação exotérmica em equilíbrio, aumentar a temperatura desloca o equilíbrio:</p>
+    <button type="button" class="au-alt">para os produtos</button>
+    <button type="button" class="au-alt">para os reagentes</button>
+    <button type="button" class="au-alt">não desloca</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="N₂ + 3 H₂ (4 mols de gás) ⇌ 2 NH₃ (2 mols). Mais pressão favorece o lado com menos mols: a amônia.">
+    <p>Na síntese da amônia, N₂ + 3 H₂ ⇌ 2 NH₃, aumentar a pressão:</p>
+    <button type="button" class="au-alt">diminui a produção de amônia</button>
+    <button type="button" class="au-alt">não altera o equilíbrio</button>
+    <button type="button" class="au-alt">aumenta a produção de amônia</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="No equilíbrio, as duas reações continuam ocorrendo, com velocidades iguais; por isso as concentrações ficam constantes.">
+    <p>No equilíbrio químico:</p>
+    <button type="button" class="au-alt">as reações direta e inversa ocorrem com a mesma velocidade</button>
+    <button type="button" class="au-alt">a reação para completamente</button>
+    <button type="button" class="au-alt">as concentrações de reagentes e produtos são sempre iguais</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="equilibrio">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
