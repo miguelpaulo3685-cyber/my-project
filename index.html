@@ -292,8 +292,9 @@
       border-top: 1px solid var(--borda);
       background: var(--superficie-2);
       padding: 15px 24px;
-      display: flex; align-items: center; gap: 22px;
+      display: flex; align-items: center; gap: 22px; flex-wrap: wrap; row-gap: 12px;
     }
+    @media (max-width: 440px) { .area-rodape { gap: 14px; padding: 14px 18px; } }
     /* nota TRI estimada da area, embaixo do rodape */
     .tri-area {
       border-top: 1px solid var(--borda);
@@ -1992,6 +1993,7 @@
     .placar-final .simbolo { font-size: 3rem; display: block; margin-bottom: 12px; }
     .placar-final h2 { font-size: 1.85rem; font-weight: 800; letter-spacing: -.5px; margin-bottom: 7px; }
     .placar-final .frase { color: var(--texto-fraco); font-size: 1rem; margin-bottom: 4px; }
+    .placar-final .nivel-proximo { max-width: 420px; margin: 12px auto 0; padding: 10px 14px; border-radius: 12px; background: var(--marca-suave); font-size: .92rem; line-height: 1.45; }
     .placar-final .risco { width: 96px; height: 4px; border-radius: 4px; background: var(--marca); margin: 16px auto 30px; }
 
     .rotulo-acertos {
@@ -3533,6 +3535,7 @@
       <span class="simbolo" id="res-simbolo">📊</span>
       <h2 id="res-titulo"></h2>
       <p class="frase" id="res-frase"></p>
+      <p class="nivel-proximo" id="res-nivel" hidden></p>
       <div class="risco"></div>
 
       <div class="rotulo-acertos">Acertos</div>
@@ -5063,6 +5066,7 @@ function desenharAreas() {
         <div class="area-rodape">
           <div class="metrica"><b>${p.feitas}</b><span>Feitas</span></div>
           <div class="metrica"><b>${taxa}%</b><span>Acerto</span></div>
+          <div class="metrica"><b>${NIVEIS[nivelDoAluno(a.id)].nome}</b><span>Seu nível</span></div>
           <button class="acao" onclick="abrirMateria('${a.id}')">Treinar</button>
         </div>
         <div class="tri-area" title="Estimativa com a mesma TRI do ENEM e os parâmetros oficiais do INEP. Conta só a primeira resposta de cada questão.">
@@ -5108,6 +5112,30 @@ function nomeDaArea(id) {
 
 const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 const POR_BLOCO = 5;
+
+// ---------- bloco adaptativo ----------
+// Cada pessoa tem um nível por área (1 Fácil a 4 Desafio), guardado no aparelho.
+// O bloco vem com a maioria das questões no nível dela, uma mais fácil para
+// aquecer e uma mais difícil para testar se já dá para subir, nessa ordem.
+// No fim: acertou 4 ou 5, sobe; 3, fica; 2 ou menos, desce.
+const CHAVE_NIVEL_BLOCO = 'mm_nivel_bloco';
+const NIVEL_INICIAL = 2;
+const MONTAGEM_DO_BLOCO = { 1: [1, 1, 1, 1, 2], 2: [1, 2, 2, 2, 3], 3: [2, 3, 3, 3, 4], 4: [3, 4, 4, 4, 4] };
+function niveisGuardados() {
+  try { return JSON.parse(ler(CHAVE_NIVEL_BLOCO)) || {}; } catch (e) { return {}; }
+}
+function nivelDoAluno(area) {
+  const n = niveisGuardados()[area];
+  return [1, 2, 3, 4].includes(n) ? n : NIVEL_INICIAL;
+}
+function proximoNivel(nivel, acertos, total) {
+  if (acertos >= Math.ceil(total * 0.8)) return Math.min(4, nivel + 1);
+  if (acertos <= Math.floor(total * 0.4)) return Math.max(1, nivel - 1);
+  return nivel;
+}
+function guardarNivel(area, nivel) {
+  guardar(CHAVE_NIVEL_BLOCO, JSON.stringify({ ...niveisGuardados(), [area]: nivel }));
+}
 
 // O nível vem do servidor. Quando a questão foi encontrada nos microdados do
 // INEP, é a dificuldade oficial da TRI (comparada às outras questões do ENEM
@@ -5178,7 +5206,9 @@ async function abrirMateria(area) {
 
   let questoes = [];
   try {
-    const r = await fetch(`${API_URL}/api/questoes/${area}${visitaNoProximoBloco ? '?com_tri=1' : ''}`);
+    const pedido = new URLSearchParams({ niveis: MONTAGEM_DO_BLOCO[nivelDoAluno(area)].join(',') });
+    if (visitaNoProximoBloco) pedido.set('com_tri', '1');
+    const r = await fetch(`${API_URL}/api/questoes/${area}?${pedido}`);
     if (r.status === 404) {
       painel.innerHTML = `<div class="vazio"><span class="cara">📭</span>
         Ainda não há questões de ${escapar(nomeDaArea(area))} no banco.</div>`;
@@ -5200,7 +5230,7 @@ async function abrirMateria(area) {
   }
 
   buscarContagemDiscussao(questoes.map(q => q.id));
-  bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(),
+  bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(), nivel: nivelDoAluno(area),
             notaAntes: notasTri[area] ? notasTri[area].nota : null, visita: visitaNoProximoBloco };
   visitaNoProximoBloco = false;
   atualizarTrilho();
@@ -5731,6 +5761,23 @@ function mostrarResultado() {
     titulo = nome ? `Não desanime, ${nome}!` : 'Não desanime!';
     frase = 'A prática leva à perfeição!';
   }
+
+  // Bloco inteiro respondido: ajusta o nível desta área para o próximo bloco.
+  const nivelEl = document.getElementById('res-nivel');
+  if (bloco.nivel && total === bloco.questoes.length) {
+    const novo = proximoNivel(bloco.nivel, acertos, total);
+    guardarNivel(materiaAtual, novo);
+    const nome = NIVEIS[novo].nome;
+    nivelEl.innerHTML = novo > bloco.nivel
+      ? (novo === 4 ? '🔥 Você subiu para o nível <b>Desafio</b>: o próximo bloco traz as questões mais difíceis do ENEM.'
+        : `⬆️ Você subiu para o nível <b>${nome}</b>: o próximo bloco vem um pouco mais difícil.`)
+      : novo < bloco.nivel
+        ? `🧱 Vamos firmar a base: o próximo bloco vem no nível <b>${nome}</b>. Quando você começar a acertar, a dificuldade volta a subir.`
+        : novo === 4
+          ? '🔥 Você segue no nível <b>Desafio</b>, o mais alto: as questões mais difíceis do ENEM. Continue assim!'
+          : `🎯 Próximo bloco: continua no nível <b>${nome}</b>. Acerte 4 de 5 para subir.`;
+    nivelEl.hidden = false;
+  } else nivelEl.hidden = true;
 
   document.getElementById('res-simbolo').textContent = simbolo;
   document.getElementById('res-titulo').textContent = titulo;

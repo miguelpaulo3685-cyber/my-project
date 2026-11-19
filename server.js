@@ -752,27 +752,47 @@ app.get('/api/questoes/:area', async (req, res) => {
   // Primeira visita guiada (?com_tri=1): prefere questões com os parâmetros do
   // INEP, para a nota TRI sair já no fim das 5.
   const comTri = req.query.com_tri === '1';
+  // Bloco adaptativo (?niveis=1,2,2,2,3): o site manda os níveis que quer, conforme
+  // os acertos da pessoa nos blocos anteriores desta área. Sem o pedido, vem sorteado.
+  const niveis = String(req.query.niveis || '').split(',').map(Number).filter(n => [1, 2, 3, 4].includes(n)).slice(0, 10);
 
   try {
     // Junta as respostas já dadas para calcular o nível de cada questão.
-    const result = await pool.query(
+    const buscar = (filtro, params, limite) => pool.query(
       `SELECT q.*,
               COUNT(r.id)::int AS total_respostas,
               COALESCE(AVG(CASE WHEN r.acertou THEN 1.0 ELSE 0 END), 0)::float AS taxa_acerto
          FROM questoes q
          LEFT JOIN respostas r ON r.questao_id = q.id
-        WHERE q.disciplina = $1 AND ${questaoCompletaSql('q.contexto')}
+        WHERE q.disciplina = $1 AND ${questaoCompletaSql('q.contexto')} AND NOT (q.id = ANY($2::int[]))${filtro}
         GROUP BY q.id
         ORDER BY ${comTri ? '(q.tri_b IS NULL), ' : ''}RANDOM()
-        LIMIT 5`,
-      [disciplina]
-    );
+        LIMIT ${limite}`,
+      [disciplina, ...params]);
+    const escolhidas = [];
+    const ids = () => escolhidas.map(q => q.id);
+    if (niveis.length) {
+      const quantos = niveis.reduce((c, n) => ({ ...c, [n]: (c[n] || 0) + 1 }), {});
+      for (const [nivel, n] of Object.entries(quantos)) {
+        const faixa = tri.faixaDoNivel(CORTES_TRI, disciplina, Number(nivel));
+        if (!faixa) continue;
+        const { rows } = await buscar(' AND q.tri_b IS NOT NULL AND ($3::float IS NULL OR q.tri_b > $3) AND ($4::float IS NULL OR q.tri_b <= $4)',
+          [ids(), faixa.min, faixa.max], n);
+        escolhidas.push(...rows);
+      }
+    }
+    // Sem pedido de nível, ou faltou questão de algum nível: completa com sorteadas.
+    const total = niveis.length || 5;
+    if (escolhidas.length < total) escolhidas.push(...(await buscar('', [ids()], total - escolhidas.length)).rows);
+    const result = { rows: escolhidas };
 
     result.rows.forEach(q => {
       Object.assign(q, nivelDaQuestao(q, q.total_respostas, q.taxa_acerto));
       delete q.taxa_acerto; // não expõe o gabarito indireto de quem acerta
       for (const campo of ['tri_item', 'tri_a', 'tri_b', 'tri_c']) delete q[campo];
     });
+    // Bloco adaptativo: da mais fácil para a mais difícil (aquece antes do desafio).
+    if (niveis.length) result.rows.sort((x, y) => (x.nivel || 2.5) - (y.nivel || 2.5));
 
     if (result.rows.length === 0) {
       return res.status(404).json({ message: 'Nenhuma questão em cache. Atualizando...' });

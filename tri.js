@@ -83,6 +83,14 @@ function calcularCortes(porAno) {
   return cortes;
 }
 
+// Faixa do parâmetro b (dificuldade do INEP) de cada nível, para buscar no banco:
+// { min, max } com min exclusivo e max inclusivo; null = sem limite. O inverso de nivelPelaTri.
+function faixaDoNivel(cortes, disciplina, nivel) {
+  const c = cortes[SIGLA_DA_DISCIPLINA[disciplina]];
+  if (!c || ![1, 2, 3, 4].includes(nivel)) return null;
+  return { min: nivel === 1 ? null : c[nivel - 2], max: nivel === 4 ? null : c[nivel - 1] };
+}
+
 function nivelPelaTri(cortes, disciplina, b) {
   const c = cortes[SIGLA_DA_DISCIPLINA[disciplina]];
   if (!c || b === null || b === undefined) return null;
@@ -252,6 +260,6 @@ function notasPorArea(respostas, areaDaDisciplina) {
 }
 
 module.exports = {
-  carregar, calcularCortes, nivelPelaTri, casar, SIGLA_DA_DISCIPLINA,
+  carregar, calcularCortes, nivelPelaTri, faixaDoNivel, casar, SIGLA_DA_DISCIPLINA,
   chanceDeAcertar, estimarNota, notasPorArea, MINIMO_PARA_NOTA
 };

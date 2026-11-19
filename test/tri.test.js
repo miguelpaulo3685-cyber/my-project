@@ -124,3 +124,17 @@ test('nota por área: só aparece a partir de 5 questões', () => {
   const cinco = tri.notasPorArea(com(5), mapa).humanas;
   assert.ok(Number.isInteger(cinco.nota) && cinco.margem > 0);
 });
+
+test('tri: faixa de cada nível é o inverso de nivelPelaTri', () => {
+  const t = require('../tri');
+  const cortes = { MT: [0.5, 1.2, 2.0] };
+  for (const b of [-1, 0.5, 0.51, 1.2, 1.5, 2.0, 2.01, 3]) {
+    const nivel = t.nivelPelaTri(cortes, 'matematica', b);
+    const f = t.faixaDoNivel(cortes, 'matematica', nivel);
+    assert.ok((f.min === null || b > f.min) && (f.max === null || b <= f.max), `b=${b} nível ${nivel}`);
+  }
+  assert.deepStrictEqual(t.faixaDoNivel(cortes, 'matematica', 1), { min: null, max: 0.5 });
+  assert.deepStrictEqual(t.faixaDoNivel(cortes, 'matematica', 4), { min: 2.0, max: null });
+  assert.strictEqual(t.faixaDoNivel(cortes, 'matematica', 7), null);
+  assert.strictEqual(t.faixaDoNivel({}, 'matematica', 2), null);
+});
