@@ -1,0 +1,84 @@
+<header>
+  <div class="au-trilha">Física · Módulo 2 · Aula 3</div>
+  <h1>Gravitação e satélites</h1>
+  <p class="au-abre">A mesma força que faz a maçã cair segura a Lua em volta da Terra e os satélites de GPS no céu. Por que o astronauta flutua na Estação Espacial, se lá em cima a gravidade ainda é quase a mesma? A resposta é que ele está caindo o tempo todo.</p>
+</header>
+
+<section class="au-cena" aria-label="Satélite em órbita: escolha a altura">
+  <div class="au-loja">Em órbita da Terra <small>escolha a altura do satélite e veja a velocidade e o tempo de uma volta</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Exemplos">
+      <button type="button" data-h="400">🛰️ Estação Espacial</button>
+      <button type="button" data-h="20200">📍 GPS</button>
+      <button type="button" data-h="35786">📡 TV (geoestacionário)</button>
+      <button type="button" data-h="384400">🌙 Lua</button>
+    </div>
+    <svg viewBox="0 0 320 220" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Lei da gravitação universal</h2>
+  <p>Todo corpo com massa atrai todo outro corpo. A força é <b>F = G · M · m ÷ d²</b>: cresce com as massas e <b>cai com o quadrado da distância</b>. Dobrando a distância, a força fica <b>4 vezes menor</b>; triplicando, 9 vezes menor.</p>
+  <p>É por isso que a gravidade na superfície da Terra é g ≈ 10 m/s², na Lua (menor massa) é cerca de 1,6 m/s², e longe da Terra ela vai enfraquecendo, mas nunca chega a zero.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Por que o satélite não cai? (Ele cai!)</h2>
+  <p>Um satélite está sempre caindo em direção à Terra, mas anda tão rápido para o lado que a superfície "foge" curvada embaixo dele: ele cai em volta, sem nunca chegar ao chão. A gravidade faz o papel da <b>força centrípeta</b>. Quanto mais perto, mais rápido ele precisa andar.</p>
+  <div class="au-filme" data-filme="canhao" aria-label="Animação: bolas lançadas cada vez mais rápido do alto de uma montanha caem cada vez mais longe, até a mais rápida dar a volta na Terra"></div>
+  <p>O astronauta na Estação flutua porque ele e a estação estão caindo juntos, com a mesma aceleração: é a <b>imponderabilidade</b>. A gravidade lá em cima ainda é cerca de 90% da daqui.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Leis de Kepler, sem mistério</h2>
+  <ul class="au-pegadinhas">
+    <li><b>1ª</b>: as órbitas dos planetas são <b>elipses</b>, com o Sol num dos focos.</li>
+    <li><b>2ª</b>: o planeta anda <b>mais rápido perto do Sol</b> (periélio) e mais devagar longe (afélio).</li>
+    <li><b>3ª</b>: quanto mais longe, mais tempo leva uma volta (T² proporcional ao raio³). Mercúrio dá a volta em 88 dias; Netuno, em 165 anos.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Astronauta flutuando <b>não</b> é "falta de gravidade": é queda livre junto com a nave.</li>
+    <li>Satélite <b>geoestacionário</b> (TV, meteorologia) dá uma volta em 24 h, junto com a Terra, e parece parado no céu, a uns 36 000 km de altura, sobre o equador.</li>
+    <li>A velocidade de um satélite <b>não depende da massa dele</b>, só da altura.</li>
+    <li>As marés são causadas principalmente pela atração da Lua.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="F é proporcional a 1/d². Com 3 vezes a distância, a força fica 3² = 9 vezes menor.">
+    <p>Se a distância entre dois corpos triplica, a força gravitacional entre eles fica:</p>
+    <button type="button" class="au-alt">9 vezes menor</button>
+    <button type="button" class="au-alt">3 vezes menor</button>
+    <button type="button" class="au-alt">igual</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Os astronautas e a estação estão em queda livre juntos em volta da Terra; por isso flutuam em relação à nave. A gravidade lá é cerca de 90% da superfície.">
+    <p>Os astronautas flutuam dentro da Estação Espacial porque:</p>
+    <button type="button" class="au-alt">lá não existe gravidade</button>
+    <button type="button" class="au-alt">a Lua puxa os astronautas para cima</button>
+    <button type="button" class="au-alt">eles e a estação estão em queda livre juntos, em volta da Terra</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O geoestacionário leva 24 h para dar uma volta, o mesmo tempo da rotação da Terra, por isso fica sempre sobre o mesmo ponto.">
+    <p>A antena parabólica fica sempre apontada para o mesmo lugar do céu porque o satélite de TV:</p>
+    <button type="button" class="au-alt">está parado no espaço</button>
+    <button type="button" class="au-alt">dá uma volta a cada 24 h, acompanhando a rotação da Terra</button>
+    <button type="button" class="au-alt">fica sobre o polo norte</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="gravitacao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Física · Módulo 2 · Aula 2</div>
+  <h1>Atrito e plano inclinado</h1>
+  <p class="au-abre">Sem atrito você não andaria (o pé escorregaria), o carro não frearia e nenhum prego ficaria na parede. O atrito atrapalha às vezes, mas quase sempre é ele que segura o mundo no lugar. Numa rampa, ele decide se a caixa fica parada ou escorrega.</p>
+</header>
+
+<section class="au-cena" aria-label="Caixa numa rampa: inclinação e tipo de superfície">
+  <div class="au-loja">A caixa escorrega? <small>mude a inclinação da rampa e a superfície</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Superfície">
+      <button type="button" data-mi="0.1">🧊 Gelo (μ = 0,1)</button>
+      <button type="button" data-mi="0.4">🪵 Madeira (μ = 0,4)</button>
+      <button type="button" data-mi="0.8">🛞 Borracha (μ = 0,8)</button>
+    </div>
+    <svg viewBox="0 0 320 200" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-ang">Inclinação</label><input id="au-ang" type="range" min="0" max="60" step="1" value="20"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Atrito: a força que segura</h2>
+  <ul class="au-pegadinhas">
+    <li>O atrito aparece entre duas superfícies e sempre <b>contra o deslizamento</b> (ou contra a tendência de deslizar).</li>
+    <li><b>Atrito estático</b>: com o corpo parado, ele "segura" até um limite máximo, <b>F = μ · N</b> (μ é o coeficiente de atrito; N é a força normal, que o chão faz).</li>
+    <li><b>Atrito dinâmico</b>: depois que escorrega, o atrito fica um pouco menor. Por isso é mais fácil manter um armário andando do que tirá-lo do lugar.</li>
+    <li>Quanto mais o corpo aperta a superfície (maior a normal), maior o atrito.</li>
+  </ul>
+  <div class="au-filme" data-filme="estatico" aria-label="Animação: empurrando cada vez mais forte, o armário só começa a andar quando a força passa do atrito máximo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>No plano inclinado</h2>
+  <p>Na rampa, o peso se divide em duas partes: uma que <b>empurra a caixa rampa abaixo</b> (P · sen θ) e outra que <b>aperta a caixa contra a rampa</b> (P · cos θ, que vira a normal). A caixa escorrega quando a parte que empurra passa do atrito máximo: quando <b>tg θ &gt; μ</b>. Quanto mais inclinada, mais empurra e menos aperta.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Freio ABS</b>: impede a roda de travar. Rodando sem deslizar, o pneu usa o atrito <b>estático</b>, que é maior que o dinâmico: o carro para em menos espaço e continua dando para virar.</li>
+    <li>Pneu careca e pista molhada: menos atrito, distância de frenagem maior.</li>
+    <li>Ao andar, o pé empurra o chão para trás e o atrito empurra você para frente.</li>
+    <li>O atrito não depende da área de contato (nos exercícios), só do tipo de superfície (μ) e da normal.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Atrito máximo = μ · N = 0,5 × 200 = 100 N. Com 80 N, a força não passa do atrito máximo e o armário fica parado.">
+    <p>Um armário com normal de 200 N está num chão com μ = 0,5. Empurrando com 80 N, ele:</p>
+    <button type="button" class="au-alt">anda com aceleração constante</button>
+    <button type="button" class="au-alt">anda com velocidade constante</button>
+    <button type="button" class="au-alt">fica parado, porque o atrito segura até 100 N</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Sem travar, a roda usa o atrito estático, que é maior que o dinâmico (roda travada derrapando).">
+    <p>O freio ABS reduz a distância de frenagem porque:</p>
+    <button type="button" class="au-alt">mantém o atrito estático, que é maior que o dinâmico</button>
+    <button type="button" class="au-alt">aumenta a massa do carro</button>
+    <button type="button" class="au-alt">elimina o atrito com o chão</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Ao caminhar, o pé empurra o chão para trás; o atrito no pé aponta para frente e é ele que nos move.">
+    <p>Quando uma pessoa caminha, a força de atrito que o chão faz no pé dela aponta:</p>
+    <button type="button" class="au-alt">para trás</button>
+    <button type="button" class="au-alt">para frente</button>
+    <button type="button" class="au-alt">para cima</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="atrito">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

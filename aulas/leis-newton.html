@@ -1,0 +1,76 @@
+<header>
+  <div class="au-trilha">Física · Módulo 2 · Aula 1</div>
+  <h1>As três leis de Newton</h1>
+  <p class="au-abre">Por que o corpo vai para frente quando o ônibus freia? Por que é mais difícil empurrar um carro do que uma bicicleta? Como o foguete sobe se não tem onde se apoiar? Três leis, escritas há mais de 300 anos, explicam tudo isso e caem em todo ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Empurre a caixa: força, massa e aceleração">
+  <div class="au-loja">Empurre a caixa <small>escolha a força e a massa, e empurre por 3 segundos (sem atrito)</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 130" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-f">Força</label><input id="au-f" type="range" min="0" max="100" step="10" value="40"><output id="au-of"></output></div>
+    <div class="au-controle"><label for="au-m">Massa</label><input id="au-m" type="range" min="5" max="50" step="5" value="20"><output id="au-om"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-empurrar">▶ Empurrar por 3 s</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>1ª Lei: inércia</h2>
+  <p>Um corpo <b>parado continua parado</b> e um corpo <b>em movimento continua em linha reta com a mesma velocidade</b>, a não ser que uma força resultante mude isso. É a <b>inércia</b>: a "preguiça" de mudar o movimento. Quanto mais massa, mais inércia.</p>
+  <div class="au-filme" data-filme="cinto" aria-label="Animação: o carro bate e para, mas o boneco continua indo para frente até o cinto segurar"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>2ª Lei: F = m · a</h2>
+  <p>A <b>força resultante</b> (a soma de todas as forças) é igual à massa vezes a aceleração: <b>F = m · a</b>. Mesma força em massa maior, aceleração menor. Força em newtons (N), massa em kg, aceleração em m/s². O <b>peso</b> é um caso dessa lei: <b>P = m · g</b>, e uma pessoa de 60 kg pesa 600 N.</p>
+  <p>Se as forças se cancelam (resultante zero), não há aceleração: o corpo fica parado <b>ou</b> anda com velocidade constante. Velocidade constante não precisa de força "para manter".</p>
+</section>
+
+<section class="au-bloco">
+  <h2>3ª Lei: ação e reação</h2>
+  <p>Toda força tem um par: se A empurra B, B empurra A com a <b>mesma intensidade</b> e sentido <b>oposto</b>. O foguete empurra os gases para baixo e os gases empurram o foguete para cima; o nadador empurra a água para trás e vai para frente. Ação e reação agem em <b>corpos diferentes</b>, por isso não se anulam.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Cinto de segurança e apoio de cabeça: estão lá por causa da <b>inércia</b> (1ª lei).</li>
+    <li>Massa (kg) não muda; <b>peso</b> (N) depende da gravidade. Na Lua você tem a mesma massa e pesa cerca de 1/6.</li>
+    <li>O peso e a força do chão (normal) <b>não</b> são ação e reação: agem no mesmo corpo. O par do peso é a força com que você puxa a Terra.</li>
+    <li>Na batida entre um caminhão e um carro, as forças são <b>iguais</b>; o carro sofre mais porque tem menos massa (acelera mais).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="F = m · a → 60 = 20 · a → a = 3 m/s².">
+    <p>Uma força resultante de 60 N age numa caixa de 20 kg. A aceleração é:</p>
+    <button type="button" class="au-alt">1 200 m/s²</button>
+    <button type="button" class="au-alt">3 m/s²</button>
+    <button type="button" class="au-alt">0,3 m/s²</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Quando o ônibus freia, o corpo tende a continuar com a velocidade que tinha (inércia), e vai para frente.">
+    <p>Quando o ônibus freia de repente, os passageiros em pé são lançados para frente. Isso se explica pela:</p>
+    <button type="button" class="au-alt">1ª lei (inércia)</button>
+    <button type="button" class="au-alt">3ª lei (ação e reação)</button>
+    <button type="button" class="au-alt">lei da gravitação</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Pela 3ª lei, a força que um faz no outro tem a mesma intensidade. O carro sofre mais porque, com menos massa, tem aceleração maior.">
+    <p>Um caminhão bate de frente num carro pequeno. Sobre as forças que um faz no outro durante a batida:</p>
+    <button type="button" class="au-alt">o caminhão faz mais força</button>
+    <button type="button" class="au-alt">o carro faz mais força</button>
+    <button type="button" class="au-alt">as forças têm a mesma intensidade</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="leis-newton">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

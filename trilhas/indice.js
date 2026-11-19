@@ -15,7 +15,8 @@ window.TRILHAS_MM = {
     'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log',
     'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia',
     'angulos-tales', 'triangulos', 'poligonos', 'areas',
-    'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular'],
+    'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular',
+    'leis-newton', 'atrito', 'gravitacao'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -88,7 +89,7 @@ window.TRILHAS_MM = {
       { id: 'fis1', nome: 'Movimento (cinemática)', sobre: 'Velocidade, aceleração, queda e giros: a base de toda a Física do ENEM.', teste: true, aulas: [
         ['velocidade-media', 'Velocidade média e unidades', '🚗'], ['cinematica', 'MRU e MRUV: os gráficos do movimento', '📈'],
         ['queda-livre', 'Queda livre e lançamentos', '🍎'], ['movimento-circular', 'Movimento circular e engrenagens', '🚲']] },
-      { id: 'fis2', nome: 'Leis de Newton', sobre: 'Força, massa e aceleração no dia a dia: freio, cinto de segurança, elevador.', aulas: [
+      { id: 'fis2', nome: 'Leis de Newton', sobre: 'Força, massa e aceleração no dia a dia: freio, cinto de segurança, elevador.', teste: true, aulas: [
         ['leis-newton', 'As três leis de Newton', '🚀'], ['atrito', 'Atrito e plano inclinado', '🛷'], ['gravitacao', 'Gravitação e satélites', '🛰️']] },
       { id: 'fis3', nome: 'Energia e quantidade de movimento', sobre: 'Transformações de energia, potência e colisões.', aulas: [
         ['trabalho-energia', 'Trabalho, energia cinética e potencial', '🎢'], ['conservacao-energia', 'Conservação e usinas de energia', '⚡'],
