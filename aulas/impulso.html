@@ -1,0 +1,75 @@
+<header>
+  <div class="au-trilha">Física · Módulo 3 · Aula 4</div>
+  <h1>Impulso e colisões</h1>
+  <p class="au-abre">Por que o airbag salva vidas? Por que o goleiro recua as mãos ao segurar a bola? E numa batida entre dois carrinhos, como saber para onde cada um vai? Tudo se resolve com uma grandeza: a quantidade de movimento.</p>
+</header>
+
+<section class="au-cena" aria-label="Colisão entre dois carrinhos">
+  <div class="au-loja">Colisão de carrinhos <small>escolha as massas, a velocidade do azul e o tipo de batida (o amarelo começa parado)</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Tipo de colisão">
+      <button type="button" data-tipo="gruda">🧲 Grudam juntos</button>
+      <button type="button" data-tipo="elastica">🏓 Batem e se separam</button>
+    </div>
+    <svg viewBox="0 0 320 120" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-m1">Massa azul</label><input id="au-m1" type="range" min="1" max="6" value="2"><output id="au-o1"></output></div>
+    <div class="au-controle"><label for="au-m2">Massa amarela</label><input id="au-m2" type="range" min="1" max="6" value="2"><output id="au-o2"></output></div>
+    <div class="au-controle"><label for="au-v">Velocidade azul</label><input id="au-v" type="range" min="1" max="10" value="6"><output id="au-o3"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-bater">▶ Bater</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Quantidade de movimento</h2>
+  <p>A <b>quantidade de movimento</b> (ou momento linear) é <b>Q = m · v</b>. Um caminhão devagar pode ter tanta quantidade de movimento quanto uma bala rápida. Numa colisão, sem forças de fora atrapalhando, <b>a quantidade de movimento total antes é igual à de depois</b>. É isso que permite prever o resultado de batidas, explosões e até do recuo da espingarda.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Impulso: força × tempo</h2>
+  <p>O <b>impulso</b> é <b>I = F · Δt</b>, e ele é igual à variação da quantidade de movimento. Para parar uma pessoa a 50 km/h, o impulso é sempre o mesmo; o que muda é o tempo. Se a parada demora mais, a <b>força é menor</b>. É o segredo do airbag, do capacete com espuma, da areia no salto em distância e das mãos do goleiro que recuam.</p>
+  <div class="au-filme" data-filme="airbag" aria-label="Animação: parar no painel leva pouco tempo e a força é enorme; parar no airbag leva mais tempo e a força é pequena"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Airbag, cinto que estica um pouco, carroceria que amassa: todos <b>aumentam o tempo</b> da parada e <b>diminuem a força</b>. O impulso é o mesmo.</li>
+    <li>Quando os corpos <b>grudam</b>, a quantidade de movimento se conserva, mas parte da energia cinética vira calor e deformação.</li>
+    <li>Explosão ou disparo: antes tudo parado (Q = 0), depois as partes saem para lados opostos. Por isso a arma recua.</li>
+    <li>Quantidade de movimento tem direção: para a esquerda conta com sinal negativo.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Antes: Q = 2 × 6 = 12. Grudados, a massa é 4: v = 12 ÷ 4 = 3 m/s.">
+    <p>Um carrinho de 2 kg a 6 m/s bate num de 2 kg parado e eles grudam. A velocidade dos dois juntos é:</p>
+    <button type="button" class="au-alt">3 m/s</button>
+    <button type="button" class="au-alt">6 m/s</button>
+    <button type="button" class="au-alt">12 m/s</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O impulso (variação da quantidade de movimento) é o mesmo; o airbag aumenta o tempo da parada, e assim diminui a força.">
+    <p>O airbag reduz os ferimentos numa batida porque:</p>
+    <button type="button" class="au-alt">diminui a velocidade do carro antes da batida</button>
+    <button type="button" class="au-alt">diminui a quantidade de movimento da pessoa</button>
+    <button type="button" class="au-alt">aumenta o tempo da parada, e a força sobre a pessoa fica menor</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Antes do disparo, Q = 0. Depois, a bala vai para frente e a arma precisa ir para trás para a soma continuar zero.">
+    <p>Uma espingarda recua ao disparar porque:</p>
+    <button type="button" class="au-alt">o ar empurra a arma</button>
+    <button type="button" class="au-alt">a quantidade de movimento total continua zero: a bala vai para frente e a arma para trás</button>
+    <button type="button" class="au-alt">a bala é mais pesada que a arma</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="impulso">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

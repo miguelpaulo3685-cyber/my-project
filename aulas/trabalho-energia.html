@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Física · Módulo 3 · Aula 1</div>
+  <h1>Trabalho, energia cinética e potencial</h1>
+  <p class="au-abre">Energia é a capacidade de fazer algo acontecer: mover, aquecer, iluminar. Um carro em movimento tem energia por estar andando; uma caixa no alto da prateleira tem energia por estar lá em cima, pronta para cair. O ENEM cobra muito as duas, e uma conta derruba muita gente: a velocidade entra ao quadrado.</p>
+</header>
+
+<section class="au-cena" aria-label="Energia de um carro em movimento e de uma caixa no alto">
+  <div class="au-loja">Quanta energia? <small>escolha o caso e mexa na massa e na velocidade (ou na altura)</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Caso">
+      <button type="button" data-modo="cinetica">🚗 Carro andando</button>
+      <button type="button" data-modo="potencial">📦 Caixa no alto</button>
+    </div>
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-m">Massa</label><input id="au-m" type="range"><output id="au-om"></output></div>
+    <div class="au-controle"><label for="au-x" id="au-rx"></label><input id="au-x" type="range"><output id="au-ox"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Trabalho: força que desloca</h2>
+  <p>Em Física, <b>trabalho</b> é a energia transferida quando uma força desloca um corpo: <b>W = F · d</b> (força na direção do movimento vezes a distância), medido em <b>joules (J)</b>. Segurar uma mala parado, por mais cansativo que seja, não realiza trabalho: não há deslocamento.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>As duas energias da mecânica</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Cinética</b> (do movimento): <b>Ec = m · v² ÷ 2</b>. Dobrar a velocidade <b>quadruplica</b> a energia: por isso batidas a 80 km/h são muito piores que a 40.</li>
+    <li><b>Potencial gravitacional</b> (da altura): <b>Ep = m · g · h</b>. Dobrar a altura dobra a energia.</li>
+    <li><b>Potencial elástica</b> (mola ou elástico esticado): Ee = k · x² ÷ 2.</li>
+    <li>O trabalho da força resultante é igual à <b>variação da energia cinética</b> (teorema da energia cinética).</li>
+  </ul>
+  <div class="au-filme" data-filme="quadrado" aria-label="Animação: dobrando a velocidade, a energia do carro fica quatro vezes maior"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Velocidade em <b>m/s</b> na fórmula (divida km/h por 3,6) e massa em <b>kg</b>.</li>
+    <li>Distância de frenagem é proporcional à energia cinética: dobrou a velocidade, a frenagem fica <b>4 vezes</b> maior.</li>
+    <li>Peso e trabalho: subir uma escada ou uma rampa até a mesma altura dá o <b>mesmo trabalho</b> contra a gravidade (m · g · h); a rampa só exige menos força por mais distância.</li>
+    <li>1 kWh (da conta de luz) = 3 600 000 J.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Ec = m · v² ÷ 2: com o dobro da velocidade, v² fica 4 vezes maior, e a energia também.">
+    <p>Se um carro passa de 40 km/h para 80 km/h, sua energia cinética:</p>
+    <button type="button" class="au-alt">dobra</button>
+    <button type="button" class="au-alt">fica igual</button>
+    <button type="button" class="au-alt">fica 4 vezes maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Ep = m · g · h = 2 × 10 × 3 = 60 J.">
+    <p>Uma caixa de 2 kg está numa prateleira a 3 m do chão (g = 10 m/s²). Sua energia potencial é:</p>
+    <button type="button" class="au-alt">60 J</button>
+    <button type="button" class="au-alt">6 J</button>
+    <button type="button" class="au-alt">600 J</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Sem deslocamento não há trabalho (W = F · d, com d = 0), mesmo que os músculos se cansem.">
+    <p>Uma pessoa segura uma mala parada no ar por 5 minutos. O trabalho que ela realiza sobre a mala é:</p>
+    <button type="button" class="au-alt">grande, porque cansa</button>
+    <button type="button" class="au-alt">zero, porque a mala não se desloca</button>
+    <button type="button" class="au-alt">igual ao peso da mala</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="trabalho-energia">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

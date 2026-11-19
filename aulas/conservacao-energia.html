@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Física · Módulo 3 · Aula 2</div>
+  <h1>Conservação da energia e usinas</h1>
+  <p class="au-abre">Energia não se cria nem se destrói: só muda de forma. Na montanha-russa, a altura vira velocidade e a velocidade vira altura de novo. Numa usina hidrelétrica, a água que cai vira eletricidade. Entender essas trocas resolve boa parte da Física do ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Carrinho de montanha-russa trocando energia potencial e cinética">
+  <div class="au-loja">Montanha-russa <small>solte o carrinho e acompanhe as barras de energia; ligue o atrito para ver a perda</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Atrito">
+      <button type="button" data-atrito="0">Sem atrito</button>
+      <button type="button" data-atrito="1">Com atrito</button>
+    </div>
+    <svg viewBox="0 0 320 245" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-h">Altura inicial</label><input id="au-h" type="range" min="20" max="50" step="5" value="40"><output id="au-o"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-soltar">▶ Soltar o carrinho</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A energia mecânica se conserva (sem atrito)</h2>
+  <p>A <b>energia mecânica</b> é a soma da cinética com a potencial. Sem atrito e sem resistência do ar, ela fica <b>constante</b>: o que se perde de altura se ganha de velocidade. Por isso, de uma altura h, um corpo chega embaixo com <b>v = √(2 · g · h)</b>, qualquer que seja o caminho e a massa.</p>
+  <p>Com atrito, parte da energia mecânica vira <b>calor</b> e som. Ela não some: só deixa de ser útil para o movimento. Por isso o carrinho real nunca volta à altura de onde saiu.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Usinas: de onde vem a eletricidade</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Hidrelétrica</b>: potencial da água na represa → cinética da água → turbina → gerador (elétrica). Renovável, mas alaga grandes áreas.</li>
+    <li><b>Termelétrica</b> (carvão, gás, óleo, biomassa): química → calor → vapor → turbina → elétrica. Emite CO₂ (menos na biomassa).</li>
+    <li><b>Nuclear</b>: energia do núcleo → calor → vapor → turbina. Não emite CO₂, mas gera lixo radioativo.</li>
+    <li><b>Eólica</b>: cinética do vento → turbina. <b>Solar fotovoltaica</b>: luz → elétrica direto, sem turbina.</li>
+  </ul>
+  <div class="au-filme" data-filme="usina" aria-label="Animação: a água desce da represa, gira a turbina e o gerador produz eletricidade"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Quase toda usina gira uma <b>turbina</b> ligada a um <b>gerador</b>. A exceção que cai muito é a <b>solar fotovoltaica</b>.</li>
+    <li>"Perda" de energia quase sempre é energia que virou <b>calor</b> (atrito, resistência elétrica).</li>
+    <li>A velocidade no fim da descida <b>não depende da massa</b>, só da altura (sem atrito).</li>
+    <li>Siga a cadeia de transformações na ordem: a questão costuma pedir a sequência certa.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="v = √(2 · g · h) = √(2 × 10 × 20) = √400 = 20 m/s.">
+    <p>Sem atrito, um carrinho parte do repouso a 20 m de altura (g = 10 m/s²). Ao chegar embaixo, sua velocidade é:</p>
+    <button type="button" class="au-alt">200 m/s</button>
+    <button type="button" class="au-alt">20 m/s</button>
+    <button type="button" class="au-alt">10 m/s</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Na hidrelétrica: a água tem energia potencial na represa, que vira cinética ao descer, gira a turbina e o gerador produz energia elétrica.">
+    <p>A sequência de transformações numa usina hidrelétrica é:</p>
+    <button type="button" class="au-alt">potencial → cinética → elétrica</button>
+    <button type="button" class="au-alt">química → térmica → elétrica</button>
+    <button type="button" class="au-alt">luminosa → elétrica</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Com atrito, parte da energia mecânica vira calor; o carrinho não tem energia para subir até a altura inicial.">
+    <p>Um carrinho real de montanha-russa nunca volta à altura de onde partiu porque:</p>
+    <button type="button" class="au-alt">a energia some no caminho</button>
+    <button type="button" class="au-alt">a massa dele diminui</button>
+    <button type="button" class="au-alt">parte da energia mecânica vira calor pelo atrito</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="conservacao-energia">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

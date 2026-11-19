@@ -1,0 +1,73 @@
+<header>
+  <div class="au-trilha">Física · Módulo 3 · Aula 3</div>
+  <h1>Potência e rendimento</h1>
+  <p class="au-abre">Dois elevadores levam a mesma carga ao 10º andar, mas um chega na metade do tempo: ele tem mais potência. Duas lâmpadas iluminam igual, mas uma esquenta muito mais: ela tem rendimento menor. Potência é rapidez para transformar energia; rendimento é quanto dela vira o que você queria.</p>
+</header>
+
+<section class="au-cena" aria-label="Lâmpadas: quanta energia vira luz e quanta vira calor">
+  <div class="au-loja">Para onde vai a energia? <small>escolha o aparelho e veja quanto vira o que você quer e quanto se perde</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Aparelho">
+      <button type="button" data-ap="incandescente">💡 Lâmpada incandescente</button>
+      <button type="button" data-ap="led">🔆 Lâmpada LED</button>
+      <button type="button" data-ap="motor">🚗 Motor a gasolina</button>
+      <button type="button" data-ap="eletrico">⚡ Motor elétrico</button>
+    </div>
+    <svg viewBox="0 0 320 130" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Potência: energia por tempo</h2>
+  <p><b>Potência = energia ÷ tempo</b> (ou trabalho ÷ tempo), medida em <b>watts (W)</b>: 1 W = 1 joule por segundo. Um chuveiro de 5 500 W transforma 5 500 J de energia elétrica em calor a cada segundo. Para levar 600 kg a 30 m de altura (180 000 J), um elevador de 6 000 W leva 30 s; um de 3 000 W leva 60 s.</p>
+  <div class="au-filme" data-filme="escada" aria-label="Animação: subir a escada correndo ou andando exige a mesma energia, mas correndo a potência é maior"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Rendimento: o que se aproveita</h2>
+  <p><b>Rendimento = energia útil ÷ energia total</b>, em porcentagem. Nenhuma máquina tem 100%: sempre se perde alguma parte, quase sempre como <b>calor</b>. Uma lâmpada incandescente transforma só uns 5% em luz; o resto esquenta o ambiente. A LED faz a mesma luz gastando muito menos.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Trocar incandescente por LED economiza porque a LED tem <b>rendimento maior</b>: a mesma luz com menos potência.</li>
+    <li>Motor de carro a combustão aproveita só uns 25 a 30%: o resto sai como calor (radiador e escapamento).</li>
+    <li>Energia útil = rendimento × energia total. Com 40% de rendimento e 1 000 J, sobram 400 J úteis e 600 J perdidos.</li>
+    <li>Cuidado com a unidade: 1 HP ≈ 746 W, 1 cv ≈ 735 W.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Energia = m · g · h = 60 × 10 × 6 = 3 600 J. Potência = 3 600 ÷ 12 = 300 W.">
+    <p>Uma pessoa de 60 kg sobe uma escada de 6 m de altura em 12 s (g = 10 m/s²). A potência média é:</p>
+    <button type="button" class="au-alt">3 600 W</button>
+    <button type="button" class="au-alt">300 W</button>
+    <button type="button" class="au-alt">30 W</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Rendimento = útil ÷ total = 30 ÷ 100 = 30%. Os outros 70 J viram calor.">
+    <p>Um motor recebe 100 J de energia e realiza 30 J de trabalho útil. Seu rendimento é:</p>
+    <button type="button" class="au-alt">30%</button>
+    <button type="button" class="au-alt">70%</button>
+    <button type="button" class="au-alt">130%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A LED tem rendimento maior: produz a mesma luz com menor potência, perdendo menos energia como calor.">
+    <p>Uma lâmpada LED de 9 W ilumina tanto quanto uma incandescente de 60 W porque:</p>
+    <button type="button" class="au-alt">a LED produz mais calor</button>
+    <button type="button" class="au-alt">a LED usa outra corrente elétrica</button>
+    <button type="button" class="au-alt">a LED transforma uma parte maior da energia em luz</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="potencia-rendimento">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

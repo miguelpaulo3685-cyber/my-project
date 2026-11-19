@@ -16,7 +16,8 @@ window.TRILHAS_MM = {
     'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia',
     'angulos-tales', 'triangulos', 'poligonos', 'areas',
     'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular',
-    'leis-newton', 'atrito', 'gravitacao'],
+    'leis-newton', 'atrito', 'gravitacao',
+    'trabalho-energia', 'conservacao-energia', 'potencia-rendimento', 'impulso'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -91,7 +92,7 @@ window.TRILHAS_MM = {
         ['queda-livre', 'Queda livre e lançamentos', '🍎'], ['movimento-circular', 'Movimento circular e engrenagens', '🚲']] },
       { id: 'fis2', nome: 'Leis de Newton', sobre: 'Força, massa e aceleração no dia a dia: freio, cinto de segurança, elevador.', teste: true, aulas: [
         ['leis-newton', 'As três leis de Newton', '🚀'], ['atrito', 'Atrito e plano inclinado', '🛷'], ['gravitacao', 'Gravitação e satélites', '🛰️']] },
-      { id: 'fis3', nome: 'Energia e quantidade de movimento', sobre: 'Transformações de energia, potência e colisões.', aulas: [
+      { id: 'fis3', nome: 'Energia e quantidade de movimento', sobre: 'Transformações de energia, potência e colisões.', teste: true, aulas: [
         ['trabalho-energia', 'Trabalho, energia cinética e potencial', '🎢'], ['conservacao-energia', 'Conservação e usinas de energia', '⚡'],
         ['potencia-rendimento', 'Potência e rendimento', '🏋️'], ['impulso', 'Impulso e colisões', '🎱']] },
       { id: 'fis4', nome: 'Hidrostática', sobre: 'Pressão, prensa hidráulica e o que boia ou afunda.', aulas: [
