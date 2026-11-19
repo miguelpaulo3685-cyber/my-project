@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Física · Módulo 5 · Aula 1</div>
+  <h1>Calor, temperatura e propagação</h1>
+  <p class="au-abre">Por que a colher de metal esquenta na sopa e a de pau não? Por que o ar-condicionado fica no alto e o aquecedor embaixo? Como o calor do Sol chega aqui, atravessando o vácuo? Temperatura e calor parecem a mesma coisa, mas não são, e o ENEM adora essa diferença.</p>
+</header>
+
+<section class="au-cena" aria-label="Colher na sopa quente: o calor sobe pelo cabo">
+  <div class="au-loja">A colher na sopa <small>escolha o material e veja o calor subir pelo cabo com o tempo</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Material">
+      <button type="button" data-mat="cobre">🟠 Cobre</button>
+      <button type="button" data-mat="aco">⚙️ Aço</button>
+      <button type="button" data-mat="madeira">🪵 Madeira</button>
+      <button type="button" data-mat="plastico">🥄 Plástico</button>
+    </div>
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-t">Tempo</label><input id="au-t" type="range" min="0" max="120" step="5" value="30"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Temperatura não é calor</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Temperatura</b> mede o grau de agitação das partículas: é o que o termômetro marca.</li>
+    <li><b>Calor</b> é energia <b>em trânsito</b>, que passa sozinha do corpo mais quente para o mais frio, até as temperaturas ficarem iguais (equilíbrio térmico).</li>
+    <li>Um corpo não "tem" calor nem "tem frio". O agasalho não esquenta: ele <b>dificulta a saída</b> do calor do seu corpo.</li>
+    <li>Escalas: <b>°F = 1,8 · °C + 32</b> e <b>K = °C + 273</b>. 0 K é o zero absoluto; não existe temperatura menor.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Três jeitos de o calor viajar</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Condução</b>: passa de partícula para partícula, sem elas saírem do lugar. Metais conduzem bem; madeira, plástico, isopor e ar parado conduzem mal (são <b>isolantes</b>).</li>
+    <li><b>Convecção</b>: o próprio fluido (ar, água) se move. O ar quente, menos denso, sobe; o frio desce. Por isso o ar-condicionado fica no alto e o aquecedor embaixo, e a geladeira tem o congelador em cima.</li>
+    <li><b>Irradiação</b>: por ondas eletromagnéticas (infravermelho). É a única que atravessa o <b>vácuo</b>: é assim que o Sol aquece a Terra.</li>
+  </ul>
+  <div class="au-filme" data-filme="conveccao" aria-label="Animação: o ar quente do aquecedor sobe, esfria no alto e desce, formando uma corrente de convecção"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Garrafa térmica: vácuo entre as paredes (corta condução e convecção) e parede espelhada (reflete a irradiação).</li>
+    <li>O piso de cerâmica "parece" mais frio que o tapete à mesma temperatura: a cerâmica conduz melhor e tira calor do pé mais rápido.</li>
+    <li>Efeito estufa: a luz do Sol entra, a Terra emite infravermelho, e gases como o CO₂ seguram parte dele.</li>
+    <li>Brisa marítima: de dia a terra esquenta mais rápido, o ar sobe sobre ela e o vento vem do mar; à noite inverte.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O cobertor é isolante: dificulta a saída do calor do corpo. Ele não produz calor nenhum.">
+    <p>Um cobertor de lã nos mantém aquecidos porque:</p>
+    <button type="button" class="au-alt">produz calor</button>
+    <button type="button" class="au-alt">dificulta a saída do calor do nosso corpo</button>
+    <button type="button" class="au-alt">transfere frio para fora</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Entre o Sol e a Terra há vácuo; só a irradiação (ondas eletromagnéticas) atravessa o vácuo.">
+    <p>O calor do Sol chega à Terra por:</p>
+    <button type="button" class="au-alt">condução</button>
+    <button type="button" class="au-alt">convecção</button>
+    <button type="button" class="au-alt">irradiação</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="°F = 1,8 × 30 + 32 = 54 + 32 = 86 °F.">
+    <p>Um dia de 30 °C corresponde, em Fahrenheit, a:</p>
+    <button type="button" class="au-alt">86 °F</button>
+    <button type="button" class="au-alt">62 °F</button>
+    <button type="button" class="au-alt">303 °F</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="calor-temperatura">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

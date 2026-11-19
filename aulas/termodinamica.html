@@ -1,0 +1,74 @@
+<header>
+  <div class="au-trilha">Física · Módulo 5 · Aula 3</div>
+  <h1>Gases e máquinas térmicas</h1>
+  <p class="au-abre">O motor do carro, a usina termelétrica e a geladeira são máquinas térmicas: trocam calor e trabalho. A termodinâmica explica por que nenhum motor aproveita 100% do combustível, e por que a geladeira precisa de energia para tirar o calor de dentro.</p>
+</header>
+
+<section class="au-cena" aria-label="Máquina térmica: fonte quente, trabalho e fonte fria">
+  <div class="au-loja">Motor térmico <small>mude as temperaturas da fonte quente e da fria e veja o rendimento máximo possível</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-tq">Fonte quente</label><input id="au-tq" type="range" min="100" max="1200" step="50" value="500"><output id="au-oq"></output></div>
+    <div class="au-controle"><label for="au-tf">Fonte fria</label><input id="au-tf" type="range" min="0" max="90" step="5" value="30"><output id="au-of"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Gases: pressão, volume e temperatura</h2>
+  <p>Num gás, <b>p · V ÷ T</b> fica constante (temperatura em <b>kelvin</b>). Esquentando com a pressão fixa, o gás <b>expande</b> (o balão cresce no sol); comprimindo de repente, ele <b>esquenta</b> (a bomba de bicicleta esquenta); expandindo de repente, <b>esfria</b> (o spray fica gelado).</p>
+</section>
+
+<section class="au-bloco">
+  <h2>1ª Lei: a conta da energia</h2>
+  <p><b>Q = W + ΔU</b>: o calor que o gás recebe vira trabalho (empurrar o pistão) e/ou aumenta a energia interna (a temperatura). É a conservação da energia aplicada ao calor.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>2ª Lei: sempre se perde para a fonte fria</h2>
+  <p>Toda máquina térmica tira calor de uma <b>fonte quente</b>, transforma uma parte em <b>trabalho</b> e joga o resto numa <b>fonte fria</b>. É impossível transformar todo o calor em trabalho. O máximo teórico (ciclo de Carnot) é <b>η = 1 − T_fria ÷ T_quente</b>, com as temperaturas em kelvin. Motores reais ficam bem abaixo disso.</p>
+  <div class="au-filme" data-filme="geladeira" aria-label="Animação: a geladeira usa energia elétrica para tirar calor de dentro e jogar atrás, na grade"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Use <b>kelvin</b> na fórmula do rendimento: K = °C + 273.</li>
+    <li>Rendimento maior pede fonte quente <b>mais quente</b> ou fonte fria <b>mais fria</b>.</li>
+    <li>A geladeira não "produz frio": ela gasta energia para levar calor de dentro para fora (por isso a grade de trás é quente). Abrir a porta da geladeira não resfria a cozinha: esquenta.</li>
+    <li>O calor passa sozinho só do quente para o frio; o contrário exige trabalho.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Em kelvin: Tq = 327 + 273 = 600 K e Tf = 27 + 273 = 300 K. η = 1 − 300/600 = 0,5 = 50%.">
+    <p>Uma máquina térmica opera entre 327 °C e 27 °C. Seu rendimento máximo teórico é:</p>
+    <button type="button" class="au-alt">92%</button>
+    <button type="button" class="au-alt">50%</button>
+    <button type="button" class="au-alt">100%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Pela 2ª lei, toda máquina térmica precisa jogar parte do calor numa fonte fria; o rendimento é sempre menor que 100%.">
+    <p>Nenhum motor a combustão consegue rendimento de 100% porque:</p>
+    <button type="button" class="au-alt">os motores ainda são mal fabricados</button>
+    <button type="button" class="au-alt">o combustível tem pouca energia</button>
+    <button type="button" class="au-alt">parte do calor precisa ir para a fonte fria (2ª lei da termodinâmica)</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A geladeira só transfere calor de dentro para fora gastando trabalho (energia elétrica); somando, ela joga na cozinha mais calor do que tira.">
+    <p>Deixar a porta da geladeira aberta num dia quente:</p>
+    <button type="button" class="au-alt">esquenta a cozinha</button>
+    <button type="button" class="au-alt">esfria a cozinha</button>
+    <button type="button" class="au-alt">não muda a temperatura da cozinha</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="termodinamica">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

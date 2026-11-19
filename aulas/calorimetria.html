@@ -1,0 +1,68 @@
+<header>
+  <div class="au-trilha">Física · Módulo 5 · Aula 2</div>
+  <h1>Calorimetria e mudanças de estado</h1>
+  <p class="au-abre">Por que a água demora tanto para ferver e a areia da praia esquenta tão rápido? Por que a temperatura da água fervendo para em 100 °C, mesmo com o fogo alto? A calorimetria conta quanto calor é preciso para esquentar ou mudar o estado de uma substância.</p>
+</header>
+
+<section class="au-cena" aria-label="Curva de aquecimento de 100 g de água, do gelo ao vapor">
+  <div class="au-loja">Do gelo ao vapor <small>vá dando calor a 100 g de gelo a −20 °C e acompanhe a temperatura</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 200" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-q">Calor dado</label><input id="au-q" type="range" min="0" max="74" step="0.5" value="5"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Calor sensível: muda a temperatura</h2>
+  <p><b>Q = m · c · ΔT</b>. O <b>calor específico</b> (c) diz quanto calor 1 g precisa para subir 1 °C. A água tem c = 1 cal/g·°C, um dos maiores da natureza: ela demora para esquentar e para esfriar. A areia tem c ≈ 0,2: esquenta 5 vezes mais rápido. Por isso a praia é quente de dia e fria de noite, e o clima perto do mar varia menos.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Calor latente: muda o estado</h2>
+  <p><b>Q = m · L</b>. Durante a fusão ou a ebulição, o calor vai todo para <b>separar as partículas</b>, e a temperatura <b>fica parada</b>. Para a água: L de fusão = 80 cal/g; L de vaporização = 540 cal/g. Por isso o suor esfria a pele: ao evaporar, ele leva muito calor embora.</p>
+  <div class="au-filme" data-filme="patamar" aria-label="Animação: enquanto a água ferve, o termômetro fica parado em 100 graus"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Durante a mudança de estado, a temperatura <b>não muda</b> (os "patamares" do gráfico).</li>
+    <li>Na panela de pressão a água ferve a ~120 °C (pressão maior); no alto da montanha, a menos de 100 °C (pressão menor): o feijão demora mais.</li>
+    <li>Mistura de águas: o calor que um perde é o que o outro ganha. 1 litro a 80 °C com 1 litro a 20 °C dá 50 °C.</li>
+    <li>Potência e aquecimento: um chuveiro de 5 500 W fornece 5 500 J por segundo (1 cal ≈ 4,2 J).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="Q = m · c · ΔT = 500 × 1 × (80 − 20) = 30 000 cal.">
+    <p>Quanto calor é preciso para aquecer 500 g de água de 20 °C a 80 °C (c = 1 cal/g·°C)?</p>
+    <button type="button" class="au-alt">30 000 cal</button>
+    <button type="button" class="au-alt">40 000 cal</button>
+    <button type="button" class="au-alt">60 cal</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Na ebulição, o calor recebido é usado para mudar de estado (calor latente) e a temperatura fica constante.">
+    <p>Enquanto a água ferve numa panela aberta ao nível do mar, sua temperatura:</p>
+    <button type="button" class="au-alt">sobe sem parar</button>
+    <button type="button" class="au-alt">cai</button>
+    <button type="button" class="au-alt">fica constante em cerca de 100 °C</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="A areia tem calor específico bem menor que o da água: com o mesmo calor do Sol, sua temperatura sobe muito mais.">
+    <p>Ao meio-dia, a areia da praia está muito mais quente que a água do mar porque:</p>
+    <button type="button" class="au-alt">a areia recebe mais sol</button>
+    <button type="button" class="au-alt">o calor específico da areia é menor que o da água</button>
+    <button type="button" class="au-alt">a água reflete todo o calor</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="calorimetria">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

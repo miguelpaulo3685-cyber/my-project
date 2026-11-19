@@ -18,7 +18,8 @@ window.TRILHAS_MM = {
     'velocidade-media', 'cinematica', 'queda-livre', 'movimento-circular',
     'leis-newton', 'atrito', 'gravitacao',
     'trabalho-energia', 'conservacao-energia', 'potencia-rendimento', 'impulso',
-    'pressao', 'empuxo'],
+    'pressao', 'empuxo',
+    'calor-temperatura', 'calorimetria', 'termodinamica'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -98,7 +99,7 @@ window.TRILHAS_MM = {
         ['potencia-rendimento', 'Potência e rendimento', '🏋️'], ['impulso', 'Impulso e colisões', '🎱']] },
       { id: 'fis4', nome: 'Hidrostática', sobre: 'Pressão, prensa hidráulica e o que boia ou afunda.', teste: true, aulas: [
         ['pressao', 'Pressão e prensa hidráulica', '🛞'], ['empuxo', 'Empuxo: boiar ou afundar', '🚢']] },
-      { id: 'fis5', nome: 'Calor e termodinâmica', sobre: 'Temperatura, trocas de calor e máquinas térmicas.', aulas: [
+      { id: 'fis5', nome: 'Calor e termodinâmica', sobre: 'Temperatura, trocas de calor e máquinas térmicas.', teste: true, aulas: [
         ['calor-temperatura', 'Calor, temperatura e propagação', '🌡️'], ['calorimetria', 'Calorimetria e mudanças de estado', '🧊'],
         ['termodinamica', 'Gases e máquinas térmicas', '🚂']] },
       { id: 'fis6', nome: 'Ondas e óptica', sobre: 'Som, luz, espelhos, lentes e a visão.', aulas: [
