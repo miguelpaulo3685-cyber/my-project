@@ -1,0 +1,67 @@
+<header>
+  <div class="au-trilha">Física · Módulo 7 · Aula 2</div>
+  <h1>Potência elétrica e conta de luz</h1>
+  <p class="au-abre">Quanto custa um banho? Vale a pena desligar o chuveiro no verão ou trocar as lâmpadas? A conta de luz cobra energia em quilowatt-hora, e com uma multiplicação dá para saber quem é o vilão da casa. Essa é uma das questões mais certas do ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Simulador da conta de luz de uma casa">
+  <div class="au-loja">A conta de luz da casa <small>ajuste quantas horas por dia cada aparelho fica ligado</small></div>
+  <div class="au-painel">
+    <div id="au-lista" class="au-gen-barras"></div>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Potência e energia</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Potência</b> (W): o quanto o aparelho consome por segundo. Vem escrita na etiqueta: chuveiro de 5 500 W, lâmpada LED de 9 W.</li>
+    <li><b>P = U · i</b>: potência = tensão × corrente. Um chuveiro de 4 400 W em 220 V puxa 20 A.</li>
+    <li><b>Energia = potência × tempo</b>. Com a potência em kW e o tempo em horas, sai em <b>kWh</b>, a unidade da conta de luz.</li>
+    <li>Exemplo: chuveiro de 5 500 W (5,5 kW) por 20 min (1/3 h) por dia → 5,5 × 1/3 ≈ 1,8 kWh por dia, uns 55 kWh por mês.</li>
+  </ul>
+  <div class="au-filme" data-filme="conta" aria-label="Animação: potência em quilowatts vezes horas dá quilowatt-hora, e vezes a tarifa dá o preço"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Converta: W ÷ 1 000 = kW; minutos ÷ 60 = horas. Errar essa conversão é o erro mais comum.</li>
+    <li>O vilão costuma ser o que tem <b>potência alta</b> (chuveiro, ferro, ar-condicionado) ou fica <b>muito tempo</b> ligado (geladeira).</li>
+    <li>Chuveiro na posição "inverno" tem <b>menor resistência</b>: passa mais corrente e esquenta mais (P = U² ÷ R).</li>
+    <li>Ligar em 127 V um aparelho de 220 V: ele funciona com potência bem menor; o contrário queima o aparelho.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="5 lâmpadas × 0,06 kW = 0,3 kW; × 5 h = 1,5 kWh por dia; × 30 dias = 45 kWh.">
+    <p>Cinco lâmpadas de 60 W ficam acesas 5 h por dia. Em 30 dias, elas consomem:</p>
+    <button type="button" class="au-alt">1,5 kWh</button>
+    <button type="button" class="au-alt">45 kWh</button>
+    <button type="button" class="au-alt">45 000 kWh</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="P = U · i → i = P ÷ U = 4 400 ÷ 220 = 20 A.">
+    <p>Um chuveiro de 4 400 W ligado em 220 V puxa uma corrente de:</p>
+    <button type="button" class="au-alt">20 A</button>
+    <button type="button" class="au-alt">968 000 A</button>
+    <button type="button" class="au-alt">0,05 A</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Energia = 1,5 kW × 2 h = 3 kWh. Custo = 3 × R$ 0,80 = R$ 2,40 por dia.">
+    <p>Um ar-condicionado de 1 500 W fica ligado 2 h por dia. Com a tarifa de R$ 0,80 por kWh, o custo por dia é:</p>
+    <button type="button" class="au-alt">R$ 1 200,00</button>
+    <button type="button" class="au-alt">R$ 0,24</button>
+    <button type="button" class="au-alt">R$ 2,40</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="consumo-energia">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

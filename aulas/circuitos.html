@@ -1,0 +1,82 @@
+<header>
+  <div class="au-trilha">Física · Módulo 7 · Aula 1</div>
+  <h1>Corrente, resistência e circuitos</h1>
+  <p class="au-abre">Por que, no pisca-pisca antigo, uma lâmpada queimada apagava todas, mas em casa uma lâmpada queimada não apaga a geladeira? A resposta está em como as coisas são ligadas: em série ou em paralelo. Eletricidade é o assunto de Física que mais cai no ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Duas lâmpadas ligadas em série ou em paralelo">
+  <div class="au-loja">Duas lâmpadas e uma pilha <small>escolha a ligação, mude a tensão e queime uma lâmpada</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Ligação">
+      <button type="button" data-lig="serie">➖ Em série</button>
+      <button type="button" data-lig="paralelo">🟰 Em paralelo</button>
+    </div>
+    <svg viewBox="0 0 320 180" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-u">Tensão</label><input id="au-u" type="range" min="3" max="24" step="3" value="12"><output id="au-o"></output></div>
+    <div class="au-atalhos"><button type="button" id="au-queimar" aria-pressed="false">💥 Queimar a lâmpada 1</button></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Tensão, corrente e resistência</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Tensão</b> (U, em volts): o "empurrão" que a pilha ou a tomada dá nas cargas.</li>
+    <li><b>Corrente</b> (i, em ampères): quantas cargas passam por segundo.</li>
+    <li><b>Resistência</b> (R, em ohms): o quanto o material dificulta a passagem. Fio fino e comprido tem mais resistência.</li>
+    <li><b>Lei de Ohm</b>: <b>U = R · i</b>. Mais tensão, mais corrente; mais resistência, menos corrente.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Série × paralelo</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Série</b>: um caminho só. A <b>corrente é a mesma</b> em todos e a tensão se divide. Se um queima, <b>tudo apaga</b>. A resistência total soma: R₁ + R₂.</li>
+    <li><b>Paralelo</b>: cada aparelho tem o seu caminho. A <b>tensão é a mesma</b> em todos e a corrente se divide. Se um queima, os outros continuam. É assim a instalação de casa (todos recebem 127 V ou 220 V).</li>
+    <li>Quanto mais aparelhos em paralelo, <b>maior a corrente total</b>: é o que esquenta o fio e desarma o disjuntor.</li>
+  </ul>
+  <div class="au-filme" data-filme="curto" aria-label="Animação: o disjuntor desarma quando a corrente fica alta demais"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Benjamim (T) com muitos aparelhos: correntes somadas, fio esquenta, risco de incêndio.</li>
+    <li><b>Curto-circuito</b>: um caminho de resistência quase zero; a corrente dispara.</li>
+    <li>Disjuntor e fusível ficam <b>em série</b> com o circuito: cortam tudo quando a corrente passa do limite.</li>
+    <li>Choque: o que machuca é a <b>corrente</b> que passa pelo corpo. Pássaro no fio não leva choque porque não há diferença de tensão entre os pés.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="i = U ÷ R = 12 ÷ 4 = 3 A.">
+    <p>Um resistor de 4 Ω é ligado a uma bateria de 12 V. A corrente é:</p>
+    <button type="button" class="au-alt">3 A</button>
+    <button type="button" class="au-alt">48 A</button>
+    <button type="button" class="au-alt">0,33 A</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Em casa os aparelhos ficam em paralelo: cada um tem o seu caminho e recebe a mesma tensão; se um desliga, os outros continuam.">
+    <p>Numa casa, quando uma lâmpada queima, a TV continua funcionando porque os aparelhos estão ligados:</p>
+    <button type="button" class="au-alt">em série</button>
+    <button type="button" class="au-alt">sem fio terra</button>
+    <button type="button" class="au-alt">em paralelo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O disjuntor fica em série e desarma quando a corrente total passa do limite, protegendo a fiação de superaquecer.">
+    <p>A função do disjuntor numa instalação elétrica é:</p>
+    <button type="button" class="au-alt">aumentar a tensão da tomada</button>
+    <button type="button" class="au-alt">cortar a corrente quando ela passa do limite seguro</button>
+    <button type="button" class="au-alt">economizar energia</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="circuitos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

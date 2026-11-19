@@ -20,7 +20,8 @@ window.TRILHAS_MM = {
     'trabalho-energia', 'conservacao-energia', 'potencia-rendimento', 'impulso',
     'pressao', 'empuxo',
     'calor-temperatura', 'calorimetria', 'termodinamica',
-    'ondas-som', 'luz-espelhos', 'lentes-visao'],
+    'ondas-som', 'luz-espelhos', 'lentes-visao',
+    'circuitos', 'consumo-energia', 'magnetismo'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -105,7 +106,7 @@ window.TRILHAS_MM = {
         ['termodinamica', 'Gases e máquinas térmicas', '🚂']] },
       { id: 'fis6', nome: 'Ondas e óptica', sobre: 'Som, luz, espelhos, lentes e a visão.', teste: true, aulas: [
         ['ondas-som', 'Ondas e som', '🔊'], ['luz-espelhos', 'Luz, reflexão e espelhos', '🪞'], ['lentes-visao', 'Refração, lentes e visão', '👓']] },
-      { id: 'fis7', nome: 'Eletricidade e magnetismo', sobre: 'O tema de Física que mais cai: circuitos, consumo e geradores.', aulas: [
+      { id: 'fis7', nome: 'Eletricidade e magnetismo', sobre: 'O tema de Física que mais cai: circuitos, consumo e geradores.', teste: true, aulas: [
         ['circuitos', 'Corrente, resistência e circuitos', '🔌'], ['consumo-energia', 'Potência elétrica e conta de luz', '🧾'],
         ['magnetismo', 'Magnetismo e geradores', '🧲']] }
     ] }

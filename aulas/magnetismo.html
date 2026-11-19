@@ -1,0 +1,72 @@
+<header>
+  <div class="au-trilha">Física · Módulo 7 · Aula 3</div>
+  <h1>Magnetismo e geradores</h1>
+  <p class="au-abre">Quase toda a eletricidade do Brasil vem de um mesmo truque: mexer um ímã perto de um fio enrolado. É assim nas hidrelétricas, nas eólicas e no dínamo da bicicleta. E o caminho contrário, corrente fazendo ímã, move os motores, os alto-falantes e o guindaste de ferro-velho.</p>
+</header>
+
+<section class="au-cena" aria-label="Ímã entrando e saindo de uma bobina ligada a uma lâmpada">
+  <div class="au-loja">O gerador mais simples <small>mexa o ímã dentro da bobina: rápido, devagar ou parado</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 160" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-vel">Velocidade do ímã</label><input id="au-vel" type="range" min="0" max="5" step="1" value="2"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Ímãs e campo magnético</h2>
+  <ul class="au-pegadinhas">
+    <li>Todo ímã tem polo <b>norte</b> e <b>sul</b>. Polos iguais se repelem; diferentes se atraem.</li>
+    <li>Cortar um ímã ao meio não separa os polos: cada pedaço vira um ímã completo.</li>
+    <li>A Terra é um grande ímã. A bússola aponta para o norte geográfico porque ali fica o <b>polo sul magnético</b> da Terra.</li>
+    <li>Uma corrente elétrica cria campo magnético em volta do fio (Oersted). Enrolando o fio num prego, faz-se um <b>eletroímã</b>, que liga e desliga.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Indução: movimento vira eletricidade</h2>
+  <p>Quando o campo magnético que atravessa uma bobina <b>varia</b> (o ímã se aproxima, se afasta ou gira), aparece uma corrente no fio: é a <b>indução eletromagnética</b> (Faraday). Ímã parado não gera nada; quanto mais rápida a variação e mais voltas de fio, maior a tensão. Nas usinas, a água, o vapor ou o vento giram turbinas que giram ímãs (ou bobinas) dentro do gerador.</p>
+  <div class="au-filme" data-filme="transformador" aria-label="Animação: o transformador muda a tensão de acordo com o número de voltas das bobinas"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Gerador: <b>movimento → eletricidade</b> (indução). Motor: <b>eletricidade → movimento</b>.</li>
+    <li>Precisa haver <b>variação</b>: ímã parado dentro da bobina não acende a lâmpada.</li>
+    <li><b>Transformador</b> só funciona com corrente alternada; a tensão muda na proporção do número de voltas.</li>
+    <li>Cartão magnético e HD perdem dados perto de ímãs fortes.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Só há indução quando o campo magnético na bobina varia; ímã parado não varia o campo e não gera corrente.">
+    <p>Um ímã é deixado parado dentro de uma bobina ligada a uma lâmpada. A lâmpada:</p>
+    <button type="button" class="au-alt">acende forte</button>
+    <button type="button" class="au-alt">não acende</button>
+    <button type="button" class="au-alt">acende fraco o tempo todo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Na usina, a turbina gira o gerador; a variação do campo magnético nas bobinas induz a corrente elétrica.">
+    <p>Nas hidrelétricas, a energia elétrica é produzida no gerador graças à:</p>
+    <button type="button" class="au-alt">indução eletromagnética</button>
+    <button type="button" class="au-alt">reação química</button>
+    <button type="button" class="au-alt">energia nuclear</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Polos opostos se atraem: o norte da agulha aponta para o polo sul magnético da Terra, que fica perto do norte geográfico.">
+    <p>A agulha da bússola aponta para o norte geográfico porque perto dele fica:</p>
+    <button type="button" class="au-alt">o polo norte magnético da Terra</button>
+    <button type="button" class="au-alt">uma grande jazida de ferro</button>
+    <button type="button" class="au-alt">o polo sul magnético da Terra</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="magnetismo">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
