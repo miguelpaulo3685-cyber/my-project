@@ -23,7 +23,8 @@ window.TRILHAS_MM = {
     'ondas-som', 'luz-espelhos', 'lentes-visao',
     'circuitos', 'consumo-energia', 'magnetismo',
     'projecoes', 'solidos', 'capacidade',
-    'pa-pg', 'trigonometria', 'ciclo-trigonometrico'],
+    'pa-pg', 'trigonometria', 'ciclo-trigonometrico',
+    'teorias-evolutivas', 'neodarwinismo', 'especiacao', 'filogenia'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -58,7 +59,7 @@ window.TRILHAS_MM = {
       { id: 'bio3', nome: 'Genética e biologia molecular', sobre: 'Raciocínio lógico, heredogramas e código genético.', teste: true, aulas: [
         ['sintese-proteica', 'DNA, RNA e síntese de proteínas', '🧬'], ['mendel', 'Leis de Mendel', '🫛'],
         ['sangue-heranca', 'Sangue (ABO e Rh) e herança ligada ao sexo', '🩸'], ['biotecnologia', 'Biotecnologia', '🔬']] },
-      { id: 'bio4', nome: 'Evolução e filogenia', sobre: 'Como as espécies mudam e como ler árvores evolutivas.', aulas: [
+      { id: 'bio4', nome: 'Evolução e filogenia', sobre: 'Como as espécies mudam e como ler árvores evolutivas.', teste: true, aulas: [
         ['teorias-evolutivas', 'Lamarck e Darwin', '🦒'], ['neodarwinismo', 'Teoria sintética da evolução', '🧩'],
         ['especiacao', 'Especiação e órgãos homólogos', '🐦'], ['filogenia', 'Cladogramas', '🌳']] },
       { id: 'bio5', nome: 'Fisiologia humana', sobre: 'Como o corpo mantém o equilíbrio interno.', aulas: [
