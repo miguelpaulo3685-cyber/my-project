@@ -632,6 +632,14 @@
       animation: surgir .4s ease;
     }
     .faixa-desafio span:last-child { font-weight: 600; opacity: .9; }
+    /* questão surpresa: aparece do nada, com um "puf" */
+    .faixa-desafio.surpresa {
+      background: rgba(233,185,73,.16); border-color: rgba(233,185,73,.6); color: var(--texto);
+      animation: puf .6s cubic-bezier(.2,1.6,.4,1);
+    }
+    .faixa-desafio.surpresa span:first-child { font-size: 1.5rem; }
+    @keyframes puf { 0% { transform: scale(.3) rotate(-6deg); opacity: 0; } 60% { transform: scale(1.06) rotate(2deg); opacity: 1; } 100% { transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .faixa-desafio.surpresa { animation: surgir .4s ease; } }
 
     /* ===================== PERFIL ===================== */
     /* Cabeçalho como o do Instagram e publicações em galeria, como no Notion:
@@ -5114,27 +5122,50 @@ const LETRAS = ['A', 'B', 'C', 'D', 'E'];
 const POR_BLOCO = 5;
 
 // ---------- bloco adaptativo ----------
-// Cada pessoa tem um nível por área (1 Fácil a 4 Desafio), guardado no aparelho.
+// Cada pessoa tem um nível por área (1 Fácil, 2 Médio, 3 Difícil), guardado no aparelho.
 // O bloco vem com a maioria das questões no nível dela, uma mais fácil para
 // aquecer e uma mais difícil para testar se já dá para subir, nessa ordem.
 // No fim: acertou 4 ou 5, sobe; 3, fica; 2 ou menos, desce.
+// Questão surpresa: quem está no Difícil e acertou 4 ou 5 no último bloco da área
+// pode ganhar, sem aviso, uma questão de desafio num ponto sorteado do bloco.
+// Não vem em todo bloco, e errar a surpresa não derruba o nível.
 const CHAVE_NIVEL_BLOCO = 'mm_nivel_bloco';
-const NIVEL_INICIAL = 2;
-const MONTAGEM_DO_BLOCO = { 1: [1, 1, 1, 1, 2], 2: [1, 2, 2, 2, 3], 3: [2, 3, 3, 3, 4], 4: [3, 4, 4, 4, 4] };
-function niveisGuardados() {
-  try { return JSON.parse(ler(CHAVE_NIVEL_BLOCO)) || {}; } catch (e) { return {}; }
+const CHAVE_EMBALO_BLOCO = 'mm_embalo_bloco';
+const NIVEL_INICIAL = 2, NIVEL_MAXIMO = 3, CHANCE_SURPRESA = 0.4;
+const MONTAGEM_DO_BLOCO = { 1: [1, 1, 1, 1, 2], 2: [1, 2, 2, 2, 3], 3: [2, 3, 3, 3, 3] };
+function lerObjeto(chave) {
+  try { return JSON.parse(ler(chave)) || {}; } catch (e) { return {}; }
 }
+function niveisGuardados() { return lerObjeto(CHAVE_NIVEL_BLOCO); }
 function nivelDoAluno(area) {
   const n = niveisGuardados()[area];
-  return [1, 2, 3, 4].includes(n) ? n : NIVEL_INICIAL;
+  return [1, 2, 3].includes(n) ? n : n === 4 ? NIVEL_MAXIMO : NIVEL_INICIAL;
 }
 function proximoNivel(nivel, acertos, total) {
-  if (acertos >= Math.ceil(total * 0.8)) return Math.min(4, nivel + 1);
+  if (acertos >= Math.ceil(total * 0.8)) return Math.min(NIVEL_MAXIMO, nivel + 1);
   if (acertos <= Math.floor(total * 0.4)) return Math.max(1, nivel - 1);
   return nivel;
 }
-function guardarNivel(area, nivel) {
+// Guarda o nível e o aproveitamento do último bloco (de 0 a 1) desta área.
+function guardarNivel(area, nivel, aproveitamento) {
   guardar(CHAVE_NIVEL_BLOCO, JSON.stringify({ ...niveisGuardados(), [area]: nivel }));
+  guardar(CHAVE_EMBALO_BLOCO, JSON.stringify({ ...lerObjeto(CHAVE_EMBALO_BLOCO), [area]: aproveitamento }));
+}
+function sortearSurpresa(area) {
+  return nivelDoAluno(area) === NIVEL_MAXIMO && (lerObjeto(CHAVE_EMBALO_BLOCO)[area] || 0) >= 0.8 && Math.random() < CHANCE_SURPRESA;
+}
+function montagemDoBloco(area, surpresa) {
+  const m = [...MONTAGEM_DO_BLOCO[nivelDoAluno(area)]];
+  if (surpresa) m[m.length - 1] = 4;
+  return m;
+}
+// A questão de desafio pedida vai para um ponto sorteado do bloco (nunca a primeira).
+function colocarSurpresa(questoes) {
+  const i = questoes.findIndex(q => q.nivel === 4);
+  if (i < 0 || questoes.length < 2) return;
+  const [q] = questoes.splice(i, 1);
+  q.surpresa = true;
+  questoes.splice(1 + Math.floor(Math.random() * questoes.length), 0, q);
 }
 
 // O nível vem do servidor. Quando a questão foi encontrada nos microdados do
@@ -5204,9 +5235,10 @@ async function abrirMateria(area) {
   document.getElementById('trilho-barra').style.width = '0%';
   document.getElementById('passo').innerHTML = `0<span>/${POR_BLOCO}</span>`;
 
-  let questoes = [];
+  let questoes = [], surpresa = false;
   try {
-    const pedido = new URLSearchParams({ niveis: MONTAGEM_DO_BLOCO[nivelDoAluno(area)].join(',') });
+    surpresa = !visitaNoProximoBloco && sortearSurpresa(area);
+    const pedido = new URLSearchParams({ niveis: montagemDoBloco(area, surpresa).join(',') });
     if (visitaNoProximoBloco) pedido.set('com_tri', '1');
     const r = await fetch(`${API_URL}/api/questoes/${area}?${pedido}`);
     if (r.status === 404) {
@@ -5229,6 +5261,7 @@ async function abrirMateria(area) {
     return;
   }
 
+  if (surpresa) colocarSurpresa(questoes);
   buscarContagemDiscussao(questoes.map(q => q.id));
   bloco = { questoes, indice: 0, respostas: [], inicio: Date.now(), inicioQuestao: Date.now(), nivel: nivelDoAluno(area),
             notaAntes: notasTri[area] ? notasTri[area].nota : null, visita: visitaNoProximoBloco };
@@ -5276,7 +5309,11 @@ function desenharQuestao() {
   const n = NIVEIS[q.nivel] || NIVEIS.novo;
   const passoVisita = bloco.visita ? `<div class="faixa-visita" role="status"><b>Visita guiada · ${bloco.indice + 1} de ${bloco.questoes.length}</b>
       <span>${DICAS_VISITA[Math.min(bloco.indice, DICAS_VISITA.length - 1)]}</span></div>` : '';
-  const desafio = q.nivel === 4 ? `
+  const desafio = q.surpresa ? `
+    <div class="faixa-desafio surpresa" role="status">
+      <span>⚡</span>
+      <span><b>Questão surpresa!</b> Apareceu um desafio: uma das questões mais difíceis do ENEM. Capricha!</span>
+    </div>` : q.nivel === 4 ? `
     <div class="faixa-desafio">
       <span>🔥</span>
       <span>${q.nivel_fonte === 'tri'
@@ -5314,6 +5351,10 @@ function desenharQuestao() {
   const listaAlts = document.getElementById('lista-alts');
   listaAlts.addEventListener('touchstart', ev => { const b = ev.target.closest('.alt'); if (b) pressionar(ev, Number(b.id.slice(4))); }, { passive: true });
   listaAlts.addEventListener('touchmove', moverToque, { passive: true });
+
+  // A surpresa precisa ser vista: leva a tela até a faixa na hora em que ela aparece.
+  const faixaSurpresa = document.querySelector('.faixa-desafio.surpresa');
+  if (faixaSurpresa) window.scrollTo({ top: Math.max(0, faixaSurpresa.getBoundingClientRect().top + window.scrollY - 170) });
 
   bloco.inicioQuestao = Date.now();
 }
@@ -5570,7 +5611,7 @@ function responder(escolhida) {
   const acertou = escolhida === q.correta;
   const segundos = Math.max(1, Math.round((Date.now() - bloco.inicioQuestao) / 1000));
 
-  bloco.respostas.push({ acertou, segundos });
+  bloco.respostas.push({ acertou, segundos, surpresa: !!q.surpresa });
   anotarResposta(materiaAtual, acertou);
   atualizarTrilho();
   if (acertou) soltarConfete();
@@ -5582,9 +5623,12 @@ function responder(escolhida) {
   if (!acertou) document.getElementById('alt-' + escolhida)?.classList.add('errada');
 
   const letra = LETRAS[q.correta] || (q.correta + 1);
-  const r = acertou
-    ? { classe: 'bom', cara: '🎉', manchete: 'Acertou!', linha: 'Parabéns, mandou muito bem!' }
-    : { classe: 'mau', cara: '💪', manchete: 'Errou, que pena!', linha: 'Continue tentando, você chega lá!' };
+  const r = q.surpresa
+    ? (acertou ? { classe: 'bom', cara: '⚡', manchete: 'Acertou a surpresa!', linha: 'Era uma questão de desafio, das mais difíceis do ENEM. Você está voando!' }
+      : { classe: 'mau', cara: '⚡', manchete: 'Essa era a questão surpresa', linha: 'Uma das mais difíceis do ENEM. Errar aqui não derruba o seu nível.' })
+    : acertou
+      ? { classe: 'bom', cara: '🎉', manchete: 'Acertou!', linha: 'Parabéns, mandou muito bem!' }
+      : { classe: 'mau', cara: '💪', manchete: 'Errou, que pena!', linha: 'Continue tentando, você chega lá!' };
 
   const ultima = bloco.indice === bloco.questoes.length - 1;
 
@@ -5765,17 +5809,23 @@ function mostrarResultado() {
   // Bloco inteiro respondido: ajusta o nível desta área para o próximo bloco.
   const nivelEl = document.getElementById('res-nivel');
   if (bloco.nivel && total === bloco.questoes.length) {
-    const novo = proximoNivel(bloco.nivel, acertos, total);
-    guardarNivel(materiaAtual, novo);
-    const nome = NIVEIS[novo].nome;
-    nivelEl.innerHTML = novo > bloco.nivel
-      ? (novo === 4 ? '🔥 Você subiu para o nível <b>Desafio</b>: o próximo bloco traz as questões mais difíceis do ENEM.'
-        : `⬆️ Você subiu para o nível <b>${nome}</b>: o próximo bloco vem um pouco mais difícil.`)
+    // Errar a questão surpresa não pesa: ela sai da conta do nível.
+    const contam = bloco.respostas.filter(r => r.acertou || !r.surpresa);
+    const acertosNivel = contam.filter(r => r.acertou).length;
+    const novo = proximoNivel(bloco.nivel, acertosNivel, contam.length);
+    guardarNivel(materiaAtual, novo, contam.length ? acertosNivel / contam.length : 0);
+    const nome = NIVEIS[novo].nome, foiBem = acertosNivel >= Math.ceil(contam.length * 0.8);
+    const surpresa = bloco.respostas.find(r => r.surpresa);
+    const linhaSurpresa = !surpresa ? ''
+      : surpresa.acertou ? '⚡ Você acertou a <b>questão surpresa</b> de desafio! Poucos acertam essa.<br>'
+      : '⚡ Teve uma <b>questão surpresa</b> de desafio. Dessa vez não deu, e ela não contou contra o seu nível.<br>';
+    nivelEl.innerHTML = linhaSurpresa + (novo > bloco.nivel
+      ? `⬆️ Você subiu para o nível <b>${nome}</b>: o próximo bloco vem um pouco mais difícil.`
       : novo < bloco.nivel
         ? `🧱 Vamos firmar a base: o próximo bloco vem no nível <b>${nome}</b>. Quando você começar a acertar, a dificuldade volta a subir.`
-        : novo === 4
-          ? '🔥 Você segue no nível <b>Desafio</b>, o mais alto: as questões mais difíceis do ENEM. Continue assim!'
-          : `🎯 Próximo bloco: continua no nível <b>${nome}</b>. Acerte 4 de 5 para subir.`;
+        : novo === NIVEL_MAXIMO
+          ? `🎯 Você segue no nível <b>${nome}</b>, o mais alto. ${foiBem ? 'Mandou muito bem!' : 'Continue firme!'}`
+          : `🎯 Próximo bloco: continua no nível <b>${nome}</b>. Acerte 4 de 5 para subir.`);
     nivelEl.hidden = false;
   } else nivelEl.hidden = true;
 
