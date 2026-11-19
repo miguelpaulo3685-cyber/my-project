@@ -30,7 +30,8 @@ window.TRILHAS_MM = {
     'botanica', 'zoologia', 'parasitologia',
     'mol', 'estequiometria', 'concentracao', 'diluicao',
     'termoquimica', 'cinetica', 'equilibrio', 'ph',
-    'oxirreducao', 'pilhas', 'eletrolise', 'corrosao'],
+    'oxirreducao', 'pilhas', 'eletrolise', 'corrosao',
+    'carbono', 'funcoes-organicas', 'propriedades-organicas'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -90,7 +91,7 @@ window.TRILHAS_MM = {
       { id: 'qui4', nome: 'Eletroquímica', sobre: 'Baterias, corrosão e indústria.', teste: true, aulas: [
         ['oxirreducao', 'Oxirredução', '🔄'], ['pilhas', 'Pilhas e baterias', '🔋'],
         ['eletrolise', 'Eletrólise', '⚡'], ['corrosao', 'Corrosão e proteção', '🛠️']] },
-      { id: 'qui5', nome: 'Química orgânica I', sobre: 'Cadeias de carbono, funções e propriedades.', aulas: [
+      { id: 'qui5', nome: 'Química orgânica I', sobre: 'Cadeias de carbono, funções e propriedades.', teste: true, aulas: [
         ['carbono', 'O carbono e as cadeias', '⬡'], ['funcoes-organicas', 'Funções orgânicas', '🏷️'], ['propriedades-organicas', 'Propriedades dos compostos orgânicos', '🌡️']] },
       { id: 'qui6', nome: 'Química orgânica II', sobre: 'Isomeria, reações e polímeros.', aulas: [
         ['isomeria-plana', 'Isomeria plana', '🔀'], ['isomeria-espacial', 'Isomeria espacial', '🪞'],

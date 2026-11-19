@@ -1,0 +1,72 @@
+<header>
+  <div class="au-trilha">Química · Módulo 5 · Aula 1</div>
+  <h1>O carbono e as cadeias</h1>
+  <p class="au-abre">O carbono faz 4 ligações e adora se ligar a outros carbonos, formando cadeias longas, ramificadas, com anéis. Por isso existem milhões de compostos orgânicos: do gás de cozinha ao DNA. Monte cadeias aqui e veja o nome e a fórmula mudarem.</p>
+</header>
+
+<section class="au-cena" aria-label="Monte uma cadeia carbônica e veja fórmula, nome e classificação">
+  <div class="au-loja">Monte sua cadeia <small>mude o número de carbonos e as opções</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 130" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-n">Carbonos na cadeia</label><input id="au-n" type="range" min="1" max="8" step="1" value="4"><output id="au-no"></output></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-dupla" aria-pressed="false">= Ligação dupla</button>
+      <button type="button" id="au-ram" aria-pressed="false">⑂ Ramificação</button>
+      <button type="button" id="au-anel" aria-pressed="false">⬡ Fechar em anel</button>
+    </div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Classificando cadeias</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Aberta</b> (acíclica) ou <b>fechada</b> (cíclica, em anel).</li>
+    <li><b>Normal</b> (só duas pontas) ou <b>ramificada</b> (tem galhos).</li>
+    <li><b>Saturada</b> (só ligações simples entre carbonos) ou <b>insaturada</b> (tem dupla ou tripla).</li>
+    <li><b>Homogênea</b> (só carbonos na cadeia) ou <b>heterogênea</b> (tem O, N ou S entre carbonos).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>O nome conta a estrutura</h2>
+  <ul class="au-pegadinhas">
+    <li>Prefixo = número de carbonos: <b>met</b> (1), <b>et</b> (2), <b>prop</b> (3), <b>but</b> (4), <b>pent</b> (5), <b>hex</b> (6), hept (7), oct (8).</li>
+    <li>Meio = ligações: <b>an</b> (só simples), <b>en</b> (uma dupla), <b>in</b> (uma tripla).</li>
+    <li>Fim = função: <b>o</b> para hidrocarboneto. Propano: 3 carbonos, só simples, hidrocarboneto.</li>
+  </ul>
+  <div class="au-filme" data-filme="quatro" aria-label="Animação: o carbono faz quatro ligações e forma o metano"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="But = 4 carbonos; an = só ligações simples; o = hidrocarboneto. C₄H₁₀.">
+    <p>O butano, presente no gás de cozinha, tem:</p>
+    <button type="button" class="au-alt">3 carbonos e uma ligação dupla</button>
+    <button type="button" class="au-alt">4 carbonos e uma ligação dupla</button>
+    <button type="button" class="au-alt">4 carbonos e só ligações simples</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Ter uma ligação dupla entre carbonos torna a cadeia insaturada.">
+    <p>O eteno (CH₂=CH₂), usado para amadurecer frutas, tem cadeia:</p>
+    <button type="button" class="au-alt">insaturada</button>
+    <button type="button" class="au-alt">saturada</button>
+    <button type="button" class="au-alt">ramificada</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Alcanos seguem CₙH₂ₙ₊₂. Com n = 5: C₅H₁₂.">
+    <p>A fórmula do pentano, um alcano de 5 carbonos, é:</p>
+    <button type="button" class="au-alt">C₅H₁₀</button>
+    <button type="button" class="au-alt">C₅H₁₂</button>
+    <button type="button" class="au-alt">C₅H₅</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="carbono">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
