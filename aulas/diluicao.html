@@ -1,0 +1,72 @@
+<header>
+  <div class="au-trilha">Química · Módulo 2 · Aula 4</div>
+  <h1>Diluição e mistura</h1>
+  <p class="au-abre">Diluir é acrescentar solvente (quase sempre água). A quantidade de soluto não muda: ela só se espalha num volume maior, e a concentração cai. É o que você faz com o suco concentrado e o que o rótulo da água sanitária manda fazer.</p>
+</header>
+
+<section class="au-cena" aria-label="Diluição de um suco concentrado">
+  <div class="au-loja">Diluindo o suco <small>100 mL de suco concentrado (120 g/L): acrescente água</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-a">Água adicionada</label><input id="au-a" type="range" min="0" max="500" step="50" value="200"><output id="au-ao"></output></div>
+    <div class="au-equacao" id="au-eq"></div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A fórmula da diluição</h2>
+  <ul class="au-pegadinhas">
+    <li>O soluto antes = o soluto depois. Por isso: <b>C₁ · V₁ = C₂ · V₂</b>.</li>
+    <li>Dobrou o volume? A concentração cai pela metade. Triplicou? Cai para um terço.</li>
+    <li>O contrário de diluir é <b>concentrar</b>: tirar solvente, por exemplo por evaporação (como nas salinas).</li>
+    <li><b>Mistura de soluções do mesmo soluto</b>: some os solutos e divida pelo volume total. C = (C₁V₁ + C₂V₂) ÷ (V₁ + V₂).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>O soluto não some</h2>
+  <div class="au-filme" data-filme="espalha" aria-label="Animação: ao adicionar água, as partículas de soluto se espalham"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Na diluição, a <b>massa (ou o número de mols) do soluto</b> não muda: só mudam o volume e a concentração.</li>
+    <li>"Adicionar 300 mL de água a 100 mL" dá volume final de <b>400 mL</b>, não 300.</li>
+    <li>Diluir errado a água sanitária (forte demais) é perigoso; fraca demais, não desinfeta.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="C₁V₁ = C₂V₂: 80 × 100 = C₂ × 400 → C₂ = 20 g/L.">
+    <p>A 100 mL de uma solução de 80 g/L adicionam-se 300 mL de água. A nova concentração é:</p>
+    <button type="button" class="au-alt">26,7 g/L</button>
+    <button type="button" class="au-alt">20 g/L</button>
+    <button type="button" class="au-alt">80 g/L</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Na diluição só se acrescenta solvente: a quantidade de soluto continua a mesma.">
+    <p>Quando diluímos uma solução, o que permanece constante é:</p>
+    <button type="button" class="au-alt">a quantidade de soluto</button>
+    <button type="button" class="au-alt">o volume da solução</button>
+    <button type="button" class="au-alt">a concentração</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Soluto total = 0,1 × 50 + 0,1 × 10 = 6 g; volume = 0,2 L; C = 6 ÷ 0,2 = 30 g/L.">
+    <p>Misturam-se 100 mL de solução de açúcar a 50 g/L com 100 mL de outra a 10 g/L. A concentração final é:</p>
+    <button type="button" class="au-alt">60 g/L</button>
+    <button type="button" class="au-alt">40 g/L</button>
+    <button type="button" class="au-alt">30 g/L</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="diluicao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

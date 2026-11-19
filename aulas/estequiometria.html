@@ -1,0 +1,72 @@
+<header>
+  <div class="au-trilha">Química · Módulo 2 · Aula 2</div>
+  <h1>Cálculo estequiométrico</h1>
+  <p class="au-abre">Uma equação química é uma receita: diz em que proporção os reagentes se combinam. Se a receita pede 2 ovos para 1 xícara de farinha e você tem 6 ovos e 2 xícaras, alguma coisa vai sobrar. Na Química é igual, e é isso que o ENEM cobra.</p>
+</header>
+
+<section class="au-cena" aria-label="Formação de água a partir de hidrogênio e oxigênio">
+  <div class="au-loja">2 H₂ + O₂ → 2 H₂O <small>mude a quantidade de cada reagente e veja o que sobra</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-h">Moléculas de H₂</label><input id="au-h" type="range" min="0" max="10" step="2" value="6"><output id="au-ho"></output></div>
+    <div class="au-controle"><label for="au-o">Moléculas de O₂</label><input id="au-o" type="range" min="0" max="6" step="1" value="2"><output id="au-oo"></output></div>
+    <div class="au-equacao" id="au-eq"></div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A regra de três da Química</h2>
+  <ul class="au-pegadinhas">
+    <li><b>1.</b> Escreva a equação <b>balanceada</b>: os coeficientes dão a proporção em mols. 2 H₂ + O₂ → 2 H₂O: 2 mol de H₂ reagem com 1 mol de O₂.</li>
+    <li><b>2.</b> Passe a proporção para o que a questão pede (massa, volume, moléculas): 2 × 2 g de H₂ reagem com 32 g de O₂ e formam 2 × 18 = 36 g de água.</li>
+    <li><b>3.</b> Monte a regra de três com o dado da questão. Ex.: com 8 g de H₂ → x g de água: 4 g está para 36 g assim como 8 g está para x → x = 72 g.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Nada se perde</h2>
+  <div class="au-filme" data-filme="lavoisier" aria-label="Animação: num frasco fechado, a massa antes e depois da reação é a mesma"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Reagente limitante</b>: o que acaba primeiro decide quanto produto se forma. O outro fica em <b>excesso</b>.</li>
+    <li><b>Rendimento</b>: se a questão diz "rendimento de 80%", calcule o teórico e multiplique por 0,8.</li>
+    <li><b>Pureza</b>: "minério com 60% de ferro" quer dizer que só 60% da massa reage.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="A proporção é 2 H₂ : 1 O₂. 4 mol de H₂ precisam de 2 mol de O₂.">
+    <p>Na reação 2 H₂ + O₂ → 2 H₂O, quantos mols de O₂ reagem com 4 mol de H₂?</p>
+    <button type="button" class="au-alt">4 mol</button>
+    <button type="button" class="au-alt">8 mol</button>
+    <button type="button" class="au-alt">2 mol</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="C + O₂ → CO₂: 12 g de C formam 44 g de CO₂. 24 g de C (o dobro) formam 88 g.">
+    <p>Na queima do carvão, C + O₂ → CO₂ (C = 12, O = 16). Queimando 24 g de carbono, formam-se:</p>
+    <button type="button" class="au-alt">88 g de CO₂</button>
+    <button type="button" class="au-alt">44 g de CO₂</button>
+    <button type="button" class="au-alt">24 g de CO₂</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="O reagente limitante é o que acaba primeiro; ele determina a quantidade máxima de produto.">
+    <p>O reagente limitante de uma reação é aquele que:</p>
+    <button type="button" class="au-alt">está em maior quantidade</button>
+    <button type="button" class="au-alt">acaba primeiro e determina quanto produto se forma</button>
+    <button type="button" class="au-alt">não participa da reação</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="estequiometria">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

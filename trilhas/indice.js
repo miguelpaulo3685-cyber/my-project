@@ -27,7 +27,8 @@ window.TRILHAS_MM = {
     'teorias-evolutivas', 'neodarwinismo', 'especiacao', 'filogenia',
     'digestorio', 'respiratorio-circulatorio', 'excretor-endocrino', 'nervoso',
     'microbiologia', 'imunologia', 'vacinas-soros', 'ists',
-    'botanica', 'zoologia', 'parasitologia'],
+    'botanica', 'zoologia', 'parasitologia',
+    'mol', 'estequiometria', 'concentracao', 'diluicao'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -78,7 +79,7 @@ window.TRILHAS_MM = {
       { id: 'qui1', nome: 'Química geral e estrutura da matéria', sobre: 'A base para entender propriedades e interações das substâncias.', teste: true, aulas: [
         ['atomo', 'Átomo, íons e isótopos', '⚛️'], ['tabela-periodica', 'Tabela periódica', '🗂️'],
         ['ligacoes', 'Ligações químicas', '🔗'], ['forcas-intermoleculares', 'Polaridade e forças intermoleculares', '💧']] },
-      { id: 'qui2', nome: 'Estequiometria e soluções', sobre: 'Os cálculos que aparecem em toda a Química do ENEM.', aulas: [
+      { id: 'qui2', nome: 'Estequiometria e soluções', sobre: 'Os cálculos que aparecem em toda a Química do ENEM.', teste: true, aulas: [
         ['mol', 'Mol e massa molar', '⚖️'], ['estequiometria', 'Cálculo estequiométrico', '🧮'],
         ['concentracao', 'Concentração das soluções', '🥤'], ['diluicao', 'Diluição e mistura', '🫗']] },
       { id: 'qui3', nome: 'Físico-química', sobre: 'Calor, velocidade das reações e equilíbrio.', aulas: [

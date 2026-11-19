@@ -1,0 +1,73 @@
+<header>
+  <div class="au-trilha">Química · Módulo 2 · Aula 1</div>
+  <h1>Mol e massa molar</h1>
+  <p class="au-abre">Átomos e moléculas são pequenos demais para contar um por um. Por isso a Química conta em pacotes, como a dúzia: o <b>mol</b>, um pacote de 6,0 × 10²³ partículas. E a massa de 1 mol de uma substância é a sua <b>massa molar</b>, que se calcula somando as massas dos átomos.</p>
+</header>
+
+<section class="au-cena" aria-label="Quantos mols há numa certa massa de cada substância">
+  <div class="au-loja">Quantos mols tem aqui? <small>escolha a substância e mude a massa</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" id="au-subs"></div>
+    <svg viewBox="0 0 320 112" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-m">Massa</label><input id="au-m" type="range" min="1" max="360" step="1" value="36"><output id="au-mo"></output></div>
+    <div class="au-equacao" id="au-eq"></div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>O passo a passo</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Massa molar (M)</b>: some as massas atômicas da tabela. H₂O = 2 × 1 + 16 = <b>18 g/mol</b>.</li>
+    <li><b>Número de mols</b>: n = massa ÷ massa molar. 36 g de água ÷ 18 g/mol = 2 mol.</li>
+    <li><b>Número de partículas</b>: multiplique por 6,0 × 10²³ (a constante de Avogadro).</li>
+    <li>Para gases nas condições normais (0 °C e 1 atm), 1 mol ocupa cerca de <b>22,4 L</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>A dúzia do químico</h2>
+  <div class="au-filme" data-filme="duzia" aria-label="Animação: dúzia, resma e mol são pacotes de contagem"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>1 mol de qualquer coisa tem o <b>mesmo número</b> de partículas, mas massas diferentes: 1 mol de água (18 g) e 1 mol de açúcar (342 g).</li>
+    <li>Questões de remédio e nutrição pedem: "quantos mols (ou moléculas) há em X mg?". Lembre de passar mg para g (÷ 1 000).</li>
+    <li>Use as massas atômicas que a questão dá: o ENEM sempre fornece.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="CO₂ = 12 + 2 × 16 = 44 g/mol.">
+    <p>Sabendo que C = 12 e O = 16, a massa molar do CO₂ é:</p>
+    <button type="button" class="au-alt">28 g/mol</button>
+    <button type="button" class="au-alt">44 g/mol</button>
+    <button type="button" class="au-alt">60 g/mol</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="n = m ÷ M = 90 ÷ 18 = 5 mol.">
+    <p>Quantos mols de água (18 g/mol) há em 90 g de água?</p>
+    <button type="button" class="au-alt">5 mol</button>
+    <button type="button" class="au-alt">1,8 mol</button>
+    <button type="button" class="au-alt">72 mol</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="1 mol de qualquer substância tem 6,0 × 10²³ partículas. 2 mol têm o dobro: 1,2 × 10²⁴.">
+    <p>Quantas moléculas há em 2 mol de açúcar?</p>
+    <button type="button" class="au-alt">342</button>
+    <button type="button" class="au-alt">6,0 × 10²³</button>
+    <button type="button" class="au-alt">1,2 × 10²⁴</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="mol">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

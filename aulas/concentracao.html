@@ -1,0 +1,73 @@
+<header>
+  <div class="au-trilha">Química · Módulo 2 · Aula 3</div>
+  <h1>Concentração das soluções</h1>
+  <p class="au-abre">Concentração diz quanto de uma substância (o soluto) está dissolvido numa certa quantidade de solução. É o que separa um suco ralo de um suco forte, um remédio seguro de uma dose perigosa, uma água potável de uma contaminada.</p>
+</header>
+
+<section class="au-cena" aria-label="Copo de água com açúcar: mude a massa e o volume">
+  <div class="au-loja">Água com açúcar <small>mude a massa de açúcar e o volume e veja a concentração</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 150" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-m">Açúcar</label><input id="au-m" type="range" min="0" max="100" step="5" value="25"><output id="au-mo"></output></div>
+    <div class="au-controle"><label for="au-v">Volume</label><input id="au-v" type="range" min="100" max="1000" step="50" value="250"><output id="au-vo"></output></div>
+    <div class="au-equacao" id="au-eq"></div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>As formas de medir</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Concentração comum</b>: C = massa do soluto (g) ÷ volume da solução (L). Unidade: g/L.</li>
+    <li><b>Concentração em mol/L</b> (molaridade): número de mols ÷ volume (L). Para passar de g/L para mol/L, divida pela massa molar.</li>
+    <li><b>Porcentagem</b>: álcool 70% tem 70 mL de álcool em cada 100 mL de solução.</li>
+    <li><b>ppm</b> (partes por milhão): 1 ppm = 1 mg por litro de água (ou por kg). Usado para coisas em quantidade muito pequena, como flúor na água e poluentes.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Qual é mais doce?</h2>
+  <div class="au-filme" data-filme="doce" aria-label="Animação: a mesma quantidade de açúcar em volumes diferentes"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>O volume tem que estar em <b>litros</b>: 250 mL = 0,25 L.</li>
+    <li>Rótulos e bulas: "500 mg em 5 mL" é 100 mg/mL, ou 100 g/L.</li>
+    <li>Na água potável, o limite de cada contaminante vem em mg/L ou ppm: compare o valor da questão com o limite.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="0" data-porque="C = 20 g ÷ 0,5 L = 40 g/L.">
+    <p>Dissolvendo 20 g de sal em água até completar 500 mL de solução, a concentração é:</p>
+    <button type="button" class="au-alt">40 g/L</button>
+    <button type="button" class="au-alt">10 g/L</button>
+    <button type="button" class="au-alt">0,04 g/L</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="n = 117 ÷ 58,5 = 2 mol; em 1 L, a concentração é 2 mol/L.">
+    <p>Uma solução tem 117 g de NaCl (58,5 g/mol) em 1 L. Sua concentração em mol/L é:</p>
+    <button type="button" class="au-alt">117 mol/L</button>
+    <button type="button" class="au-alt">0,5 mol/L</button>
+    <button type="button" class="au-alt">2 mol/L</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="1 ppm em água equivale a 1 mg por litro. 0,7 ppm = 0,7 mg/L.">
+    <p>A água tratada recebe flúor na concentração de 0,7 ppm. Isso equivale a:</p>
+    <button type="button" class="au-alt">0,7 g por litro</button>
+    <button type="button" class="au-alt">0,7 mg por litro</button>
+    <button type="button" class="au-alt">7 g por litro</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="concentracao">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
