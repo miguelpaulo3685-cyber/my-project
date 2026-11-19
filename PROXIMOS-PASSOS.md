@@ -389,6 +389,13 @@ redação, esqueci a senha e prévia no WhatsApp. Tudo passou.
     dia a dia). Ou seja: pergunta "e se...?" que prende, situação do cotidiano brasileiro, número de impacto,
     1 a 2 minutos, vertical. Casa com o diferencial das simulações: cada aula do plano poderia ter um vídeo
     assim + a simulação para mexer. Os vídeos servem também de divulgação no TikTok (com o endereço no fim).
+  - **Preço e vídeo de lançamento (Miguel, 19/11):** Miguel acha R$ 15 barato para tudo que o PRO terá. Sugestão:
+    preço cheio R$ 24,90 a 29,90, com "preço de fundador" (ex.: R$ 14,90 para sempre) para quem estiver na lista de
+    espera, e plano "até o ENEM" com desconto. Taxa de assinatura sobe mais com valor percebido do que com preço baixo:
+    amostra grátis do PRO (ex.: 1 correção por professor), 7 dias grátis, lista de espera aquecida, falar também com
+    os pais (quem paga). **IDEIA: vídeo animado de lançamento** — "custa menos que uma pizza por mês" (só vale se for
+    verdade no preço escolhido; pizza média ~R$ 40-60), mostrando tudo que vem no PRO. Cuidado com publicidade para
+    menores: sem pressão do tipo "compre já" ou "peça aos seus pais"; falar com o aluno e com a família.
   - **Provas próprias "no estilo" e a confiança do aluno (18/11):** o medo é o aluno desconfiar e não pagar R$ 15.
     Como passar confiança: (1) simulado "estilo UECE" curto grátis para provar a qualidade; (2) mostrar a base de
     cada questão ("assunto mais cobrado pela UECE nos últimos 5 anos: Genética, 12%"); (3) "revisada por
