@@ -54,6 +54,18 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   Os arquivos ficaram só na sessão antiga do Claude (temporários): baixar do chat se ainda precisar. Postar a versão
   sem música e pôr o som pelo TikTok/Instagram; o começo e o fim ainda são do criador do template.
 
+## IDEIA: aulas para universitários (Miguel, 19/11/2026, ainda não começada)
+- Miguel está no 2º período de Engenharia Mecânica (Programação, Cálculo 2, Álgebra Linear, Física 1) e
+  sentiu na pele a falta de material bom. Ideia: uma trilha "Faculdade" com aulas interativas no mesmo estilo.
+- A favor: universitário é adulto (paga sozinho, sem a questão dos menores), sofre com as mesmas matérias em
+  todo o país, e simulação combina muito com cálculo (derivada = inclinação, integral = área) e álgebra linear
+  (matriz que gira/estica o plano). O site continua útil depois do ENEM: o aluno não vai embora quando passa.
+- Contra: tira o foco do ENEM agora, que ainda precisa de alunos e do PRO; é outro público e outra divulgação.
+- Ponte natural: a **trilha de Física do ENEM** (que ainda não existe) cobre boa parte de Física 1 (cinemática,
+  leis de Newton, energia). Fazer a Física do ENEM primeiro serve aos dois públicos.
+- Sugestão: decidir depois do lançamento do PRO (2027). Começar pelas matérias que o Miguel está cursando,
+  com ele como primeiro aluno e testador.
+
 ## OS DOIS DIFERENCIAIS (Miguel, 16/11, dia do lançamento)
 
 1. **A comunidade (o maior, o site nasceu dela).** "Não é apenas um site de questões, vai além disso." A conexão
