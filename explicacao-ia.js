@@ -228,8 +228,12 @@ function registrarExplicacoes(app, { pool, auth, exigirModerador, espera = ESPER
             [id, texto, modelo]);
           return { texto };
         } catch (erro) {
-          console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
-          if (erro.recusada) recusadas.set(id, Date.now());
+          // Recusa da trava de qualidade não é defeito do site: já aparece no status da IA
+          // (Administração) e não deve encher a lista de erros nem disparar alerta.
+          if (erro.recusada) {
+            console.log(`Explicação por IA da questão ${id} barrada pela trava:`, erro.recusada);
+            recusadas.set(id, Date.now());
+          } else console.error(`Erro na explicação por IA da questão ${id}:`, motivoDoErro(erro));
           return { erro };
         } finally { emAndamento.delete(id); }
       })());
