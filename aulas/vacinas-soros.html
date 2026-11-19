@@ -1,0 +1,78 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 6 · Aula 3</div>
+  <h1>Vacina ou soro?</h1>
+  <p class="au-abre">Os dois ajudam o corpo contra um inimigo, mas de jeitos opostos. A vacina ensina o corpo a se defender sozinho e demora a fazer efeito. O soro entrega a defesa pronta e age na hora, mas passa logo. Saber qual usar em cada situação é questão clássica do ENEM.</p>
+</header>
+
+<section class="au-cena" aria-label="Escolha a situação e o tratamento e veja os anticorpos ao longo do tempo">
+  <div class="au-loja">Qual é o certo? <small>escolha a situação e depois vacina ou soro</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" id="au-cenas">
+      <button type="button" data-cena="cobra">🐍 Picada de cobra agora</button>
+      <button type="button" data-cena="sarampo">🗓️ Proteger do sarampo</button>
+    </div>
+    <svg viewBox="0 0 320 170" id="au-graf" role="img"></svg>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-atalhos" id="au-trats">
+      <button type="button" data-trat="vacina">💉 Vacina</button>
+      <button type="button" data-trat="soro">🧴 Soro</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Lado a lado</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Vacina</b>: tem o <b>antígeno</b> (micróbio morto ou enfraquecido, um pedaço dele, ou a "receita" dele, como nas vacinas de RNA). O corpo produz os próprios anticorpos e células de memória. Imunidade <b>ativa</b>, demora semanas, dura anos. Serve para <b>prevenir</b>.</li>
+    <li><b>Soro</b>: tem <b>anticorpos prontos</b>. Imunidade <b>passiva</b>, imediata, mas some em semanas e não deixa memória. Serve para <b>tratar</b> na hora: picada de cobra, escorpião, aranha, raiva.</li>
+    <li>O bebê também recebe imunidade passiva natural: anticorpos da mãe pela placenta e pelo leite materno.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Como se faz o soro</h2>
+  <p>O soro antiofídico é produzido no Brasil por institutos públicos. Um animal grande recebe doses pequenas e seguras do veneno, produz anticorpos, e esses anticorpos são separados do sangue dele e purificados.</p>
+  <div class="au-filme" data-filme="soro" aria-label="Animação: veneno no cavalo, anticorpos no sangue, soro purificado"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Imunidade coletiva</b>: quando muita gente se vacina, o micróbio não consegue circular, e até quem não pode se vacinar (bebês, pessoas com imunidade baixa) fica protegido.</li>
+    <li>Com a queda da vacinação, doenças que estavam controladas, como o sarampo, voltaram a aparecer.</li>
+    <li>Vacina não é tratamento: quem já está doente precisa de outra coisa.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="O veneno age em horas. O soro traz anticorpos prontos, que neutralizam o veneno na hora.">
+    <p>Uma pessoa picada por uma cobra venenosa deve receber:</p>
+    <button type="button" class="au-alt">vacina, porque estimula a memória</button>
+    <button type="button" class="au-alt">soro, porque traz anticorpos prontos e age na hora</button>
+    <button type="button" class="au-alt">antibiótico</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A vacina leva o corpo a produzir anticorpos e células de memória, que respondem rápido num contato futuro.">
+    <p>A vacina protege por muitos anos porque:</p>
+    <button type="button" class="au-alt">faz o corpo produzir anticorpos e células de memória</button>
+    <button type="button" class="au-alt">contém anticorpos prontos que ficam para sempre</button>
+    <button type="button" class="au-alt">mata os vírus que estão no ambiente</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Com muita gente imune, o micróbio não acha em quem se espalhar: é a imunidade coletiva, ou de rebanho.">
+    <p>Quando muita gente se vacina, até quem não pode tomar a vacina fica mais protegido. Isso se chama:</p>
+    <button type="button" class="au-alt">imunidade passiva</button>
+    <button type="button" class="au-alt">resistência bacteriana</button>
+    <button type="button" class="au-alt">imunidade coletiva (de rebanho)</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="vacinas-soros">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
