@@ -31,7 +31,8 @@ window.TRILHAS_MM = {
     'mol', 'estequiometria', 'concentracao', 'diluicao',
     'termoquimica', 'cinetica', 'equilibrio', 'ph',
     'oxirreducao', 'pilhas', 'eletrolise', 'corrosao',
-    'carbono', 'funcoes-organicas', 'propriedades-organicas'],
+    'carbono', 'funcoes-organicas', 'propriedades-organicas',
+    'isomeria-plana', 'isomeria-espacial', 'reacoes-organicas', 'polimeros'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -93,7 +94,7 @@ window.TRILHAS_MM = {
         ['eletrolise', 'Eletrólise', '⚡'], ['corrosao', 'Corrosão e proteção', '🛠️']] },
       { id: 'qui5', nome: 'Química orgânica I', sobre: 'Cadeias de carbono, funções e propriedades.', teste: true, aulas: [
         ['carbono', 'O carbono e as cadeias', '⬡'], ['funcoes-organicas', 'Funções orgânicas', '🏷️'], ['propriedades-organicas', 'Propriedades dos compostos orgânicos', '🌡️']] },
-      { id: 'qui6', nome: 'Química orgânica II', sobre: 'Isomeria, reações e polímeros.', aulas: [
+      { id: 'qui6', nome: 'Química orgânica II', sobre: 'Isomeria, reações e polímeros.', teste: true, aulas: [
         ['isomeria-plana', 'Isomeria plana', '🔀'], ['isomeria-espacial', 'Isomeria espacial', '🪞'],
         ['reacoes-organicas', 'Reações orgânicas', '🧪'], ['polimeros', 'Polímeros', '🧴']] },
       { id: 'qui7', nome: 'Química ambiental e tópicos especiais', sobre: 'A Química do cotidiano e das notícias.', teste: true, aulas: [
