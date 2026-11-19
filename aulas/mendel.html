@@ -1,0 +1,84 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 3 · Aula 2</div>
+  <h1>Leis de Mendel: a chance de herdar uma característica</h1>
+  <p class="au-abre">Um monge cruzou milhares de ervilhas e descobriu que as características passam dos pais para os filhos em "pacotinhos", os genes. Cada filho recebe um de cada pai. Com um quadro de 4 casas você descobre a chance de um filho nascer com cada característica, e o ENEM adora isso.</p>
+</header>
+
+<section class="au-cena" aria-label="Quadro de cruzamento de ervilhas amarelas e verdes">
+  <div class="au-loja">Cruzando ervilhas <small>escolha os genes de cada planta e veja os filhos possíveis</small></div>
+  <div class="au-painel">
+    <div class="au-gen-pais">
+      <div><small>Planta 1</small><div class="au-atalhos" role="group" aria-label="Genes da planta 1" id="au-p1"></div></div>
+      <div><small>Planta 2</small><div class="au-atalhos" role="group" aria-label="Genes da planta 2" id="au-p2"></div></div>
+    </div>
+    <div class="au-gen-quadro" id="au-quadro" role="img"></div>
+    <div class="au-gen-barras" id="au-barras"></div>
+    <div class="au-atalhos">
+      <button type="button" id="au-plantar">🌱 Plantar 100 sementes</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Gene, alelo, genótipo e fenótipo</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Alelos</b> são as versões de um gene. Na ervilha: <b>A</b> (amarela) e <b>a</b> (verde). Cada planta tem <b>dois</b>: um veio do pai e um da mãe.</li>
+    <li><b>Dominante</b> (letra maiúscula) aparece mesmo com um só. <b>Recessivo</b> (minúscula) só aparece em dose dupla (aa).</li>
+    <li><b>Genótipo</b> é a dupla de letras (AA, Aa, aa). <b>Fenótipo</b> é o que se vê (amarela ou verde), que também pode sofrer influência do ambiente.</li>
+    <li><b>Homozigoto</b>: duas letras iguais (AA ou aa). <b>Heterozigoto</b>: diferentes (Aa).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>1ª Lei: cada filho recebe um alelo de cada pai</h2>
+  <p>Na formação dos gametas, os dois alelos se <b>separam</b>: cada gameta leva só um. Por isso, cruzando duas plantas <b>Aa</b>, os filhos saem <b>1 AA : 2 Aa : 1 aa</b>, ou seja, <b>3 amarelas para 1 verde</b>. É a famosa proporção <b>3 : 1</b>.</p>
+  <div class="au-filme" data-filme="geracoes" aria-label="Animação: amarela pura cruzada com verde pura, todos os filhos amarelos, e na geração seguinte 3 amarelas para 1 verde"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>2ª Lei: duas características ao mesmo tempo</h2>
+  <p>Genes de características diferentes (cor e textura, por exemplo) que ficam em cromossomos diferentes se separam de forma <b>independente</b>. Cruzando dois duplo-heterozigotos (AaBb × AaBb), a proporção dos fenótipos é <b>9 : 3 : 3 : 1</b>. Atalho: multiplique as chances de cada característica. Chance de ser verde (1/4) <b>e</b> rugosa (1/4) = 1/16.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Dois pais "normais" que têm um filho com uma doença recessiva são, os dois, <b>heterozigotos (Aa)</b>. A chance de o próximo filho ter a doença é <b>1/4</b>.</li>
+    <li>"Dado que o filho é normal, qual a chance de ser portador?" Aí só contam as 3 casas normais: <b>2/3</b>, não 1/2.</li>
+    <li>Para saber se uma planta dominante é AA ou Aa, cruza-se com uma <b>aa</b> (cruzamento-teste). Se aparecer algum filho recessivo, ela era Aa.</li>
+    <li>"Filho <b>e</b> menino": multiplique pela chance do sexo, <b>1/2</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Aa × Aa dá 1 AA : 2 Aa : 1 aa. Só aa é verde: 1 em 4, ou 25%.">
+    <p>Duas ervilhas amarelas heterozigotas (Aa) são cruzadas. A chance de nascer uma ervilha verde é:</p>
+    <button type="button" class="au-alt">0%</button>
+    <button type="button" class="au-alt">50%</button>
+    <button type="button" class="au-alt">25%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Se os pais não têm a doença e o filho tem, a doença é recessiva e os dois pais são Aa.">
+    <p>Um casal sem albinismo tem um filho albino. Sabendo que o albinismo é recessivo, os pais são:</p>
+    <button type="button" class="au-alt">os dois heterozigotos (Aa)</button>
+    <button type="button" class="au-alt">os dois homozigotos dominantes (AA)</button>
+    <button type="button" class="au-alt">um AA e um aa</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Aa × aa: metade dos filhos é Aa (amarela) e metade aa (verde). A proporção é 1 : 1.">
+    <p>No cruzamento Aa × aa, a proporção esperada de fenótipos é:</p>
+    <button type="button" class="au-alt">3 amarelas : 1 verde</button>
+    <button type="button" class="au-alt">1 amarela : 1 verde</button>
+    <button type="button" class="au-alt">todas amarelas</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="mendel">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

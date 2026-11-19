@@ -690,3 +690,44 @@ i.au-peso { display: inline-flex; width: 20px; height: 20px; border-radius: 50%;
 .au-cercado{display:block;border:3px dashed #8bc34a;background:rgba(139,195,74,.12);border-radius:4px;transition:width .6s,height .6s;width:80px;height:80px}
 .au-colonia{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:min(260px,72vw)}
 .au-colonia i{width:12px;height:12px;border-radius:50%;background:#8bc34a;display:block}
+
+/* ---------- Biologia Módulo 3 (genética) ---------- */
+.au-gen-linha { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; }
+.au-gen-rot { width: 100%; text-align: center; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--texto-fraco); margin-top: 4px; }
+.au-gen-codon { display: inline-flex; gap: 2px; padding: 3px; border-radius: 9px; border: 1px solid var(--borda); }
+.au-gen-base { width: 28px; height: 32px; border: 0; border-radius: 6px; font: 800 15px/32px var(--fonte); text-align: center; color: #10130f; padding: 0; }
+button.au-gen-base { cursor: pointer; }
+button.au-gen-base:hover { outline: 2px solid var(--texto); outline-offset: 1px; }
+.au-gen-A { background: #6fd08c; } .au-gen-T { background: #f08a8a; } .au-gen-U { background: #f2a65a; }
+.au-gen-C { background: #62a8ea; } .au-gen-G { background: #e9cf5b; }
+.au-gen-base.au-gen-novo { box-shadow: 0 0 0 3px var(--texto); }
+.au-gen-aa { font: 700 13px var(--fonte); padding: 6px 10px; border-radius: 999px; background: var(--marca-suave); border: 1px solid var(--borda); }
+.au-gen-aa.au-gen-mudou { background: #f2a65a; color: #1a1208; border-color: #f2a65a; }
+.au-gen-aa.au-gen-pare { background: var(--errado); color: #fff; border-color: var(--errado); }
+.au-gen-aa.au-gen-apagado { opacity: .35; }
+.au-gen-pais { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.au-gen-pais > div { display: flex; flex-direction: column; gap: 6px; }
+.au-gen-pais small { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--texto-fraco); }
+.au-gen-pais .au-atalhos button { padding: 7px 11px; }
+.au-gen-quadro { display: grid; grid-template-columns: 52px repeat(2, minmax(0, 1fr)); gap: 5px; max-width: 360px; width: 100%; margin: 0 auto; }
+.au-gen-quadro b, .au-gen-quadro span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 52px; border-radius: 10px; font: 700 15px var(--fonte); text-align: center; }
+.au-gen-quadro b { color: var(--texto-fraco); font-size: 14px; }
+.au-gen-quadro span { background: var(--superficie-2); border: 1px solid var(--borda); padding: 4px; }
+.au-gen-quadro span small { font: 500 11px/1.2 var(--fonte); color: var(--texto-fraco); }
+.au-gen-ervilha { display: inline-block; width: 18px; height: 18px; border-radius: 50%; box-shadow: inset -3px -3px 0 rgba(0,0,0,.18); }
+.au-gen-amarela { background: #e9cf5b; } .au-gen-verde { background: #6fae3f; }
+.au-gen-barras { display: flex; flex-direction: column; gap: 6px; }
+.au-gen-barra { display: grid; grid-template-columns: minmax(96px, 150px) minmax(0, 1fr) 48px; align-items: center; gap: 8px; font-size: 13px; }
+.au-gen-barra > span { height: 12px; border-radius: 6px; background: var(--marca-suave); overflow: hidden; }
+.au-gen-barra i { display: block; height: 100%; border-radius: 6px; background: var(--marca); transition: width .35s; }
+.au-gen-barra em { font-style: normal; text-align: right; color: var(--texto-fraco); font-variant-numeric: tabular-nums; }
+.au-gen-gel { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; background: #0b1726; border-radius: 12px; padding: 10px 8px 12px; }
+.au-gen-poco { display: flex; flex-direction: column; gap: 6px; }
+.au-gen-poco small { color: #cfe3ff; font-size: 11px; line-height: 1.2; text-align: center; min-height: 28px; }
+.au-gen-trilho { position: relative; height: 190px; border-radius: 6px; background: rgba(255,255,255,.04); border-top: 4px solid #1f3550; }
+.au-gen-faixa { position: absolute; left: 12%; right: 12%; height: 6px; border-radius: 3px; background: #e8f1ff; box-shadow: 0 0 8px rgba(232,241,255,.7); transition: background .3s, box-shadow .3s; }
+.au-gen-faixa.au-gen-mae { background: #ff9ad5; box-shadow: 0 0 9px #ff9ad5; }
+.au-gen-faixa.au-gen-pai { background: #b4f28c; box-shadow: 0 0 9px #b4f28c; }
+.au-gen-faixa.au-gen-falta { background: var(--errado); box-shadow: 0 0 9px var(--errado); }
+.au-gen-poco.au-gen-escolhido small { color: #b4f28c; font-weight: 700; }
+@media (max-width: 420px) { .au-gen-base { width: 24px; height: 28px; line-height: 28px; font-size: 13px; } .au-gen-quadro { grid-template-columns: 44px repeat(2, minmax(0, 1fr)); } }

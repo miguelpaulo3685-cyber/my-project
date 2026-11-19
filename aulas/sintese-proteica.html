@@ -1,0 +1,87 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 3 · Aula 1</div>
+  <h1>DNA, RNA e síntese de proteínas</h1>
+  <p class="au-abre">O DNA é a receita; a proteína é o bolo pronto. No meio do caminho, a célula faz uma cópia da receita (o RNA) e um "cozinheiro" (o ribossomo) lê essa cópia de três em três letras. Aqui você vai trocar uma letra do DNA e ver, na hora, o que acontece com a proteína.</p>
+</header>
+
+<section class="au-cena" aria-label="Do DNA à proteína: toque numa letra do DNA para causar uma mutação">
+  <div class="au-loja">Do DNA à proteína <small>toque numa letra do DNA para trocar e veja o RNA e a proteína mudarem</small></div>
+  <div class="au-painel">
+    <div class="au-gen-linha" id="au-dna"></div>
+    <div class="au-gen-linha" id="au-rna"></div>
+    <div class="au-gen-linha" id="au-prot"></div>
+    <div class="au-atalhos" role="group" aria-label="Exemplos">
+      <button type="button" data-exemplo="original">↺ DNA original</button>
+      <button type="button" data-exemplo="silenciosa">Mutação silenciosa</button>
+      <button type="button" data-exemplo="troca">Troca de aminoácido</button>
+      <button type="button" data-exemplo="parada">Parada antes da hora</button>
+    </div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>DNA e RNA: parecidos, mas não iguais</h2>
+  <ul class="au-pegadinhas">
+    <li><b>DNA</b>: fita <b>dupla</b>, açúcar <b>desoxirribose</b>, bases <b>A, T, C, G</b>. Fica guardado no núcleo.</li>
+    <li><b>RNA</b>: fita <b>simples</b>, açúcar <b>ribose</b>, bases <b>A, U, C, G</b> (troca o T pela <b>U</b>, uracila). Sai do núcleo e vai até o ribossomo.</li>
+    <li>As bases sempre se encaixam em pares: <b>A com T</b> (ou A com U, no RNA) e <b>C com G</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Os três passos: duplicar, transcrever, traduzir</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Duplicação (replicação)</b>: antes de a célula se dividir, o DNA faz uma cópia de si mesmo. Cada DNA novo tem uma fita velha e uma nova (<b>semiconservativa</b>).</li>
+    <li><b>Transcrição</b>: no núcleo, uma fita do DNA serve de molde para fazer o <b>RNA mensageiro</b>. Onde o DNA tem A, o RNA põe U; onde tem T, põe A; C vira G e G vira C.</li>
+    <li><b>Tradução</b>: no citoplasma, o <b>ribossomo</b> lê o RNA de 3 em 3 letras. Cada trinca é um <b>códon</b>, e cada códon pede um <b>aminoácido</b>, trazido pelo <b>RNA transportador</b>. Começa no <b>AUG</b> e termina num códon de parada (UAA, UAG ou UGA).</li>
+  </ul>
+  <div class="au-filme" data-filme="traducao" aria-label="Animação: o ribossomo lendo o RNA de três em três letras e montando a proteína"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Mutação: uma letra trocada pode mudar tudo (ou nada)</h2>
+  <p>O código genético é <b>degenerado</b>: vários códons pedem o mesmo aminoácido. Por isso uma troca de letra às vezes não muda nada (<b>mutação silenciosa</b>). Outras vezes troca um aminoácido, como na <b>anemia falciforme</b>: uma letra trocada faz entrar <b>valina</b> no lugar de <b>ácido glutâmico</b> na hemoglobina, e a hemácia fica em forma de foice. E se aparecer um códon de parada no meio, a proteína sai cortada.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>RNA tem <b>U</b> no lugar de <b>T</b>. Se a questão mostra uma sequência com U, é RNA.</li>
+    <li>O código genético é <b>universal</b>: o mesmo códon pede o mesmo aminoácido na bactéria e no ser humano. É isso que permite uma bactéria fabricar insulina humana.</li>
+    <li>Uma mutação no DNA só passa para os filhos se acontecer nas células que formam os gametas (óvulo e espermatozoide).</li>
+    <li>Contas de trincas: uma proteína com 100 aminoácidos precisa de pelo menos <b>300 bases</b> no RNA (mais o códon de parada).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Na transcrição, A do DNA vira U no RNA, T vira A, C vira G e G vira C. TAC vira AUG.">
+    <p>A fita molde do DNA tem a trinca TAC. O códon no RNA mensageiro será:</p>
+    <button type="button" class="au-alt">ATG</button>
+    <button type="button" class="au-alt">AUG</button>
+    <button type="button" class="au-alt">UAC</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Como vários códons pedem o mesmo aminoácido (código degenerado), a troca de uma base pode não mudar a proteína: é a mutação silenciosa.">
+    <p>Uma base do DNA foi trocada, mas a proteína ficou exatamente igual. Isso é possível porque:</p>
+    <button type="button" class="au-alt">o RNA corrige o erro do DNA</button>
+    <button type="button" class="au-alt">a proteína não depende do DNA</button>
+    <button type="button" class="au-alt">o código genético é degenerado: códons diferentes podem pedir o mesmo aminoácido</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O ribossomo lê o RNA mensageiro de três em três bases (códons); cada códon corresponde a um aminoácido.">
+    <p>Na tradução, o ribossomo lê o RNA mensageiro:</p>
+    <button type="button" class="au-alt">de três em três bases, e cada trinca pede um aminoácido</button>
+    <button type="button" class="au-alt">de uma em uma base, e cada base é um aminoácido</button>
+    <button type="button" class="au-alt">de trás para frente, a partir do códon de parada</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="sintese-proteica">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

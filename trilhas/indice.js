@@ -12,7 +12,8 @@ window.TRILHAS_MM = {
     'atomo', 'tabela-periodica', 'ligacoes', 'forcas-intermoleculares',
     'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade',
     'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico',
-    'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log'],
+    'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log',
+    'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -44,7 +45,7 @@ window.TRILHAS_MM = {
       { id: 'bio2', nome: 'Citologia e bioquímica celular', sobre: 'A base estrutural e energética dos seres vivos.', teste: true, aulas: [
         ['bioquimica', 'Água, sais e moléculas da vida', '🧪'], ['membrana', 'Membrana e transportes', '🫧'], ['organelas', 'Organelas', '🏭'],
         ['metabolismo-energetico', 'Respiração e fermentação', '⚡'], ['fotossintese', 'Fotossíntese', '🌿']] },
-      { id: 'bio3', nome: 'Genética e biologia molecular', sobre: 'Raciocínio lógico, heredogramas e código genético.', aulas: [
+      { id: 'bio3', nome: 'Genética e biologia molecular', sobre: 'Raciocínio lógico, heredogramas e código genético.', teste: true, aulas: [
         ['sintese-proteica', 'DNA, RNA e síntese de proteínas', '🧬'], ['mendel', 'Leis de Mendel', '🫛'],
         ['sangue-heranca', 'Sangue (ABO e Rh) e herança ligada ao sexo', '🩸'], ['biotecnologia', 'Biotecnologia', '🔬']] },
       { id: 'bio4', nome: 'Evolução e filogenia', sobre: 'Como as espécies mudam e como ler árvores evolutivas.', aulas: [

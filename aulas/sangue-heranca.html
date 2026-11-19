@@ -1,0 +1,93 @@
+<header>
+  <div class="au-trilha">Biologia · Módulo 3 · Aula 3</div>
+  <h1>Sangue (ABO e Rh) e herança ligada ao sexo</h1>
+  <p class="au-abre">Por que um filho pode ter um tipo de sangue diferente dos dois pais? Por que o daltonismo é bem mais comum em homens? As duas respostas usam o mesmo quadro de cruzamento, com uma novidade em cada: três alelos no sangue e um gene que mora no cromossomo X.</p>
+</header>
+
+<section class="au-cena" aria-label="Quadro de cruzamento: tipo sanguíneo ou daltonismo">
+  <div class="au-loja">Herança na família <small>escolha o caso e os genes da mãe e do pai</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Caso">
+      <button type="button" data-modo="abo">🩸 Tipo sanguíneo (ABO)</button>
+      <button type="button" data-modo="x">🎨 Daltonismo (ligado ao X)</button>
+    </div>
+    <div class="au-gen-pais">
+      <div><small>Mãe</small><div class="au-atalhos" role="group" aria-label="Genes da mãe" id="au-mae"></div></div>
+      <div><small>Pai</small><div class="au-atalhos" role="group" aria-label="Genes do pai" id="au-pai"></div></div>
+    </div>
+    <div class="au-gen-quadro" id="au-quadro" role="img"></div>
+    <div class="au-gen-barras" id="au-barras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Sistema ABO: três alelos e codominância</h2>
+  <ul class="au-pegadinhas">
+    <li>São três alelos: <b>Iᴬ</b>, <b>Iᴮ</b> e <b>i</b>. Iᴬ e Iᴮ dominam o i. Entre eles, nenhum domina: quem tem os dois é <b>AB</b> (<b>codominância</b>).</li>
+    <li>Tipo <b>A</b>: IᴬIᴬ ou Iᴬi. Tipo <b>B</b>: IᴮIᴮ ou Iᴮi. Tipo <b>AB</b>: IᴬIᴮ. Tipo <b>O</b>: ii.</li>
+    <li>Por isso um casal A (Iᴬi) e B (Iᴮi) pode ter filhos dos <b>quatro</b> tipos, inclusive O.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Quem doa para quem</h2>
+  <p>O sangue tem <b>aglutinogênios</b> (marcas na hemácia) e o plasma tem <b>aglutininas</b> (anticorpos contra a marca que a pessoa não tem). Quem é A tem anticorpo anti-B; quem é O tem anti-A e anti-B; quem é AB não tem nenhum dos dois.</p>
+  <ul class="au-pegadinhas">
+    <li><b>O</b> não tem marca A nem B: é o <b>doador universal</b>.</li>
+    <li><b>AB</b> não tem anticorpo contra A nem B: é o <b>receptor universal</b>.</li>
+    <li>No fator Rh, <b>Rh⁻ só recebe Rh⁻</b>. O mais seguro de todos para doar é <b>O⁻</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Fator Rh e a eritroblastose fetal</h2>
+  <p>Rh⁺ é dominante (RR ou Rr); Rh⁻ é rr. Se uma mãe <b>Rh⁻</b> espera um bebê <b>Rh⁺</b>, no parto ela pode produzir anticorpos anti-Rh. Num segundo bebê Rh⁺, esses anticorpos atravessam a placenta e destroem as hemácias dele: é a <b>eritroblastose fetal</b>. A prevenção é uma injeção de anticorpos anti-Rh na mãe logo após o primeiro parto.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Herança ligada ao X: daltonismo e hemofilia</h2>
+  <p>Mulheres são <b>XX</b> e homens são <b>XY</b>. Alguns genes ficam só no X. Se o alelo é recessivo (Xᵈ), a mulher só tem a condição com dois (XᵈXᵈ), mas o homem, que tem um X só, basta um (XᵈY). Por isso <b>daltonismo e hemofilia são muito mais comuns em homens</b>. E o filho homem sempre recebe o X <b>da mãe</b> (do pai ele recebe o Y).</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Pai AB não pode ter filho O: ele sempre passa Iᴬ ou Iᴮ.</li>
+    <li>Pai daltônico não passa o daltonismo para o filho homem (passa o Y), mas <b>todas as filhas</b> recebem o Xᵈ dele.</li>
+    <li>Mãe portadora (XᴰXᵈ) com pai normal: metade dos <b>filhos homens</b> é daltônica; nenhuma filha é.</li>
+    <li>Doador universal = <b>O⁻</b>; receptor universal = <b>AB⁺</b>.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Iᴬi × Iᴮi pode dar IᴬIᴮ (AB), Iᴬi (A), Iᴮi (B) e ii (O): os quatro tipos, cada um com 25%.">
+    <p>Uma mulher do tipo A (Iᴬi) e um homem do tipo B (Iᴮi) podem ter filhos:</p>
+    <button type="button" class="au-alt">só A ou B</button>
+    <button type="button" class="au-alt">dos tipos A, B, AB e O</button>
+    <button type="button" class="au-alt">só AB</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O filho homem recebe o X da mãe. Se ela é portadora (XᴰXᵈ), metade dos filhos homens recebe o Xᵈ e é daltônica.">
+    <p>Uma mulher portadora do gene do daltonismo (XᴰXᵈ) e um homem de visão normal têm um filho homem. A chance de ele ser daltônico é:</p>
+    <button type="button" class="au-alt">50%</button>
+    <button type="button" class="au-alt">25%</button>
+    <button type="button" class="au-alt">0%</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O sangue O não tem aglutinogênios A nem B, então não é atacado pelos anticorpos de quem recebe. O⁻ é o doador universal.">
+    <p>O tipo sanguíneo considerado doador universal é:</p>
+    <button type="button" class="au-alt">AB⁺</button>
+    <button type="button" class="au-alt">A⁻</button>
+    <button type="button" class="au-alt">O⁻</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="sangue-heranca">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>
