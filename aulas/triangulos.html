@@ -1,0 +1,75 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 2</div>
+  <h1>Semelhança de triângulos e Teorema de Pitágoras</h1>
+  <p class="au-abre">Como medir a altura de um prédio sem subir nele? Qual o tamanho da escada para alcançar uma janela? O ENEM resolve isso com duas ferramentas: triângulos semelhantes (mesma forma, tamanhos diferentes) e o Teorema de Pitágoras, que liga os três lados de um triângulo retângulo.</p>
+</header>
+
+<section class="au-cena" aria-label="Pitágoras e sombras">
+  <div class="au-loja">Medindo sem régua <small>escolha o modo e mexa nos controles</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Modo">
+      <button type="button" data-modo="pitagoras">📐 Pitágoras</button>
+      <button type="button" data-modo="sombra">☀️ Sombras (semelhança)</button>
+    </div>
+    <svg viewBox="0 0 320 220" id="au-graf" role="img"></svg>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle"><label for="au-v1" id="au-r1"></label><input id="au-v1" type="range"><output id="au-o1"></output></div>
+    <div class="au-controle"><label for="au-v2" id="au-r2"></label><input id="au-v2" type="range"><output id="au-o2"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Triângulos semelhantes</h2>
+  <p>Dois triângulos são <b>semelhantes</b> quando têm os <b>mesmos ângulos</b>. Aí os lados são <b>proporcionais</b>: se um lado dobra, todos dobram. Na hora da sombra, o sol bate com o mesmo ângulo em você e no prédio, então: <b>altura ÷ sombra</b> é igual para os dois.</p>
+  <p>Cuidado com áreas: se os lados aumentam <b>k vezes</b>, a área aumenta <b>k² vezes</b> (e o volume, k³). Uma foto ampliada 2 vezes tem 4 vezes a área.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Teorema de Pitágoras</h2>
+  <p>Num triângulo <b>retângulo</b> (com um ângulo de 90°), o lado maior, oposto ao ângulo reto, é a <b>hipotenusa</b> (c); os outros dois são os <b>catetos</b> (a e b). Sempre vale: <b>a² + b² = c²</b>.</p>
+  <div class="au-filme" data-filme="quadrados" aria-label="Animação: os quadrados dos catetos 3 e 4 somam o quadrado da hipotenusa 5"></div>
+  <p>Ternos que caem muito: <b>3, 4, 5</b> e seus múltiplos (6, 8, 10; 9, 12, 15), e <b>5, 12, 13</b>. Reconhecer na hora economiza conta.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Escada encostada no muro: a <b>escada é a hipotenusa</b>; o chão e o muro são os catetos.</li>
+    <li>Diagonal de um quadrado de lado L: <b>L√2</b>. Altura de um triângulo equilátero de lado L: <b>L√3/2</b>.</li>
+    <li>Na semelhança, compare <b>lado com lado correspondente</b> (o menor com o menor, o maior com o maior).</li>
+    <li>Mapa e maquete: a escala vale para comprimentos; para área, eleve a escala ao quadrado.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="A escada é a hipotenusa: 6² + 8² = 36 + 64 = 100, e √100 = 10 m.">
+    <p>Uma escada toca um muro a 8 m do chão, com o pé a 6 m do muro. O comprimento da escada é:</p>
+    <button type="button" class="au-alt">14 m</button>
+    <button type="button" class="au-alt">10 m</button>
+    <button type="button" class="au-alt">12 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Mesmo sol, triângulos semelhantes: 2/1,5 = H/9, então H = 9 × 2 ÷ 1,5 = 12 m.">
+    <p>Uma pessoa de 2 m projeta uma sombra de 1,5 m. No mesmo instante, a sombra de uma árvore mede 9 m. A altura da árvore é:</p>
+    <button type="button" class="au-alt">12 m</button>
+    <button type="button" class="au-alt">6,75 m</button>
+    <button type="button" class="au-alt">10,5 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Se os lados triplicam, a área fica 3² = 9 vezes maior.">
+    <p>Uma figura é ampliada e todos os lados ficam 3 vezes maiores. A área fica:</p>
+    <button type="button" class="au-alt">3 vezes maior</button>
+    <button type="button" class="au-alt">6 vezes maior</button>
+    <button type="button" class="au-alt">9 vezes maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="triangulos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

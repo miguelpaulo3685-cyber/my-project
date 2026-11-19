@@ -29,12 +29,14 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Conversa anterior:** "M&M Estudos — pós-lançamento". Ramo de trabalho: `claude/gracious-babbage-tp7kds` (em dia com o master).
 - **Combinado do Miguel (17/11):** parar de criar funções novas no site e focar em **anunciar**; só aulas e consertos.
   As aulas da trilha continuam: "continue com as aulas e publique" vale como "sim" para publicar aulas.
-- **Próximas aulas:** Matemática 5, 6 e 7, Biologia 4 a 7 e Química 2 a 6. (Biologia Módulo 3 publicado em 19/11: 51 aulas no total.)
+- **Próximas aulas:** Matemática 6 e 7, Biologia 4 a 7 e Química 2 a 6. (Em 19/11 saíram Biologia 3 e Matemática 5: 55 aulas no total.)
   Cada módulo pronto ganha `trilhas/teste-<id>.js` (10 questões) e `teste: true` no índice.
 - **Publicado em 17-18/11:** Matemática Módulo 3 (6 aulas + teste mat3, 47 aulas no total); estilo Serra sai sozinho
   quando o aluno escolhe tema/cor/imagem; escolher Claro/Escuro/tema pronto/cor de fundo tira a imagem de fundo
   (era o bug do "tema claro não funciona"); "Aulas soltas" saiu da tela Treinar (as 3 aulas seguem em `aulas/`);
   **administradores veem a trilha toda sem cadeado** (`moduloAberto` em `index.html`).
+- **Publicado em 19/11:** Matemática Módulo 5 (geometria plana): ângulos/paralelas/Tales, semelhança (sombras) e Pitágoras,
+  polígonos e circunferência, áreas na malha de quadradinhos + teste mat5.
 - **Publicado em 19/11:** Biologia Módulo 3 (genética): DNA/RNA e síntese de proteínas (troque uma base do DNA e veja a
   proteína mudar), Leis de Mendel (quadro de cruzamento e "plantar 100 sementes"), Sangue ABO/Rh e herança ligada ao X
   (quadro com mãe e pai), Biotecnologia (teste de paternidade por bandas de DNA) + teste bio3. CSS novo: `.au-gen-*` em aulas/base.css.

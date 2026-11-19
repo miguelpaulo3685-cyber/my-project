@@ -1,0 +1,81 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 1</div>
+  <h1>Ângulos, paralelas e Teorema de Tales</h1>
+  <p class="au-abre">Ruas que cruzam avenidas, terrenos entre ruas paralelas, rampas e telhados: a geometria do ENEM começa nos ângulos. Duas ideias resolvem muita questão: quando uma reta corta duas paralelas, os ângulos se repetem; e retas paralelas cortam duas transversais em pedaços proporcionais (Tales).</p>
+</header>
+
+<section class="au-cena" aria-label="Paralelas cortadas por uma transversal e Teorema de Tales">
+  <div class="au-loja">Régua de ângulos <small>escolha o modo e arraste o controle</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Modo">
+      <button type="button" data-modo="paralelas">∥ Paralelas e transversal</button>
+      <button type="button" data-modo="tales">📏 Teorema de Tales</button>
+    </div>
+    <svg viewBox="0 0 320 220" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-v" id="au-rot">Ângulo</label><input id="au-v" type="range" min="20" max="160" value="60"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Os ângulos que você precisa conhecer</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Reto</b> = 90° (o canto do caderno). <b>Agudo</b> é menor que 90°; <b>obtuso</b>, maior. <b>Raso</b> = 180° (meia-volta). Uma volta inteira tem <b>360°</b>.</li>
+    <li><b>Complementares</b> somam 90°. <b>Suplementares</b> somam 180°.</li>
+    <li><b>Opostos pelo vértice</b> (o "X" de duas retas que se cruzam) são <b>iguais</b>.</li>
+    <li>Num <b>triângulo</b>, os três ângulos internos somam sempre <b>180°</b>.</li>
+  </ul>
+  <div class="au-filme" data-filme="triangulo" aria-label="Animação: os três cantos de um triângulo juntos formam meia-volta, 180 graus"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Duas paralelas e uma transversal</h2>
+  <p>Quando uma reta corta duas paralelas, só aparecem <b>dois valores</b> de ângulo: um α e o seu suplemento, 180° − α. <b>Correspondentes</b> (mesma posição nos dois cruzamentos) são iguais; <b>alternos internos</b> (entre as paralelas, em lados opostos da transversal) são iguais; <b>colaterais internos</b> (entre as paralelas, do mesmo lado) somam 180°.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Teorema de Tales</h2>
+  <p>Retas <b>paralelas</b> cortando duas transversais formam segmentos <b>proporcionais</b>: se na primeira transversal os pedaços medem a e b, e na segunda c e d, então <b>a/b = c/d</b>. É o caso clássico dos terrenos entre ruas paralelas: as frentes para uma avenida são proporcionais às frentes para a outra.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Desenhe! Marque α em todos os ângulos iguais e 180° − α nos outros. Quase sempre a resposta aparece.</li>
+    <li>Num triângulo, o <b>ângulo externo</b> é igual à <b>soma dos dois internos não vizinhos</b>.</li>
+    <li>Em Tales, monte a proporção na mesma ordem nas duas transversais (de cima para baixo, por exemplo).</li>
+    <li>Relógio: cada hora vale 360° ÷ 12 = <b>30°</b>. Às 3h os ponteiros formam 90°.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Os três ângulos internos de um triângulo somam 180°: 180 − 50 − 70 = 60°.">
+    <p>Um triângulo tem ângulos de 50° e 70°. O terceiro ângulo mede:</p>
+    <button type="button" class="au-alt">50°</button>
+    <button type="button" class="au-alt">60°</button>
+    <button type="button" class="au-alt">120°</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Colaterais internos somam 180°: 180 − 65 = 115°.">
+    <p>Duas paralelas são cortadas por uma transversal. Um ângulo colateral interno mede 65°. O outro colateral interno mede:</p>
+    <button type="button" class="au-alt">65°</button>
+    <button type="button" class="au-alt">25°</button>
+    <button type="button" class="au-alt">115°</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Por Tales, 20/30 = x/45, então x = 45 × 20 ÷ 30 = 30 m.">
+    <p>Dois terrenos vizinhos ficam entre duas ruas paralelas. Na rua de cima, as frentes medem 20 m e 30 m. Na rua de baixo, a frente do segundo terreno mede 45 m. A frente do primeiro, na rua de baixo, mede:</p>
+    <button type="button" class="au-alt">30 m</button>
+    <button type="button" class="au-alt">35 m</button>
+    <button type="button" class="au-alt">67,5 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="angulos-tales">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

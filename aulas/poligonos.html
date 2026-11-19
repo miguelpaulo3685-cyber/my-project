@@ -1,0 +1,87 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 3</div>
+  <h1>Polígonos e circunferência</h1>
+  <p class="au-abre">Ladrilhos que encaixam no chão, a bola de futebol, a roda da bicicleta, a pista de atletismo. Polígonos e circunferências estão em toda parte, e o ENEM cobra poucas fórmulas: soma dos ângulos, diagonais, comprimento da circunferência e área do círculo.</p>
+</header>
+
+<section class="au-cena" aria-label="Polígonos regulares e circunferência">
+  <div class="au-loja">Formas redondas e de lados iguais <small>escolha o modo e arraste o controle</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Modo">
+      <button type="button" data-modo="poligono">⬡ Polígonos</button>
+      <button type="button" data-modo="circulo">⭕ Circunferência</button>
+    </div>
+    <svg viewBox="0 0 320 220" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-v" id="au-rot"></label><input id="au-v" type="range"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Polígonos: ângulos e diagonais</h2>
+  <ul class="au-pegadinhas">
+    <li>Um polígono de <b>n</b> lados pode ser dividido em <b>n − 2</b> triângulos a partir de um vértice. Por isso a <b>soma dos ângulos internos</b> é <b>(n − 2) × 180°</b>.</li>
+    <li>Se ele é <b>regular</b> (lados e ângulos iguais), cada ângulo interno mede (n − 2) × 180° ÷ n.</li>
+    <li>A soma dos ângulos <b>externos</b> é sempre <b>360°</b>, para qualquer polígono.</li>
+    <li><b>Diagonais</b>: d = n(n − 3) ÷ 2. Cada vértice liga com todos menos ele mesmo e os dois vizinhos; divide por 2 porque cada diagonal foi contada duas vezes.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Ladrilhos que encaixam</h2>
+  <p>Para cobrir o chão sem buracos, os ângulos em volta de cada ponto precisam somar <b>360°</b>. Triângulos equiláteros (60° × 6), quadrados (90° × 4) e hexágonos (120° × 3) encaixam sozinhos. Pentágonos regulares (108°) não: sobra um buraco. É por isso que os favos de mel são hexagonais.</p>
+  <div class="au-filme" data-filme="ladrilho" aria-label="Animação: três hexágonos fecham 360 graus em volta de um ponto, três pentágonos deixam um buraco"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Circunferência e círculo</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Comprimento</b> da circunferência (a volta): <b>C = 2πr</b>. Uma roda de raio r anda 2πr a cada volta.</li>
+    <li><b>Área</b> do círculo (o disco): <b>A = πr²</b>.</li>
+    <li>π ≈ 3,14. Muitas questões do ENEM mandam usar <b>π = 3</b>: leia o enunciado.</li>
+    <li>Diâmetro = 2 × raio. Cuidado quando a questão dá o diâmetro.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Dobrar o raio <b>dobra a volta</b>, mas <b>quadruplica a área</b>.</li>
+    <li>Pizza grande × duas médias: compare as <b>áreas</b> (πr²), não os diâmetros.</li>
+    <li>Pista de atletismo: as raias de fora são mais longas, por isso a largada é escalonada.</li>
+    <li>Arco de circunferência: um ângulo central de θ graus corresponde a θ/360 da volta inteira.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="Soma dos ângulos internos = (n − 2) × 180° = (6 − 2) × 180° = 720°.">
+    <p>A soma dos ângulos internos de um hexágono é:</p>
+    <button type="button" class="au-alt">360°</button>
+    <button type="button" class="au-alt">540°</button>
+    <button type="button" class="au-alt">720°</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Cada volta anda 2πr = 2 × 3 × 0,5 = 3 m. Em 100 voltas: 300 m.">
+    <p>Uma roda de raio 0,5 m dá 100 voltas sem deslizar. Usando π = 3, a distância percorrida é:</p>
+    <button type="button" class="au-alt">300 m</button>
+    <button type="button" class="au-alt">150 m</button>
+    <button type="button" class="au-alt">75 m</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="A área é πr². Com raio 2 vezes maior, a área fica 2² = 4 vezes maior.">
+    <p>Uma pizza tem o dobro do raio de outra. A área dela é:</p>
+    <button type="button" class="au-alt">o dobro</button>
+    <button type="button" class="au-alt">o quádruplo</button>
+    <button type="button" class="au-alt">o triplo</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="poligonos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

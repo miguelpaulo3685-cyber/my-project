@@ -13,7 +13,8 @@ window.TRILHAS_MM = {
     'quimica-ambiental', 'tratamento-agua', 'combustiveis', 'radioatividade',
     'bioquimica', 'membrana', 'organelas', 'metabolismo-energetico',
     'equacoes', 'sistemas', 'funcoes', 'funcao-afim', 'funcao-quadratica', 'exponencial-log',
-    'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia'],
+    'sintese-proteica', 'mendel', 'sangue-heranca', 'biotecnologia',
+    'angulos-tales', 'triangulos', 'poligonos', 'areas'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -30,7 +31,7 @@ window.TRILHAS_MM = {
       { id: 'mat4', nome: 'Estatística, contagem e probabilidade', sobre: 'Assuntos que sempre caem e pedem atenção aos detalhes do enunciado.', teste: true, aulas: [
         ['graficos', 'Gráficos e tabelas', '📊'], ['medias', 'Média, moda, mediana e dispersão', '📈'],
         ['combinatoria', 'Análise combinatória', '🎲'], ['probabilidade', 'Probabilidade', '🎯']] },
-      { id: 'mat5', nome: 'Geometria plana', sobre: 'Visualizar e calcular medidas em superfícies.', aulas: [
+      { id: 'mat5', nome: 'Geometria plana', sobre: 'Visualizar e calcular medidas em superfícies.', teste: true, aulas: [
         ['angulos-tales', 'Ângulos, paralelas e Tales', '📐'], ['triangulos', 'Semelhança e Pitágoras', '🔺'],
         ['poligonos', 'Polígonos e circunferência', '⭕'], ['areas', 'Áreas de figuras planas', '🟩']] },
       { id: 'mat6', nome: 'Geometria espacial e projeções', sobre: 'Embalagens, reservatórios e visão espacial.', aulas: [

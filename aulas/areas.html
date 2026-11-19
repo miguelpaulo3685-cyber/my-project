@@ -1,0 +1,84 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 5 · Aula 4</div>
+  <h1>Áreas de figuras planas</h1>
+  <p class="au-abre">Quanto piso comprar para a sala? Quantas latas de tinta para a parede? Qual terreno é maior? Área é contar quantos quadradinhos cabem dentro da figura, e quase todas as fórmulas saem de uma só: a do retângulo.</p>
+</header>
+
+<section class="au-cena" aria-label="Área de figuras planas sobre uma malha de quadradinhos">
+  <div class="au-loja">Malha de quadradinhos <small>cada quadradinho tem 1 m²; escolha a figura e mexa nas medidas</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Figura">
+      <button type="button" data-fig="retangulo">▭ Retângulo</button>
+      <button type="button" data-fig="triangulo">◺ Triângulo</button>
+      <button type="button" data-fig="paralelogramo">▱ Paralelogramo</button>
+      <button type="button" data-fig="trapezio">⏢ Trapézio</button>
+      <button type="button" data-fig="circulo">◯ Círculo</button>
+    </div>
+    <svg viewBox="0 0 320 210" id="au-graf" role="img"></svg>
+    <p class="au-formula" id="au-conta" style="margin:0;text-align:center"></p>
+    <div class="au-controle" id="au-c1"><label for="au-v1" id="au-r1"></label><input id="au-v1" type="range" min="1" max="12" value="8"><output id="au-o1"></output></div>
+    <div class="au-controle" id="au-c2"><label for="au-v2" id="au-r2"></label><input id="au-v2" type="range" min="1" max="7" value="5"><output id="au-o2"></output></div>
+    <div class="au-controle" id="au-c3"><label for="au-v3">Base menor</label><input id="au-v3" type="range" min="1" max="12" value="4"><output id="au-o3"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Tudo começa no retângulo</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Retângulo</b>: base × altura. <b>Quadrado</b>: lado².</li>
+    <li><b>Paralelogramo</b>: base × altura. Corte o triângulo de um lado e encaixe do outro: vira um retângulo.</li>
+    <li><b>Triângulo</b>: base × altura ÷ 2. É metade de um paralelogramo.</li>
+    <li><b>Trapézio</b>: (base maior + base menor) × altura ÷ 2. Dois trapézios iguais formam um paralelogramo.</li>
+    <li><b>Losango</b>: diagonal maior × diagonal menor ÷ 2.</li>
+    <li><b>Círculo</b>: πr².</li>
+  </ul>
+  <div class="au-filme" data-filme="metade" aria-label="Animação: um triângulo é metade de um retângulo de mesma base e altura"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>A altura é sempre "em pé"</h2>
+  <p>A altura é a distância <b>perpendicular</b> (em ângulo reto) entre a base e o ponto mais alto. No paralelogramo e no triângulo, ela não é o lado inclinado. Erro clássico: multiplicar a base pelo lado torto.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Unidades</b>: 1 m² = 10 000 cm² (100 × 100), não 100. Converta antes de fazer a conta.</li>
+    <li><b>1 hectare = 10 000 m²</b> (um quadrado de 100 m × 100 m), muito usado em questões de terrenos e plantações.</li>
+    <li>Figuras estranhas: divida em retângulos e triângulos, ou calcule o retângulo inteiro e <b>tire</b> o que sobra.</li>
+    <li>Piso e azulejo: área do cômodo ÷ área de uma peça, e arredonde <b>para cima</b> (não dá para comprar meia caixa).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Área do trapézio = (B + b) × h ÷ 2 = (10 + 6) × 4 ÷ 2 = 32 m².">
+    <p>Um terreno tem forma de trapézio com bases de 10 m e 6 m e altura de 4 m. A área é:</p>
+    <button type="button" class="au-alt">64 m²</button>
+    <button type="button" class="au-alt">32 m²</button>
+    <button type="button" class="au-alt">40 m²</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="A sala tem 4 × 5 = 20 m²; cada piso tem 0,5 × 0,5 = 0,25 m². 20 ÷ 0,25 = 80 pisos.">
+    <p>Uma sala de 4 m por 5 m será coberta com pisos quadrados de 50 cm de lado. São necessários, no mínimo:</p>
+    <button type="button" class="au-alt">80 pisos</button>
+    <button type="button" class="au-alt">40 pisos</button>
+    <button type="button" class="au-alt">20 pisos</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="Área do triângulo = base × altura ÷ 2 = 12 × 5 ÷ 2 = 30 m².">
+    <p>Um canteiro triangular tem base de 12 m e altura de 5 m. Sua área é:</p>
+    <button type="button" class="au-alt">60 m²</button>
+    <button type="button" class="au-alt">17 m²</button>
+    <button type="button" class="au-alt">30 m²</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="areas">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>
