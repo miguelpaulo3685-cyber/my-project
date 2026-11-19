@@ -1,0 +1,68 @@
+<header>
+  <div class="au-trilha">Química · Módulo 4 · Aula 3</div>
+  <h1>Eletrólise</h1>
+  <p class="au-abre">A pilha usa uma reação espontânea para gerar eletricidade. A eletrólise faz o contrário: usa eletricidade para forçar uma reação que não aconteceria sozinha. É assim que se produz alumínio, cloro, soda cáustica e que se cobre uma peça com uma camada de metal.</p>
+</header>
+
+<section class="au-cena" aria-label="Cobreação de uma chave: corrente e tempo definem a massa de cobre depositada">
+  <div class="au-loja">Cobrindo uma chave com cobre <small>mude a corrente e o tempo e veja quanto cobre se deposita</small></div>
+  <div class="au-painel">
+    <svg viewBox="0 0 320 166" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-i">Corrente</label><input id="au-i" type="range" min="1" max="10" step="1" value="2"><output id="au-io"></output></div>
+    <div class="au-controle"><label for="au-t">Tempo</label><input id="au-t" type="range" min="10" max="120" step="10" value="30"><output id="au-to"></output></div>
+    <div class="au-equacao" id="au-eq"></div>
+    <div class="au-leituras au-leituras-txt" id="au-leituras"></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Como funciona</h2>
+  <ul class="au-pegadinhas">
+    <li>Uma fonte de energia empurra elétrons. No <b>cátodo</b> (polo −) ocorre <b>redução</b>; no <b>ânodo</b> (polo +), <b>oxidação</b>. Os polos são invertidos em relação à pilha, mas cátodo continua sendo onde se reduz.</li>
+    <li><b>Ígnea</b>: com a substância derretida, sem água. Ex.: NaCl fundido dá sódio metálico e gás cloro; a bauxita dá alumínio.</li>
+    <li><b>Aquosa</b>: em solução. A salmoura (água + sal) dá gás cloro, gás hidrogênio e soda cáustica (NaOH).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>A conta de Faraday</h2>
+  <ul class="au-pegadinhas">
+    <li>Carga: <b>Q = i · t</b> (corrente em ampères, tempo em <b>segundos</b>).</li>
+    <li>1 mol de elétrons tem carga de cerca de <b>96 500 C</b> (1 faraday).</li>
+    <li>Cu²⁺ + 2 e⁻ → Cu: são 2 mols de elétrons para cada mol de cobre (63,5 g).</li>
+  </ul>
+  <div class="au-filme" data-filme="aluminio" aria-label="Animação: reciclar alumínio economiza a energia da eletrólise"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="Q = i · t = 5 A × 600 s = 3 000 C. O tempo precisa estar em segundos.">
+    <p>Uma corrente de 5 A passa durante 10 minutos. A carga que passou é:</p>
+    <button type="button" class="au-alt">50 C</button>
+    <button type="button" class="au-alt">3 000 C</button>
+    <button type="button" class="au-alt">300 C</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="O objeto a ser revestido recebe os íons metálicos, que ganham elétrons (redução). Ele deve ser o cátodo.">
+    <p>Na galvanoplastia, a peça que vai receber a camada de metal deve ser ligada como:</p>
+    <button type="button" class="au-alt">cátodo, onde os íons metálicos se reduzem</button>
+    <button type="button" class="au-alt">ânodo, onde ocorre oxidação</button>
+    <button type="button" class="au-alt">ponte salina</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="A eletrólise usa energia elétrica para provocar uma reação não espontânea; a pilha faz o contrário.">
+    <p>A diferença entre pilha e eletrólise é que a eletrólise:</p>
+    <button type="button" class="au-alt">gera energia elétrica a partir de uma reação espontânea</button>
+    <button type="button" class="au-alt">não envolve troca de elétrons</button>
+    <button type="button" class="au-alt">consome energia elétrica para forçar uma reação</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="eletrolise">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="natureza">Treinar questões de Ciências da Natureza →</button>
+  </p>
+</section>

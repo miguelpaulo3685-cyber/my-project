@@ -29,7 +29,8 @@ window.TRILHAS_MM = {
     'microbiologia', 'imunologia', 'vacinas-soros', 'ists',
     'botanica', 'zoologia', 'parasitologia',
     'mol', 'estequiometria', 'concentracao', 'diluicao',
-    'termoquimica', 'cinetica', 'equilibrio', 'ph'],
+    'termoquimica', 'cinetica', 'equilibrio', 'ph',
+    'oxirreducao', 'pilhas', 'eletrolise', 'corrosao'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -86,7 +87,7 @@ window.TRILHAS_MM = {
       { id: 'qui3', nome: 'Físico-química', sobre: 'Calor, velocidade das reações e equilíbrio.', teste: true, aulas: [
         ['termoquimica', 'Termoquímica', '🔥'], ['cinetica', 'Cinética química', '⏱️'],
         ['equilibrio', 'Equilíbrio químico', '⚖️'], ['ph', 'pH e equilíbrio iônico', '🍋']] },
-      { id: 'qui4', nome: 'Eletroquímica', sobre: 'Baterias, corrosão e indústria.', aulas: [
+      { id: 'qui4', nome: 'Eletroquímica', sobre: 'Baterias, corrosão e indústria.', teste: true, aulas: [
         ['oxirreducao', 'Oxirredução', '🔄'], ['pilhas', 'Pilhas e baterias', '🔋'],
         ['eletrolise', 'Eletrólise', '⚡'], ['corrosao', 'Corrosão e proteção', '🛠️']] },
       { id: 'qui5', nome: 'Química orgânica I', sobre: 'Cadeias de carbono, funções e propriedades.', aulas: [
