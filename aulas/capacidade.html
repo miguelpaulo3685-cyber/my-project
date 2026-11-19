@@ -1,0 +1,68 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 6 · Aula 3</div>
+  <h1>Troncos, inscrição e capacidade</h1>
+  <p class="au-abre">Uma torneira enche um balde com vazão constante. O nível da água sobe sempre na mesma rapidez? Depende do formato! Essa pergunta, com um gráfico de altura por tempo, é uma das favoritas do ENEM. Aqui também entram o copo em forma de tronco de cone e a bola dentro da caixa.</p>
+</header>
+
+<section class="au-cena" aria-label="Enchendo recipientes de formatos diferentes com a mesma torneira">
+  <div class="au-loja">Enchendo recipientes <small>escolha o formato e avance o tempo: compare o gráfico da altura da água</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Formato">
+      <button type="button" data-forma="cilindro">🥫 Cilindro</button>
+      <button type="button" data-forma="cone">🍸 Cone (ponta para baixo)</button>
+      <button type="button" data-forma="funil">🔻 Cone (ponta para cima)</button>
+      <button type="button" data-forma="esfera">🔮 Esfera</button>
+    </div>
+    <svg viewBox="0 0 320 180" id="au-graf" role="img"></svg>
+    <div class="au-controle"><label for="au-t">Tempo</label><input id="au-t" type="range" min="0" max="100" value="40"><output id="au-o"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>A regra do gráfico</h2>
+  <p>Com vazão constante, o <b>volume</b> cresce sempre igual. A <b>altura</b> sobe <b>rápido onde o recipiente é estreito</b> e <b>devagar onde é largo</b>. Cilindro: reta. Cone com a ponta para baixo: começa rápido e vai desacelerando (curva "deitando"). Ponta para cima: o contrário. Esfera: rápido, devagar no meio, rápido de novo.</p>
+</section>
+
+<section class="au-bloco">
+  <h2>Troncos e sólidos inscritos</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Tronco de cone</b> (copo, balde, abajur): é um cone grande menos o cone pequeno cortado da ponta. Volume do tronco = volume do grande − volume do pequeno.</li>
+    <li>Cortando um cone na <b>metade da altura</b>, o cone de cima tem 1/8 do volume (as medidas ficam pela metade: (1/2)³ = 1/8). O tronco fica com 7/8.</li>
+    <li><b>Esfera inscrita num cubo</b>: o diâmetro da esfera é igual à aresta do cubo.</li>
+    <li><b>Cilindro inscrito num cubo</b>: diâmetro e altura iguais à aresta. Ele ocupa π/4 ≈ 78,5% do cubo.</li>
+  </ul>
+  <div class="au-filme" data-filme="tronco" aria-label="Animação: cortar um cone na metade da altura deixa um cone pequeno de um oitavo do volume e um tronco com sete oitavos"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="1" data-porque="No cone com a ponta para baixo, o fundo é estreito: a altura sobe rápido no começo e cada vez mais devagar, porque o recipiente vai alargando.">
+    <p>Uma taça em forma de cone, com a ponta para baixo, é enchida por uma torneira com vazão constante. A altura da água:</p>
+    <button type="button" class="au-alt">sobe sempre com a mesma rapidez</button>
+    <button type="button" class="au-alt">sobe rápido no começo e cada vez mais devagar</button>
+    <button type="button" class="au-alt">sobe devagar no começo e cada vez mais rápido</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="Esfera inscrita: diâmetro = aresta = 10 cm, raio 5 cm. V = 4/3 · π · 5³ ≈ 4/3 × 3,14 × 125 ≈ 523 cm³.">
+    <p>Uma bola cabe exatamente dentro de uma caixa cúbica de 10 cm de aresta. O volume da bola é aproximadamente:</p>
+    <button type="button" class="au-alt">523 cm³</button>
+    <button type="button" class="au-alt">1 000 cm³</button>
+    <button type="button" class="au-alt">314 cm³</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="2" data-porque="O cone de cima tem medidas pela metade: volume (1/2)³ = 1/8 do total. O tronco fica com 1 − 1/8 = 7/8.">
+    <p>Um cone de 80 mL é cortado paralelamente à base, na metade da altura. O tronco (a parte de baixo) tem:</p>
+    <button type="button" class="au-alt">40 mL</button>
+    <button type="button" class="au-alt">60 mL</button>
+    <button type="button" class="au-alt">70 mL</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="capacidade">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>

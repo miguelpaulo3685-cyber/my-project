@@ -21,7 +21,8 @@ window.TRILHAS_MM = {
     'pressao', 'empuxo',
     'calor-temperatura', 'calorimetria', 'termodinamica',
     'ondas-som', 'luz-espelhos', 'lentes-visao',
-    'circuitos', 'consumo-energia', 'magnetismo'],
+    'circuitos', 'consumo-energia', 'magnetismo',
+    'projecoes', 'solidos', 'capacidade'],
   materias: {
     matematica: { nome: 'Matemática', icone: '🧮', modulos: [
       { id: 'mat1', nome: 'Matemática básica e aritmética', sobre: 'A base de tudo: destrava o resto da matéria e garante as questões fáceis, que mais pesam na TRI.', teste: true, aulas: [
@@ -41,7 +42,7 @@ window.TRILHAS_MM = {
       { id: 'mat5', nome: 'Geometria plana', sobre: 'Visualizar e calcular medidas em superfícies.', teste: true, aulas: [
         ['angulos-tales', 'Ângulos, paralelas e Tales', '📐'], ['triangulos', 'Semelhança e Pitágoras', '🔺'],
         ['poligonos', 'Polígonos e circunferência', '⭕'], ['areas', 'Áreas de figuras planas', '🟩']] },
-      { id: 'mat6', nome: 'Geometria espacial e projeções', sobre: 'Embalagens, reservatórios e visão espacial.', aulas: [
+      { id: 'mat6', nome: 'Geometria espacial e projeções', sobre: 'Embalagens, reservatórios e visão espacial.', teste: true, aulas: [
         ['projecoes', 'Posição e projeções (sombras)', '🔦'], ['solidos', 'Áreas e volumes dos sólidos', '📦'], ['capacidade', 'Troncos, inscrição e capacidade', '🥤']] },
       { id: 'mat7', nome: 'Sequências e trigonometria', sobre: 'Tópicos de nível médio a difícil.', aulas: [
         ['pa-pg', 'Sequências, PA e PG', '🔢'], ['trigonometria', 'Seno, cosseno e tangente', '📐'], ['ciclo-trigonometrico', 'Leis dos senos e cossenos e ondas', '〰️']] }

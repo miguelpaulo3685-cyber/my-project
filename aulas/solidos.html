@@ -1,0 +1,79 @@
+<header>
+  <div class="au-trilha">Matemática · Módulo 6 · Aula 2</div>
+  <h1>Áreas e volumes dos sólidos</h1>
+  <p class="au-abre">Quanto papelão gasta uma caixa? Quantos litros cabem numa lata? O ENEM pergunta isso com embalagens, piscinas e caixas-d'água. Área é o que cobre o sólido por fora; volume é o que cabe dentro. E 1 litro é exatamente um cubo de 10 cm de lado.</p>
+</header>
+
+<section class="au-cena" aria-label="Caixa ou lata: mude as medidas e veja a área e o volume">
+  <div class="au-loja">Embalagens <small>escolha a forma e mude as medidas (em cm)</small></div>
+  <div class="au-painel">
+    <div class="au-atalhos" role="group" aria-label="Forma">
+      <button type="button" data-forma="caixa">📦 Caixa</button>
+      <button type="button" data-forma="lata">🥫 Lata (cilindro)</button>
+    </div>
+    <svg viewBox="0 0 320 192" id="au-graf" role="img"></svg>
+    <div class="au-leituras" id="au-leituras"></div>
+    <div class="au-controle"><label for="au-a" id="au-ra"></label><input id="au-a" type="range" min="2" max="30" value="10"><output id="au-oa"></output></div>
+    <div class="au-controle"><label for="au-b" id="au-rb"></label><input id="au-b" type="range" min="2" max="30" value="10"><output id="au-ob"></output></div>
+    <div class="au-controle" id="au-cc"><label for="au-c">Altura</label><input id="au-c" type="range" min="2" max="30" value="10"><output id="au-oc"></output></div>
+    <div class="au-recado" id="au-recado" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <h2>Volume: área da base × altura</h2>
+  <ul class="au-pegadinhas">
+    <li><b>Prisma</b> (caixa, cubo, prisma triangular) e <b>cilindro</b>: <b>V = área da base × altura</b>. Caixa: comprimento × largura × altura. Cilindro: π · r² · h.</li>
+    <li><b>Pirâmide e cone</b>: <b>um terço</b> disso. V = área da base × altura ÷ 3.</li>
+    <li><b>Esfera</b>: V = 4/3 · π · r³.</li>
+    <li>Conversões: <b>1 dm³ = 1 litro</b>; 1 m³ = 1 000 litros; 1 cm³ = 1 mL.</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Área: abra o sólido</h2>
+  <p>Para a área, imagine a embalagem <b>desmontada</b> (a planificação) e some as partes. A caixa vira 6 retângulos, em pares iguais. A lata vira 2 círculos (tampa e fundo) e um retângulo que dá a volta: largura 2πr, altura h.</p>
+  <div class="au-filme" data-filme="planificar" aria-label="Animação: a lata se abre em dois círculos e um retângulo"></div>
+</section>
+
+<section class="au-bloco">
+  <h2>Onde o ENEM pega</h2>
+  <ul class="au-pegadinhas">
+    <li>Se todas as medidas dobram, a área fica <b>4×</b> e o volume <b>8×</b>.</li>
+    <li>Dobrar só o raio da lata <b>quadruplica</b> o volume (o raio está ao quadrado); dobrar a altura só dobra.</li>
+    <li>Confira as unidades: medidas em cm dão cm³; divida por 1 000 para ter litros.</li>
+    <li>"Quantas caixinhas cabem na caixa grande": divida medida por medida, não volume por volume (sobras não contam).</li>
+  </ul>
+</section>
+
+<section class="au-bloco">
+  <h2>Teste rápido</h2>
+  <div class="au-pergunta" data-certa="2" data-porque="V = 2 × 1 × 0,5 = 1 m³ = 1 000 litros.">
+    <p>Uma caixa-d'água tem 2 m de comprimento, 1 m de largura e 0,5 m de altura. Ela comporta:</p>
+    <button type="button" class="au-alt">100 litros</button>
+    <button type="button" class="au-alt">3,5 litros</button>
+    <button type="button" class="au-alt">1 000 litros</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="0" data-porque="V = π · r² · h. Com o raio 2 vezes maior, r² fica 4 vezes maior; a altura igual não muda isso.">
+    <p>Uma lata tem o dobro do raio de outra, com a mesma altura. O volume dela é:</p>
+    <button type="button" class="au-alt">4 vezes maior</button>
+    <button type="button" class="au-alt">2 vezes maior</button>
+    <button type="button" class="au-alt">8 vezes maior</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+  <div class="au-pergunta" data-certa="1" data-porque="Cone de mesma base e altura de um cilindro tem 1/3 do volume: 300 ÷ 3 = 100 mL.">
+    <p>Um copo cilíndrico tem 300 mL. Um copo em forma de cone com a mesma base e a mesma altura tem:</p>
+    <button type="button" class="au-alt">150 mL</button>
+    <button type="button" class="au-alt">100 mL</button>
+    <button type="button" class="au-alt">300 mL</button>
+    <div class="au-retorno" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="au-bloco">
+  <p class="au-fim">
+    <button type="button" class="au-seguir" data-concluir="solidos">✓ Terminei a aula</button>
+    <button type="button" class="au-seguir au-seguir-leve" data-treinar="matematica">Treinar questões de Matemática →</button>
+  </p>
+</section>
