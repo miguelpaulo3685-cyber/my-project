@@ -209,7 +209,7 @@ async function abrirSessao(usuarioId) {
 }
 
 app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
-  const { nome, email, senha, aceite, origem, convite } = req.body || {};
+  const { nome, email, senha, aceite, origem, convite, visitante } = req.body || {};
 
   if (!nome || String(nome).trim().length < 2) {
     return res.status(400).json({ error: 'Diga seu nome (ao menos 2 letras).' });
@@ -244,8 +244,9 @@ app.post('/api/auth/registrar', freioCadastro, async (req, res) => {
       .catch(erro => console.error('Erro ao enviar confirmação:', erro.message));
 
     await crescimento.registrarOrigem(pool, rows[0].id, { origem, convite });
+    const juntadas = await crescimento.juntarRespostasDoVisitante(pool, rows[0].id, visitante);
     const token = await abrirSessao(rows[0].id);
-    res.status(201).json({ token, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO });
+    res.status(201).json({ token, usuario: rows[0], dias_de_sessao: auth.DIAS_DE_SESSAO, respostas_juntadas: juntadas });
   } catch (erro) {
     if (erro.code === '23505') {
       return res.status(409).json({ error: 'Já existe uma conta com esse e-mail.' });
@@ -306,7 +307,7 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
 
   try {
     const existente = await pool.query('SELECT id FROM usuarios WHERE email = $1', [google.email]);
-    let id = existente.rows[0]?.id;
+    let id = existente.rows[0]?.id, juntadas = 0;
     if (id) {
       await pool.query('UPDATE usuarios SET email_verificado = TRUE WHERE id = $1', [id]);
     } else {
@@ -319,6 +320,7 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
       );
       id = rows[0].id;
       await crescimento.registrarOrigem(pool, id, { origem: req.body?.origem, convite: req.body?.convite });
+      juntadas = await crescimento.juntarRespostasDoVisitante(pool, id, req.body?.visitante);
     }
 
     const { rows } = await pool.query(
@@ -328,7 +330,8 @@ app.post('/api/auth/google', freioGoogle, async (req, res) => {
     const { foto_id, ...dadosDoUsuario } = rows[0];
     const token = await abrirSessao(id);
     res.status(existente.rowCount ? 200 : 201).json({
-      token, usuario: { ...dadosDoUsuario, foto: imagens.urlAssinada(foto_id) }, nova: !existente.rowCount, dias_de_sessao: auth.DIAS_DE_SESSAO
+      token, usuario: { ...dadosDoUsuario, foto: imagens.urlAssinada(foto_id) }, nova: !existente.rowCount, dias_de_sessao: auth.DIAS_DE_SESSAO,
+      respostas_juntadas: juntadas
     });
   } catch (erro) {
     console.error('Erro no login com Google:', erro.message);
@@ -556,16 +559,17 @@ function nivelDaQuestao(q, totalRespostas, taxaAcerto) {
 }
 
 app.post('/api/responder', freioRespostas, async (req, res) => {
-  const { questao_id, acertou, segundos } = req.body || {};
+  const { questao_id, acertou, segundos, visitante } = req.body || {};
   if (!Number.isInteger(questao_id) || typeof acertou !== 'boolean') {
     return res.status(400).json({ error: 'Informe questao_id e acertou.' });
   }
 
   try {
     await pool.query(
-      'INSERT INTO respostas (questao_id, usuario_id, acertou, segundos) VALUES ($1, $2, $3, $4)',
+      'INSERT INTO respostas (questao_id, usuario_id, acertou, segundos, visitante) VALUES ($1, $2, $3, $4, $5)',
       [questao_id, req.usuario ? req.usuario.id : null, acertou,
-       Number.isInteger(segundos) ? Math.min(segundos, 3600) : null]
+       Number.isInteger(segundos) ? Math.min(segundos, 3600) : null,
+       req.usuario ? null : crescimento.marcaDoVisitante(visitante)]
     );
 
     const { rows } = await pool.query(

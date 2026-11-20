@@ -85,3 +85,33 @@ test('uso: as telas do site só mandam partes que o servidor aceita', () => {
   const partes = [...mapa.matchAll(/'([a-z]+)'/g)].map(m => m[1]).concat('aulas');
   for (const p of partes) assert.ok(c.PARTES.includes(p), `parte desconhecida: ${p}`);
 });
+
+test('respostas sem conta: marca é um resumo, não o código; código inválido não marca', () => {
+  const m = c.marcaDoVisitante('abc123def456ghi7');
+  assert.match(m, /^[0-9a-f]{32}$/);
+  assert.ok(!m.includes('abc123'));
+  assert.strictEqual(c.marcaDoVisitante('abc123def456ghi7'), m);
+  assert.notStrictEqual(m, c.quemUsou(null, 'abc123def456ghi7').quem.slice(1)); // outro tempero que o painel de uso
+  assert.strictEqual(c.marcaDoVisitante('curto'), null);
+  assert.strictEqual(c.marcaDoVisitante("x' OR 1=1 --"), null);
+  assert.strictEqual(c.marcaDoVisitante(undefined), null);
+});
+
+test('conta nova leva as respostas feitas sem conta no aparelho', async () => {
+  const banco = bancoFalso();
+  const n = await c.juntarRespostasDoVisitante(banco, 42, 'abc123def456ghi7');
+  assert.strictEqual(n, 1);
+  const f = banco.feitas[0];
+  assert.match(f.sql, /UPDATE respostas SET usuario_id = \$1, visitante = NULL WHERE visitante = \$2 AND usuario_id IS NULL/);
+  assert.deepStrictEqual(f.valores, [42, c.marcaDoVisitante('abc123def456ghi7')]);
+});
+
+test('sem código válido nada é juntado; erro no banco não quebra o cadastro', async () => {
+  const banco = bancoFalso();
+  assert.strictEqual(await c.juntarRespostasDoVisitante(banco, 42, null), 0);
+  assert.strictEqual(banco.feitas.length, 0);
+  const quebrado = { async query() { throw new Error('caiu'); } };
+  const erro = console.error; console.error = () => {};
+  assert.strictEqual(await c.juntarRespostasDoVisitante(quebrado, 42, 'abc123def456ghi7'), 0);
+  console.error = erro;
+});

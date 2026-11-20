@@ -28,11 +28,34 @@ const NOMES_PARTE = {
 const lerParte = valor => (PARTES.includes(valor) ? valor : null);
 // Visitante sem conta: o site manda um código sorteado no aparelho; aqui ele vira um resumo (hash),
 // para o banco não guardar nem o código.
+const visitanteValido = visitante => typeof visitante === 'string' && /^[a-z0-9]{12,40}$/.test(visitante);
+const resumo = texto => require('crypto').createHash('sha256').update(texto).digest('hex');
 const quemUsou = (usuario, visitante) => {
   if (usuario) return { quem: `u${usuario.id}`, conta: true };
-  if (typeof visitante !== 'string' || !/^[a-z0-9]{12,40}$/.test(visitante)) return null;
-  return { quem: 'v' + require('crypto').createHash('sha256').update(visitante).digest('hex').slice(0, 20), conta: false };
+  if (!visitanteValido(visitante)) return null;
+  return { quem: 'v' + resumo(visitante).slice(0, 20), conta: false };
 };
+
+// Questões respondidas sem conta: cada resposta guarda um resumo do código do aparelho
+// (com outro tempero, para não bater com o do painel de uso). Quando a pessoa cria a conta
+// nesse aparelho, as respostas passam para ela e a nota TRI não começa do zero.
+const marcaDoVisitante = visitante => (visitanteValido(visitante) ? resumo('respostas:' + visitante).slice(0, 32) : null);
+
+// Só para conta recém-criada: assim ninguém junta respostas de outro aparelho numa conta antiga.
+async function juntarRespostasDoVisitante(pool, usuarioId, visitante) {
+  const marca = marcaDoVisitante(visitante);
+  if (!marca) return 0;
+  try {
+    const r = await pool.query(
+      'UPDATE respostas SET usuario_id = $1, visitante = NULL WHERE visitante = $2 AND usuario_id IS NULL',
+      [usuarioId, marca]
+    );
+    return r.rowCount || 0;
+  } catch (erro) {
+    console.error('Erro ao juntar as respostas do visitante:', erro.message);
+    return 0;
+  }
+}
 const HOJE = "(NOW() - INTERVAL '3 hours')::date";
 const SQL_USO = `
   SELECT parte,
@@ -165,4 +188,4 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
 }
 
 module.exports = registrarCrescimento;
-Object.assign(module.exports, { SQL_USO, PARTES, lerParte, quemUsou, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });
+Object.assign(module.exports, { SQL_USO, PARTES, lerParte, quemUsou, marcaDoVisitante, juntarRespostasDoVisitante, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });

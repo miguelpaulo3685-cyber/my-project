@@ -860,6 +860,13 @@ async function runMigrations() {
     `);
     console.log('✅ Tabela uso_partes criada');
 
+    // Respostas sem conta levam um resumo do código do aparelho, para irem junto quando a
+    // pessoa cria a conta (crescimento.juntarRespostasDoVisitante). Depois disso ele é apagado.
+    await pool.query(`
+      ALTER TABLE respostas ADD COLUMN IF NOT EXISTS visitante VARCHAR(32);
+      CREATE INDEX IF NOT EXISTS idx_respostas_visitante ON respostas(visitante) WHERE visitante IS NOT NULL;
+    `);
+
     console.log('✅ Todas as tabelas criadas com sucesso!');
 
     // Verificar dados

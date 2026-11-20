@@ -2191,6 +2191,8 @@
     .turma-fim p { color: var(--texto-fraco); font-size: .86rem; margin: 2px 0 10px; line-height: 1.45; }
     .turma-fim .botoes { display: flex; flex-wrap: wrap; gap: 8px; }
     .turma-fim .acao { margin: 0; }
+    .guardar-conta .cara { font-size: 1.6rem; line-height: 1; }
+    .fim-visita + .guardar-conta { margin-top: 14px; }
     .bolhas-junto { display: flex; flex-shrink: 0; }
     .bolhas-junto .bolha-autor { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;
       margin-left: -8px; border: 2px solid var(--superficie); background: linear-gradient(135deg, var(--marca), var(--marca-forte)); color: var(--sobre-marca); font-weight: 800; font-size: .8rem; }
@@ -4732,6 +4734,17 @@ function fecharAula() {
 // em cada aparelho. Sem conta, vai um código sorteado no aparelho, sem nada que identifique a pessoa.
 const PARTE_DA_TELA = { questao: 'treinar', comunidade: 'comunidade', feed: 'comunidade', simulado: 'simulado', prova: 'simulado',
   arena: 'arena', redacao: 'redacao', reels: 'reels', mensagens: 'mensagens', desafio: 'desafio' };
+// Código sorteado neste aparelho. Vai no painel de uso e nas respostas sem conta (o servidor só
+// guarda um resumo dele), para essas respostas irem junto quando a pessoa criar a conta aqui.
+function codigoVisitante() {
+  let visitante = ler('mm-visitante');
+  if (!visitante) {
+    visitante = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('').slice(0, 20);
+    guardar('mm-visitante', visitante);
+  }
+  return visitante;
+}
+
 function registrarUso(parte) {
   if (!parte) return;
   const dia = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
@@ -4740,11 +4753,7 @@ function registrarUso(parte) {
   const feito = anotacao();
   if (feito.partes.includes(marca)) return;
   feito.partes.push(marca); guardar('mm-uso', JSON.stringify(feito)); // anota já, para não mandar duas vezes
-  let visitante = ler('mm-visitante');
-  if (!visitante) {
-    visitante = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('').slice(0, 20);
-    guardar('mm-visitante', visitante);
-  }
+  const visitante = codigoVisitante();
   const desfazer = () => { const f = anotacao(); f.partes = f.partes.filter(m => m !== marca); guardar('mm-uso', JSON.stringify(f)); };
   fetch(`${API_URL}/api/uso`, { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
     body: JSON.stringify({ parte, visitante }) })
@@ -5013,8 +5022,7 @@ function desenharFimDaVisita() {
       <button class="acao secundaria" onclick="irPara('treinar')">Treinar outra área</button>
       <button class="acao secundaria" onclick="abrirDesafio()">Desafio da semana</button>
       <button class="acao secundaria" onclick="abrirArena()">Jogar com amigos na Arena</button>
-      ${usuarioLogado ? '' : `<button class="acao" onclick="abrirConta('criar')">Criar conta para salvar a nota</button>`}
-    </div></div>`;
+    </div></div>${usuarioLogado ? '' : htmlGuardarSemConta()}`;
 }
 
 function desenharOndeSalva() {
@@ -5767,7 +5775,7 @@ function registrarResposta(questaoId, acertou, segundos) {
   ultimaGravacao = fetch(`${API_URL}/api/responder`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...cabecalhoAuth() },
-    body: JSON.stringify({ questao_id: questaoId, acertou, segundos })
+    body: JSON.stringify({ questao_id: questaoId, acertou, segundos, ...(usuarioLogado ? {} : { visitante: codigoVisitante() }) })
   }).catch(e => console.warn('Não registrei a resposta:', e.message));
 }
 
@@ -7023,10 +7031,13 @@ async function enviarConta(evento) {
 
 // Guardado na primeira visita (veja o script do <head>); só vai no cadastro.
 function origemDaVisita() {
-  try { return JSON.parse(localStorage.getItem('mm_origem')) || {}; } catch (e) { return {}; }
+  let origem = {};
+  try { origem = JSON.parse(localStorage.getItem('mm_origem')) || {}; } catch (e) {}
+  return { ...origem, visitante: codigoVisitante() }; // conta nova leva as respostas feitas sem conta neste aparelho
 }
 
 async function concluirEntrada(dados, mensagem) {
+  if (dados.respostas_juntadas > 0) mensagem += ` ${plural(dados.respostas_juntadas, 'questão que você fez sem conta foi', 'questões que você fez sem conta foram')} para ela.`;
   historicoSim = null; // o histórico de simulados passa a vir da conta
   guardar(CHAVE_TOKEN, dados.token);
   usuarioLogado = dados.usuario;
@@ -10411,13 +10422,24 @@ function htmlJunto(d, onde) {
 }
 
 // Fim do bloco: um cartão que leva para a comunidade, conforme a situação de quem acabou de treinar.
+// Fim do bloco sem conta: mostra o que a pessoa já tem a perder e que tudo vai junto.
+// Sem contagem regressiva nem bloqueio: é um convite, o treino continua igual sem conta.
+function htmlGuardarSemConta() {
+  const feitas = respostasLocais().length;
+  const jaFez = feitas > 1 ? `Você já respondeu ${feitas} questões neste aparelho.` : 'Você já começou a treinar neste aparelho.';
+  return `<div class="turma-fim guardar-conta"><span class="cara" aria-hidden="true">💾</span><div><b>Guarde a sua nota TRI</b>
+    <p>${jaFez} Sem conta, isso fica só aqui e some se o navegador for limpo. Crie sua conta grátis: o que você fez vai junto,
+      e você continua no celular ou no computador, com a turma da sua escola.</p>
+    <div class="botoes"><button class="acao pequena" onclick="abrirConta('criar')">Criar conta grátis</button>
+      <button class="acao discreta pequena" onclick="abrirConta('entrar')">Já tenho conta</button></div></div></div>`;
+}
+
 function htmlTurmaNoFim(d) {
   const cartao = (bolhas, titulo, texto, botoes) => `<div class="turma-fim">${bolhas}<div><b>${titulo}</b><p>${texto}</p>
     <div class="botoes">${botoes}</div></div></div>`;
   if (!usuarioLogado) {
     if (bloco && bloco.visita) return ''; // a primeira visita já termina com o convite para criar a conta
-    return cartao('', 'Ninguém passa no ENEM sozinho', 'Com uma conta você vê quem da sua escola treinou hoje, forma dupla de estudo e guarda a sua nota.',
-      `<button class="acao pequena" onclick="abrirConta('criar')">Criar conta grátis</button>`);
+    return htmlGuardarSemConta();
   }
   const turmas = [d && d.escola, d && d.grupo].filter(Boolean);
   const ativa = turmas.find(t => t.estudaram_hoje);
