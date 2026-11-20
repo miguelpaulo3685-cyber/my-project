@@ -26,6 +26,15 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
   nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
 ## ONDE PARAMOS (18/11/2026) — leia primeiro
+- **Publicado em 20/11 (sim do Matheus/Miguel):** conta nova leva as questões feitas sem conta. A resposta sem conta guarda
+  um resumo do código do aparelho (`respostas.visitante`); ao criar conta (e-mail ou Google) nesse aparelho, elas passam para
+  a conta (`crescimento.juntarRespostasDoVisitante`). Só conta nova; só vale para respostas depois de 20/11. Fim do bloco sem
+  conta mostra o cartão "Guarde a sua nota TRI" (`htmlGuardarSemConta` em index.html).
+- **Números do painel em 20/11 (pelos prints):** 18 contas (+10 na semana; 15 em 30 dias), 7 estudaram na semana, 2 voltaram
+  em 2+ dias, 87 questões na semana. Origem: 9 direto, 3 Google, 3 Instagram, 0 convite. Treinar: 16 pessoas na semana, só 4
+  com conta. Comunidade: 80% criaram laço, 0 duplas. Meta de 5.000 contas no fim de 2027 = ~85 por semana (hoje ~10).
+  Usar `?origem=instagram` / `?origem=tiktok` nos links. Aviso: "Por que errei?" estourou a cota do Gemini (429) e caiu
+  no flash-lite; vários "a IA não chegou ao gabarito". Ver isso como conserto.
 - **Pendente (19/11, noite):** (1) [feito 20/11, pelos prints do Miguel] ler a lista de "Erros do site" para corrigir: a chave de sessão (mm_token, sem aspas)
   colada no formulário seguro foi recusada (401); Miguel vai pegar de novo no notebook, ou mandar prints da lista pelo
   celular. (2) [feito] Conserto "recusa da trava da IA não conta como erro" publicado.
