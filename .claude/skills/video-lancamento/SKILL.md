@@ -6,7 +6,7 @@ description: Fazer vídeos curtos de lançamento/divulgação do M&M Estudos no 
 # Vídeo de lançamento (estilo referência 2)
 
 A referência é um vídeo de "lançamento de feature de um app" que passa na tela de um notebook e foi filmado com o celular.
-O arquivo da referência fica no repositório privado `mm-videos` (`referencias/edicao-lancamento.mp4`), porque não é nosso
+O arquivo da referência fica no repositório privado `mm-videos` (`referencias/lancamento-feature.mp4`), porque não é nosso
 e este repositório é público. As regras abaixo descrevem a edição.
 
 ## Regras de edição (seguir sempre)
