@@ -25,7 +25,19 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Divulgação (Miguel, 18/11):** nunca falar de quem criou o site ("dois estudantes/amigos que criaram..."),
   nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
-## ONDE PARAMOS (18/11/2026) — leia primeiro
+## ONDE PARAMOS (23/11/2026) — leia primeiro
+- **Publicado em 23/11 (sim do Miguel/Matheus):** 18 resoluções comentadas novas (ENEM 2024/2025), total de 49 em `resolucoes.json`.
+- **Vídeo de lançamento "nota TRI"** (estilo da referência "edição com o Claude pra lançamento de feature"): animação em HTML
+  gravada quadro a quadro (Playwright + FFmpeg), 31 s, 1920x1080, sem música. Telas refeitas com textos reais do site (Treinar,
+  questão ENEM 2013 q139 da torneira, resultado com nota TRI "exemplo", trilha de Matemática). Plano: tocar em tela cheia no
+  notebook e filmar com o celular. O arquivo ficou só na sessão do Claude; guardar no mm-videos quando houver acesso.
+- **HyperFrames** (skill de vídeo da HeyGen, `npx skills add heygen-com/hyperframes`): a instalação foi bloqueada na sessão de
+  nuvem; dá para instalar no computador do Miguel.
+- **mm-videos continua sem acesso** pelo GitHub do Matheus: o Miguel precisa adicionar o Matheus como colaborador.
+- **Postagem combinada:** conta @mmestudos.questoes com os 28 "Você acertaria?" (18:30, 23/11 a 20/12); conta principal em
+  3 horários: 12:30 gancho forte, 18:30 site em uso (lançamentos neste estilo novo), 21:30 histórias (21, 22 e as próximas).
+
+## ANTES (18/11/2026)
 - **Publicado em 20/11 (sim do Matheus/Miguel):** conta nova leva as questões feitas sem conta. A resposta sem conta guarda
   um resumo do código do aparelho (`respostas.visitante`); ao criar conta (e-mail ou Google) nesse aparelho, elas passam para
   a conta (`crescimento.juntarRespostasDoVisitante`). Só conta nova; só vale para respostas depois de 20/11. Fim do bloco sem
