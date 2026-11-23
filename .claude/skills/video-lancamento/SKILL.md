@@ -27,6 +27,15 @@ e este repositório é público. As regras abaixo descrevem a edição.
 11. **Fim:** frase curta grande ("Grátis. De verdade."), depois a marca M&M Estudos + mmestudos.com.br.
 12. **Sem música embutida** (entra pelo TikTok/Instagram). O texto do gancho fixo no topo também entra pelo app.
 
+## Onde este vídeo entra (combinado com o Miguel, 23/11)
+
+São 3 vídeos por dia, cada um com o seu padrão:
+1. **"Você acertaria?"**: os 28 vídeos de questão já feitos (no `mm-videos`, com `legendas-questoes.md`).
+2. **Historinhas**: o estilo de história em desenho (pedido do Matheus), como "O número" e "A mochila de pedras".
+3. **Lançamento / site em uso**: este estilo aqui, um recurso real do site por vídeo.
+
+O Miguel vai mandar mais vídeos de referência; cada um vira uma skill própria em `.claude/skills/`.
+
 ## Regras do conteúdo (do PROXIMOS-PASSOS.md)
 
 - Só telas e textos que existem no site (Treinar, nota TRI, trilhas, sequência de dias). Nada inventado.

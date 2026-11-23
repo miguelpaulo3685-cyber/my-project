@@ -34,7 +34,11 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **HyperFrames** (skill de vídeo da HeyGen, `npx skills add heygen-com/hyperframes`): a instalação foi bloqueada na sessão de
   nuvem; dá para instalar no computador do Miguel.
 - **mm-videos continua sem acesso** pelo GitHub do Matheus: o Miguel precisa adicionar o Matheus como colaborador.
-- **Postagem combinada:** conta @mmestudos.questoes com os 28 "Você acertaria?" (18:30, 23/11 a 20/12); conta principal em
+- **Padrão dos 3 vídeos por dia (Miguel, 23/11):** (1) "Você acertaria?" (os 28 prontos), (2) historinhas (pedido do
+  Matheus), (3) lançamento/site em uso no estilo da skill `video-lancamento` (aprovado na versão 2, 20 s). O Miguel vai
+  mandar mais 4 vídeos de referência para virar skills de edição. Depois: produzir as próximas 4 semanas e eles agendam
+  no TikTok, Instagram e Shorts.
+- **Postagem combinada (antes):** conta @mmestudos.questoes com os 28 "Você acertaria?" (18:30, 23/11 a 20/12); conta principal em
   3 horários: 12:30 gancho forte, 18:30 site em uso (lançamentos neste estilo novo), 21:30 histórias (21, 22 e as próximas).
 
 ## ANTES (18/11/2026)
