@@ -2030,6 +2030,9 @@
     .cartao-final.destaque .valor { font-size: 2.3rem; }
 
     .botoes-final { max-width: 420px; margin: 0 auto; display: grid; gap: 11px; }
+    .compartilhar-nota { max-width: 420px; margin: 0 auto 14px; display: grid; gap: 6px; text-align: center; }
+    .compartilhar-nota button { width: 100%; padding: 14px; font-size: 1rem; margin: 0; }
+    .compartilhar-nota small { color: var(--texto-fraco); font-size: .8rem; }
     .botoes-final button { width: 100%; padding: 14px; font-size: 1rem; }
 
     .rodape-aviso {
@@ -3569,6 +3572,7 @@
         </div>
       </div>
 
+      <div id="res-compartilhar"></div>
       <div id="res-visita"></div>
       <div id="res-junto"></div>
       <div class="botoes-final">
@@ -5866,6 +5870,9 @@ async function mostrarNotaTriDoBloco() {
   const antes = bloco.notaAntes;
   valor.textContent = '…';
   legenda.textContent = 'Nota TRI estimada';
+  ultimaNotaBloco = null;
+  const botaoCartao = document.getElementById('res-compartilhar');
+  if (botaoCartao) botaoCartao.innerHTML = '';
 
   await ultimaGravacao;
   const n = (await buscarNotasTri())[area];
@@ -5882,6 +5889,73 @@ async function mostrarNotaTriDoBloco() {
     : `<small class="${dif > 0 ? 'subiu' : 'desceu'}">${dif > 0 ? '▲ +' : '▼ '}${dif}</small>`;
   valor.innerHTML = `${n.nota}${variacao}`;
   legenda.textContent = `Nota TRI estimada (±${n.margem})`;
+  const acertos = bloco.respostas.filter(r => r.acertou).length;
+  ultimaNotaBloco = { area, nota: n.nota, margem: n.margem, acertos, total: bloco.respostas.length };
+  const alvo = document.getElementById('res-compartilhar');
+  if (alvo) alvo.innerHTML = `<div class="compartilhar-nota">
+    <button class="acao" onclick="compartilharNota(this)">📲 Compartilhar minha nota</button>
+    <small>Vira uma imagem para os stories, com o seu link de convite. Seu nome não aparece.</small></div>`;
+}
+
+// ---------- cartão da nota TRI para os stories ----------
+// Imagem 1080x1920 sem nome nem foto (muitos alunos são menores). O link leva o convite de quem
+// compartilhou, então quem entrar por ele conta como indicação (e libera o emblema de convite).
+let ultimaNotaBloco = null;
+
+async function desenharCartaoNota(d) {
+  try { await Promise.all(['700 120px Fraunces', '500 40px Fraunces', '600 40px Inter', '400 40px Inter'].map(f => document.fonts.load(f))); } catch (e) {}
+  const W = 1080, H = 1920, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0b0d0c'; g.fillRect(0, 0, W, H);
+  const brilho = g.createRadialGradient(W / 2, 820, 40, W / 2, 820, 760);
+  brilho.addColorStop(0, 'rgba(34,197,94,.28)'); brilho.addColorStop(1, 'rgba(34,197,94,0)');
+  g.fillStyle = brilho; g.fillRect(0, 0, W, H);
+  g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+  // marca no topo
+  g.fillStyle = '#22c55e';
+  if (g.roundRect) { g.beginPath(); g.roundRect(W / 2 - 205, 268, 72, 72, 16); g.fill(); } else g.fillRect(W / 2 - 205, 268, 72, 72);
+  g.fillStyle = '#052e14'; g.font = '700 48px Fraunces, Georgia, serif'; g.fillText('M', W / 2 - 169, 322);
+  g.textAlign = 'left'; g.fillStyle = '#f5f5f4'; g.font = '700 52px Fraunces, Georgia, serif'; g.fillText('M&M Estudos', W / 2 - 115, 322);
+  g.textAlign = 'center';
+  // área e nota
+  const area = (AREAS.find(a => a.id === d.area) || {}).nome || 'ENEM';
+  g.fillStyle = '#a8a29e'; g.font = '400 46px Inter, system-ui, sans-serif'; g.fillText('Minha nota TRI em', W / 2, 560);
+  g.fillStyle = '#f5f5f4'; g.font = '700 76px Fraunces, Georgia, serif'; g.fillText(area, W / 2, 650);
+  g.fillStyle = '#ffffff'; g.font = '700 330px Fraunces, Georgia, serif'; g.fillText(String(d.nota), W / 2, 990);
+  g.fillStyle = '#a8a29e'; g.font = '400 40px Inter, system-ui, sans-serif'; g.fillText(`estimativa (±${d.margem}) · ${d.acertos} de ${d.total} acertos`, W / 2, 1075);
+  g.fillStyle = '#22c55e'; g.fillRect(W / 2 - 90, 1135, 180, 8);
+  // desafio
+  g.fillStyle = '#86efac'; g.font = '500 70px Fraunces, Georgia, serif'; g.fillText('Você passa dessa?', W / 2, 1290);
+  g.fillStyle = '#d6d3d1'; g.font = '400 42px Inter, system-ui, sans-serif';
+  g.fillText('5 questões reais do ENEM, uns 10 minutos.', W / 2, 1390);
+  g.fillText('No fim sai a sua nota TRI. Grátis.', W / 2, 1448);
+  g.fillStyle = '#22c55e'; g.font = '600 60px Inter, system-ui, sans-serif'; g.fillText('mmestudos.com.br', W / 2, 1590);
+  return await new Promise(ok => c.toBlob(ok, 'image/png'));
+}
+
+async function compartilharNota(botao) {
+  const d = ultimaNotaBloco;
+  if (!d) return;
+  if (botao) botao.disabled = true;
+  try {
+    const link = `${location.origin}${location.pathname}?origem=story${usuarioLogado ? `&convite=${usuarioLogado.id}` : ''}`;
+    const area = (AREAS.find(a => a.id === d.area) || {}).nome || 'ENEM';
+    const texto = `Tirei ${d.nota} na nota TRI de ${area} (estimativa). Você passa dessa? ${link}`;
+    const blob = await desenharCartaoNota(d);
+    const arquivo = new File([blob], 'minha-nota-tri.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+      try { await navigator.share({ files: [arquivo], text: texto }); return; }
+      catch (e) { if (e.name === 'AbortError') return; }
+    }
+    // Sem compartilhamento de arquivo (computador, navegador antigo): baixa a imagem e copia o texto com o link.
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'minha-nota-tri.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    try { await navigator.clipboard.writeText(texto); avisoSim('Imagem salva e texto com o link copiado. É só postar!'); }
+    catch (e) { avisoSim('Imagem salva. Poste com o link mmestudos.com.br'); }
+  } finally { if (botao) botao.disabled = false; }
 }
 
 function soltarConfete() {
