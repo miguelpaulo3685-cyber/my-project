@@ -6,9 +6,10 @@
 
 const { notificar } = require('./social');
 
-const ORIGENS = ['tiktok', 'instagram', 'whatsapp', 'youtube', 'busca', 'indicacao', 'outro', 'direto'];
+const ORIGENS = ['tiktok', 'tiktok2', 'tiktok_pago', 'instagram', 'whatsapp', 'youtube', 'busca', 'story', 'escola', 'indicacao', 'outro', 'direto'];
 const NOMES_ORIGEM = {
-  tiktok: 'TikTok', instagram: 'Instagram', whatsapp: 'WhatsApp', youtube: 'YouTube', busca: 'Google e buscas',
+  tiktok: 'TikTok', tiktok2: 'TikTok (2ª conta)', tiktok_pago: 'TikTok (anúncio)', instagram: 'Instagram', whatsapp: 'WhatsApp',
+  youtube: 'YouTube', busca: 'Google e buscas', story: 'Cartão da nota (stories)', escola: 'Escola parceira',
   indicacao: 'Convite de amigo', outro: 'Outro site', direto: 'Direto (digitou ou salvou)', sem_registro: 'Antes do registro de origem'
 };
 
@@ -124,6 +125,54 @@ const SQL_COMUNIDADE = `
     COUNT(*) FILTER (WHERE teve_7_dias AND NOT (seguiu OR grupo OR boas_vindas OR dupla OR conversou) AND voltou)::int AS sem_laco_voltou
   FROM l`;
 
+// Metas (PLANO PRO, 25/11/2026): 5.000 contas até 31/08/2027 e as condições para lançar o PRO.
+// Contas ativas = contas diferentes que responderam ao menos uma questão na semana (segunda a domingo, Brasília).
+const SQL_METAS_SEMANAS = `
+  WITH s AS (
+    SELECT generate_series(date_trunc('week', (NOW() - INTERVAL '3 hours')::date) - INTERVAL '7 weeks',
+                           date_trunc('week', (NOW() - INTERVAL '3 hours')::date), INTERVAL '1 week')::date AS ini
+  )
+  SELECT to_char(s.ini, 'YYYY-MM-DD') AS semana,
+    (SELECT COUNT(*)::int FROM usuarios u
+      WHERE (u.created_at - INTERVAL '3 hours')::date >= s.ini AND (u.created_at - INTERVAL '3 hours')::date < s.ini + 7) AS cadastros,
+    (SELECT COUNT(DISTINCT r.usuario_id)::int FROM respostas r
+      WHERE r.usuario_id IS NOT NULL
+        AND r.created_at >= s.ini + INTERVAL '3 hours' AND r.created_at < s.ini + INTERVAL '7 days 3 hours') AS ativos
+  FROM s ORDER BY s.ini`;
+
+// Pontos de controle da meta de contas (total acumulado em cada data).
+const MARCOS_CONTAS = [
+  ['2026-11-25', 18], ['2026-12-31', 300], ['2027-03-31', 2650], ['2027-07-31', 4350], ['2027-08-31', 5000]
+];
+// Meta de contas novas por semana, conforme o período do ano do ENEM.
+function metaDaSemana(iso) {
+  const d = String(iso).slice(0, 10);
+  if (d < '2027-01-01') return 60;
+  if (d < '2027-04-01') return 180;
+  if (d < '2027-08-01') return 100;
+  return 140;
+}
+// Quantas contas o plano espera ter numa data (linha reta entre os pontos de controle).
+function contasPrevistas(iso) {
+  const t = Date.parse(String(iso).slice(0, 10));
+  const pontos = MARCOS_CONTAS.map(([d, n]) => [Date.parse(d), n]);
+  if (t <= pontos[0][0]) return pontos[0][1];
+  for (let i = 1; i < pontos.length; i++) {
+    const [t0, n0] = pontos[i - 1], [t1, n1] = pontos[i];
+    if (t <= t1) return Math.round(n0 + (n1 - n0) * (t - t0) / (t1 - t0));
+  }
+  return pontos[pontos.length - 1][1];
+}
+// Condições do PLANO PRO a partir das semanas fechadas (a semana atual ainda está correndo).
+function condicoesPro(semanas, contas) {
+  const fechadas = semanas.slice(0, -1).map(s => s.ativos);
+  const seguidas = min => { let n = 0; for (let i = fechadas.length - 1; i >= 0 && fechadas[i] >= min; i--) n++; return n; };
+  return {
+    lista_espera: { liberada: seguidas(100) >= 2, semanas_com_100: seguidas(100) },
+    lancar: { contas_ok: contas >= 1000, semanas_com_200: seguidas(200), ativos_ok: seguidas(200) >= 3 }
+  };
+}
+
 function registrarCrescimento(app, { pool, exigirModerador }) {
   // O site avisa quando alguém abre uma parte (uma vez por parte e por dia em cada aparelho).
   app.post('/api/uso', async (req, res) => {
@@ -171,8 +220,16 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
         const linha = r.rows.find(x => x.parte === p) || { pessoas_7: 0, contas_7: 0, hoje: 0 };
         return { parte: p, nome: NOMES_PARTE[p], pessoas_7: linha.pessoas_7, contas_7: linha.contas_7, hoje: linha.hoje };
       }).sort((a, b) => b.pessoas_7 - a.pessoas_7)).catch(erro => { console.error('Erro nos números de uso:', erro.message); return null; });
+      const metas = await Promise.all([pool.query(SQL_METAS_SEMANAS), pool.query('SELECT COUNT(*)::int AS n FROM usuarios')])
+        .then(([sem, tot]) => {
+          const hoje = new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
+          const semanas = sem.rows.map(x => ({ ...x, meta: metaDaSemana(x.semana) }));
+          const contas = tot.rows[0].n;
+          return { hoje, contas, previstas_hoje: contasPrevistas(hoje), meta_final: 5000, semanas, pro: condicoesPro(semanas, contas) };
+        }).catch(erro => { console.error('Erro nas metas:', erro.message); return null; });
       const comunidade = await pool.query(SQL_COMUNIDADE).then(r => r.rows[0]).catch(erro => { console.error('Erro nos números da comunidade:', erro.message); return null; });
       res.json({
+        metas,
         uso,
         comunidade,
         por_dia: porDia.rows,
@@ -188,4 +245,4 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
 }
 
 module.exports = registrarCrescimento;
-Object.assign(module.exports, { SQL_USO, PARTES, lerParte, quemUsou, marcaDoVisitante, juntarRespostasDoVisitante, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });
+Object.assign(module.exports, { SQL_METAS_SEMANAS, metaDaSemana, contasPrevistas, condicoesPro, SQL_USO, PARTES, lerParte, quemUsou, marcaDoVisitante, juntarRespostasDoVisitante, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });

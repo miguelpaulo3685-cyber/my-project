@@ -2817,6 +2817,8 @@
         const pela = t => marca.includes(t) || ref.includes(t);
         const convite = /^\d{1,9}$/.test(p.get('convite') || '') ? p.get('convite') : null;
         const origem = convite ? 'indicacao'
+          : /tiktok[-_]?pago/.test(marca) ? 'tiktok_pago' : marca === 'tiktok2' ? 'tiktok2'
+          : marca === 'story' ? 'story' : (marca === 'escola' || marca === 'colegio') ? 'escola'
           : pela('tiktok') ? 'tiktok' : pela('insta') ? 'instagram' : (pela('whatsapp') || marca === 'wa') ? 'whatsapp'
           : (pela('youtube') || ref === 'youtu.be') ? 'youtube' : /(^|\.)(google|bing|duckduckgo|yahoo)\./.test(ref) ? 'busca'
           : (marca || ref) ? 'outro' : 'direto';
@@ -12100,7 +12102,8 @@ async function desenharCrescimento() {
   const total30 = d.por_dia.reduce((s, x) => s + x.cadastros, 0);
   const totalMes = d.origens.reduce((s, o) => s + o.mes, 0);
   const coorte = d.semanas.reduce((s, x) => ({ c: s.c + x.cadastros, v: s.v + x.voltaram }), { c: 0, v: 0 });
-  alvo.innerHTML = `<div class="rotulo-modal">Cadastros por dia (últimos 30 dias: ${total30})</div>
+  alvo.innerHTML = `${blocoMetas(d.metas, dataCurta)}
+    <div class="rotulo-modal">Cadastros por dia (últimos 30 dias: ${total30})</div>
     <div class="grafico-dias" role="img" aria-label="Cadastros por dia nos últimos 30 dias">${d.por_dia.map(x =>
       `<span title="${dataCurta(x.dia)}: ${plural(x.cadastros, 'cadastro', 'cadastros')}"><i style="height:${x.cadastros ? Math.max(4, x.cadastros / maior * 100) : 0}%"></i></span>`).join('')}</div>
     <div class="eixo-dias"><small>${dataCurta(d.por_dia[0].dia)}</small><small>maior dia: ${maior === 1 && !total30 ? 0 : maior}</small><small>hoje</small></div>
@@ -12125,7 +12128,35 @@ async function desenharCrescimento() {
       <b>${o.mes}</b><small>${o.total} no total</small></div>`).join('')}
     <p class="pista">${plural(d.convites.mes, 'conta nova veio', 'contas novas vieram')} por convite de amigo neste mês
       (${plural(d.convites.quem_convidou, 'pessoa já trouxe', 'pessoas já trouxeram')} alguém).
-      Para saber o que funciona, use links com <b>?origem=tiktok</b> ou <b>?origem=instagram</b> na bio e nos posts.</p>`;
+      Para saber o que funciona, use links com <b>?origem=tiktok</b>, <b>?origem=instagram</b>, <b>?origem=tiktok2</b> (2ª conta),
+      <b>?origem=tiktok-pago</b> (anúncio) ou <b>?origem=escola</b> (colégio parceiro). O cartão da nota já leva <b>?origem=story</b>.</p>`;
+}
+
+// Metas do PLANO PRO: contas até agosto, contas novas por semana contra a meta e as condições para lançar o PRO.
+function blocoMetas(m, dataCurta) {
+  if (!m) return '';
+  const nf = n => Number(n).toLocaleString('pt-BR');
+  const emDia = m.contas >= m.previstas_hoje;
+  const fechadas = m.semanas.slice(0, -1), atual = m.semanas[m.semanas.length - 1];
+  const linha = (s, corrente) => `<div class="barra-admin"><span>${corrente ? 'Esta semana' : `Semana de ${dataCurta(s.semana)}`}</span>
+      <div class="trilho"><i style="width:${Math.min(100, Math.round(s.cadastros / s.meta * 100))}%"></i></div>
+      <b>${s.cadastros}</b><small>meta ${s.meta} · ${s.ativos} ativas</small></div>`;
+  const ok = v => (v ? '✅' : '⬜');
+  const p = m.pro;
+  return `<div class="rotulo-modal">Metas: 5.000 contas até 31/08/2027</div>
+    <div class="barra-admin"><span>Contas hoje</span>
+      <div class="trilho"><i style="width:${Math.min(100, Math.round(m.contas / m.meta_final * 100))}%"></i></div>
+      <b>${nf(m.contas)}</b><small>${emDia ? '✅ em dia' : '⚠️ atrás'}: o plano previa ${nf(m.previstas_hoje)} hoje</small></div>
+    ${fechadas.map(s => linha(s, false)).join('')}${linha(atual, true)}
+    <p class="pista">Barra = contas novas da semana contra a meta do período (60 em dezembro, 180 de janeiro a março,
+      100 de abril a julho, 140 em agosto). "Ativas" = contas que responderam ao menos uma questão na semana.
+      Pontos de controle: 300 em 31/12, 2.650 em 31/03, 4.350 em 31/07.</p>
+    <div class="rotulo-modal">Condições do PRO</div>
+    <p class="pista" style="margin-top:0">
+      ${ok(p.lista_espera.liberada)} Lista de espera: 100 contas ativas por 2 semanas seguidas (agora: ${p.lista_espera.semanas_com_100})<br>
+      ${ok(p.lancar.ativos_ok)} Lançar: 200 contas ativas por 3 semanas seguidas (agora: ${p.lancar.semanas_com_200})<br>
+      ${ok(p.lancar.contas_ok)} Lançar: 1.000 contas (agora: ${nf(m.contas)})<br>
+      ⬜ Lançar: 100 pessoas na lista de espera (a lista ainda não existe)</p>`;
 }
 
 async function desenharMensagensDenunciadas() {

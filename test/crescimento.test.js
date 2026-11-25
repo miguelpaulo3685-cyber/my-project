@@ -115,3 +115,32 @@ test('sem código válido nada é juntado; erro no banco não quebra o cadastro'
   assert.strictEqual(await c.juntarRespostasDoVisitante(quebrado, 42, 'abc123def456ghi7'), 0);
   console.error = erro;
 });
+
+test('metas: meta semanal por período e contas previstas pelos pontos de controle', () => {
+  assert.strictEqual(c.metaDaSemana('2026-12-07'), 60);
+  assert.strictEqual(c.metaDaSemana('2027-02-01'), 180);
+  assert.strictEqual(c.metaDaSemana('2027-05-03'), 100);
+  assert.strictEqual(c.metaDaSemana('2027-08-02'), 140);
+  assert.strictEqual(c.contasPrevistas('2026-11-01'), 18);
+  assert.strictEqual(c.contasPrevistas('2026-12-31'), 300);
+  assert.strictEqual(c.contasPrevistas('2027-08-31'), 5000);
+  assert.strictEqual(c.contasPrevistas('2028-01-01'), 5000);
+});
+
+test('metas: condições do PRO contam só semanas fechadas e seguidas', () => {
+  const s = ativos => ativos.map(a => ({ ativos: a }));
+  // a última semana (corrente) não conta, mesmo com 999
+  const p = c.condicoesPro(s([50, 210, 220, 90, 230, 240, 250, 999]), 1200);
+  assert.strictEqual(p.lancar.semanas_com_200, 3);
+  assert.strictEqual(p.lancar.ativos_ok, true);
+  assert.strictEqual(p.lancar.contas_ok, true);
+  assert.strictEqual(p.lista_espera.liberada, true);
+  const q = c.condicoesPro(s([120, 80, 150, 10]), 300);
+  assert.strictEqual(q.lista_espera.semanas_com_100, 1);
+  assert.strictEqual(q.lista_espera.liberada, false);
+  assert.strictEqual(q.lancar.contas_ok, false);
+});
+
+test('origem: aceita as marcas novas (2ª conta, anúncio, stories, escola)', () => {
+  for (const o of ['tiktok2', 'tiktok_pago', 'story', 'escola']) assert.strictEqual(c.lerOrigem(o), o);
+});
