@@ -25,7 +25,18 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Divulgação (Miguel, 18/11):** nunca falar de quem criou o site ("dois estudantes/amigos que criaram..."),
   nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
-## ONDE PARAMOS (23/11/2026) — leia primeiro
+## ONDE PARAMOS (27/11/2026) — leia primeiro
+- **Publicado em 27/11 (sim do Matheus):** painel ganhou "Pessoas que usaram o site por dia" (14 dias, com e sem
+  conta); último acesso agora grava também quem volta com a sessão aberta (antes só no login); 6 resoluções novas
+  (55 no total) para questões em que a explicação por IA era recusada. Lista de erros do painel limpa depois do deploy.
+- **Números de 27/11:** 19 contas (2 admins), nenhuma nova desde 20/11; 0 contas ativas na semana; 1 a 3 pessoas por
+  dia usando o site desde 25/11, apesar dos vídeos (~400 visualizações no TikTok). Nenhuma conta com origem TikTok:
+  conferir o link da bio com `?origem=tiktok` e o comentário fixado.
+- **Pendente:** explicação para 2014-165, 2020-158 e 2021-145 (precisam da figura). A 2021-145 parece estar com o
+  gabarito errado no banco (a conta do enunciado não bate com a letra A): conferir na prova do INEP.
+- Vídeos: tudo em `mm-videos` (ramo `claude/padrao-audiovisual`, `RESUMO.md`).
+
+## Antes (23/11/2026)
 - **Publicado em 23/11 (sim do Miguel/Matheus):** 18 resoluções comentadas novas (ENEM 2024/2025), total de 49 em `resolucoes.json`.
 - **Vídeo de lançamento "nota TRI"** (estilo da referência "edição com o Claude pra lançamento de feature"): animação em HTML
   gravada quadro a quadro (Playwright + FFmpeg), 31 s, 1920x1080, sem música. Telas refeitas com textos reais do site (Treinar,
