@@ -65,6 +65,16 @@ const SQL_USO = `
     COUNT(DISTINCT quem) FILTER (WHERE dia = ${HOJE})::int AS hoje
   FROM uso_partes WHERE dia > ${HOJE} - 7 GROUP BY parte`;
 
+// Pessoas diferentes que usaram o site em cada um dos últimos 14 dias, com e sem conta.
+// Mostra se os vídeos trazem gente mesmo quando ninguém cria conta.
+const SQL_PESSOAS = `
+  SELECT to_char(d, 'YYYY-MM-DD') AS dia,
+    COUNT(DISTINCT p.quem)::int AS pessoas,
+    COUNT(DISTINCT p.quem) FILTER (WHERE NOT p.conta)::int AS sem_conta
+  FROM generate_series(${HOJE} - 13, ${HOJE}, INTERVAL '1 day') d
+  LEFT JOIN uso_partes p ON p.dia = d::date
+  GROUP BY d ORDER BY d`;
+
 const lerOrigem = valor => (ORIGENS.includes(valor) ? valor : null);
 const lerConvite = valor => { const n = Number(valor); return Number.isInteger(n) && n > 0 ? n : null; };
 
@@ -227,10 +237,12 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
           const contas = tot.rows[0].n;
           return { hoje, contas, previstas_hoje: contasPrevistas(hoje), meta_final: 5000, semanas, pro: condicoesPro(semanas, contas) };
         }).catch(erro => { console.error('Erro nas metas:', erro.message); return null; });
+      const pessoas = await pool.query(SQL_PESSOAS).then(r => r.rows).catch(erro => { console.error('Erro nas pessoas por dia:', erro.message); return null; });
       const comunidade = await pool.query(SQL_COMUNIDADE).then(r => r.rows[0]).catch(erro => { console.error('Erro nos números da comunidade:', erro.message); return null; });
       res.json({
         metas,
         uso,
+        pessoas,
         comunidade,
         por_dia: porDia.rows,
         semanas: semanas.rows,
@@ -245,4 +257,4 @@ function registrarCrescimento(app, { pool, exigirModerador }) {
 }
 
 module.exports = registrarCrescimento;
-Object.assign(module.exports, { SQL_METAS_SEMANAS, metaDaSemana, contasPrevistas, condicoesPro, SQL_USO, PARTES, lerParte, quemUsou, marcaDoVisitante, juntarRespostasDoVisitante, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });
+Object.assign(module.exports, { SQL_PESSOAS, SQL_METAS_SEMANAS, metaDaSemana, contasPrevistas, condicoesPro, SQL_USO, PARTES, lerParte, quemUsou, marcaDoVisitante, juntarRespostasDoVisitante, SQL_COMUNIDADE, ORIGENS, NOMES_ORIGEM, EMBLEMAS_CONVITE, lerOrigem, lerConvite, registrarOrigem });

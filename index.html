@@ -12080,6 +12080,22 @@ function blocoComunidade(c, pct) {
 }
 
 // Quem usa cada parte: pessoas diferentes (com ou sem conta) que abriram cada parte nos últimos 7 dias.
+// Pessoas que usaram o site por dia (com e sem conta): mostra se os vídeos trazem gente antes do cadastro.
+function blocoPessoas(dias, dataCurta) {
+  if (!dias || !dias.length) return '';
+  const maior = Math.max(1, ...dias.map(x => x.pessoas));
+  const total = dias.reduce((s, x) => s + x.pessoas, 0), sem = dias.reduce((s, x) => s + x.sem_conta, 0);
+  return `<div class="rotulo-modal">Pessoas que usaram o site por dia (14 dias)</div>
+    <div class="grafico-dias" role="img" aria-label="Pessoas que usaram o site por dia">${dias.map(x =>
+      `<span title="${dataCurta(x.dia)}: ${plural(x.pessoas, 'pessoa', 'pessoas')} (${x.sem_conta} sem conta)"><i style="height:${x.pessoas ? Math.max(4, x.pessoas / maior * 100) : 0}%"></i></span>`).join('')}</div>
+    <div class="eixo-dias"><small>${dataCurta(dias[0].dia)}</small><small>${plural(sem, 'visita sem conta', 'visitas sem conta')} no período</small><small>hoje</small></div>
+    <details class="tabela-admin"><summary>Ver em tabela</summary>${dias.slice().reverse().map(x =>
+      `<div><span>${dataCurta(x.dia)}</span><b>${x.pessoas}</b><small>${x.sem_conta} sem conta</small></div>`).join('')}</details>
+    <p class="pista">Conta quem abriu alguma parte do site (uma vez por dia em cada aparelho), com ou sem conta.
+      Se esse número sobe nos dias de vídeo e os cadastros não, o problema está em pedir a conta, não nos vídeos.
+      ${total ? '' : 'Nenhuma visita registrada nesses 14 dias.'}</p>`;
+}
+
 function blocoUso(uso, pct) {
   if (!uso) return '';
   const maior = Math.max(1, ...uso.map(u => u.pessoas_7));
@@ -12095,7 +12111,10 @@ function blocoUso(uso, pct) {
 async function desenharCrescimento() {
   const alvo = document.getElementById('admin-crescimento');
   let d;
-  try { d = await api('/api/admin/crescimento'); } catch (e) { alvo.innerHTML = ''; return; }
+  try { d = await api('/api/admin/crescimento'); } catch (e) {
+    alvo.innerHTML = `<div class="rotulo-modal">Crescimento</div><p class="pista">Não consegui carregar os números (${escapar(e.daApi || SEM_SERVIDOR)}). Tente de novo daqui a pouco.</p>`;
+    return;
+  }
   const dataCurta = iso => { const [, m, dia] = String(iso).slice(0, 10).split('-'); return `${dia}/${m}`; };
   const pct = (a, b) => (b ? Math.round(a / b * 100) : 0);
   const maior = Math.max(1, ...d.por_dia.map(x => x.cadastros));
@@ -12117,6 +12136,8 @@ async function desenharCrescimento() {
       : '<p class="pista">Ainda não há contas com mais de 7 dias.</p>'}
     <p class="pista">Conta quem criou a conta naquela semana e respondeu ao menos uma questão (treino, simulado ou Arena)
       em algum dos 7 dias seguintes. Acima de 30% é bom sinal.</p>
+
+    ${blocoPessoas(d.pessoas, dataCurta)}
 
     ${blocoUso(d.uso, pct)}
 

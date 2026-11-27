@@ -144,3 +144,10 @@ test('metas: condições do PRO contam só semanas fechadas e seguidas', () => {
 test('origem: aceita as marcas novas (2ª conta, anúncio, stories, escola)', () => {
   for (const o of ['tiktok2', 'tiktok_pago', 'story', 'escola']) assert.strictEqual(c.lerOrigem(o), o);
 });
+
+test('pessoas por dia: 14 dias, com e sem conta, contando cada aparelho uma vez', () => {
+  assert.match(c.SQL_PESSOAS, /COUNT\(DISTINCT p\.quem\)::int AS pessoas/);
+  assert.match(c.SQL_PESSOAS, /FILTER \(WHERE NOT p\.conta\)::int AS sem_conta/);
+  assert.match(c.SQL_PESSOAS, /- 13/);
+  assert.match(c.SQL_PESSOAS, /LEFT JOIN uso_partes/);
+});

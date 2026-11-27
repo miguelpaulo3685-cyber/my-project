@@ -159,6 +159,9 @@ function exigirAdmin(req, res, next) {
 
 // Le o token do cabecalho e descobre quem esta falando. Nao bloqueia:
 // as rotas que exigem login usam exigirLogin.
+const SQL_ULTIMO_ACESSO = `UPDATE usuarios SET ultimo_acesso = NOW()
+  WHERE id = $1 AND (ultimo_acesso IS NULL OR ultimo_acesso < NOW() - INTERVAL '15 minutes')`;
+
 async function identificar(req, res, next) {
   req.usuario = null;
   const cabecalho = req.headers.authorization || '';
@@ -177,7 +180,12 @@ async function identificar(req, res, next) {
           WHERE s.token_hash = $1 AND s.expira_em > NOW()`,
         [auth.hashDeToken(token)]
       );
-      if (rows[0]) req.usuario = rows[0];
+      if (rows[0]) {
+        req.usuario = rows[0];
+        // Antes só o login gravava o último acesso: quem voltava com a sessão aberta parecia sumido
+        // (duplas, sugestões de amigos e o e-mail semanal usam esse dado). Grava no máximo a cada 15 min.
+        pool.query(SQL_ULTIMO_ACESSO, [rows[0].id]).catch(erro => console.error('Erro ao gravar último acesso:', erro.message));
+      }
     } catch (erro) {
       console.error('Erro ao identificar sessao:', erro.message);
     }
