@@ -69,7 +69,11 @@ const ITENS = [
   ['telescopio', '🔭', 'Telescópio', 'raro'], ['dna', '🧬', 'DNA', 'raro'], ['alvo', '🎯', 'Alvo', 'raro'],
   ['coroa', '👑', 'Coroa', 'epico'], ['dragao', '🐉', 'Dragão', 'epico'], ['galaxia', '🌌', 'Galáxia', 'epico'], ['diamante', '💎', 'Diamante', 'epico'],
   // Só por convite (crescimento.js): nunca saem do baú.
-  ['convite', '🤝', 'Chamou um amigo', 'convite'], ['turma', '📣', 'Trouxe a turma', 'convite']
+  ['convite', '🤝', 'Chamou um amigo', 'convite'], ['turma', '📣', 'Trouxe a turma', 'convite'],
+  // Só pelo Rumo ao curso (rumo.js): marcos do caminho e pódio da semana.
+  ['rumo_inicio', '👣', 'Primeiro passo', 'rumo'], ['rumo_200', '🗺️', 'Na estrada', 'rumo'],
+  ['rumo_100', '🧭', 'Na rota', 'rumo'], ['rumo_50', '🔥', 'Reta final', 'rumo'], ['rumo_20', '🏁', 'Quase lá', 'rumo'],
+  ['rumo_passou', '🎓', 'Hoje eu passaria', 'rumo'], ['rumo_podio', '🏅', 'Pódio da semana', 'rumo'], ['rumo_campeao', '🏆', 'Campeão da semana', 'rumo']
 ].map(([id, emoji, nome, raridade]) => ({ id, emoji, nome, raridade }));
 const ITEM_POR_ID = new Map(ITENS.map(i => [i.id, i]));
 const PESO_RARIDADE = { comum: 70, raro: 25, epico: 5 };

@@ -867,6 +867,32 @@ async function runMigrations() {
       CREATE INDEX IF NOT EXISTS idx_respostas_visitante ON respostas(visitante) WHERE visitante IS NOT NULL;
     `);
 
+    // Rumo ao curso (rumo.js): meta de curso, nota de cada dia (para a subida da semana) e pódio semanal.
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS rumo_metas (
+        usuario_id INT PRIMARY KEY REFERENCES usuarios(id) ON DELETE CASCADE,
+        curso VARCHAR(40) NOT NULL,
+        faculdade VARCHAR(60),
+        nota_corte SMALLINT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_rumo_metas_curso ON rumo_metas(curso);
+      CREATE TABLE IF NOT EXISTS rumo_historico (
+        usuario_id INT NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+        dia DATE NOT NULL,
+        nota SMALLINT NOT NULL,
+        PRIMARY KEY (usuario_id, dia)
+      );
+      CREATE TABLE IF NOT EXISTS rumo_campeoes (
+        semana DATE NOT NULL,
+        posicao SMALLINT NOT NULL,
+        usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+        subida SMALLINT NOT NULL DEFAULT 0,
+        PRIMARY KEY (semana, posicao)
+      );
+    `);
+
     console.log('✅ Todas as tabelas criadas com sucesso!');
 
     // Verificar dados

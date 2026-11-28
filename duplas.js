@@ -18,7 +18,7 @@ const CONVITES_PENDENTES = 5;
 const ONLINE = "INTERVAL '3 minutes'";
 const INICIO_DE_HOJE = "(date_trunc('day', NOW() - INTERVAL '3 hours') + INTERVAL '3 hours')";
 const bloqueio = (a, b) => `EXISTS (SELECT 1 FROM bloqueios x WHERE (x.usuario_id = ${a} AND x.bloqueado_id = ${b}) OR (x.usuario_id = ${b} AND x.bloqueado_id = ${a}))`;
-const TIPOS_DE_CONQUISTA = ['sequencia', 'tri', 'arena', 'desafio', 'melhor_resposta', 'pomodoros', 'correcoes', 'dupla'];
+const TIPOS_DE_CONQUISTA = ['sequencia', 'tri', 'arena', 'desafio', 'melhor_resposta', 'pomodoros', 'correcoes', 'dupla', 'rumo'];
 const SUBIDA_QUE_CONTA = 15; // pontos de TRI a mais para virar conquista
 const NOME_DA_AREA = { linguagens: 'Linguagens', 'ciencias-humanas': 'Humanas', 'ciencias-natureza': 'Natureza', matematica: 'Matemática' };
 

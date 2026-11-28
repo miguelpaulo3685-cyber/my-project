@@ -12,5 +12,5 @@ test('notas: padrão é só amigos, e a regra usa seguir nos dois sentidos', () 
 
 test('notas: só atividades com nota passam pela regra', () => {
   const sql = p.atividadeVisivelSql('$1', 'a', 'u');
-  assert.match(sql, /a\.tipo NOT IN \('tri', 'desafio'\)/);
+  assert.match(sql, /a\.tipo NOT IN \('tri', 'desafio', 'rumo'\)/);
 });

@@ -13,8 +13,8 @@ const podeVerNotasSql = (quem, u) => `(COALESCE(${u}.quem_ve_notas, '${PADRAO_NO
       AND EXISTS (SELECT 1 FROM seguidores sv1 WHERE sv1.seguidor_id = ${quem} AND sv1.seguido_id = ${u}.id)
       AND EXISTS (SELECT 1 FROM seguidores sv2 WHERE sv2.seguidor_id = ${u}.id AND sv2.seguido_id = ${quem})))`;
 
-// Atividades que mostram nota: a primeira nota TRI ou recorde, e o Desafio.
-const TIPOS_COM_NOTA = ['tri', 'desafio'];
+// Atividades que mostram nota: a primeira nota TRI ou recorde, o Desafio e os marcos do Rumo ao curso.
+const TIPOS_COM_NOTA = ['tri', 'desafio', 'rumo'];
 const atividadeVisivelSql = (quem, a, u) =>
   `(${a}.tipo NOT IN (${TIPOS_COM_NOTA.map(t => `'${t}'`).join(', ')}) OR ${podeVerNotasSql(quem, u)})`;
 

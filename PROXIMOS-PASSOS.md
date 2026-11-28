@@ -25,7 +25,20 @@ Arquivo de passagem entre conversas com o Claude. Numa conversa nova, comece com
 - **Divulgação (Miguel, 18/11):** nunca falar de quem criou o site ("dois estudantes/amigos que criaram..."),
   nem em legenda, bio ou vídeo. O foco é o site e a comunidade.
 
-## ONDE PARAMOS (27/11/2026) — leia primeiro
+## RUMO AO CURSO (28/11/2026) — feito no ramo, falta o "sim" para publicar
+- Pedido do Miguel: sistema de progresso sem XP, com recompensas e competição. A pessoa escolhe curso (lista de 33 com
+  nota de corte APROXIMADA das federais no SISU, ampla concorrência; dá para ajustar) e faculdade opcional. Progresso =
+  nota de corte menos a nota do rumo (média das melhores notas TRI por área, `tri_recordes`, + melhor redação). Só vale
+  com 3 das 5 notas.
+- Marcos viram emblemas (raridade `rumo` em arena.js, nunca saem do baú): 👣 liberou a nota, 🗺️ faltam 200, 🧭 100,
+  🔥 50, 🏁 20, 🎓 passou. Disputa: rankings Meu curso / Semana / Geral / Escola; quem mais subiu na semana anterior
+  ganha 🏆 (2º e 3º 🏅), calculado na primeira visita da semana nova (`rumo_campeoes`). Quem esconde as notas aparece
+  como "Estudante" (igual ao Desafio). Cartão para stories sem nome nem foto.
+- Arquivos: `rumo.js`, `test/rumo.test.js`, tabelas `rumo_metas`, `rumo_historico`, `rumo_campeoes` em `migrations/init.js`,
+  tela `tela-rumo` e cartão `cartao-rumo` no Treinar (index.html). Consultas testadas numa cópia do banco no Neon
+  (ramo `teste-rumo-ao-curso`, pode ser apagado).
+
+## ONDE PARAMOS (27/11/2026)
 - **Publicado em 27/11 (sim do Matheus):** painel ganhou "Pessoas que usaram o site por dia" (14 dias, com e sem
   conta); último acesso agora grava também quem volta com a sessão aberta (antes só no login); 6 resoluções novas
   (55 no total) para questões em que a explicação por IA era recusada. Lista de erros do painel limpa depois do deploy.

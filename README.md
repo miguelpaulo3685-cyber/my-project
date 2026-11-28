@@ -57,6 +57,9 @@ uma tabela ou coluna que o código espera.
 | `POST /api/posts/:id/restaurar` | administrador |
 | `GET /api/perfil/:id` | login (perfil, números e publicações) |
 | `PUT /api/perfil` (bio e foto) | login |
+| `GET /api/rumo/cursos` | livre |
+| `GET`, `PUT` e `DELETE /api/rumo` (meta de curso, nota e marcos) | login |
+| `GET /api/rumo/ranking?tipo=curso\|semana\|geral\|escola` | login |
 | `POST /api/publicacoes`, `PUT` e `DELETE /api/publicacoes/:id` | login (só o autor edita; autor ou administrador apaga) |
 | `POST /api/publicacoes/:id/denunciar` / `restaurar` | login / administrador |
 | `GET /api/simulado?dia=1\|2&ano=2009..2023\|misto&lingua=ingles\|espanhol` | livre (90 questões na ordem da prova) |

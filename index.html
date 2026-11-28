@@ -1155,6 +1155,33 @@
     .cartao-desafio button.acao { margin: 0; }
     #tela-desafio .barra-prova { top: 62px; }
     .ranking { display: grid; gap: 6px; }
+    /* Rumo ao curso */
+    .barra-rumo { display: block; height: 12px; border-radius: 999px; background: var(--superficie-2); overflow: hidden; margin-top: 12px; }
+    .barra-rumo i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--marca), var(--certo)); transition: width .8s; }
+    .barra-rumo.pequena { height: 6px; margin-top: 6px; }
+    .rumo-meta { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .rumo-meta small { display: block; color: var(--texto-fraco); font-size: .82rem; }
+    .rumo-meta b { display: block; font-size: 1.15rem; margin: 2px 0; }
+    .rumo-meta button { margin: 0; }
+    .rumo-numeros { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 14px; text-align: center; }
+    .rumo-numeros > div { background: var(--superficie-2); border-radius: 12px; padding: 10px 4px; }
+    .rumo-numeros b { display: block; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+    .rumo-numeros small { color: var(--texto-fraco); font-size: .78rem; }
+    .rumo-numeros .passou { background: var(--marca-suave); }
+    .partes-rumo { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-top: 6px; }
+    .parte-rumo { margin: 0; padding: 8px 2px; border-radius: 10px; border: 1px dashed var(--borda); background: transparent; color: var(--texto); display: grid; gap: 2px; cursor: pointer; }
+    .parte-rumo.feita { border-style: solid; background: var(--superficie-2); }
+    .parte-rumo b { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+    .parte-rumo small { color: var(--texto-fraco); font-size: .7rem; }
+    .form-rumo { display: grid; gap: 12px; }
+    .form-rumo label { display: grid; gap: 4px; font-weight: 600; }
+    .form-rumo input, .form-rumo select { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid var(--borda);
+      background: var(--superficie-2); color: var(--texto); font: inherit; font-weight: 400; }
+    .form-rumo input:focus, .form-rumo select:focus { outline: none; border-color: var(--marca); }
+    .form-rumo button { margin: 0; }
+    .linha-ranking.rumo { grid-template-columns: 42px 38px 1fr auto; }
+    .linha-ranking.rumo .nome small { color: var(--texto-fraco); font-weight: 400; font-size: .78rem; overflow: hidden; text-overflow: ellipsis; }
+    .rumo-atalho { width: 100%; margin-bottom: 12px; }
     .linha-ranking {
       display: grid; grid-template-columns: 42px 38px 1fr auto auto; gap: 12px; align-items: center;
       background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; padding: 8px 14px;
@@ -3506,6 +3533,7 @@
     <div id="aviso-topo"></div>
 
     <section class="trilha-cartao" id="trilha-cartao" aria-label="O que cai no ENEM: sua trilha de estudo"></section>
+    <div id="cartao-rumo"></div>
 
     <section class="guia" id="guia" aria-label="Começar a treinar">
       <b>Bora treinar?</b>
@@ -3675,6 +3703,7 @@
   </main>
 
   <!-- ===================== ARENA ===================== -->
+  <main class="pagina escondido" id="tela-rumo"></main>
   <main class="pagina escondido" id="tela-arena">
     <div id="conteudo-arena"></div>
   </main>
@@ -4464,10 +4493,10 @@ function iniciarTema() {
 
 // ===================== NAVEGAÇÃO =====================
 function irPara(tela) {
-  ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao'].forEach(t => {
+  ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'simulado', 'prova', 'desafio', 'reels', 'comunidade', 'feed', 'perfil', 'config', 'mensagens', 'arena', 'redacao', 'rumo'].forEach(t => {
     document.getElementById('tela-' + t).classList.toggle('escondido', t !== tela);
   });
-  const treinando = ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'desafio'].includes(tela);
+  const treinando = ['treinar', 'aula', 'trilha', 'questao', 'resultado', 'desafio', 'rumo'].includes(tela);
   registrarUso(PARTE_DA_TELA[tela]);
   if (tela !== 'aula') fecharAula();
   document.getElementById('aba-treinar').classList.toggle('ativa', treinando);
@@ -4493,7 +4522,7 @@ function irPara(tela) {
   if (tela !== 'questao') pararCronometro();
   window.scrollTo(0, 0);
   if (tela === 'trilha') desenharTrilha();
-  if (tela === 'treinar') { desenharCartaoTrilha(); desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
+  if (tela === 'treinar') { desenharCartaoTrilha(); desenharCartaoRumo(); desenharAreas(); desenharGuia(); desenharCartaoDesafio(); desenharAtalhoArena(); desenharPulso(); }
   if (tela !== 'desafio') pararRelogioDesafio();
   if (tela === 'feed') { abaComunidade = 'feed'; desenharSubabas(); abrirFeed(); }
   if (tela === 'comunidade') mostrarComunidade();
@@ -4739,7 +4768,7 @@ function fecharAula() {
 // Uso de cada parte (para o painel da Administração): avisa o servidor uma vez por parte e por dia
 // em cada aparelho. Sem conta, vai um código sorteado no aparelho, sem nada que identifique a pessoa.
 const PARTE_DA_TELA = { questao: 'treinar', comunidade: 'comunidade', feed: 'comunidade', simulado: 'simulado', prova: 'simulado',
-  arena: 'arena', redacao: 'redacao', reels: 'reels', mensagens: 'mensagens', desafio: 'desafio' };
+  arena: 'arena', redacao: 'redacao', reels: 'reels', mensagens: 'mensagens', desafio: 'desafio', rumo: 'rumo' };
 // Código sorteado neste aparelho. Vai no painel de uso e nas respostas sem conta (o servidor só
 // guarda um resumo dele), para essas respostas irem junto quando a pessoa criar a conta aqui.
 function codigoVisitante() {
@@ -9955,6 +9984,242 @@ async function desenharRankingDesafio() {
   }
 }
 
+// ===================== RUMO AO CURSO =====================
+// A pessoa escolhe o curso dos sonhos e a nota de corte. O progresso é a
+// distância entre a nota dela (melhores notas TRI + redação) e esse corte.
+// Competição: rankings do curso, da semana, geral e da escola (rumo.js).
+let rumo = null, rumoCursos = null, rankingRumo = 'curso', editandoRumo = false;
+const PARTES_RUMO = { linguagens: ['Linguagens', 'linguagens'], 'ciencias-humanas': ['Humanas', 'humanas'],
+  'ciencias-natureza': ['Natureza', 'natureza'], matematica: ['Matemática', 'matematica'], redacao: ['Redação', null] };
+const ABAS_RANKING_RUMO = [['curso', 'Meu curso'], ['semana', 'Semana'], ['geral', 'Geral'], ['escola', 'Escola']];
+
+async function buscarCursosRumo() {
+  if (!rumoCursos) rumoCursos = await api('/api/rumo/cursos');
+  return rumoCursos;
+}
+const nomeMetaRumo = m => `${m.curso_nome}${m.faculdade ? ` · ${m.faculdade}` : ''}`;
+const textoFaltaRumo = r => r.passou ? `Você passaria hoje! ${Math.abs(r.falta)} pontos acima do corte`
+  : `Faltam <b>${r.falta}</b> pontos`;
+
+// Cartão no Treinar.
+async function desenharCartaoRumo() {
+  const alvo = document.getElementById('cartao-rumo');
+  if (!alvo) return;
+  if (!usuarioLogado) {
+    alvo.innerHTML = `<button class="atalho-inicio rumo-atalho" onclick="abrirConta('criar')"><span class="icone">🎯</span>
+      <span><b>Rumo ao curso</b><small>Escolha o curso dos sonhos e veja quantos pontos faltam para passar.</small></span></button>`;
+    return;
+  }
+  try { rumo = await api('/api/rumo'); } catch (e) { alvo.innerHTML = ''; return; }
+  if (!rumo.meta) {
+    alvo.innerHTML = `<button class="atalho-inicio rumo-atalho" onclick="abrirRumo()"><span class="icone">🎯</span>
+      <span><b>Rumo ao curso</b><small>Qual curso você quer? Escolha e dispute com quem quer o mesmo.</small></span></button>`;
+    return;
+  }
+  const detalhe = rumo.valida ? `${rumo.passou ? 'Você passaria hoje! 🎓' : `Faltam ${rumo.falta} pontos`}${rumo.subida_semana > 0 ? ` · +${rumo.subida_semana} esta semana` : ''}`
+    : `Faça mais ${plural(rumo.faltam_notas, 'área', 'áreas')} para liberar a sua nota`;
+  alvo.innerHTML = `<button class="atalho-inicio rumo-atalho" onclick="abrirRumo()"><span class="icone">${rumo.passou ? '🎓' : '🎯'}</span>
+    <span style="flex:1;min-width:0"><b>${escapar(nomeMetaRumo(rumo.meta))}</b><small>${detalhe}</small>
+      ${rumo.valida ? `<span class="barra-rumo pequena"><i style="width:${rumo.pct}%"></i></span>` : ''}</span></button>`;
+}
+
+async function abrirRumo() {
+  if (!usuarioLogado) return abrirConta('criar');
+  irPara('rumo');
+  const alvo = document.getElementById('tela-rumo');
+  alvo.innerHTML = '<div class="vazio">Carregando o seu rumo…</div>';
+  try { [rumo] = await Promise.all([api('/api/rumo'), buscarCursosRumo()]); }
+  catch (e) { alvo.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`; return; }
+  desenharRumo();
+  if (rumo.novos && rumo.novos.length) {
+    soltarConfete();
+    const m = rumo.marcos.find(x => x.id === rumo.novos[rumo.novos.length - 1]);
+    if (m) avisoSim(`Emblema novo: ${m.emoji} ${m.nome}!`);
+  }
+}
+
+function desenharRumo() {
+  const alvo = document.getElementById('tela-rumo');
+  const cabecalho = `<div class="cabecalho-secao"><h1>🎯 Rumo ao curso</h1>
+    <p>Sua nota contra a nota de corte do curso que você quer. Cada treino, simulado e redação mexe na barra.</p></div>`;
+  if (!rumo.meta || editandoRumo) { alvo.innerHTML = cabecalho + htmlEscolherRumo(); return; }
+  const r = rumo;
+  const partes = (r.partes_detalhe || []).map(p => {
+    const [nome, areaFront] = PARTES_RUMO[p.parte] || [p.parte, null];
+    const acao = areaFront ? `abrirMateria('${areaFront}')` : 'abrirRedacoes()';
+    return `<button class="parte-rumo${p.nota !== null ? ' feita' : ''}" onclick="${acao}">
+      <b>${p.nota !== null ? p.nota : '—'}</b><small>${nome}</small></button>`;
+  }).join('');
+  const marcos = r.marcos.map(m => `<span class="selo-conquista${m.tem ? '' : ' bloqueado'}"
+      title="${escapar(m.nome)}${m.falta === null ? ' (liberar a nota)' : m.falta === 0 ? ' (passar do corte)' : ` (faltar ${m.falta} ou menos)`}">${m.emoji}</span>`).join('');
+  alvo.innerHTML = `${cabecalho}
+    <section class="painel rumo-principal">
+      <div class="rumo-meta"><div><small>Meu curso</small><b>${escapar(nomeMetaRumo(r.meta))}</b>
+        <small>Nota de corte: ${r.meta.nota_corte}${r.meta.corte_sugerido === r.meta.nota_corte ? ' (aproximada)' : ''}</small></div>
+        <button class="acao discreta" onclick="editandoRumo = true; desenharRumo()">Trocar</button></div>
+      ${r.valida ? `
+        <div class="rumo-numeros"><div><b>${r.nota}</b><small>sua nota</small></div>
+          <div class="${r.passou ? 'passou' : ''}"><b>${r.passou ? '🎓' : r.falta}</b><small>${r.passou ? 'passaria hoje!' : 'pontos faltando'}</small></div>
+          <div><b>${r.subida_semana > 0 ? '+' : ''}${r.subida_semana}</b><small>esta semana</small></div></div>
+        <div class="barra-rumo"><i style="width:${r.pct}%"></i></div>
+        <p class="pista" style="margin:6px 0 0">${textoFaltaRumo(r)} · ${r.pct}% do caminho</p>
+        <button class="acao" style="margin-top:12px" onclick="compartilharRumo(this)">📲 Postar nos stories</button>`
+      : `<p style="margin:12px 0 0"><b>Falta pouco para liberar a sua nota.</b> Ela é a média das suas melhores notas
+          nas 4 áreas e na redação, e precisa de pelo menos ${rumoCursos.minimo_de_notas} delas.
+          Faça ${plural(r.faltam_notas, 'bloco de uma área nova', 'blocos de áreas novas')} (ou uma redação) para entrar na disputa.</p>`}
+      <b style="display:block;margin-top:16px">Suas 5 notas</b>
+      <div class="partes-rumo">${partes}</div>
+      <p class="pista" style="margin:6px 0 0">Vale a melhor nota de cada área. Toque para treinar.</p>
+      <b style="display:block;margin-top:16px">Marcos do caminho</b>
+      <div class="selos" style="margin-top:6px">${marcos}</div>
+      <p class="pista" style="margin:6px 0 0">Cada marco vira um emblema para usar ao lado do seu nome.</p>
+    </section>
+    <section class="painel">
+      <div class="titulo-bloco"><b>🏆 Disputa</b></div>
+      <p class="pista" style="margin:4px 0 10px">Quem mais subir até domingo ganha o 🏆; 2º e 3º ganham o 🏅.
+        ${r.semana.campeao ? 'Você já foi campeão da semana! ' : ''}</p>
+      <div class="abas-feed" role="group" aria-label="Rankings">${ABAS_RANKING_RUMO.map(([id, n]) =>
+        `<button data-filtro="${id}" aria-pressed="${rankingRumo === id}" onclick="rankingRumo = '${id}'; desenharRankingRumo()">${n}</button>`).join('')}</div>
+      <p class="pista" id="minha-posicao-rumo" style="margin:10px 0 6px"></p>
+      <div id="lista-ranking-rumo"><div class="vazio">Carregando…</div></div>
+    </section>`;
+  desenharRankingRumo();
+}
+
+function htmlEscolherRumo() {
+  const m = rumo.meta || {};
+  const cursos = rumoCursos.cursos;
+  const atual = cursos.find(c => c.id === m.curso) || null;
+  return `<section class="painel"><form onsubmit="salvarRumo(event)" class="form-rumo">
+    <label>Curso que você quer
+      <select name="curso" required onchange="sugerirCorteRumo(this)">
+        <option value="">Escolha…</option>
+        ${cursos.map(c => `<option value="${c.id}" data-corte="${c.corte}"${c.id === m.curso ? ' selected' : ''}>${escapar(c.nome)}</option>`).join('')}
+      </select></label>
+    <label>Faculdade (opcional)
+      <input name="faculdade" maxlength="60" placeholder="Ex.: UFMG, USP, UFPE" value="${escapar(m.faculdade || '')}"></label>
+    <label>Nota de corte
+      <input name="nota_corte" type="number" min="300" max="1000" required value="${m.nota_corte || (atual ? atual.corte : '')}"></label>
+    <p class="pista" style="margin:0">A nota da lista é uma média aproximada das federais no SISU (ampla concorrência).
+      Se souber a da sua faculdade, troque aqui.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="acao" type="submit">Salvar meta</button>
+      ${rumo.meta ? `<button class="acao discreta" type="button" onclick="editandoRumo = false; desenharRumo()">Cancelar</button>
+        <button class="acao discreta" type="button" onclick="tirarRumo()">Tirar meta</button>` : ''}
+    </div></form></section>`;
+}
+
+function sugerirCorteRumo(sel) {
+  const corte = sel.selectedOptions[0] && sel.selectedOptions[0].dataset.corte;
+  if (corte) sel.form.nota_corte.value = corte;
+}
+
+async function salvarRumo(ev) {
+  ev.preventDefault();
+  const f = ev.target, botao = f.querySelector('button[type=submit]');
+  botao.disabled = true;
+  try {
+    await api('/api/rumo', { method: 'PUT', body: JSON.stringify({ curso: f.curso.value, faculdade: f.faculdade.value, nota_corte: Number(f.nota_corte.value) }) });
+    editandoRumo = false;
+    rumo = await api('/api/rumo');
+    desenharRumo();
+    if (rumo.novos && rumo.novos.length) soltarConfete();
+  } catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); botao.disabled = false; }
+}
+
+async function tirarRumo() {
+  if (!confirm('Tirar a sua meta de curso? Você sai dos rankings do Rumo (os emblemas ficam).')) return;
+  try { await api('/api/rumo', { method: 'DELETE' }); editandoRumo = false; rumo = { meta: null }; desenharRumo(); }
+  catch (e) { avisoSim(e.daApi || SEM_SERVIDOR); }
+}
+
+async function desenharRankingRumo() {
+  document.querySelectorAll('#tela-rumo .abas-feed button').forEach(b => b.setAttribute('aria-pressed', b.dataset.filtro === rankingRumo));
+  const lista = document.getElementById('lista-ranking-rumo');
+  if (!lista) return;
+  const pos = document.getElementById('minha-posicao-rumo');
+  lista.innerHTML = '<div class="vazio">Carregando…</div>';
+  try {
+    const d = await api(`/api/rumo/ranking?tipo=${rankingRumo}`);
+    if (d.sem_escola) { pos.textContent = ''; lista.innerHTML = '<div class="vazio">Coloque a sua escola no perfil para disputar com os colegas.</div>'; return; }
+    pos.textContent = d.minha ? `Você está em ${d.minha.posicao}º de ${d.total}.` : (rumo.valida ? '' : 'Libere a sua nota para entrar no ranking.');
+    const medalha = p => ({ 1: '🥇', 2: '🥈', 3: '🥉' }[p] || `${p}º`);
+    const valor = l => rankingRumo === 'semana' ? `<b>+${l.subida}</b>`
+      : rankingRumo === 'curso' ? (l.passou ? '<b>🎓</b>' : `<b>${l.falta}</b><small> faltam</small>`) : `<b>${l.pct}%</b>`;
+    const sub = l => rankingRumo === 'curso' ? (l.faculdade ? escapar(l.faculdade) : '') : escapar(l.curso);
+    lista.innerHTML = d.ranking.length ? `<div class="ranking">${d.ranking.map(l => `
+      <div class="linha-ranking rumo${l.eu ? ' eu' : ''}">
+        <span class="pos">${medalha(l.posicao)}</span>
+        <span class="bolha-autor">${l.foto ? `<img src="${escapar(urlImagem(l.foto))}" alt="">` : escapar((l.nome || '?').charAt(0).toUpperCase())}</span>
+        <span class="nome">${l.id ? `<button class="autor-link" onclick="abrirPerfil(${Number(l.id)})">${escapar(l.nome)}${l.emblema ? ` ${escapar(l.emblema)}` : ''}${l.eu ? ' (você)' : ''}</button>`
+          : `<b title="Esta pessoa preferiu não mostrar as notas">${escapar(l.nome)}</b>`}${l.campeao ? ` <span title="Pódio da semana passada">${l.campeao === 1 ? '🏆' : '🏅'}</span>` : ''}
+          <small style="display:block">${sub(l)}</small></span>
+        <span class="pontos">${valor(l)}</span>
+      </div>`).join('')}</div>`
+      : `<div class="vazio">${rankingRumo === 'semana' ? 'Ninguém subiu esta semana ainda. Treine e seja o primeiro!'
+        : rankingRumo === 'curso' ? 'Ninguém mais escolheu esse curso ainda. Chame os amigos que querem o mesmo!' : 'Ninguém neste ranking ainda.'}</div>`;
+  } catch (e) {
+    lista.innerHTML = `<div class="vazio">${escapar(e.daApi || SEM_SERVIDOR)}</div>`;
+  }
+}
+
+// Cartão 1080x1920 para os stories: sem nome nem foto (muitos alunos são menores).
+async function desenharCartaoRumoStory(r) {
+  try { await Promise.all(['700 120px Fraunces', '500 40px Fraunces', '600 40px Inter', '400 40px Inter'].map(f => document.fonts.load(f))); } catch (e) {}
+  const W = 1080, H = 1920, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d');
+  g.fillStyle = '#0b0d0c'; g.fillRect(0, 0, W, H);
+  const brilho = g.createRadialGradient(W / 2, 860, 40, W / 2, 860, 760);
+  brilho.addColorStop(0, 'rgba(34,197,94,.28)'); brilho.addColorStop(1, 'rgba(34,197,94,0)');
+  g.fillStyle = brilho; g.fillRect(0, 0, W, H);
+  g.textAlign = 'center';
+  g.fillStyle = '#f5f5f4'; g.font = '700 52px Fraunces, Georgia, serif'; g.fillText('M&M Estudos', W / 2, 322);
+  const curso = r.meta.curso_nome;
+  const ajustar = (texto, fonte, max) => { let t = fonte; g.font = `700 ${t}px Fraunces, Georgia, serif`; while (g.measureText(texto).width > max && t > 40) { t -= 4; g.font = `700 ${t}px Fraunces, Georgia, serif`; } };
+  if (r.passou) {
+    g.fillStyle = '#a8a29e'; g.font = '400 50px Inter, system-ui, sans-serif'; g.fillText('Hoje eu passaria em', W / 2, 620);
+    g.fillStyle = '#ffffff'; ajustar(curso, 110, 940); g.fillText(curso, W / 2, 760);
+    g.font = '260px serif'; g.fillText('🎓', W / 2, 1080);
+  } else {
+    g.fillStyle = '#a8a29e'; g.font = '400 50px Inter, system-ui, sans-serif'; g.fillText('Faltam', W / 2, 560);
+    g.fillStyle = '#ffffff'; g.font = '700 330px Fraunces, Georgia, serif'; g.fillText(String(r.falta), W / 2, 880);
+    g.fillStyle = '#a8a29e'; g.font = '400 50px Inter, system-ui, sans-serif'; g.fillText('pontos para', W / 2, 970);
+    g.fillStyle = '#ffffff'; ajustar(curso, 96, 940); g.fillText(curso, W / 2, 1090);
+  }
+  // barra do caminho
+  const bx = 170, by = 1170, bw = W - 340, bh = 28;
+  g.fillStyle = '#292524'; g.fillRect(bx, by, bw, bh);
+  g.fillStyle = '#22c55e'; g.fillRect(bx, by, bw * Math.min(1, r.pct / 100), bh);
+  g.fillStyle = '#d6d3d1'; g.font = '400 40px Inter, system-ui, sans-serif'; g.fillText(`${r.pct}% do caminho`, W / 2, by + 90);
+  g.fillStyle = '#86efac'; g.font = '500 70px Fraunces, Georgia, serif'; g.fillText('E você, quer qual curso?', W / 2, 1450);
+  g.fillStyle = '#22c55e'; g.font = '600 60px Inter, system-ui, sans-serif'; g.fillText('mmestudos.com.br', W / 2, 1600);
+  return await new Promise(ok => c.toBlob(ok, 'image/png'));
+}
+
+async function compartilharRumo(botao) {
+  const r = rumo;
+  if (!r || !r.valida) return;
+  if (botao) botao.disabled = true;
+  try {
+    const link = `${location.origin}${location.pathname}?origem=story&convite=${usuarioLogado.id}`;
+    const texto = r.passou ? `Hoje eu passaria em ${r.meta.curso_nome}! E você, quer qual curso? ${link}`
+      : `Faltam ${r.falta} pontos para eu passar em ${r.meta.curso_nome}. E você, quer qual curso? ${link}`;
+    const blob = await desenharCartaoRumoStory(r);
+    const arquivo = new File([blob], 'meu-rumo.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+      try { await navigator.share({ files: [arquivo], text: texto }); return; }
+      catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'meu-rumo.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    try { await navigator.clipboard.writeText(texto); avisoSim('Imagem salva e texto com o link copiado. É só postar!'); }
+    catch (e) { avisoSim('Imagem salva. Poste com o link mmestudos.com.br'); }
+  } finally { if (botao) botao.disabled = false; }
+}
+
 // ===================== COMUNIDADE =====================
 // "Agora" (quem está no site, metas do dia e o que está rolando), salas de
 // estudo com pomodoro coletivo e Pergunte à comunidade. Feed e grupos
@@ -10934,6 +11199,13 @@ const TEXTO_ATIVIDADE = {
   sequencia: a => `chegou a <b>${a.alvo_id} dias seguidos</b> estudando 🔥`,
   arena: a => `venceu ${a.texto ? `<b>${escapar(a.texto)}</b>` : 'uma partida na <b>Arena</b>'} contra ${plural(Math.max(1, Number(a.alvo_id) - 1), 'pessoa', 'pessoas')} ⚡`,
   correcoes: a => `já corrigiu <b>${plural(a.alvo_id, 'redação', 'redações')}</b> da comunidade ✍️`,
+  rumo: a => { const [marco, resto] = String(a.texto || '').split('|');
+    if (marco === 'campeao') return `foi o <b>campeão da semana</b> no Rumo ao curso: +${escapar(resto)} pontos 🏆`;
+    if (marco === 'podio') return `ficou no <b>pódio da semana</b> no Rumo ao curso: +${escapar(resto)} pontos 🏅`;
+    const textos = { rumo_inicio: 'entrou na disputa do <b>Rumo ao curso</b> rumo a', rumo_200: 'está a menos de 200 pontos de',
+      rumo_100: 'está a menos de 100 pontos de', rumo_50: 'está na reta final para', rumo_20: 'está a menos de 20 pontos de',
+      rumo_passou: 'chegou na nota de corte de' };
+    return `${textos[marco] || 'avançou rumo a'} <b>${escapar(resto || 'o curso')}</b> ${marco === 'rumo_passou' ? '🎓' : '🎯'}`; },
   pomodoros: a => `completou <b>${a.alvo_id} pomodoros</b> hoje${a.texto ? ` na sala ${escapar(a.texto)}` : ''} ⏱️`
 };
 
@@ -12599,16 +12871,19 @@ function desenharMinhaArena() {
   <section class="painel">
     <b>Seus emblemas</b>
     <p class="pista" style="margin:4px 0 0">Cada partida com amigos abre um baú. ${usando ? `Usando: ${usando.emoji} ${escapar(usando.nome)}.` : 'Toque num emblema para usar ao lado do seu nome.'}</p>
-    <div class="colecao">${e.colecao.filter(i => i.raridade !== 'convite').map(botaoEmblema).join('')}</div>
+    <div class="colecao">${e.colecao.filter(i => i.raridade !== 'convite' && i.raridade !== 'rumo').map(botaoEmblema).join('')}</div>
     <b style="display:block;margin-top:16px">Emblemas de convite</b>
     <p class="pista" style="margin:4px 0 0">Crie uma sala e chame amigos pelo WhatsApp. ${e.convidados
       ? `${plural(e.convidados, 'amigo já entrou', 'amigos já entraram')} pelo seu convite.` : 'Ninguém entrou pelo seu convite ainda.'}
       1 amigo dá o 🤝, 5 amigos dão o 📣.</p>
     <div class="colecao">${e.colecao.filter(i => i.raridade === 'convite').map(botaoEmblema).join('')}</div>
+    <b style="display:block;margin-top:16px">Emblemas do Rumo ao curso</b>
+    <p class="pista" style="margin:4px 0 0">Chegue perto da nota de corte do seu curso ou fique no pódio da semana. <button class="autor-link" onclick="abrirRumo()">Abrir o Rumo</button></p>
+    <div class="colecao">${e.colecao.filter(i => i.raridade === 'rumo').map(botaoEmblema).join('')}</div>
   </section>`;
 }
 
-const NOME_RARIDADE = { comum: 'comum', raro: 'raro', epico: 'épico', convite: 'por convite' };
+const NOME_RARIDADE = { comum: 'comum', raro: 'raro', epico: 'épico', convite: 'por convite', rumo: 'Rumo ao curso' };
 function botaoEmblema(i) {
   const falta = i.raridade === 'convite' ? (i.id === 'turma' ? 'Chame 5 amigos para ganhar' : 'Chame 1 amigo para ganhar') : 'Ainda não ganhou';
   return `<button class="${i.raridade}${i.id === arena.eu.emblema ? ' usando' : ''}" ${i.tem ? '' : 'disabled'}

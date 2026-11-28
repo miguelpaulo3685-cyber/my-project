@@ -661,7 +661,10 @@ app.post('/api/tri', async (req, res) => {
     }
     const notas = tri.notasPorArea(linhas, DISCIPLINA_PARA_AREA);
     // Primeira nota ou recorde bem acima do anterior vira conquista para a comunidade comemorar.
-    if (req.usuario && !req.body?.so_estas) require('./duplas').registrarRecordesTri(pool, req.usuario.id, notas).catch(() => {});
+    if (req.usuario && !req.body?.so_estas) {
+      const id = req.usuario.id;
+      require('./duplas').registrarRecordesTri(pool, id, notas).then(() => require('./rumo').anotar(pool, id)).catch(() => {});
+    }
     res.json({ notas, minimo: tri.MINIMO_PARA_NOTA });
   } catch (erro) {
     console.error('Erro ao calcular nota TRI:', erro.message);
@@ -1271,6 +1274,7 @@ require('./mensagens')(app, { pool, auth, limitar, exigirLogin, exigirModerador 
 require('./crescimento')(app, { pool, exigirModerador });
 require('./resolucoes')(app, { pool, exigirModerador });
 require('./trilha')(app, { pool, auth, limitar, exigirLogin });
+require('./rumo')(app, { pool, auth, limitar, exigirLogin });
 require('./explicacao-ia')(app, { pool, auth, exigirModerador });
 require('./erros').registrarRotasDeErros(app, { pool, vigia: vigiaDeErros, limitar, auth, exigirModerador });
 require('./feedback').registrarRotasDeFeedback(app, { pool, limitar, auth, exigirModerador });

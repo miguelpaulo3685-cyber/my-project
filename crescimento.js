@@ -21,10 +21,10 @@ const EMBLEMAS_CONVITE = [
 ];
 
 // Uso de cada parte do site (painel "Quem usa cada parte"). Lista fechada, como as origens.
-const PARTES = ['treinar', 'aulas', 'comunidade', 'simulado', 'arena', 'redacao', 'reels', 'mensagens', 'desafio'];
+const PARTES = ['treinar', 'aulas', 'comunidade', 'simulado', 'arena', 'redacao', 'reels', 'mensagens', 'desafio', 'rumo'];
 const NOMES_PARTE = {
   treinar: 'Treinar (fez questões)', aulas: 'O que cai no ENEM (aulas)', comunidade: 'Comunidade', simulado: 'Simulado',
-  arena: 'Arena', redacao: 'Redação', reels: 'Reels', mensagens: 'Mensagens', desafio: 'Desafio da semana'
+  arena: 'Arena', redacao: 'Redação', reels: 'Reels', mensagens: 'Mensagens', desafio: 'Desafio da semana', rumo: 'Rumo ao curso'
 };
 const lerParte = valor => (PARTES.includes(valor) ? valor : null);
 // Visitante sem conta: o site manda um código sorteado no aparelho; aqui ele vira um resumo (hash),
